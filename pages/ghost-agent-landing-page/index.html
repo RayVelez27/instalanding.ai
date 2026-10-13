@@ -1,0 +1,1128 @@
+<!doctype html>
+<!--
+  INSTALANDING.AI · Ghost Agent Landing Page
+  slug     ghost-agent-landing-page
+  prompt   https://instalanding.ai/p/ghost-agent-landing-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/ghost-agent-landing-page
+  license  MIT. Fictional brand; replace names, copy, numbers and contact details before shipping.
+
+  MAP
+  tokens    :root custom properties at the top of <style>: --night/--ink (surfaces), --text/--muted/--dim,
+            --pink/--purple/--cyan and --grad (the cyan-violet-pink accent), --sans Archivo (Google Fonts,
+            variable width: display type is font-stretch 125% + weight 900, uppercase).
+  sections  nav, menu, hero, agents, customers, live-demo, how-it-works, cta, footer
+  scripts   one inline <script>, in IIFE blocks: header glass after 20px; full-screen takeover menu (inert
+            when closed, Escape closes); 20 CSS pixel ghosts floating up the hero (paused off screen);
+            SVG ghost clones from <template id="ghostTpl">; scroll reveals; Ghost Shift (a 100-cell task
+            board the three agents clear on a 480ms beat, fizzbuzz-coloured: every 3rd Scout, 5th Scribe,
+            15th Sentinel); cyber cards (.fx: injected HUD layers + pointer tilt); a custom listbox
+            select; the demo form, which opens a mailto.
+  assets    none: the logo, the favicon and both ghost styles are inline SVG or pure CSS gradients.
+
+  ADAPTING
+  - The hero's bottom-right corner and the inverse curve under its bottom-left share --curve and
+    --hero-base. Change the hero's bottom gradient colour and --hero-base together or the curve shows a seam.
+  - Pixel ghosts are seven gradient rectangles each, all scaled off --size; edit the background-size and
+    background-position lists as a set or the ghost falls apart.
+  - Work cards take real imagery through a custom property: style="--img:url(photo.jpg)". Inline it as a
+    data URI to keep the file standalone.
+  - .fx cards get their decoration injected by JS; anything that must sit above it needs to be a direct
+    child (they are lifted to z-index 1 automatically).
+  - The form opens the visitor's email app. Point it at a real form service before launch.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Haunt — AI Agents That Work Like Ghosts</title>
+<meta name="description" content="Haunt deploys invisible AI agents into the tools your team already uses. They research, write and ship in the background, and you only notice them when the work is done.">
+<meta name="theme-color" content="#060409">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Haunt">
+<meta property="og:title" content="Haunt — AI agents that work like ghosts">
+<meta property="og:description" content="Invisible AI agents that research, write and ship inside the tools you already use.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 34'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2349e7ff'/><stop offset='.55' stop-color='%239769ff'/><stop offset='1' stop-color='%23ff4fc8'/></linearGradient></defs><path fill='url(%23g)' d='M4 31V15a12 12 0 0 1 24 0v16l-4-3-4 3-4-3-4 3-4-3z'/><rect x='10' y='13' width='4' height='6' rx='2' fill='%23060409'/><rect x='18' y='13' width='4' height='6' rx='2' fill='%23060409'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<style>
+/* ================= TOKENS ================= */
+:root {
+  --night: #060409;
+  --ink: #0b0711;
+  --panel: rgba(255,255,255,.03);
+  --line: rgba(255,255,255,.09);
+  --text: #fbf8ff;
+  --muted: #c6bdd3;
+  --dim: rgba(251,248,255,.56);
+  --pink: #ff4fc8;
+  --purple: #9769ff;
+  --cyan: #49e7ff;
+  --grad: linear-gradient(90deg, var(--cyan), var(--purple) 55%, var(--pink));
+  --sans: "Archivo", system-ui, sans-serif;
+  --track: calc(-1 * clamp(0px, -4.0909px + 1.1364vw, 10px)); /* display tracking from the type spec */
+  --wrap: min(1200px, calc(100% - 48px));
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+
+/* ================= BASE ================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--night); color: var(--text);
+  font-family: var(--sans); font-size: 17px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+::selection { background: var(--purple); color: #fff; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: var(--wrap); margin-inline: auto; }
+.skip { position: absolute; left: 16px; top: -60px; z-index: 200; padding: 10px 16px; border-radius: 10px; background: var(--text); color: var(--night); font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .8rem; text-decoration: none; }
+.skip:focus { top: 16px; }
+
+.eyebrow { margin: 0 0 18px; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.h2 { margin: 0 0 24px; font-size: clamp(2rem, 4.6vw, 4.2rem); }
+.outline { color: transparent; -webkit-text-stroke: 1.5px rgba(251,248,255,.85); }
+.outline { -webkit-text-stroke-width: clamp(1px, .12vw, 2px); }
+.grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.dot { color: var(--cyan); }
+/* Display type: Archivo Black Expanded */
+.hero-title, .h2, .jam-title, .takeover-links a, .takeover-contact h2, .brand-word,
+.service h3, .work-meta h3, .step h3, .step-num, .stat strong, .work-mark, .beat-word {
+  font-stretch: 125%; font-weight: 900; text-transform: uppercase;
+}
+.hero-title, .h2, .jam-title, .beat-word { line-height: .8; }
+.hero-title { letter-spacing: max(var(--track), -.045em); word-spacing: .06em; }
+.h2, .jam-title, .beat-word { letter-spacing: -.035em; word-spacing: .08em; }
+.lede { margin: 0; max-width: 540px; color: var(--muted); font-size: clamp(1.05rem, 1.4vw, 1.2rem); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; padding: 15px 26px;
+  border: 0; border-radius: 999px; cursor: pointer; text-decoration: none;
+  font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .82rem; letter-spacing: .06em; color: #fff;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(151,105,255,.35); }
+.btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,.24); }
+.btn-ghost:hover { border-color: var(--cyan); box-shadow: none; }
+.link { font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .8rem; letter-spacing: .1em; color: var(--cyan); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .25s; }
+.link:hover { border-color: currentColor; }
+
+.section { position: relative; padding: clamp(96px, 12vw, 160px) 0; }
+
+.js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.js .reveal.in { opacity: 1; transform: none; }
+
+/* ================= HEADER + NAV ================= */
+.site-header { position: fixed; inset: 0 0 auto; z-index: 100; border-bottom: 1px solid transparent; transition: background .3s, border-color .3s; }
+.site-header.scrolled { background: rgba(6,4,9,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--line); }
+.nav-open .site-header { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: transparent; }
+.bar { display: flex; align-items: center; justify-content: space-between; width: calc(100% - 40px); height: 84px; margin-inline: auto; }
+
+/* Logo: gradient ghost mark + wordmark */
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; }
+.brand-mark { width: 34px; height: 36px; overflow: visible; filter: drop-shadow(0 0 12px rgba(151,105,255,.5)); animation: brand-float 4s ease-in-out infinite; }
+.brand-eyes { transform-box: fill-box; transform-origin: center; animation: brand-blink 5s infinite; }
+.brand-word { font-size: 1.35rem; line-height: 1; letter-spacing: -.02em; }
+.brand:hover .brand-mark { filter: drop-shadow(0 0 18px rgba(255,79,200,.6)); }
+@keyframes brand-float { 50% { transform: translateY(-2px); } }
+@keyframes brand-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.12); } }
+
+.menu-btn { display: inline-flex; align-items: center; gap: 14px; padding: 10px 0; border: 0; background: none; color: var(--text); cursor: pointer; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; }
+.menu-lines { position: relative; width: 32px; height: 14px; }
+.menu-lines span { position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px; background: currentColor; transition: transform .45s var(--ease), opacity .3s; }
+.menu-lines span:nth-child(1) { top: 0; }
+.menu-lines span:nth-child(2) { top: 6px; }
+.menu-lines span:nth-child(3) { top: 12px; }
+.nav-open .menu-lines span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-open .menu-lines span:nth-child(2) { opacity: 0; }
+.nav-open .menu-lines span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+.takeover {
+  position: fixed; inset: 0; z-index: 99; overflow-y: auto;
+  display: grid; grid-template-columns: 1.1fr .9fr;
+  background: radial-gradient(circle at 85% 10%, rgba(151,105,255,.22), transparent 45%), #08050c;
+  opacity: 0; visibility: hidden; transform: translateY(-12px);
+  transition: opacity .45s var(--ease), transform .45s var(--ease), visibility 0s .45s;
+}
+.nav-open .takeover { opacity: 1; visibility: visible; transform: none; transition: opacity .45s var(--ease), transform .45s var(--ease); }
+.takeover-links, .takeover-contact { display: flex; flex-direction: column; justify-content: center; padding: 120px 6vw 60px; }
+.takeover-links ol { margin: 0; padding: 0; list-style: none; counter-reset: n; }
+.takeover-links li { counter-increment: n; border-bottom: 1px solid var(--line); }
+.takeover-links a { display: flex; align-items: baseline; gap: 22px; padding: 16px 0; text-decoration: none; font-size: clamp(1.7rem, 3.8vw, 3.2rem); line-height: .9; letter-spacing: -.02em; transition: color .25s, padding .35s var(--ease); }
+.takeover-links a::before { content: "0" counter(n); font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .8rem; font-weight: 400; letter-spacing: .1em; color: var(--dim); }
+.takeover-links a:hover { color: var(--cyan); padding-left: 10px; }
+.takeover-contact { gap: 28px; border-left: 1px solid var(--line); }
+.takeover-contact h2 { margin: 0; font-size: clamp(1.5rem, 2.6vw, 2.2rem); line-height: .9; letter-spacing: -.02em; }
+.takeover-contact ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.takeover-contact li a { font-size: 1.2rem; font-weight: 600; text-decoration: none; transition: color .2s; }
+.takeover-contact li a:hover { color: var(--cyan); }
+.takeover-contact li span { color: var(--muted); }
+.socials { display: flex; gap: 20px; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; }
+.socials a { text-decoration: none; color: var(--muted); transition: color .2s; }
+.socials a:hover { color: var(--cyan); }
+
+/* ================= HERO ================= */
+/* The signature shape: a big rounded bottom-right corner, plus an inverse
+   curve under the bottom-left that pours the hero into the next section. */
+.hero {
+  --curve: clamp(64px, 15vw, 240px);
+  --hero-base: #03505b; /* bottom colour of the gradient — the inverse curve uses it too */
+  position: relative; z-index: 2; isolation: isolate;
+  min-height: max(100svh, 640px); display: flex; align-items: flex-end;
+  padding: 140px 0 clamp(72px, 10vw, 140px);
+  border-bottom-right-radius: var(--curve);
+  background:
+    radial-gradient(70% 55% at 88% 0%, rgba(255,79,200,.28), transparent 70%),
+    linear-gradient(to top, var(--hero-base) 0%, #2a1145 52%, #4a1540 100%);
+}
+.hero::before, .hero::after {
+  content: ""; position: absolute; top: 100%; left: 0; z-index: -1;
+  width: var(--curve); height: var(--curve); pointer-events: none;
+}
+.hero::before { background: var(--hero-base); }
+.hero::after { background: var(--night); border-top-left-radius: var(--curve); }
+.hero + .section { z-index: 3; } /* keep the next section's content above the curve */
+.hero-ghosts { position: absolute; inset: 0; z-index: -2; overflow: hidden; border-radius: inherit; pointer-events: none; }
+.hero-title { margin: 0 0 40px; max-width: 14ch; font-size: clamp(2.4rem, 7.2vw, 7.4rem); }
+.hero-foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 32px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.hero-meta { margin: 0; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); text-align: right; line-height: 2; }
+
+/* pixel ghosts */
+.ghost {
+  --size: 40px; --c: rgba(0,165,255,.6);
+  --p: calc(var(--size) / 5);
+  --p1: var(--p); --p2: calc(var(--p) * 2); --p3: calc(var(--p) * 3); --p4: calc(var(--p) * 4);
+  --p5: calc(var(--p) * 5); --p6: calc(var(--p) * 6); --p9: calc(var(--p) * 9);
+  position: absolute; top: 0; left: var(--x);
+  width: var(--p5); height: calc(var(--p) * 15);
+  opacity: var(--o, .7); mix-blend-mode: plus-lighter; filter: blur(.5px);
+  transform-origin: center bottom;
+  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
+    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
+    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
+    linear-gradient(to bottom, var(--c) 0%, transparent 100%);
+  background-size:
+    var(--p3) var(--p2), var(--p1) var(--p2), var(--p1) var(--p2), var(--p1) var(--p2),
+    var(--p2) var(--p3), var(--p2) var(--p3), var(--p5) var(--p9);
+  background-position:
+    var(--p1) 0, 0 var(--p1), var(--p4) var(--p1), var(--p2) var(--p2),
+    0 var(--p3), var(--p3) var(--p3), 0 var(--p6);
+  animation: spooky var(--sd, 1s) ease-in-out infinite alternate, float var(--fd, 8s) linear infinite;
+  animation-delay: var(--delay, 0s), var(--delay, 0s);
+}
+.hero-ghosts.paused .ghost { animation-play-state: paused; }
+@keyframes spooky { 0%, 100% { transform: skew(1deg); scale: 1 1.2; } 50% { scale: 1.4 .6; } 100% { transform: skew(-1deg); } }
+@keyframes float { from { translate: 0 calc(var(--stage-h, 100vh) + 100%); } to { translate: 0 -100%; } }
+
+/* ================= AGENTS ================= */
+.services-head { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; margin-bottom: 56px; }
+.service-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.service { display: grid; grid-template-columns: 72px 1.1fr 1.3fr 1fr; gap: 24px; align-items: baseline; padding: 34px 12px; border-bottom: 1px solid var(--line); transition: background .3s; }
+.service:hover { background: linear-gradient(90deg, rgba(151,105,255,.08), transparent 70%); }
+.service-num { font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .8rem; letter-spacing: .1em; color: var(--dim); }
+.service h3 { margin: 0; font-size: clamp(1.25rem, 1.9vw, 1.6rem); line-height: 1; letter-spacing: -.01em; }
+.service h3 small { display: block; margin-top: 8px; font-stretch: 125%; font-size: .7rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+.service p { margin: 0; color: var(--muted); }
+.service ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.service li { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .7rem; letter-spacing: .06em; color: var(--muted); }
+
+/* ================= CUSTOMERS ================= */
+.work { background: var(--ink); }
+.work-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 48px; }
+.work-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+.work-card {
+  position: relative; isolation: isolate; overflow: hidden; grid-column: span 7;
+  display: flex; align-items: flex-end; min-height: 440px; padding: 32px;
+  border: 1px solid var(--line); border-radius: 24px; text-decoration: none;
+}
+.work-card:nth-child(2), .work-card:nth-child(3) { grid-column: span 5; }
+.work-media { position: absolute; inset: 0; z-index: -2; background: var(--fallback); transition: transform .9s var(--ease); }
+/* Set --img on a .work-card (style="--img:url(photo.jpg)") to drop in real imagery */
+.work-media::after { content: ""; position: absolute; inset: 0; background: var(--img, none) center / cover no-repeat; }
+.work-card::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(6,4,9,.88), rgba(6,4,9,0) 62%); }
+.work-card:hover .work-media { transform: scale(1.04); }
+.work-mark { position: absolute; top: 22px; right: 28px; z-index: -1; font-size: clamp(4rem, 9vw, 7.5rem); line-height: .8; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.16); }
+.wc-pink   { --fallback: radial-gradient(circle at 75% 30%, rgba(255,79,200,.45), transparent 55%), #12081a; }
+.wc-cyan   { --fallback: radial-gradient(circle at 30% 20%, rgba(73,231,255,.36), transparent 55%), #071217; }
+.wc-purple { --fallback: radial-gradient(circle at 70% 25%, rgba(151,105,255,.45), transparent 55%), #0e0918; }
+.wc-mix    { --fallback: radial-gradient(circle at 20% 30%, rgba(73,231,255,.28), transparent 50%), radial-gradient(circle at 85% 70%, rgba(255,79,200,.3), transparent 50%), #0c0814; }
+.work-meta { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; width: 100%; }
+.work-cat { font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+.work-meta h3 { margin: 8px 0 6px; font-size: clamp(1.4rem, 2.5vw, 2.1rem); line-height: .9; letter-spacing: -.02em; }
+.work-result { margin: 0; color: var(--muted); }
+.work-cta { padding: 10px 16px; border-radius: 999px; background: rgba(255,255,255,.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .75rem; letter-spacing: .08em; opacity: 0; transform: translateY(8px); transition: opacity .35s, transform .35s var(--ease); }
+.work-card:hover .work-cta, .work-card:focus-visible .work-cta { opacity: 1; transform: none; }
+@media (hover: none) { .work-cta { opacity: 1; transform: none; } }
+
+.proof { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: center; margin-top: 96px; padding-top: 56px; border-top: 1px solid var(--line); }
+.clients { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--line); }
+.clients span { padding: 28px 16px; background: var(--ink); text-align: center; font-weight: 600; font-size: 1.05rem; letter-spacing: -.01em; color: var(--muted); }
+.quote { margin: 0; }
+.quote blockquote { margin: 0; font-weight: 500; font-size: clamp(1.35rem, 2.4vw, 1.9rem); line-height: 1.3; letter-spacing: -.02em; }
+.quote figcaption { margin-top: 20px; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+.placeholder { color: var(--dim); }
+
+/* ================= GHOST SHIFT (live agent demo) ================= */
+.jam {
+  position: relative; isolation: isolate; overflow: hidden; text-align: center;
+  padding: clamp(88px, 10vw, 130px) 0 clamp(56px, 7vw, 80px);
+  border-block: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(151,105,255,.14), transparent 35%),
+    radial-gradient(circle at 80% 80%, rgba(255,79,200,.1), transparent 40%),
+    #08050c;
+}
+.jam-grid {
+  position: absolute; inset: 0; z-index: -1; padding: 8px;
+  display: grid; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); gap: 4px;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse at center, #000 25%, transparent 78%);
+}
+.cell { display: grid; place-items: center; min-width: 0; border: 1px solid rgba(255,255,255,.04); border-radius: 8px; background: rgba(255,255,255,.012); font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.16); transition: background .3s, border-color .3s, box-shadow .15s, color .3s; }
+.cell.scout { color: rgba(73,231,255,.4); }
+.cell.scribe { color: rgba(151,105,255,.55); }
+.cell.sentinel { color: rgba(255,79,200,.55); }
+.cell.done { background: rgba(151,105,255,.07); border-color: rgba(151,105,255,.2); color: rgba(255,255,255,.4); }
+.cell.lit { color: #fff; }
+.cell.lit-pink   { background: rgba(255,79,200,.22);  border-color: rgba(255,79,200,.5);  box-shadow: 0 0 22px rgba(255,79,200,.4); }
+.cell.lit-purple { background: rgba(151,105,255,.22); border-color: rgba(151,105,255,.5); box-shadow: 0 0 22px rgba(151,105,255,.4); }
+.cell.lit-cyan   { background: rgba(73,231,255,.18);  border-color: rgba(73,231,255,.45); box-shadow: 0 0 22px rgba(73,231,255,.38); }
+/* Intro fades out while the agents work, so the task board takes over */
+.jam-intro { transition: opacity .6s var(--ease), transform .6s var(--ease), filter .6s var(--ease); }
+.jam-on .jam-intro { opacity: 0; transform: translateY(-14px) scale(.98); filter: blur(6px); pointer-events: none; }
+.jam-grid { transition: opacity .6s var(--ease); opacity: .7; }
+.jam-on .jam-grid { opacity: 1; }
+.jam-title { margin: 0; font-size: clamp(2.4rem, 7vw, 6rem); transition: transform .15s; }
+.jam-beat .jam-title { transform: scale(1.012); }
+.jam-tagline { max-width: 500px; margin: 18px auto 0; color: var(--muted); }
+.jam-stage { position: relative; }
+.band { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 5%; width: min(380px, 76vw); margin: 40px auto 4px; }
+.agent { position: relative; z-index: 2; width: 27%; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: transform .2s var(--ease); }
+.agent-lead { width: 34%; margin-bottom: 4%; }
+.agent .sg { width: 100%; }
+.agent-name { font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); transition: color .2s; }
+.agent.hop { transform: translateY(-8%) scale(1.06); }
+.agent.hop .agent-name { color: var(--cyan); }
+.band-glow { position: absolute; inset: 10% 5%; border-radius: 50%; background: rgba(151,105,255,.3); filter: blur(50px); opacity: .45; transition: opacity .3s; }
+.jam-on .band-glow { opacity: 1; }
+.beat-word { position: absolute; left: 50%; top: 42%; z-index: -1; transform: translate(-50%, -50%) scale(.85); opacity: 0; pointer-events: none; font-size: clamp(2.6rem, 9vw, 7rem); color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.55); white-space: nowrap; transition: opacity .09s, transform .09s; }
+.beat-word.show { opacity: .2; transform: translate(-50%, -50%) scale(1); }
+.player { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; width: min(560px, 100%); margin: 24px auto 0; padding: 10px; border: 1px solid var(--line); border-radius: 999px; background: rgba(10,6,15,.78); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.play { display: inline-flex; align-items: center; gap: 12px; padding: 8px 22px 8px 8px; border: 0; border-radius: 999px; cursor: pointer; background: linear-gradient(135deg, var(--pink), var(--purple)); color: #fff; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .78rem; letter-spacing: .1em; white-space: nowrap; transition: transform .2s var(--ease), box-shadow .2s; }
+.play:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(151,105,255,.35); }
+.play-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,.22); font-size: .78rem; }
+.track { min-width: 0; padding-right: 18px; text-align: left; }
+.track-top { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .7rem; letter-spacing: .08em; color: var(--dim); white-space: nowrap; }
+.track-top span:first-child { overflow: hidden; text-overflow: ellipsis; }
+.progress { height: 4px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.1); }
+.progress span { display: block; width: 0; height: 100%; background: var(--grad); transition: width .2s; }
+.jam-key { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin: 18px 0 0; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.jam-key b { font-weight: 500; }
+.jam-key .k-scout { color: var(--cyan); }
+.jam-key .k-scribe { color: var(--purple); }
+.jam-key .k-sentinel { color: var(--pink); }
+
+/* SVG ghost */
+.sg { position: relative; z-index: 2; width: 130px; transition: transform .12s ease; }
+.sg svg { display: block; width: 100%; height: auto; }
+.sg .sg-body { animation: sg-bob 3s ease-out infinite; animation-delay: var(--d, 0s); filter: drop-shadow(0 0 18px rgba(73,231,255,.18)) drop-shadow(0 0 40px rgba(255,79,200,.14)); transition: filter .2s; }
+.sg .sg-shadow-frame { margin-top: 8%; }
+.sg .sg-shadow { width: 100%; height: auto; transform-origin: center; animation: sg-shrink 3s ease-out infinite; animation-delay: var(--d, 0s); }
+@keyframes sg-bob { 50% { transform: translate(0, 15%); } }
+@keyframes sg-shrink { 0%, 100% { transform: scaleX(.9); } 50% { transform: scaleX(.6); } }
+.jam-on .sg .sg-body { filter: drop-shadow(0 0 26px rgba(73,231,255,.3)) drop-shadow(0 0 56px rgba(255,79,200,.3)); }
+.jam-on .sg .sg-body, .jam-on .sg .sg-shadow { animation-duration: .96s; }
+
+/* ================= HOW IT WORKS ================= */
+.process { background: radial-gradient(circle at 50% 0%, rgba(151,105,255,.12), transparent 45%), var(--night); }
+.process-head { max-width: 760px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+.step { padding: 32px 28px 36px; border: 1px solid var(--line); border-radius: 22px; background: var(--panel); transition: border-color .3s, transform .3s var(--ease); }
+.step-num { display: inline-block; margin-bottom: 40px; font-size: 3.2rem; line-height: .9; letter-spacing: -.03em; }
+.step h3 { margin: 0 0 12px; font-size: 1.4rem; letter-spacing: -.01em; }
+.step p { margin: 0; color: var(--muted); }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 72px; border-top: 1px solid var(--line); }
+.stat { padding: 32px 8px 0; }
+.stat strong { display: block; font-size: clamp(1.9rem, 3.4vw, 3rem); line-height: .9; letter-spacing: -.03em; }
+.stat span { display: block; margin-top: 10px; font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+
+/* ================= DEMO ================= */
+.contact { background: radial-gradient(circle at 22% 30%, rgba(255,79,200,.12), transparent 45%), var(--ink); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: start; }
+.contact .sg { width: 104px; margin-bottom: 28px; }
+.contact-direct { display: grid; gap: 14px; margin-top: 36px; }
+.contact-direct a { font-weight: 600; font-size: 1.25rem; letter-spacing: -.01em; text-decoration: none; transition: color .2s; }
+.contact-direct a:hover { color: var(--cyan); }
+.contact-direct span { color: var(--muted); }
+.form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 32px; border: 1px solid var(--line); border-radius: 24px; background: var(--panel); }
+.field { display: grid; gap: 8px; }
+.field-full { grid-column: 1 / -1; }
+.field label { font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.field input, .field textarea { width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.03); color: var(--text); font: inherit; font-size: 1rem; transition: border-color .2s, background .2s, box-shadow .2s; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--purple); background: rgba(151,105,255,.06); box-shadow: 0 0 0 3px rgba(151,105,255,.2); }
+.field textarea { min-height: 140px; resize: vertical; }
+.form .btn { justify-self: start; }
+.form-note { grid-column: 1 / -1; margin: 0; font-size: .85rem; color: var(--dim); }
+
+.site-footer { padding: 28px 0 36px; border-top: 1px solid var(--line); background: var(--ink); font-family: var(--sans); font-stretch: 125%; font-weight: 500; font-size: .75rem; letter-spacing: .06em; color: var(--dim); }
+.site-footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+.site-footer nav { display: flex; gap: 20px; }
+.site-footer a { text-decoration: none; color: var(--muted); transition: color .2s; }
+.site-footer a:hover { color: var(--cyan); }
+
+
+/* ================= CYBER CARDS (tilt + glare + HUD details) ================= */
+.fx {
+  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+  position: relative; isolation: isolate; overflow: hidden;
+}
+.fx, .js .reveal.in.fx {
+  transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .7s var(--ease), border-color .3s, box-shadow .3s, opacity .9s var(--ease);
+}
+.js .reveal.in.fx.tilting { transition: transform .12s ease-out, border-color .3s, box-shadow .3s; }
+.fx:hover {
+  border-color: rgba(151,105,255,.4);
+  box-shadow: 0 34px 70px -28px rgba(0,0,0,.8), 0 0 46px -12px rgba(151,105,255,.45);
+}
+.fx > :not(.fx-layer):not(.work-media):not(.work-mark) { position: relative; z-index: 1; }
+.fx-layer { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: inherit; pointer-events: none; }
+
+.fx-glare {
+  position: absolute; inset: 0; opacity: 0; transition: opacity .35s;
+  background:
+    radial-gradient(420px circle at var(--mx) var(--my), rgba(255,255,255,.13), transparent 45%),
+    linear-gradient(125deg, transparent 38%, rgba(255,255,255,.05) 47%, rgba(255,255,255,.09) 50%, rgba(255,255,255,.05) 53%, transparent 62%);
+}
+.fx-glows i { position: absolute; width: 46%; aspect-ratio: 1; border-radius: 50%; filter: blur(28px); opacity: 0; transition: opacity .4s; }
+.fx-glows i:nth-child(1) { top: -18%; left: -14%; background: radial-gradient(circle, rgba(73,231,255,.35), transparent 70%); }
+.fx-glows i:nth-child(2) { top: 50%; right: -18%; transform: translateY(-50%); background: radial-gradient(circle, rgba(151,105,255,.38), transparent 70%); }
+.fx-glows i:nth-child(3) { bottom: -22%; left: 30%; background: radial-gradient(circle, rgba(255,79,200,.3), transparent 70%); }
+
+.fx-lines { position: absolute; inset: 0; opacity: 0; transition: opacity .4s; }
+.fx-lines span { position: absolute; left: 0; width: 100%; height: 1px; transform: scaleX(0); background: linear-gradient(90deg, transparent, rgba(151,105,255,.45), rgba(73,231,255,.35), transparent); animation: fx-line 3s linear infinite; }
+.fx-lines span:nth-child(1) { top: 20%; transform-origin: left; }
+.fx-lines span:nth-child(2) { top: 40%; transform-origin: right; animation-delay: 1s; }
+.fx-lines span:nth-child(3) { top: 60%; transform-origin: left; animation-delay: 2s; }
+.fx-lines span:nth-child(4) { top: 80%; transform-origin: right; animation-delay: 1.5s; }
+@keyframes fx-line { 0% { transform: scaleX(0); opacity: 0; } 50% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+
+.fx-scan { position: absolute; inset: 0; opacity: 0; transition: opacity .3s; background: linear-gradient(to bottom, transparent, rgba(151,105,255,.12) 48%, rgba(73,231,255,.18) 50%, transparent 52%, transparent); transform: translateY(-100%); }
+.fx:hover .fx-scan { opacity: 1; animation: fx-scan 2.4s linear infinite; }
+@keyframes fx-scan { to { transform: translateY(100%); } }
+
+.fx-particles span { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px currentColor; color: var(--cyan); opacity: 0; }
+.fx-particles span:nth-child(even) { background: var(--pink); color: var(--pink); }
+.fx-particles span:nth-child(1) { --x: 1;   --y: -1;  top: 40%; left: 20%; }
+.fx-particles span:nth-child(2) { --x: -1;  --y: -1;  top: 60%; right: 20%; }
+.fx-particles span:nth-child(3) { --x: .5;  --y: 1;   top: 20%; left: 40%; }
+.fx-particles span:nth-child(4) { --x: -.5; --y: 1;   top: 80%; right: 40%; }
+.fx-particles span:nth-child(5) { --x: 1;   --y: .5;  top: 30%; left: 60%; }
+.fx-particles span:nth-child(6) { --x: -1;  --y: .5;  top: 70%; right: 60%; }
+.fx:hover .fx-particles span { animation: fx-particle 2s infinite; }
+.fx:hover .fx-particles span:nth-child(2n) { animation-delay: .5s; }
+.fx:hover .fx-particles span:nth-child(3n) { animation-delay: 1s; }
+@keyframes fx-particle { 0% { transform: translate(0, 0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(calc(var(--x) * 40px), calc(var(--y) * 40px)); opacity: 0; } }
+
+.fx-corners span { position: absolute; width: 16px; height: 16px; border: 1.5px solid rgba(151,105,255,.35); transition: border-color .3s, filter .3s, top .35s var(--ease), right .35s var(--ease), bottom .35s var(--ease), left .35s var(--ease); }
+.fx-corners span:nth-child(1) { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.fx-corners span:nth-child(2) { top: 14px; right: 14px; border-left: 0; border-bottom: 0; }
+.fx-corners span:nth-child(3) { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
+.fx-corners span:nth-child(4) { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+.fx:hover .fx-corners span { border-color: rgba(73,231,255,.9); filter: drop-shadow(0 0 5px rgba(73,231,255,.7)); }
+.fx:hover .fx-corners span:nth-child(1) { top: 10px; left: 10px; }
+.fx:hover .fx-corners span:nth-child(2) { top: 10px; right: 10px; }
+.fx:hover .fx-corners span:nth-child(3) { bottom: 10px; left: 10px; }
+.fx:hover .fx-corners span:nth-child(4) { bottom: 10px; right: 10px; }
+
+.fx:hover .fx-glare, .fx:hover .fx-glows i, .fx:hover .fx-lines { opacity: 1; }
+.fx:active { --press: .985; }
+.fx.step:hover .step-num { filter: drop-shadow(0 0 14px rgba(151,105,255,.55)); }
+
+/* ================= CUSTOM SELECT ================= */
+.select { position: relative; }
+.select-btn {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px;
+  background: rgba(255,255,255,.03); color: var(--text); font: inherit; font-size: 1rem; text-align: left; cursor: pointer;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+}
+.select-btn:hover { border-color: rgba(255,255,255,.2); }
+.select-btn:focus-visible, .select.open .select-btn { outline: none; border-color: var(--purple); background: rgba(151,105,255,.06); box-shadow: 0 0 0 3px rgba(151,105,255,.2); }
+.select-value.is-placeholder { color: rgba(251,248,255,.4); }
+.select-chev { flex: none; width: 18px; height: 18px; color: var(--dim); transition: transform .3s var(--ease), color .2s; }
+.select.open .select-chev { transform: rotate(180deg); color: var(--cyan); }
+.select-list {
+  position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 30;
+  margin: 0; padding: 6px; list-style: none; max-height: 380px; overflow-y: auto; outline: none;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 16px;
+  background: linear-gradient(180deg, rgba(28,18,40,.94), rgba(14,9,20,.96));
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 28px 60px -12px rgba(0,0,0,.7), 0 0 0 1px rgba(151,105,255,.08), 0 0 50px -10px rgba(151,105,255,.3);
+  opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.98); transform-origin: top center;
+  transition: opacity .18s, transform .25s var(--ease), visibility 0s .25s;
+}
+.select.open .select-list { opacity: 1; visibility: visible; transform: none; transition: opacity .18s, transform .25s var(--ease); }
+.select-list:focus-visible { outline: none; }
+.select-list::before { content: ""; position: absolute; inset: 0 16px auto; height: 1px; background: var(--grad); opacity: .6; }
+.select-list li {
+  position: relative; display: grid; grid-template-columns: 1fr 18px; align-items: center; column-gap: 12px;
+  padding: 11px 12px 11px 16px; border-radius: 10px; cursor: pointer; transition: background .15s;
+}
+.select-list li::before { content: ""; position: absolute; left: 6px; top: 50%; width: 2px; height: 0; border-radius: 2px; background: var(--grad); transform: translateY(-50%); transition: height .2s var(--ease); }
+.select-list li span { font-weight: 500; }
+.select-list li small { grid-column: 1; font-size: .8rem; color: var(--dim); line-height: 1.4; }
+.select-list li svg { grid-column: 2; grid-row: 1 / span 2; width: 16px; height: 16px; color: var(--cyan); opacity: 0; transform: scale(.6); transition: opacity .2s, transform .2s var(--ease); }
+.select-list li.active { background: rgba(255,255,255,.06); }
+.select-list li.active::before { height: 60%; }
+.select-list li[aria-selected="true"] span { color: #fff; }
+.select-list li[aria-selected="true"] svg { opacity: 1; transform: none; }
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .services-head, .proof, .contact-grid { grid-template-columns: 1fr; }
+  .service { grid-template-columns: 44px 1fr; row-gap: 12px; }
+  .service p, .service ul { grid-column: 2; }
+  .service ul { justify-content: flex-start; }
+  .steps { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); row-gap: 16px; }
+  .hero-meta { text-align: left; }
+}
+@media (max-width: 800px) {
+  .takeover { grid-template-columns: 1fr; }
+  .takeover-links { padding-top: 110px; padding-bottom: 32px; }
+  .takeover-contact { padding-top: 40px; border-left: 0; border-top: 1px solid var(--line); }
+  .work-card, .work-card:nth-child(2), .work-card:nth-child(3) { grid-column: 1 / -1; min-height: 340px; }
+}
+@media (max-width: 700px) {
+  .cell { font-size: 0; }
+}
+@media (max-width: 560px) {
+  .bar { height: 68px; }
+  .brand-mark { width: 26px; height: 28px; }
+  .brand-word { font-size: 1.4rem; }
+  .player { grid-template-columns: 1fr; border-radius: 22px; }
+  .play { justify-content: center; }
+  .track { padding: 0 8px 6px; }
+  .form { grid-template-columns: 1fr; padding: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-ghosts { display: none; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .brand-mark, .brand-eyes { animation: none; }
+  .sg .sg-body, .sg .sg-shadow { animation: none !important; }
+  .jam-beat .jam-title, .agent.hop { transform: none; }
+  .beat-word { display: none; }
+  .fx-lines, .fx-scan, .fx-particles { display: none; }
+  .select-list, .select-chev { transition: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header" data-section="nav">
+  <div class="bar">
+    <a class="brand" href="#top" aria-label="Haunt — home">
+      <svg class="brand-mark" viewBox="0 0 32 34" aria-hidden="true">
+        <defs>
+          <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#49e7ff"/>
+            <stop offset=".55" stop-color="#9769ff"/>
+            <stop offset="1" stop-color="#ff4fc8"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#brandGrad)" d="M4 31V15a12 12 0 0 1 24 0v16l-4-3-4 3-4-3-4 3-4-3z"/>
+        <g class="brand-eyes" fill="#060409">
+          <rect x="10" y="13" width="4" height="6" rx="2"/>
+          <rect x="18" y="13" width="4" height="6" rx="2"/>
+        </g>
+      </svg>
+      <span class="brand-word">haunt<span class="dot">.</span></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="takeover">
+      <span class="menu-text">Menu</span>
+      <span class="menu-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<nav class="takeover" id="takeover" aria-label="Main" data-section="menu">
+  <div class="takeover-links">
+    <ol>
+      <li><a href="#agents">Agents</a></li>
+      <li><a href="#customers">Customers</a></li>
+      <li><a href="#live">Live demo</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#demo">Book a demo</a></li>
+    </ol>
+  </div>
+  <div class="takeover-contact">
+    <p class="eyebrow" style="margin:0">Talk to us</p>
+    <h2>Meet your agents on your own data<span class="dot">.</span></h2>
+    <ul>
+      <li><a href="mailto:hello@haunt.example">hello@haunt.example</a></li>
+      <li><a href="tel:+15550142">+1 555-0142</a></li>
+      <li><span>Fully remote · on shift 24/7</span></li>
+    </ul>
+    <div class="socials">
+      <a href="#">LinkedIn</a><a href="#">X</a><a href="#">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="top" data-section="hero">
+    <div class="hero-ghosts" id="heroGhosts" aria-hidden="true"></div>
+    <div class="wrap">
+      <h1 class="hero-title">AI agents that work like <span class="grad-text">ghosts</span><span class="dot">.</span></h1>
+      <div class="hero-foot">
+        <div>
+          <p class="lede">Haunt slips invisible AI agents into the tools your team already uses. They research, write and ship in the background, and you only notice them when the work is done.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#demo">Summon your first agent →</a>
+            <a class="btn btn-ghost" href="#live">Watch them work</a>
+          </div>
+        </div>
+        <p class="hero-meta">Lives in Slack, Notion, HubSpot + 40 more<br>No new tab · No new dashboard</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AGENTS ================= -->
+  <section class="section" id="agents" data-section="agents">
+    <div class="wrap">
+      <div class="services-head reveal">
+        <div>
+          <p class="eyebrow">01 — The agents</p>
+          <h2 class="h2">Invisible by <span class="outline">design</span><span class="dot">.</span></h2>
+        </div>
+        <p class="lede">Four agents share one memory of your business. They pass through walls between apps, work while you sleep, and never ask for a status meeting.</p>
+      </div>
+      <ul class="service-list">
+        <li class="service reveal">
+          <span class="service-num">01</span>
+          <h3>Scout<small>Research agent</small></h3>
+          <p>Researches accounts, competitors and markets overnight, then leaves a brief exactly where you’ll look for it.</p>
+          <ul><li>Account intel</li><li>Web research</li><li>Briefs</li></ul>
+        </li>
+        <li class="service reveal">
+          <span class="service-num">02</span>
+          <h3>Scribe<small>Writing agent</small></h3>
+          <p>Drafts emails, posts, docs and ad copy in your voice, right inside the tools you already write in.</p>
+          <ul><li>Brand voice</li><li>Drafts in place</li><li>Variants</li></ul>
+        </li>
+        <li class="service reveal">
+          <span class="service-num">03</span>
+          <h3>Sentinel<small>Watch agent</small></h3>
+          <p>Watches campaigns, pipelines and inboxes around the clock, and fixes small problems before anyone sees them.</p>
+          <ul><li>Monitoring</li><li>Auto-fix</li><li>Quiet alerts</li></ul>
+        </li>
+        <li class="service reveal">
+          <span class="service-num">04</span>
+          <h3>Poltergeist<small>Ops agent</small></h3>
+          <p>Moves data between apps, updates records and clears the busywork nobody should be doing by hand.</p>
+          <ul><li>CRM hygiene</li><li>Workflows</li><li>Integrations</li></ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= CUSTOMERS ================= -->
+  <section class="section work" id="customers" data-section="customers">
+    <div class="wrap">
+      <div class="work-head reveal">
+        <div>
+          <p class="eyebrow">02 — Customer stories</p>
+          <h2 class="h2" style="margin:0">Quietly, <span class="outline">everywhere</span><span class="dot">.</span></h2>
+        </div>
+        <a href="#" class="link">All customer stories →</a>
+      </div>
+
+      <!-- Add real imagery per card: style="--img:url('isla-surf.jpg')" -->
+      <div class="work-grid">
+        <a href="#" class="work-card wc-pink reveal fx">
+          <div class="work-media"></div><span class="work-mark" aria-hidden="true">IS</span>
+          <div class="work-meta">
+            <div><span class="work-cat">Travel · Scout + Scribe</span><h3>Isla Surf Co.</h3><p class="work-result">+182% online bookings</p></div>
+            <span class="work-cta">Read the story →</span>
+          </div>
+        </a>
+        <a href="#" class="work-card wc-cyan reveal fx">
+          <div class="work-media"></div><span class="work-mark" aria-hidden="true">CB</span>
+          <div class="work-meta">
+            <div><span class="work-cat">Hospitality · Scribe</span><h3>Café Borinquen</h3><p class="work-result">4.6× return on ad spend</p></div>
+            <span class="work-cta">Read the story →</span>
+          </div>
+        </a>
+        <a href="#" class="work-card wc-purple reveal fx">
+          <div class="work-media"></div><span class="work-mark" aria-hidden="true">NC</span>
+          <div class="work-meta">
+            <div><span class="work-cat">Healthcare · Sentinel</span><h3>Northwind Clinics</h3><p class="work-result">2.3M organic impressions</p></div>
+            <span class="work-cta">Read the story →</span>
+          </div>
+        </a>
+        <a href="#" class="work-card wc-mix reveal fx">
+          <div class="work-media"></div><span class="work-mark" aria-hidden="true">VB</span>
+          <div class="work-meta">
+            <div><span class="work-cat">E-commerce · Poltergeist</span><h3>Volta Bikes</h3><p class="work-result">Sold out first run in 9 days</p></div>
+            <span class="work-cta">Read the story →</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="proof reveal">
+        <div>
+          <p class="eyebrow">Teams quietly haunted by Haunt</p>
+          <div class="clients">
+            <span>Isla Surf Co.</span><span>Café Borinquen</span>
+            <span>Northwind Clinics</span><span>Volta Bikes</span>
+          </div>
+        </div>
+        <!-- Replace with a real customer quote and attribution -->
+        <figure class="quote">
+          <blockquote class="placeholder">“Your strongest customer quote goes here — one or two sentences about the work that started getting done without anyone noticing.”</blockquote>
+          <figcaption>Name · Head of Growth, Company</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GHOST SHIFT (live agent demo) ================= -->
+  <section class="jam" id="live" aria-labelledby="jamTitle" data-section="live-demo" data-component="ghost-shift">
+    <div class="jam-grid" id="jamGrid" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="jam-intro">
+        <h2 class="jam-title" id="jamTitle">Ghost <span class="outline">Shift</span></h2>
+        <p class="jam-tagline">This is your backlog while you sleep. Summon the agents and watch them clear 100 tasks without a single meeting.</p>
+      </div>
+
+      <div class="jam-stage">
+        <figure class="band" aria-label="Three ghost agents: Scout, Sentinel and Scribe">
+          <div class="band-glow"></div>
+          <div class="agent" data-agent="scout"><div class="sg" style="--d:-.4s"></div><span class="agent-name">Scout</span></div>
+          <div class="agent agent-lead" data-agent="sentinel"><div class="sg" style="--d:0s"></div><span class="agent-name">Sentinel</span></div>
+          <div class="agent" data-agent="scribe"><div class="sg" style="--d:-1.1s"></div><span class="agent-name">Scribe</span></div>
+        </figure>
+        <div class="beat-word" id="beatWord" aria-hidden="true">SCOUT</div>
+      </div>
+
+      <div class="player">
+        <button class="play" id="playBtn" type="button" aria-pressed="false">
+          <span class="play-icon" id="playIcon" aria-hidden="true">▶</span>
+          <span id="playLabel">SUMMON AGENTS</span>
+        </button>
+        <div class="track">
+          <div class="track-top"><span id="trackState">BACKLOG: 100 TASKS</span><span id="trackTime">0 / 100</span></div>
+          <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+        </div>
+      </div>
+      <p class="jam-key">
+        <span><b class="k-scout">×3</b> Scout researches</span>
+        <span><b class="k-scribe">×5</b> Scribe drafts</span>
+        <span><b class="k-sentinel">×15</b> Sentinel ships</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section class="section process" id="how" data-section="how-it-works">
+    <div class="wrap">
+      <div class="process-head reveal">
+        <p class="eyebrow">03 — How it works</p>
+        <h2 class="h2">Summon. Assign. <span class="outline">Vanish</span><span class="dot">.</span></h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal fx">
+          <span class="step-num grad-text">01</span>
+          <h3>Summon</h3>
+          <p>Connect your tools in minutes. Agents appear wherever your team already works. No new tab to learn.</p>
+        </div>
+        <div class="step reveal fx">
+          <span class="step-num grad-text">02</span>
+          <h3>Assign</h3>
+          <p>Give them a goal in plain English. They split the work, check each other’s output and ask only when it matters.</p>
+        </div>
+        <div class="step reveal fx">
+          <span class="step-num grad-text">03</span>
+          <h3>Vanish</h3>
+          <p>They work in the background and surface only when there’s something worth seeing: a draft, a fix, a win.</p>
+        </div>
+      </div>
+      <div class="stats reveal">
+        <div class="stat"><strong>120+</strong><span>Teams haunted</span></div>
+        <div class="stat"><strong>40+</strong><span>Integrations</span></div>
+        <div class="stat"><strong>24/7</strong><span>Always on shift</span></div>
+        <div class="stat"><strong>10 min</strong><span>Average setup</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DEMO ================= -->
+  <section class="section contact" id="demo" data-section="cta">
+    <div class="wrap contact-grid">
+      <div class="reveal">
+        <div class="sg" style="--d:-.6s" role="img" aria-label="Floating ghost"></div>
+        <p class="eyebrow">04 — Get started</p>
+        <h2 class="h2">Let something <span class="outline">haunt you</span><span class="dot">.</span></h2>
+        <p class="lede">Book a 20-minute demo and we’ll summon an agent on your own data, or start free and give it its first task today.</p>
+        <div class="contact-direct">
+          <a href="mailto:hello@haunt.example">hello@haunt.example</a>
+          <a href="tel:+15550142">+1 555-0142</a>
+          <span>Fully remote · on shift 24/7</span>
+        </div>
+      </div>
+
+      <!-- Opens the visitor's email app. Swap the submit handler for a form service (Formspree, Netlify Forms, etc.) when ready. -->
+      <form class="form reveal" id="contactForm">
+        <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="f-company">Company</label><input id="f-company" name="company" autocomplete="organization"></div>
+        <div class="field">
+          <label id="f-team-label" for="f-team">Team size</label>
+          <div class="select" data-select>
+            <input type="hidden" name="team" value="">
+            <button class="select-btn" id="f-team" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="team-list" aria-labelledby="f-team-label f-team-value">
+              <span class="select-value is-placeholder" id="f-team-value">Select team size</span>
+              <svg class="select-chev" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <ul class="select-list" id="team-list" role="listbox" tabindex="-1" aria-labelledby="f-team-label">
+              <li role="option" id="team-opt-0" data-value="Just me" aria-selected="false"><span>Just me</span><small>Solo founder or freelancer</small><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+              <li role="option" id="team-opt-1" data-value="2–10" aria-selected="false"><span>2–10</span><small>A small, scrappy team</small><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+              <li role="option" id="team-opt-2" data-value="11–50" aria-selected="false"><span>11–50</span><small>Growing team, several channels</small><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+              <li role="option" id="team-opt-3" data-value="51–200" aria-selected="false"><span>51–200</span><small>Multiple teams to coordinate</small><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+              <li role="option" id="team-opt-4" data-value="200+" aria-selected="false"><span>200+</span><small>Enterprise rollout and SSO</small><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></li>
+            </ul>
+          </div>
+        </div>
+        <div class="field field-full"><label for="f-msg">What should your first agent do?</label><textarea id="f-msg" name="message" required placeholder="e.g. Research every inbound lead and draft a reply before I’m online."></textarea></div>
+        <button class="btn" type="submit">Book my demo →</button>
+        <p class="form-note">We’ll confirm a time within one business day.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer" data-section="footer">
+  <div class="wrap">
+    <span>© 2026 Haunt · Fictional brand, invented figures</span>
+    <nav aria-label="Social"><a href="#">LinkedIn</a><a href="#">X</a><a href="#">GitHub</a></nav>
+  </div>
+</footer>
+
+<template id="ghostTpl">
+  <svg class="sg-body" viewBox="0 0 127.433 132.743" aria-hidden="true">
+    <path fill="#FFF6F4" d="M116.223,125.064c1.032-1.183,1.323-2.73,1.391-3.747V54.76c0,0-4.625-34.875-36.125-44.375s-66,6.625-72.125,44l-0.781,63.219c0.062,4.197,1.105,6.177,1.808,7.006c1.94,1.811,5.408,3.465,10.099-0.6c7.5-6.5,8.375-10,12.75-6.875s5.875,9.75,13.625,9.25s12.75-9,13.75-9.625s4.375-1.875,7,1.25s5.375,8.25,12.875,7.875s12.625-8.375,12.625-8.375s2.25-3.875,7.25,0.375s7.625,9.75,14.375,8.125C114.739,126.01,115.412,125.902,116.223,125.064z"/>
+    <circle fill="#013E51" cx="86.238" cy="57.885" r="6.667"/>
+    <circle fill="#013E51" cx="40.072" cy="57.885" r="6.667"/>
+    <path fill="#013E51" d="M71.916,62.782c0.05-1.108-0.809-2.046-1.917-2.095c-0.673-0.03-1.28,0.279-1.667,0.771c-0.758,0.766-2.483,2.235-4.696,2.358c-1.696,0.094-3.438-0.625-5.191-2.137c-0.003-0.003-0.007-0.006-0.011-0.009l0.002,0.005c-0.332-0.294-0.757-0.488-1.235-0.509c-1.108-0.049-2.046,0.809-2.095,1.917c-0.032,0.724,0.327,1.37,0.887,1.749c-0.001,0-0.002-0.001-0.003-0.001c2.221,1.871,4.536,2.88,6.912,2.986c0.333,0.014,0.67,0.012,1.007-0.01c3.163-0.191,5.572-1.942,6.888-3.166l0.452-0.453c0.021-0.019,0.04-0.041,0.06-0.061l0.034-0.034c-0.007,0.007-0.015,0.014-0.021,0.02C71.666,63.771,71.892,63.307,71.916,62.782z"/>
+    <g fill="#FCEFED" stroke="#FEEBE6" stroke-miterlimit="10">
+      <circle cx="18.614" cy="99.426" r="3.292"/>
+      <circle cx="95.364" cy="28.676" r="3.291"/>
+      <circle cx="24.739" cy="93.551" r="2.667"/>
+      <circle cx="101.489" cy="33.051" r="2.666"/>
+      <circle cx="18.738" cy="87.717" r="2.833"/>
+      <path d="M116.279,55.814c-0.021-0.286-2.323-28.744-30.221-41.012c-7.806-3.433-15.777-5.173-23.691-5.173c-16.889,0-30.283,7.783-37.187,15.067c-9.229,9.736-13.84,26.712-14.191,30.259l-0.748,62.332c0.149,2.133,1.389,6.167,5.019,6.167c1.891,0,4.074-1.083,6.672-3.311c4.96-4.251,7.424-6.295,9.226-6.295c1.339,0,2.712,1.213,5.102,3.762c4.121,4.396,7.461,6.355,10.833,6.355c2.713,0,5.311-1.296,7.942-3.962c3.104-3.145,5.701-5.239,8.285-5.239c2.116,0,4.441,1.421,7.317,4.473c2.638,2.8,5.674,4.219,9.022,4.219c4.835,0,8.991-2.959,11.27-5.728l0.086-0.104c1.809-2.2,3.237-3.938,5.312-3.938c2.208,0,5.271,1.942,9.359,5.936c0.54,0.743,3.552,4.674,6.86,4.674c1.37,0,2.559-0.65,3.531-1.932l0.203-0.268L116.279,55.814z M114.281,121.405c-0.526,0.599-1.096,0.891-1.734,0.891c-2.053,0-4.51-2.82-5.283-3.907l-0.116-0.136c-4.638-4.541-7.975-6.566-10.82-6.566c-3.021,0-4.884,2.267-6.857,4.667l-0.086,0.104c-1.896,2.307-5.582,4.999-9.725,4.999c-2.775,0-5.322-1.208-7.567-3.59c-3.325-3.528-6.03-5.102-8.772-5.102c-3.278,0-6.251,2.332-9.708,5.835c-2.236,2.265-4.368,3.366-6.518,3.366c-2.772,0-5.664-1.765-9.374-5.723c-2.488-2.654-4.29-4.395-6.561-4.395c-2.515,0-5.045,2.077-10.527,6.777c-2.727,2.337-4.426,2.828-5.37,2.828c-2.662,0-3.017-4.225-3.021-4.225l0.745-62.163c0.332-3.321,4.767-19.625,13.647-28.995c3.893-4.106,10.387-8.632,18.602-11.504c-0.458,0.503-0.744,1.165-0.744,1.898c0,1.565,1.269,2.833,2.833,2.833c1.564,0,2.833-1.269,2.833-2.833c0-1.355-0.954-2.485-2.226-2.764c4.419-1.285,9.269-2.074,14.437-2.074c7.636,0,15.336,1.684,22.887,5.004c26.766,11.771,29.011,39.047,29.027,39.251V121.405z"/>
+    </g>
+  </svg>
+  <div class="sg-shadow-frame">
+    <svg class="sg-shadow" viewBox="0 0 122.436 39.744" aria-hidden="true">
+      <ellipse fill="rgba(151,105,255,.35)" cx="61.128" cy="19.872" rx="49.25" ry="8.916"/>
+    </svg>
+  </div>
+</template>
+
+<script>
+document.documentElement.classList.add('js');
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- Header state ----------
+(function () {
+  const header = document.querySelector('.site-header');
+  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+// ---------- Takeover nav ----------
+(function () {
+  const btn = document.getElementById('menuBtn');
+  const nav = document.getElementById('takeover');
+  const text = btn.querySelector('.menu-text');
+  const isOpen = () => document.body.classList.contains('nav-open');
+  function setNav(open) {
+    document.body.classList.toggle('nav-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    text.textContent = open ? 'Close' : 'Menu';
+    nav.inert = !open;
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) nav.querySelector('a').focus({ preventScroll: true });
+  }
+  nav.inert = true;
+  btn.addEventListener('click', () => setNav(!isOpen()));
+  nav.addEventListener('click', e => { if (e.target.closest('a[href^="#"]')) setNav(false); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && isOpen()) { setNav(false); btn.focus(); }
+  });
+})();
+
+// ---------- Hero pixel ghosts (20, paused offscreen) ----------
+(function () {
+  if (reduceMotion) return;
+  const stage = document.getElementById('heroGhosts');
+  const sizes = [50, 80, 40, 30, 60, 30, 60, 20, 40, 70, 50, 80, 30, 60, 40, 70, 20, 50, 80, 40];
+  sizes.forEach((s, i) => {
+    const g = document.createElement('span');
+    const m = i % 5;
+    g.className = 'ghost';
+    g.style.cssText =
+      '--size:' + s + 'px;' +
+      '--x:' + (2 + i / sizes.length * 96).toFixed(2) + '%;' +
+      '--sd:' + ((m + 1) * .65).toFixed(2) + 's;' +
+      '--fd:' + ((m + 1) * 2.3 + 5).toFixed(2) + 's;' +
+      '--delay:' + (-i * 1.7).toFixed(1) + 's;' +
+      '--o:' + (.3 + s / 80 * .45).toFixed(2);
+    stage.appendChild(g);
+  });
+  const setH = () => stage.style.setProperty('--stage-h', stage.offsetHeight + 'px');
+  setH();
+  window.addEventListener('resize', setH);
+  new IntersectionObserver(([e]) => stage.classList.toggle('paused', !e.isIntersecting)).observe(stage);
+})();
+
+// ---------- SVG ghosts ----------
+(function () {
+  const tpl = document.getElementById('ghostTpl');
+  document.querySelectorAll('.sg').forEach(el => el.appendChild(tpl.content.cloneNode(true)));
+})();
+
+// ---------- Scroll reveals ----------
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  if (reduceMotion || !('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('in')); return; }
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -8% 0px' });
+  els.forEach(el => io.observe(el));
+})();
+
+// ---------- Ghost Shift: agents clear a 100-task backlog (visual only) ----------
+(function () {
+  const section = document.getElementById('live');
+  const grid = document.getElementById('jamGrid');
+  const ACTION = { scout: 'researched', scribe: 'drafted', sentinel: 'shipped' };
+  const role = n => n % 15 === 0 ? 'sentinel' : n % 3 === 0 ? 'scout' : n % 5 === 0 ? 'scribe' : null;
+  const pad = n => String(n).padStart(2, '0');
+  const cells = [];
+  for (let n = 1; n <= 100; n++) {
+    const r = role(n);
+    const c = document.createElement('div');
+    c.className = 'cell' + (r ? ' ' + r : '');
+    c.textContent = r || pad(n);
+    grid.appendChild(c);
+    cells.push({ n, r, el: c });
+  }
+  const agentEls = {};
+  section.querySelectorAll('.agent').forEach(a => { agentEls[a.dataset.agent] = a; });
+
+  const btn = document.getElementById('playBtn');
+  const icon = document.getElementById('playIcon');
+  const playLabel = document.getElementById('playLabel');
+  const stateEl = document.getElementById('trackState');
+  const countEl = document.getElementById('trackTime');
+  const bar = document.getElementById('progressBar');
+  const beatWord = document.getElementById('beatWord');
+  const colors = ['lit-pink', 'lit-purple', 'lit-cyan'];
+
+  const BEAT_MS = 480; // one task cleared every 480ms
+  let playing = false, timer = null;
+  let taskPtr = 0, cleared = 0;
+  const SPB = BEAT_MS / 1000;
+
+  // One beat = one task cleared. After 100, the backlog refills and the shift starts over.
+  function beat() {
+    const idx = taskPtr % 100;
+    if (idx === 0 && taskPtr > 0) cells.forEach(c => c.el.classList.remove('done'));
+    taskPtr++;
+    cleared = idx + 1;
+    const cur = cells[idx];
+    const picks = [cur, ...Array.from({ length: 3 }, () => cells[Math.random() * 100 | 0])];
+    picks.forEach(p => {
+      const col = colors[Math.random() * colors.length | 0];
+      p.el.classList.add('lit', col);
+      setTimeout(() => p.el.classList.remove('lit', col), SPB * 900);
+    });
+    cur.el.classList.add('done');
+    section.classList.add('jam-beat');
+    setTimeout(() => section.classList.remove('jam-beat'), 110);
+    if (cur.r) {
+      beatWord.textContent = cur.r.toUpperCase();
+      beatWord.classList.add('show');
+      setTimeout(() => beatWord.classList.remove('show'), 260);
+      const a = agentEls[cur.r];
+      a.classList.add('hop');
+      setTimeout(() => a.classList.remove('hop'), 240);
+    }
+    stateEl.textContent = 'T-' + pad(cur.n) + (cur.r ? ' → ' + cur.r.toUpperCase() + ' ' + ACTION[cur.r].toUpperCase() : ' → CLEARED');
+    countEl.textContent = cleared + ' / 100';
+    bar.style.width = cleared + '%';
+  }
+
+  function start() {
+    playing = true;
+    section.classList.add('jam-on');
+    btn.setAttribute('aria-pressed', 'true');
+    icon.textContent = '❚❚';
+    playLabel.textContent = 'SEND THEM HOME';
+    beat();
+    timer = setInterval(beat, BEAT_MS);
+  }
+
+  function stop() {
+    playing = false;
+    section.classList.remove('jam-on', 'jam-beat');
+    btn.setAttribute('aria-pressed', 'false');
+    icon.textContent = '▶';
+    playLabel.textContent = 'SUMMON AGENTS';
+    stateEl.textContent = 'AGENTS RESTING · ' + (100 - cleared) + ' LEFT';
+    clearInterval(timer);
+  }
+
+  btn.addEventListener('click', () => playing ? stop() : start());
+})();
+
+// ---------- Cyber cards: decorative layers + pointer tilt ----------
+(function () {
+  const cards = document.querySelectorAll('.fx');
+  const n = (k, tag = 'span') => Array.from({ length: k }, () => `<${tag}></${tag}>`).join('');
+  const decor =
+    '<div class="fx-layer" aria-hidden="true">' +
+      '<div class="fx-glows">' + n(3, 'i') + '</div>' +
+      '<div class="fx-lines">' + n(4) + '</div>' +
+      '<div class="fx-particles">' + n(6) + '</div>' +
+      '<div class="fx-scan"></div>' +
+      '<div class="fx-glare"></div>' +
+      '<div class="fx-corners">' + n(4) + '</div>' +
+    '</div>';
+  cards.forEach(c => c.insertAdjacentHTML('afterbegin', decor));
+  if (reduceMotion || !matchMedia('(hover: hover)').matches) return;
+
+  cards.forEach(card => {
+    const max = card.classList.contains('work-card') ? 7 : 10;
+    let raf = 0;
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        card.classList.add('tilting');
+        card.style.setProperty('--rx', ((.5 - y) * 2 * max).toFixed(2) + 'deg');
+        card.style.setProperty('--ry', ((x - .5) * 2 * max).toFixed(2) + 'deg');
+        card.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+      });
+    });
+    card.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(raf);
+      card.classList.remove('tilting');
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
+    });
+  });
+})();
+
+// ---------- Custom select (listbox) ----------
+(function () {
+  document.querySelectorAll('[data-select]').forEach(root => {
+    const btn = root.querySelector('.select-btn');
+    const list = root.querySelector('.select-list');
+    const input = root.querySelector('input[type="hidden"]');
+    const label = root.querySelector('.select-value');
+    const opts = Array.from(list.querySelectorAll('[role="option"]'));
+    let active = -1, typed = '', typedTimer = 0;
+
+    const isOpen = () => root.classList.contains('open');
+    function setActive(i) {
+      active = Math.max(0, Math.min(opts.length - 1, i));
+      opts.forEach((o, j) => o.classList.toggle('active', j === active));
+      list.setAttribute('aria-activedescendant', opts[active].id);
+      opts[active].scrollIntoView({ block: 'nearest' });
+    }
+    function open() {
+      root.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      const sel = opts.findIndex(o => o.getAttribute('aria-selected') === 'true');
+      setActive(sel >= 0 ? sel : 0);
+      list.focus({ preventScroll: true });
+    }
+    function close(focusBtn = true) {
+      root.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      if (focusBtn) btn.focus({ preventScroll: true });
+    }
+    function choose(i) {
+      opts.forEach((o, j) => o.setAttribute('aria-selected', String(j === i)));
+      input.value = opts[i].dataset.value;
+      label.textContent = opts[i].dataset.value;
+      label.classList.remove('is-placeholder');
+      close();
+    }
+
+    btn.addEventListener('click', () => isOpen() ? close() : open());
+    btn.addEventListener('keydown', e => {
+      if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); open(); }
+    });
+    opts.forEach((o, i) => {
+      o.addEventListener('click', () => choose(i));
+      o.addEventListener('pointermove', () => { if (active !== i) setActive(i); });
+    });
+    list.addEventListener('keydown', e => {
+      switch (e.key) {
+        case 'ArrowDown': e.preventDefault(); setActive(active + 1); break;
+        case 'ArrowUp': e.preventDefault(); setActive(active - 1); break;
+        case 'Home': e.preventDefault(); setActive(0); break;
+        case 'End': e.preventDefault(); setActive(opts.length - 1); break;
+        case 'Enter': case ' ': e.preventDefault(); choose(active); break;
+        case 'Escape': e.preventDefault(); close(); break;
+        case 'Tab': close(false); break;
+        default:
+          if (e.key.length === 1) {
+            typed += e.key.toLowerCase();
+            clearTimeout(typedTimer); typedTimer = setTimeout(() => { typed = ''; }, 500);
+            const hit = opts.findIndex(o => o.dataset.value.toLowerCase().startsWith(typed));
+            if (hit >= 0) setActive(hit);
+          }
+      }
+    });
+    document.addEventListener('pointerdown', e => { if (isOpen() && !root.contains(e.target)) close(false); });
+  });
+})();
+
+// ---------- Demo form ----------
+(function () {
+  const form = document.getElementById('contactForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const body =
+      'Name: ' + f.get('name') + '\n' +
+      'Email: ' + f.get('email') + '\n' +
+      'Company: ' + (f.get('company') || '—') + '\n' +
+      'Team size: ' + (f.get('team') || '—') + '\n\n' +
+      'First agent task: ' + f.get('message');
+    window.location.href = 'mailto:hello@haunt.example?subject=' +
+      encodeURIComponent('Haunt demo request — ' + f.get('name')) +
+      '&body=' + encodeURIComponent(body);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1360 @@
+<!doctype html>
+<!--
+  INSTALANDING.AI · Paper Sun Agent Page
+  slug     paper-sun-agent-page
+  prompt   https://instalanding.ai/p/paper-sun-agent-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/paper-sun-agent-page
+  license  MIT. Fictional brand; replace names, copy, prices and numbers before shipping.
+
+  MAP
+  tokens    .db custom properties at the top of <style>: --color-page (deep night navy), --color-panel,
+            --color-line, the dusk ramp --color-ember / --color-flame / --color-marigold / --color-sky, and the
+            deep blues. Bricolage Grotesque (display, .display), Figtree (body), JetBrains Mono (labels),
+            all from Google Fonts. Colours are oklch throughout.
+  sections  nav, hero, how-it-works, features, run-log, pricing, faq, cta, footer
+  scripts   one inline <script>: (1) the page data and the Component class (night stops, run log, stickers);
+            (2) a small binder that renders the markup's data-b-* attributes, data-t text, <template data-for>
+            lists and <template data-if> blocks from Component.renderVals(), re-applying nodes in place.
+            Component: the night arc auto-advances every 4.5s (six hours, dusk to daybreak); the run log
+            reveals a row every 1.4s, pauses on a refund needing review, and replays; clicking the hero
+            panel slaps a peel-in "done" sticker where you clicked.
+  assets    none: the paper-cut sun scenes, panels and icons are inline SVG and CSS.
+
+  ADAPTING
+  - Text that changes lives in the data arrays at the top of the script (NIGHT, RUN, LABELS, COLORS);
+    the markup only holds {{placeholders}} via data-b-* and data-t, so edit the arrays, not the nodes.
+  - The hero art and the night arc are sized in cqi against container-type: inline-size boxes (.art,
+    .night). Give them a width, never a fixed height, or everything inside rescales wrongly.
+  - Stickers peel in with an @property --p animation and per-sticker geometry computed in makeSticker();
+    the fold axis comes from --u0/--u1, so pass a new angle rather than editing the CSS transforms.
+  - prefers-reduced-motion stops the timers, shows the whole run log and pins the night at dusk.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daybreak — agents for the night shift</title>
+<meta name="description" content="Daybreak runs AI agents on the work your team keeps pushing to tomorrow, and has it waiting, checked and reviewable, when you log on.">
+<meta name="theme-color" content="#0b1023">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@property --p { syntax: "<number>"; inherits: true; initial-value: 1; }
+body { margin: 0; background: oklch(14% 0.045 265); }
+*, *::before, *::after { box-sizing: border-box; }
+a { color: oklch(81.2% 0.139 206.5); } a:hover { color: oklch(90.9% 0.189 99.9); }
+
+.db {
+  --color-page: oklch(14% 0.045 265);
+  --color-panel: oklch(22% 0.07 262);
+  --color-line: oklch(32% 0.08 262);
+  --color-deep-glow: oklch(50% 0.17 258);
+  --color-deep: oklch(43.7% 0.178 260.6);
+  --color-deep-edge: oklch(40% 0.168 262);
+  --color-ember-shade: oklch(42% 0.16 30);
+  --color-ember: oklch(60.1% 0.222 31.7);
+  --color-marigold-deep: oklch(74.5% 0.171 62);
+  --color-marigold: oklch(76.6% 0.174 63.4);
+  --color-sky: oklch(81.2% 0.139 206.5);
+  --color-flame: oklch(64.7% 0.24 31.5);
+  --color-sun: oklch(90.9% 0.189 99.9);
+  --color-sun-ply: oklch(93.5% 0.18 101);
+  --color-mist: oklch(90% 0.08 206);
+  --color-ink: oklch(20% 0.08 262);
+  --color-shadow: oklch(0% 0 0);
+  --duration-drift: 18s;
+  --drift-x: 4;
+  --drift-y: 2.5;
+  --scene-grid: 689;
+  --sheet-bleed: 40;
+  color: var(--color-mist);
+  background: var(--color-page);
+  font-family: "Figtree", system-ui, sans-serif;
+  overflow-x: clip;
+}
+.display { font-family: "Bricolage Grotesque", "Figtree", sans-serif; font-optical-sizing: auto; letter-spacing: -0.02em; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 24px; border-radius: 999px; font: 700 16px/1 "Figtree", sans-serif; text-decoration: none; cursor: pointer; border: 0; transition: translate .15s ease, box-shadow .15s ease; }
+.btn--sun { background: var(--color-sun); color: var(--color-ink); box-shadow: 0 6px 0 oklch(70% 0.16 85), 0 14px 28px oklch(0% 0 0 / .45); }
+.btn--sun:hover { color: var(--color-ink); translate: 0 -2px; box-shadow: 0 8px 0 oklch(70% 0.16 85), 0 18px 32px oklch(0% 0 0 / .45); }
+.btn--ghost { background: transparent; color: var(--color-mist); box-shadow: inset 0 0 0 2px oklch(90% 0.08 206 / .45); }
+.btn--ghost:hover { color: var(--color-sun); box-shadow: inset 0 0 0 2px var(--color-sun); }
+.btn--ink { background: var(--color-ink); color: var(--color-sun); box-shadow: 0 6px 0 oklch(10% 0.05 262), 0 14px 28px oklch(0% 0 0 / .3); }
+.btn--ink:hover { color: var(--color-sun); translate: 0 -2px; }
+.btn--small { min-height: 44px; padding: 0 18px; font-size: 15px; }
+
+/* Paper dots */
+.dot { flex: none; border-radius: 50%; box-shadow: 0 3px 6px oklch(0% 0 0 / .45), inset 0 -2px 0 oklch(0% 0 0 / .12); }
+
+/* ---------- Paper-cut scene ---------- */
+.stage { position: relative; display: block; width: 100%; aspect-ratio: 689 / 1028; padding: 0; margin: 0; border: 0; border-radius: 28px; overflow: clip; cursor: crosshair; background: var(--color-deep); box-shadow: 0 40px 80px oklch(0% 0 0 / .55), 0 0 0 1px oklch(90% 0.08 206 / .08); }
+.stage:focus-visible { outline: 3px solid var(--color-sun); outline-offset: 4px; }
+.papercut { --u: calc(100cqi / var(--scene-grid)); position: absolute; inset: 0; container-type: inline-size; isolation: isolate; overflow: clip;
+  background: radial-gradient(in srgb circle calc(560 * var(--u)) at calc(399 * var(--u)) calc(510 * var(--u)), var(--color-deep-glow), var(--color-deep) 45%, var(--color-deep-edge)); }
+.papercut > * { position: absolute; }
+.sheet, .sun, .speck { animation: drift var(--duration-drift) ease-in-out infinite; }
+.db--still .sheet, .db--still .sun, .db--still .speck { animation: none; }
+.sheet { inset: calc(var(--sheet-bleed) * var(--u) * -1); filter: drop-shadow(0 calc(var(--cast-y) * var(--u)) calc(var(--cast-blur) * var(--u)) color-mix(in oklch, var(--color-shadow) calc(var(--cast-alpha) * 100%), transparent)); }
+.sheet::before { content: ""; position: absolute; inset: 0; background: var(--paper); clip-path: var(--cut); }
+.sheet[data-sheet="ember"] { --depth: 1; --paper: radial-gradient(calc(150 * var(--u)) calc(95 * var(--u)) at calc(310 * var(--u)) calc(335 * var(--u)), var(--color-ember-shade), transparent), var(--color-ember); --cast-y: 10; --cast-blur: 40; --cast-alpha: 0.3;
+  --cut: polygon(0 0, 0 35.2%, 1.42% 34.68%, 3.42% 33.95%, 5.2% 33.3%, 6.43% 32.84%, 7.44% 32.46%, 8.45% 32.13%, 9.54% 31.84%, 10.62% 31.6%, 11.7% 31.41%, 12.79% 31.27%, 13.87% 31.18%, 14.95% 31.14%, 16.04% 31.16%, 17.12% 31.23%, 18.21% 31.32%, 19.29% 31.41%, 20.37% 31.52%, 21.46% 31.68%, 22.54% 31.9%, 23.62% 32.18%, 24.71% 32.49%, 25.79% 32.84%, 26.87% 33.23%, 27.96% 33.66%, 29.04% 34.14%, 30.13% 34.65%, 31.21% 35.2%, 32.29% 35.8%, 33.38% 36.44%, 34.46% 37.09%, 35.54% 37.77%, 36.63% 38.47%, 37.71% 39.17%, 38.79% 39.86%, 39.88% 40.55%, 40.96% 41.25%, 42.05% 41.95%, 43.13% 42.65%, 44.21% 43.32%, 45.3% 43.96%, 46.38% 44.57%, 47.46% 45.13%, 48.55% 45.61%, 49.63% 46.03%, 50.72% 46.39%, 51.8% 46.68%, 52.88% 46.92%, 53.97% 47.11%, 55.05% 47.27%, 56.13% 47.39%, 57.22% 47.47%, 58.3% 47.51%, 59.38% 47.51%, 60.47% 47.47%, 61.55% 47.41%, 62.64% 47.32%, 63.72% 47.2%, 64.8% 47.08%, 65.89% 46.93%, 66.97% 46.75%, 68.05% 46.52%, 69.14% 46.25%, 70.22% 45.94%, 71.3% 45.6%, 72.39% 45.23%, 73.47% 44.77%, 74.56% 44.17%, 75.64% 43.49%, 76.72% 42.78%, 77.81% 42.07%, 78.89% 41.34%, 79.97% 40.61%, 81.06% 39.9%, 82.14% 39.19%, 83.22% 38.54%, 84.31% 37.95%, 85.39% 37.4%, 86.48% 36.91%, 87.56% 36.48%, 88.64% 36.09%, 89.73% 35.74%, 90.67% 35.46%, 91.61% 35.21%, 92.98% 34.84%, 95.3% 34.18%, 98.04% 33.41%, 100% 32.85%, 100% 0); }
+.sheet[data-sheet="dune-top"] { --depth: 2; --paper: var(--color-marigold-deep); --cast-y: 26; --cast-blur: 56; --cast-alpha: 0.9;
+  --cut: polygon(0 0, 0 31.23%, 1.42% 30.44%, 3.42% 29.33%, 5.2% 28.34%, 6.43% 27.66%, 7.44% 27.1%, 8.45% 26.53%, 9.54% 25.89%, 10.62% 25.23%, 11.7% 24.64%, 12.79% 24.17%, 13.87% 23.77%, 14.95% 23.38%, 16.04% 22.93%, 17.12% 22.49%, 18.21% 22.11%, 19.29% 21.81%, 20.37% 21.58%, 21.46% 21.39%, 22.54% 21.25%, 23.62% 21.16%, 24.71% 21.12%, 25.79% 21.14%, 26.87% 21.2%, 27.96% 21.3%, 29.04% 21.41%, 30.13% 21.56%, 31.21% 21.75%, 32.29% 22%, 33.38% 22.3%, 34.46% 22.65%, 35.54% 23.05%, 36.63% 23.51%, 37.71% 24.01%, 38.79% 24.57%, 39.88% 25.19%, 40.96% 25.81%, 42.05% 26.44%, 43.13% 27.07%, 44.21% 27.71%, 45.3% 28.34%, 46.38% 28.98%, 47.46% 29.6%, 48.55% 30.21%, 49.63% 30.8%, 50.72% 31.41%, 51.8% 32.04%, 52.88% 32.69%, 53.97% 33.3%, 55.05% 33.88%, 56.13% 34.42%, 57.22% 34.93%, 58.3% 35.39%, 59.38% 35.81%, 60.47% 36.19%, 61.55% 36.53%, 62.64% 36.83%, 63.72% 37.09%, 64.8% 37.34%, 65.89% 37.55%, 66.97% 37.73%, 68.05% 37.87%, 69.14% 37.97%, 70.22% 38%, 71.3% 37.93%, 72.39% 37.79%, 73.47% 37.64%, 74.56% 37.48%, 75.64% 37.31%, 76.72% 37.09%, 77.81% 36.82%, 78.89% 36.49%, 79.97% 36.1%, 81.06% 35.65%, 82.14% 35.13%, 83.22% 34.57%, 84.31% 33.95%, 85.39% 33.27%, 86.48% 32.58%, 87.56% 31.86%, 88.64% 31.12%, 89.73% 30.42%, 90.67% 29.84%, 91.61% 29.3%, 92.98% 28.52%, 95.3% 27.18%, 98.04% 25.59%, 100% 24.46%, 100% 0); }
+.sheet[data-sheet="sky"] { --depth: 3; --paper: var(--color-sky); --cast-y: 28; --cast-blur: 56; --cast-alpha: 0.95;
+  --cut: polygon(0 0, 0 12.82%, 1.42% 12.76%, 3.42% 12.69%, 5.2% 12.64%, 6.43% 12.61%, 7.44% 12.6%, 8.45% 12.64%, 9.54% 12.74%, 10.62% 12.89%, 11.7% 13.09%, 12.79% 13.32%, 13.87% 13.59%, 14.95% 13.9%, 16.04% 14.25%, 17.12% 14.63%, 18.21% 15.07%, 19.29% 15.57%, 20.37% 16.11%, 21.46% 16.7%, 22.54% 17.33%, 23.62% 18%, 24.71% 18.68%, 25.79% 19.37%, 26.87% 20.06%, 27.96% 20.76%, 29.04% 21.45%, 30.13% 22.15%, 31.21% 22.83%, 32.29% 23.51%, 33.38% 24.17%, 34.46% 24.82%, 35.54% 25.45%, 36.63% 26.06%, 37.71% 26.62%, 38.79% 27.12%, 39.88% 27.56%, 40.96% 27.98%, 42.05% 28.38%, 43.13% 28.74%, 44.21% 29.06%, 45.3% 29.32%, 46.38% 29.53%, 47.46% 29.69%, 48.55% 29.83%, 49.63% 29.92%, 50.72% 29.96%, 51.8% 29.95%, 52.88% 29.88%, 53.97% 29.78%, 55.05% 29.67%, 56.13% 29.53%, 57.22% 29.33%, 58.3% 29.06%, 59.38% 28.73%, 60.47% 28.34%, 61.55% 27.88%, 62.64% 27.37%, 63.72% 26.81%, 64.8% 26.19%, 65.89% 25.52%, 66.97% 24.82%, 68.05% 24.08%, 69.14% 23.32%, 70.22% 22.56%, 71.3% 21.82%, 72.39% 21.08%, 73.47% 20.4%, 74.56% 19.78%, 75.64% 19.2%, 76.72% 18.68%, 77.81% 18.21%, 78.89% 17.8%, 79.97% 17.42%, 81.06% 17.08%, 82.14% 16.79%, 83.22% 16.52%, 84.31% 16.25%, 85.39% 16%, 86.48% 15.79%, 87.56% 15.64%, 88.64% 15.53%, 89.73% 15.43%, 90.67% 15.36%, 91.61% 15.31%, 92.98% 15.25%, 95.3% 15.19%, 98.04% 15.12%, 100% 15.07%, 100% 0); }
+.sheet[data-sheet="lagoon"] { --depth: 1; --paper: var(--color-sky); --cast-y: -35; --cast-blur: 100; --cast-alpha: 0.2;
+  --cut: polygon(0 100%, 0 71.39%, 1.42% 71.12%, 3.42% 70.74%, 5.2% 70.4%, 6.43% 70.18%, 7.44% 70%, 8.45% 69.77%, 9.54% 69.45%, 10.62% 69.09%, 11.7% 68.68%, 12.79% 68.24%, 13.87% 67.76%, 14.95% 67.24%, 16.04% 66.67%, 17.12% 66.06%, 18.21% 65.43%, 19.29% 64.79%, 20.37% 64.12%, 21.46% 63.45%, 22.54% 62.76%, 23.62% 62.06%, 24.71% 61.37%, 25.79% 60.69%, 26.87% 60.02%, 27.96% 59.39%, 29.04% 58.78%, 30.13% 58.21%, 31.21% 57.67%, 32.29% 57.16%, 33.38% 56.67%, 34.46% 56.23%, 35.54% 55.82%, 36.63% 55.46%, 37.71% 55.14%, 38.79% 54.89%, 39.88% 54.69%, 40.96% 54.51%, 42.05% 54.36%, 43.13% 54.24%, 44.21% 54.15%, 45.3% 54.1%, 46.38% 54.1%, 47.46% 54.15%, 48.55% 54.28%, 49.63% 54.46%, 50.72% 54.69%, 51.8% 54.98%, 52.88% 55.31%, 53.97% 55.69%, 55.05% 56.09%, 56.13% 56.54%, 57.22% 57.04%, 58.3% 57.6%, 59.38% 58.21%, 60.47% 58.84%, 61.55% 59.51%, 62.64% 60.2%, 63.72% 60.83%, 64.8% 61.36%, 65.89% 61.83%, 66.97% 62.27%, 68.05% 62.71%, 69.14% 63.12%, 70.22% 63.54%, 71.3% 63.96%, 72.39% 64.38%, 73.47% 64.8%, 74.56% 65.22%, 75.64% 65.63%, 76.72% 66.06%, 77.81% 66.57%, 78.89% 67.09%, 79.97% 67.51%, 81.06% 67.75%, 82.14% 67.87%, 83.22% 67.96%, 84.31% 68.02%, 85.39% 68.04%, 86.48% 68.05%, 87.56% 68.06%, 88.64% 68.07%, 89.73% 68.05%, 90.67% 68.02%, 91.61% 67.96%, 92.98% 67.87%, 95.3% 67.7%, 98.04% 67.48%, 100% 67.33%, 100% 100%); }
+.sheet[data-sheet="dune"] { --depth: 2; --paper: var(--color-marigold); --cast-y: -25; --cast-blur: 80; --cast-alpha: 0.5;
+  --cut: polygon(0 100%, 0 73.74%, 1.42% 74.45%, 3.42% 75.46%, 5.2% 76.35%, 6.43% 76.99%, 7.44% 77.51%, 8.45% 77.98%, 9.54% 78.4%, 10.62% 78.76%, 11.7% 79.06%, 12.79% 79.3%, 13.87% 79.48%, 14.95% 79.6%, 16.04% 79.68%, 17.12% 79.71%, 18.21% 79.69%, 19.29% 79.64%, 20.37% 79.55%, 21.46% 79.42%, 22.54% 79.28%, 23.62% 79.11%, 24.71% 78.88%, 25.79% 78.57%, 26.87% 78.21%, 27.96% 77.8%, 29.04% 77.36%, 30.13% 76.89%, 31.21% 76.35%, 32.29% 75.75%, 33.38% 75.08%, 34.46% 74.37%, 35.54% 73.61%, 36.63% 72.82%, 37.71% 72.02%, 38.79% 71.24%, 39.88% 70.46%, 40.96% 69.68%, 42.05% 68.89%, 43.13% 68.1%, 44.21% 67.33%, 45.3% 66.58%, 46.38% 65.85%, 47.46% 65.16%, 48.55% 64.51%, 49.63% 63.89%, 50.72% 63.36%, 51.8% 62.94%, 52.88% 62.6%, 53.97% 62.27%, 55.05% 61.95%, 56.13% 61.64%, 57.22% 61.37%, 58.3% 61.16%, 59.38% 60.98%, 60.47% 60.83%, 61.55% 60.67%, 62.64% 60.54%, 63.72% 60.47%, 64.8% 60.49%, 65.89% 60.59%, 66.97% 60.74%, 68.05% 60.95%, 69.14% 61.22%, 70.22% 61.55%, 71.3% 61.94%, 72.39% 62.39%, 73.47% 62.91%, 74.56% 63.5%, 75.64% 64.17%, 76.72% 64.89%, 77.81% 65.67%, 78.89% 66.5%, 79.97% 67.33%, 81.06% 68.15%, 82.14% 68.97%, 83.22% 69.77%, 84.31% 70.52%, 85.39% 71.25%, 86.48% 71.93%, 87.56% 72.55%, 88.64% 73.12%, 89.73% 73.65%, 90.67% 74.05%, 91.61% 74.4%, 92.98% 74.91%, 95.3% 75.81%, 98.04% 76.86%, 100% 77.62%, 100% 100%); }
+.sheet[data-sheet="flame"] { --depth: 3; --paper: var(--color-flame); --cast-y: -12; --cast-blur: 50; --cast-alpha: 0.1;
+  --cut: polygon(0 100%, 0 89.98%, 1.42% 89.59%, 3.42% 89.03%, 5.2% 88.54%, 6.43% 88.21%, 7.44% 87.94%, 8.45% 87.64%, 9.54% 87.25%, 10.62% 86.83%, 11.7% 86.37%, 12.79% 85.87%, 13.87% 85.32%, 14.95% 84.75%, 16.04% 84.14%, 17.12% 83.51%, 18.21% 82.85%, 19.29% 82.17%, 20.37% 81.47%, 21.46% 80.78%, 22.54% 80.08%, 23.62% 79.38%, 24.71% 78.7%, 25.79% 78.05%, 26.87% 77.41%, 27.96% 76.81%, 29.04% 76.23%, 30.13% 75.68%, 31.21% 75.18%, 32.29% 74.74%, 33.38% 74.35%, 34.46% 74.01%, 35.54% 73.7%, 36.63% 73.43%, 37.71% 73.19%, 38.79% 73.01%, 39.88% 72.86%, 40.96% 72.74%, 42.05% 72.65%, 43.13% 72.59%, 44.21% 72.56%, 45.3% 72.58%, 46.38% 72.64%, 47.46% 72.74%, 48.55% 72.9%, 49.63% 73.11%, 50.72% 73.38%, 51.8% 73.68%, 52.88% 74.04%, 53.97% 74.46%, 55.05% 74.94%, 56.13% 75.49%, 57.22% 76.08%, 58.3% 76.74%, 59.38% 77.44%, 60.47% 78.16%, 61.55% 78.88%, 62.64% 79.62%, 63.72% 80.32%, 64.8% 80.99%, 65.89% 81.63%, 66.97% 82.22%, 68.05% 82.77%, 69.14% 83.28%, 70.22% 83.75%, 71.3% 84.19%, 72.39% 84.58%, 73.47% 84.93%, 74.56% 85.24%, 75.64% 85.51%, 76.72% 85.74%, 77.81% 85.92%, 78.89% 86.07%, 79.97% 86.19%, 81.06% 86.3%, 82.14% 86.39%, 83.22% 86.46%, 84.31% 86.54%, 85.39% 86.61%, 86.48% 86.64%, 87.56% 86.62%, 88.64% 86.56%, 89.73% 86.46%, 90.67% 86.35%, 91.61% 86.21%, 92.98% 86.01%, 95.3% 85.68%, 98.04% 85.3%, 100% 85.02%, 100% 100%); }
+.speck { --depth: 2; inset-inline-start: calc((var(--x) - var(--r)) * var(--u)); inset-block-start: calc((var(--y) - var(--r)) * var(--u)); inline-size: calc(2 * var(--r) * var(--u)); aspect-ratio: 1; border-radius: 50%; background: var(--paper); box-shadow: 0 calc(0.3 * var(--r) * var(--u)) calc(0.6 * var(--r) * var(--u)) color-mix(in oklch, var(--color-shadow) 55%, transparent); }
+.speck[data-speck="moon"] { --x: 112; --y: 446; --r: 17; --paper: var(--color-mist); }
+.speck[data-speck="ember"] { --x: 592; --y: 566; --r: 11; --depth: 3; --paper: var(--color-marigold); }
+.sun { --depth: 4; inset-inline-start: calc(268.7 * var(--u)); inset-block-start: calc(381.5 * var(--u)); inline-size: calc(257.6 * var(--u)); aspect-ratio: 1; border-radius: 50%; background: var(--color-sun); box-shadow: 0 calc(12 * var(--u)) calc(24 * var(--u)) calc(4 * var(--u)) color-mix(in oklch, var(--color-shadow) 90%, transparent); }
+.sun::before { content: ""; position: absolute; inset: calc(10 * var(--u)); border-radius: 50%; background: var(--color-sun-ply); box-shadow: 0 calc(4 * var(--u)) calc(8 * var(--u)) color-mix(in oklch, var(--color-shadow) 16%, transparent); translate: 0 calc(-4 * var(--u)); }
+@keyframes drift {
+  0%, 100% { translate: calc(var(--depth) * var(--drift-x) * var(--u) * -1) 0; }
+  25% { translate: 0 calc(var(--depth) * var(--drift-y) * var(--u) * -1); }
+  50% { translate: calc(var(--depth) * var(--drift-x) * var(--u)) 0; }
+  75% { translate: 0 calc(var(--depth) * var(--drift-y) * var(--u)); }
+}
+
+/* ---------- Sticker slap (peel-in) ---------- */
+.stickers { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.sticker { position: absolute; pointer-events: none; transform: rotate(var(--rot)); will-change: transform, opacity;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.22)) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.18));
+  animation: slap 1100ms ease-out both, peel 1100ms ease-in-out both;
+  --fold: calc(var(--minp) + var(--span) * var(--p));
+  --half-plane: polygon(
+    calc((var(--fold) * var(--u0) + var(--big) * var(--w0)) * 1px) calc((var(--fold) * var(--u1) + var(--big) * var(--w1)) * 1px),
+    calc((var(--fold) * var(--u0) - var(--big) * var(--w0)) * 1px) calc((var(--fold) * var(--u1) - var(--big) * var(--w1)) * 1px),
+    calc((var(--fold) * var(--u0) - var(--big) * var(--w0) - var(--big) * var(--u0)) * 1px) calc((var(--fold) * var(--u1) - var(--big) * var(--w1) - var(--big) * var(--u1)) * 1px),
+    calc((var(--fold) * var(--u0) + var(--big) * var(--w0) - var(--big) * var(--u0)) * 1px) calc((var(--fold) * var(--u1) + var(--big) * var(--w1) - var(--big) * var(--u1)) * 1px)
+  ); }
+.sticker--seed { animation: none; --p: 1; }
+@keyframes slap { 0% { opacity: 0; transform: rotate(var(--rot)) scale(1.08); } 20% { opacity: 1; transform: rotate(var(--rot)) scale(1); } 100% { opacity: 1; transform: rotate(var(--rot)) scale(1); } }
+@keyframes peel { from { --p: var(--p0); } to { --p: 1; } }
+.sticker__layer { position: absolute; inset: 0; }
+.sticker__flat { clip-path: var(--half-plane); }
+.sticker__face { width: 100%; height: 100%; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4%; padding: 12%; color: oklch(20% 0.08 262); font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; line-height: 0.95; text-align: center; letter-spacing: -0.02em; box-shadow: inset 0 0 0 calc(var(--s) * 0.04px) #fff, inset 0 calc(var(--s) * -0.03px) 0 calc(var(--s) * 0.04px) rgba(0,0,0,.08); }
+.sticker__check { width: 30%; height: 30%; }
+.sticker__flap-clip { clip-path: var(--half-plane); }
+.sticker__flap-inner { transform-origin: 0 0; transform: matrix(var(--a), var(--b), var(--b), var(--d), calc(2 * var(--fold) * var(--u0)), calc(2 * var(--fold) * var(--u1))); }
+.sticker__flap-fill { border-radius: 50%;
+  background-image: linear-gradient(calc(var(--ca) * 1deg), #cdcdcd calc(var(--p) * 100%), #f3f3f3 calc((var(--p) + (1 - var(--p)) * 0.1) * 100%), #ffffff calc((var(--p) + (1 - var(--p)) * 0.45) * 100%), #f0f0f0 calc((var(--p) + (1 - var(--p)) * 0.82) * 100%), #c6c6c6 100%); }
+.sticker__flap-shadow { filter: drop-shadow(calc(var(--u0) * var(--s) * -0.05 * (1 - var(--p)) * 1px) calc((var(--u1) * -0.05 + 0.04) * var(--s) * (1 - var(--p)) * 1px) calc(var(--s) * 0.025 * 1px) rgba(0, 0, 0, calc(0.35 * (1 - var(--p))))); }
+
+/* ---------- Paper bands ---------- */
+.band { position: relative; }
+.band__back { position: absolute; left: 0; right: 0; top: 0; height: 200px; clip-path: polygon(0 60px, 6.25% 57.4px, 12.5% 50.4px, 18.75% 40.5px, 25% 29.8px, 31.25% 20.3px, 37.5% 14px, 43.75% 12px, 50% 14.9px, 56.25% 22px, 62.5% 32px, 68.75% 42.7px, 75% 52.1px, 81.25% 58.2px, 87.5% 60px, 93.75% 56.8px, 100% 49.6px, 100% 100%, 0 100%); }
+.band__front { position: relative; filter: drop-shadow(0 -16px 28px oklch(0% 0 0 / .45)); margin-top: 34px; }
+.band__paper { clip-path: polygon(0 49.6px, 6.25% 56.8px, 12.5% 60px, 18.75% 58.2px, 25% 52.1px, 31.25% 42.7px, 37.5% 32px, 43.75% 22px, 50% 14.9px, 56.25% 12px, 62.5% 14px, 68.75% 20.3px, 75% 29.8px, 81.25% 40.5px, 87.5% 50.4px, 93.75% 57.4px, 100% 60px, 100% 100%, 0 100%); }
+
+/* ---------- Hero: glass night-run panel ---------- */
+.hero { position: relative; isolation: isolate; margin-top: -96px; padding-top: 96px;
+  background:
+    radial-gradient(ellipse 60% 22% at 50% 74%, oklch(66% 0.2 42 / .32), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 50% 58%, oklch(42% 0.17 268 / .45), transparent 70%),
+    oklch(14% 0.045 265); }
+.hero-white { background: linear-gradient(180deg, #ffffff 20%, oklch(87% 0.06 230) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero-sun { background: linear-gradient(180deg, oklch(94% 0.19 102) 0%, oklch(89% 0.19 92) 45%, oklch(78% 0.17 68) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero-spectrum { background: linear-gradient(90deg, oklch(80% 0.13 225) 0%, oklch(68% 0.2 290) 34%, oklch(70% 0.2 350) 55%, oklch(74% 0.18 45) 76%, oklch(88% 0.18 92) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cmd { position: relative; width: min(100%, 660px); display: flex; align-items: center; gap: 16px; padding: 10px 10px 10px 28px; border-radius: 16px; border: 1.5px solid transparent;
+  background: linear-gradient(oklch(13% 0.04 265), oklch(13% 0.04 265)) padding-box, linear-gradient(90deg, oklch(65% 0.17 255), oklch(62% 0.2 295), oklch(70% 0.19 40), oklch(85% 0.17 85)) border-box;
+  box-shadow: 0 0 32px oklch(60% 0.18 265 / .35), 0 20px 50px oklch(0% 0 0 / .5); transition: box-shadow .2s ease; }
+.cmd:focus-within { box-shadow: 0 0 0 4px oklch(90.9% 0.189 99.9 / .25), 0 0 44px oklch(60% 0.18 265 / .5), 0 20px 50px oklch(0% 0 0 / .5); }
+.cmd__prompt { font: 500 20px/1 "JetBrains Mono", ui-monospace, monospace; color: oklch(80% 0.15 175); }
+.cmd__input { flex: 1; min-width: 0; height: 56px; background: transparent; border: 0; outline: none; color: oklch(96% 0.02 240); caret-color: oklch(90.9% 0.189 99.9); font: 400 20px/1 "JetBrains Mono", ui-monospace, monospace; }
+.cmd__input::placeholder { color: oklch(92% 0.02 240); opacity: 1; }
+.cmd__go { flex: none; display: grid; place-items: center; width: 76px; height: 56px; border: 0; border-radius: 10px; background: oklch(90.9% 0.189 99.9); color: oklch(20% 0.08 262); cursor: pointer; box-shadow: 0 0 20px oklch(90.9% 0.189 99.9 / .35); transition: translate .15s ease; }
+.cmd__go:hover { translate: 0 -1px; }
+.cmd__go:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 40px; font-size: 16px; color: oklch(84% 0.04 250); }
+.checks li { display: flex; align-items: center; gap: 12px; }
+.checks svg { flex: none; width: 24px; height: 24px; }
+.tile { position: absolute; z-index: 1; width: 5.4cqi; aspect-ratio: 1; display: grid; place-items: center; border-radius: 1.4cqi;
+  background: linear-gradient(135deg, oklch(30% 0.09 270 / .9), oklch(16% 0.05 265 / .92)); border: 1px solid oklch(80% 0.1 270 / .45);
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .15), 0 0 2.4cqi oklch(60% 0.2 280 / .45), 0 2cqi 4cqi oklch(0% 0 0 / .5); animation: float 8s ease-in-out infinite; }
+.tile svg { width: 55%; height: 55%; }
+.db--still .tile { animation: none; }
+.rocks { position: absolute; z-index: 2; left: 50%; width: 100vw; translate: -50% 0; bottom: -5%; height: 30%; pointer-events: none; }
+.rocks-fade { position: absolute; z-index: 2; left: 50%; width: 100vw; translate: -50% 0; bottom: -5%; height: 14%; pointer-events: none; background: linear-gradient(180deg, transparent, oklch(14% 0.045 265)); }
+
+/* ---------- Footer (continues the CTA sunrise) ---------- */
+.foot { position: relative; overflow: hidden; isolation: isolate; color: oklch(80% 0.04 245);
+  background: radial-gradient(ellipse 40% 26% at 50% 0%, oklch(66% 0.2 42 / .22), transparent 70%), linear-gradient(180deg, oklch(12% 0.04 265), oklch(8.5% 0.03 265)); }
+.foot__reflect { position: absolute; z-index: -1; left: 50%; top: 0; width: min(320px, 40vw); height: 360px; translate: -50% 0; pointer-events: none;
+  background: repeating-linear-gradient(180deg, oklch(80% 0.16 60 / .5) 0 3px, transparent 3px 11px);
+  -webkit-mask-image: radial-gradient(ellipse 50% 100% at 50% 0%, #000, transparent 75%); mask-image: radial-gradient(ellipse 50% 100% at 50% 0%, #000, transparent 75%);
+  filter: blur(1.5px); opacity: .55; animation: shimmer 6s ease-in-out infinite; }
+@keyframes shimmer { 0%, 100% { opacity: .55; scale: 1 1; } 50% { opacity: .35; scale: 1.08 1; } }
+.foot__grid { max-width: 1240px; margin: 0 auto; padding: 96px clamp(20px, 4vw, 40px) 56px; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 48px 40px; }
+.foot__brand { grid-column: span 2; display: flex; flex-direction: column; gap: 20px; max-width: 26rem; }
+@media (max-width: 560px) { .foot__brand { grid-column: auto; } }
+.foot__col { display: flex; flex-direction: column; gap: 4px; }
+.foot__head { margin: 0 0 10px; font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: oklch(66% 0.05 250); }
+.foot__link { display: inline-flex; align-items: center; min-height: 40px; font-size: 15px; text-decoration: none; color: oklch(86% 0.03 240); transition: color .2s ease, translate .2s ease; }
+.foot__link:hover { color: oklch(90.9% 0.189 99.9); translate: 3px 0; }
+.foot__status { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; min-height: 40px; padding: 0 14px; border-radius: 999px; text-decoration: none;
+  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: oklch(90% 0.03 240);
+  background: oklch(100% 0 0 / .04); border: 1px solid oklch(100% 0 0 / .1); }
+.foot__status:hover { color: oklch(90.9% 0.189 99.9); border-color: oklch(90.9% 0.189 99.9 / .5); }
+.foot__bar { max-width: 1240px; margin: 0 auto; padding: 22px clamp(20px, 4vw, 40px); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; font-size: 14px; color: oklch(66% 0.04 250);
+  border-top: 1px solid transparent; border-image: linear-gradient(90deg, transparent, oklch(100% 0 0 / .14), transparent) 1; }
+.foot__top { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 999px; text-decoration: none; color: oklch(86% 0.03 240); border: 1px solid oklch(100% 0 0 / .14); }
+.foot__top:hover { color: oklch(90.9% 0.189 99.9); border-color: oklch(90.9% 0.189 99.9 / .5); }
+.foot__mark { display: block; margin: 0 auto -0.2em; text-align: center; white-space: nowrap; font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: clamp(88px, 21vw, 320px); line-height: 0.85; letter-spacing: -0.06em;
+  background: linear-gradient(180deg, oklch(36% 0.1 268 / .9), oklch(20% 0.06 265 / .2) 70%, transparent); -webkit-background-clip: text; background-clip: text; color: transparent; user-select: none; pointer-events: none; }
+.db--still .foot__reflect { animation: none; }
+@media (prefers-reduced-motion: reduce) { .foot__reflect { animation: none; } }
+.stats { position: relative; width: 100%; max-width: 1120px; margin: 56px 0 128px; }
+.stats__inner { position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.stat { position: relative; display: flex; flex-direction: column; gap: 18px; padding: 44px 40px 40px; }
+.stat + .stat::before { content: ""; position: absolute; left: 0; top: 18%; bottom: 18%; width: 1px; background: linear-gradient(180deg, transparent, oklch(100% 0 0 / .14), transparent); }
+.stat__icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; border: 1px solid oklch(100% 0 0 / .12);
+  background: linear-gradient(160deg, oklch(28% 0.08 268), oklch(16% 0.05 265)); box-shadow: inset 0 1px 0 oklch(100% 0 0 / .14), 0 0 24px var(--glow); color: var(--tint); }
+.stat__icon svg { width: 22px; height: 22px; }
+.stat__num { font-family: "Bricolage Grotesque", sans-serif; font-size: clamp(48px, 5vw, 64px); font-weight: 800; line-height: 0.95; letter-spacing: -0.045em;
+  background: linear-gradient(180deg, #fff 30%, oklch(80% 0.06 250)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat__label { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tint); }
+.stat__body { margin: 0; font-size: 15px; line-height: 1.55; color: oklch(78% 0.035 250); max-width: 26ch; }
+@container (max-width: 640px) { .task__sub { display: none; } .task__title { font-size: 2.6cqi !important; } .tile { display: none; } }
+.art { position: relative; container-type: inline-size; perspective: 2200px; perspective-origin: 50% 0%; }
+.art__orbit { position: absolute; border-radius: 50%; border: 1px solid oklch(72% 0.12 255 / .22); pointer-events: none; }
+.art__floor { position: absolute; left: 10%; right: -20%; bottom: -6%; height: 34%; border-radius: 50%; background: radial-gradient(ellipse at 60% 50%, oklch(68% 0.2 45 / .55), oklch(55% 0.22 20 / .2) 45%, transparent 70%); filter: blur(30px); pointer-events: none; }
+.panel3d { position: relative; aspect-ratio: 900 / 620; transform-style: preserve-3d; transform: rotateX(10deg) rotateY(9deg) rotateZ(-0.5deg); }
+.panel-glass { position: absolute; inset: 0; display: block; padding: 0; margin: 0; cursor: crosshair; overflow: hidden; border-radius: 2.6cqi; border: 1.5px solid oklch(80% 0.08 260 / .45);
+  background: linear-gradient(165deg, oklch(24% 0.08 265 / .95), oklch(13% 0.045 265 / .97) 55%);
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .1), 0 0 60px oklch(58% 0.18 265 / .35), 0 80px 140px oklch(0% 0 0 / .65); font: inherit; }
+.panel-glass:focus-visible { outline: 3px solid oklch(90.9% 0.189 99.9); outline-offset: 6px; }
+.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.panel-side { position: absolute; left: 0; top: 0; bottom: 0; width: 9%; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 3.6cqi; padding-top: 3cqi; border-right: 1px solid oklch(100% 0 0 / .08); background: oklch(14% 0.045 265 / .88); color: oklch(86% 0.05 245 / .8); }
+.panel-side svg { width: 2.3cqi; height: 2.3cqi; }
+.panel-head { position: absolute; left: 13%; top: 6.5%; z-index: 1; display: flex; gap: 1.6cqi; align-items: flex-start; text-align: left; color: #fff; }
+.panel-head svg { width: 3cqi; height: 3cqi; color: oklch(81.2% 0.139 206.5); }
+.task { position: absolute; display: flex; align-items: center; gap: 1.4cqi; padding: 1.4cqi 1.6cqi; border-radius: 1.8cqi; color: #fff; text-align: left;
+  background: linear-gradient(135deg, oklch(33% 0.1 278 / .8), oklch(18% 0.06 265 / .88));
+  border: 1.5px solid oklch(74% 0.14 288 / .65);
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .14), 0 0 3.2cqi oklch(60% 0.2 285 / .5), 0 3cqi 6cqi oklch(0% 0 0 / .5);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  animation: float 7s ease-in-out infinite; }
+.task--warm { border-color: oklch(82% 0.12 55 / .75); box-shadow: inset 0 1px 0 oklch(100% 0 0 / .14), 0 0 3.2cqi oklch(70% 0.18 45 / .5), 0 3cqi 6cqi oklch(0% 0 0 / .5); }
+.task__check { flex: none; display: grid; place-items: center; width: 3.4cqi; height: 3.4cqi; border-radius: 50%; background: oklch(80% 0.17 160); color: oklch(22% 0.06 200); box-shadow: 0 0 2cqi oklch(80% 0.17 160 / .55); }
+.task__check svg { width: 62%; height: 62%; }
+.task__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.5cqi; }
+.task__title { font-family: "Bricolage Grotesque", sans-serif; font-weight: 600; font-size: 1.85cqi; line-height: 1.1; letter-spacing: -0.01em; }
+.task__sub { font-size: 1.4cqi; line-height: 1.2; color: oklch(85% 0.06 280); }
+.task__icon { flex: none; display: grid; place-items: center; width: 4.2cqi; height: 4.2cqi; border-radius: 1.2cqi; background: oklch(15% 0.045 265 / .92); box-shadow: inset 0 0 0 1px oklch(100% 0 0 / .1); }
+.task__icon svg { width: 55%; height: 55%; }
+@keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -0.9cqi; } }
+.db--still .task { animation: none; }
+
+/* ---------- The night, hour by hour (features) ---------- */
+.night { position: relative; width: 100%; max-width: 1080px; margin: 0 auto; aspect-ratio: 2 / 1; container-type: inline-size; }
+.night__sky { position: absolute; inset: 0; overflow: hidden; border-radius: 50cqi 50cqi 0 0; transition: background 1s ease;
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .12); }
+.night__star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; transition: opacity 1s ease; }
+.night__sun { position: absolute; left: 50%; top: 100%; width: 30cqi; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #fff7da, oklch(90.9% 0.189 99.9) 42%, oklch(76.6% 0.174 63.4));
+  box-shadow: 0 0 6cqi oklch(85% 0.17 80 / .55), 0 0 18cqi oklch(76% 0.17 60 / .35);
+  transition: transform 1.1s cubic-bezier(.2,.8,.2,1), opacity 1.1s ease; }
+.night__horizon { position: absolute; left: -6%; right: -6%; bottom: 0; height: 2px; background: linear-gradient(90deg, transparent, oklch(90% 0.08 206 / .55), transparent); }
+.night__arc { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.night__progress { transition: stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1); }
+.stop { position: absolute; z-index: 1; width: 44px; height: 44px; translate: -50% -50%; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.stop:focus-visible { outline: 2px solid oklch(90.9% 0.189 99.9); outline-offset: 2px; }
+.stop__orb { width: 16px; height: 16px; border-radius: 50%; opacity: .5; box-shadow: 0 0 0 4px oklch(100% 0 0 / .06), 0 0 16px var(--c); transition: transform .45s ease, box-shadow .45s ease, opacity .45s ease; }
+.stop--past .stop__orb { opacity: .9; }
+.stop:not(.stop--on):hover .stop__orb { opacity: 1; transform: scale(1.3); }
+.stop--on .stop__orb { opacity: 1; transform: scale(1.75); box-shadow: 0 0 0 5px oklch(100% 0 0 / .16), 0 0 0 12px oklch(100% 0 0 / .05), 0 0 34px var(--c); }
+.stop__label { position: absolute; display: flex; flex-direction: column; gap: 5px; padding: 9px 13px; border-radius: 12px; white-space: nowrap; pointer-events: none;
+  background: oklch(11% 0.04 265 / .84); border: 1px solid oklch(100% 0 0 / .1); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px oklch(0% 0 0 / .45), inset 0 1px 0 oklch(100% 0 0 / .06); transition: border-color .45s ease, box-shadow .45s ease; }
+.stop--on .stop__label { border-color: color-mix(in oklch, var(--c) 65%, transparent); box-shadow: 0 0 26px color-mix(in oklch, var(--c) 30%, transparent), 0 10px 28px oklch(0% 0 0 / .45), inset 0 1px 0 oklch(100% 0 0 / .08); }
+.lab--r { left: calc(100% + 4px); top: 50%; translate: 0 -50%; align-items: flex-start; }
+.lab--l { right: calc(100% + 4px); top: 50%; translate: 0 -50%; align-items: flex-end; }
+.lab--b { top: calc(100% + 6px); left: 50%; translate: -50% 0; align-items: center; }
+.lab--br { top: calc(100% - 4px); left: calc(100% - 4px); align-items: flex-start; }
+.lab--bl { top: calc(100% - 4px); right: calc(100% - 4px); align-items: flex-end; }
+.stop__time { font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em; color: oklch(76% 0.05 250); transition: color .45s ease; }
+.stop__title { font: 600 14px/1.2 "Figtree", sans-serif; color: oklch(88% 0.03 240); opacity: .65; transition: opacity .45s ease; }
+.stop--on .stop__time { color: oklch(90.9% 0.189 99.9); }
+.stop--on .stop__title { opacity: 1; color: #fff; }
+@container (max-width: 640px) { .stop__title { display: none; } .stop__time { font-size: 10px; } }
+.readout { width: min(100%, 680px); display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+.readout--a { animation: readA .6s ease both; }
+.readout--b { animation: readB .6s ease both; }
+@keyframes readA { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+@keyframes readB { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+.readout__kicker { margin: 0; font: 500 13px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; }
+.readout__snip { display: inline-block; margin-top: 6px; padding: 12px 18px; border-radius: 12px; font: 400 14px/1.4 "JetBrains Mono", ui-monospace, monospace; color: oklch(90% 0.04 240);
+  background: oklch(11% 0.04 265 / .75); border: 1px solid oklch(100% 0 0 / .1); box-shadow: inset 0 1px 0 oklch(100% 0 0 / .06); }
+.console { position: relative; width: min(100%, 780px); border-radius: 24px; padding: 1px;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--accent) 75%, transparent), oklch(100% 0 0 / .08) 35%, oklch(100% 0 0 / .05) 65%, oklch(60% 0.17 265 / .5));
+  box-shadow: 0 40px 100px -30px oklch(0% 0 0 / .85), 0 0 90px -24px color-mix(in oklch, var(--accent) 45%, transparent); transition: box-shadow 1s ease; }
+.console__in { overflow: hidden; border-radius: 23px;
+  background: radial-gradient(ellipse 70% 90% at 0% 0%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), linear-gradient(180deg, oklch(17% 0.05 265 / .97), oklch(11% 0.04 265 / .98)); }
+.console__bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 24px; border-bottom: 1px solid oklch(100% 0 0 / .07);
+  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: oklch(78% 0.04 250); }
+.console__live { display: flex; align-items: center; gap: 10px; }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-out infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--accent) 65%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }
+.segs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; padding: 18px 24px 0; }
+.seg { height: 3px; border-radius: 3px; overflow: hidden; background: oklch(100% 0 0 / .1); }
+.seg__fill { width: 0; height: 100%; border-radius: inherit; background: var(--accent); }
+.seg__fill--past { width: 100%; opacity: .45; }
+.seg__fill--full { width: 100%; }
+.seg__fill--run-a { animation: segA 4.5s linear both; }
+.seg__fill--run-b { animation: segB 4.5s linear both; }
+@keyframes segA { from { width: 0; } to { width: 100%; } }
+@keyframes segB { from { width: 0; } to { width: 100%; } }
+.console .readout { width: 100%; align-items: flex-start; text-align: left; gap: 12px; padding: 28px 32px 6px; }
+.term { width: 100%; display: flex; align-items: center; gap: 12px; margin-top: 10px; padding: 14px 18px; border-radius: 14px;
+  background: oklch(8% 0.03 265 / .85); border: 1px solid oklch(100% 0 0 / .08); box-shadow: inset 0 1px 0 oklch(100% 0 0 / .05);
+  font: 400 14px/1.45 "JetBrains Mono", ui-monospace, monospace; color: oklch(90% 0.04 240); }
+.term__prompt { color: var(--accent); }
+.term code { flex: 1; min-width: 0; font: inherit; overflow-wrap: anywhere; }
+.term__caret { flex: none; width: 8px; height: 18px; border-radius: 1px; background: var(--accent); animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.console__foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px 22px; }
+.console__hint { font-size: 14px; color: oklch(72% 0.04 250); text-align: center; }
+@media (prefers-reduced-motion: reduce) {
+  .pulse, .term__caret { animation: none; }
+  .seg__fill--run-a, .seg__fill--run-b { animation: none; width: 100%; }
+}
+
+/* ---------- Closing CTA ---------- */
+.cta { position: relative; overflow: hidden; isolation: isolate;
+  background:
+    radial-gradient(ellipse 55% 40% at 50% 100%, oklch(66% 0.2 42 / .35), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 50% 62%, oklch(42% 0.17 268 / .45), transparent 70%),
+    oklch(14% 0.045 265); }
+.cta__scene { display: block; width: 100%; height: clamp(220px, 32vw, 460px); margin-top: -24px; margin-bottom: -2px; }
+.cta__done { margin: 0; padding: 12px 18px; border-radius: 12px; font-size: 15px; color: oklch(92% 0.03 240); background: oklch(100% 0 0 / .05); border: 1px solid oklch(80% 0.17 160 / .4); }
+
+/* ---------- Every step, written down (animated run log) ---------- */
+@property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.runsec { position: relative; isolation: isolate; }
+.runsec::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: min(1100px, 120%); height: 80%; translate: -30% -50%; border-radius: 50%;
+  background: radial-gradient(ellipse at center, oklch(45% 0.17 270 / .35), transparent 65%); filter: blur(20px); pointer-events: none; }
+.metric { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 16px; padding: 16px 0; border-bottom: 1px solid oklch(100% 0 0 / .08); }
+.metric__label { font-size: 15px; color: oklch(78% 0.04 250); }
+.metric__num { font-family: "Bricolage Grotesque", sans-serif; font-size: 34px; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: #fff; transition: color .4s ease; }
+.runlog { position: relative; border-radius: 26px; padding: 1.5px;
+  background: conic-gradient(from var(--ang), oklch(65% 0.17 255 / .9), oklch(62% 0.2 295 / .2), oklch(70% 0.19 40 / .9), oklch(85% 0.17 85 / .2), oklch(65% 0.17 255 / .9));
+  box-shadow: 0 50px 120px -30px oklch(0% 0 0 / .85), 0 0 100px -30px oklch(60% 0.18 280 / .5); animation: spinBorder 9s linear infinite; }
+@keyframes spinBorder { to { --ang: 360deg; } }
+.runlog__in { position: relative; overflow: hidden; border-radius: 24.5px;
+  background: radial-gradient(ellipse 80% 60% at 100% 0%, oklch(32% 0.1 280 / .45), transparent 60%), linear-gradient(180deg, oklch(16% 0.05 265), oklch(10.5% 0.035 265)); }
+.runlog__scan { position: absolute; left: 0; right: 0; height: 120px; top: -120px; pointer-events: none;
+  background: linear-gradient(180deg, transparent, oklch(80% 0.1 230 / .06), transparent); animation: scan 5s ease-in-out infinite; }
+@keyframes scan { to { top: 100%; } }
+.runlog__bar { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 26px; border-bottom: 1px solid oklch(100% 0 0 / .07); }
+.runlog__brief { font-family: "Bricolage Grotesque", sans-serif; font-size: 17px; font-weight: 700; color: #fff; }
+.runlog__live { display: inline-flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 999px; background: oklch(100% 0 0 / .05); border: 1px solid oklch(100% 0 0 / .1);
+  font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; color: oklch(90% 0.03 240); font-variant-numeric: tabular-nums; }
+.runlog__dot { width: 8px; height: 8px; border-radius: 50%; background: oklch(80% 0.17 160); animation: livePulse 1.8s ease-out infinite; }
+.runlog__dot--done { background: oklch(90.9% 0.189 99.9); animation: none; box-shadow: 0 0 10px oklch(90.9% 0.189 99.9 / .8); }
+@keyframes livePulse { 0% { box-shadow: 0 0 0 0 oklch(80% 0.17 160 / .7); } 100% { box-shadow: 0 0 0 10px transparent; } }
+.log { position: relative; list-style: none; margin: 0; padding: 26px 26px 10px; display: flex; flex-direction: column; gap: 20px; }
+.log__track { position: absolute; left: calc(26px + 74px + 14px + 6px); top: 38px; bottom: 34px; width: 2px; border-radius: 2px; background: oklch(100% 0 0 / .08); }
+.log__fill { width: 100%; border-radius: inherit; background: linear-gradient(180deg, oklch(81.2% 0.139 206.5), oklch(70% 0.19 300), oklch(64.7% 0.24 31.5), oklch(90.9% 0.189 99.9));
+  box-shadow: 0 0 12px oklch(70% 0.17 280 / .7); transition: height .9s cubic-bezier(.2,.8,.2,1); }
+.logrow { position: relative; display: grid; grid-template-columns: 74px 14px minmax(0, 1fr); gap: 14px; align-items: start;
+  opacity: 0; translate: 0 10px; filter: blur(4px); transition: opacity .6s ease, translate .6s ease, filter .6s ease; }
+.logrow--in { opacity: 1; translate: 0 0; filter: none; }
+.logrow__time { padding-top: 3px; font: 500 13px/1.2 "JetBrains Mono", ui-monospace, monospace; color: oklch(70% 0.04 250); font-variant-numeric: tabular-nums; }
+.logrow__node { width: 14px; height: 14px; margin-top: 4px; border-radius: 50%; background: oklch(14% 0.04 265); border: 2px solid var(--c); box-shadow: 0 0 12px color-mix(in oklch, var(--c) 60%, transparent); }
+.logrow--now .logrow__node { background: var(--c); animation: nodePulse 1.6s ease-out infinite; }
+@keyframes nodePulse { 0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--c) 70%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+.logrow__body { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; margin-top: -9px; border-radius: 14px; border: 1px solid transparent; transition: background .5s ease, border-color .5s ease; }
+.logrow--now .logrow__body { background: oklch(100% 0 0 / .04); border-color: oklch(100% 0 0 / .08); }
+.logrow--flag .logrow__body { background: oklch(60.1% 0.222 31.7 / .1); border-color: oklch(64.7% 0.24 31.5 / .45); }
+.logrow__head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.logrow__title { font-size: 16px; font-weight: 700; color: #fff; }
+.logrow__text { font-size: 15px; line-height: 1.5; color: oklch(80% 0.04 248); }
+.chip { display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 999px; font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--c); background: color-mix(in oklch, var(--c) 14%, transparent); border: 1px solid color-mix(in oklch, var(--c) 40%, transparent); }
+.review { align-self: flex-start; margin-top: 4px; min-height: 36px; padding: 0 14px; border-radius: 999px; border: 0; cursor: pointer; font: 700 13px/1 "Figtree", sans-serif;
+  background: oklch(64.7% 0.24 31.5); color: #fff; box-shadow: 0 0 18px oklch(64.7% 0.24 31.5 / .45); }
+.review:hover { filter: brightness(1.1); }
+.review:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.runlog__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 10px 26px 24px; padding: 16px 18px; border-radius: 16px;
+  background: linear-gradient(90deg, oklch(90.9% 0.189 99.9 / .14), oklch(76.6% 0.174 63.4 / .06)); border: 1px solid oklch(90.9% 0.189 99.9 / .4); animation: footIn .7s ease both; }
+@keyframes footIn { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+.replay { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid oklch(100% 0 0 / .2); background: transparent; color: #fff; cursor: pointer; font: 600 14px/1 "Figtree", sans-serif; }
+.replay:hover { border-color: oklch(90.9% 0.189 99.9); color: oklch(90.9% 0.189 99.9); }
+.replay:focus-visible { outline: 2px solid oklch(90.9% 0.189 99.9); outline-offset: 2px; }
+.db--still .runlog, .db--still .runlog__scan { animation: none; }
+@media (max-width: 520px) { .logrow { grid-template-columns: 58px 14px minmax(0, 1fr); gap: 10px; } .log__track { left: calc(26px + 58px + 10px + 6px); } }
+@media (prefers-reduced-motion: reduce) {
+  .runlog, .runlog__scan, .runlog__dot, .logrow--now .logrow__node, .runlog__foot { animation: none; }
+  .logrow, .log__fill { transition: none; }
+}
+
+.navbtn { display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%; border: 1px solid oklch(100% 0 0 / .22); background: oklch(100% 0 0 / .04); color: #fff; cursor: pointer; transition: border-color .2s ease, color .2s ease; }
+.navbtn:hover { border-color: oklch(90.9% 0.189 99.9); color: oklch(90.9% 0.189 99.9); }
+.navbtn:focus-visible { outline: 2px solid oklch(90.9% 0.189 99.9); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .night__sky, .night__sun, .night__progress, .stop__orb { transition: none; }
+  .readout--a, .readout--b { animation: none; }
+}
+
+/* ---------- Orb cards (tilting dark face on a colored rim) ---------- */
+.orb-rim { position: relative; display: flex; border-radius: 24px; background: var(--rim);
+  box-shadow: 0 1px 2px var(--rim), 0 18px 40px -16px var(--rim), inset 0 1px 0 oklch(100% 0 0 / .25); }
+.orb { position: relative; z-index: 0; isolation: isolate; overflow: hidden; flex: 1; min-width: 0; display: flex; flex-direction: column;
+  border-radius: 24px; background: oklch(17% 0.012 265); color: oklch(97% 0.005 250);
+  box-shadow: inset 0 2px 6px oklch(100% 0 0 / .16), inset 0 0 0 1px oklch(100% 0 0 / .06);
+  transition: transform .5s ease; transform-origin: 50% 60%; }
+.orb::before, .orb::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; filter: blur(26px); transition: translate .5s ease, opacity .5s ease; pointer-events: none; }
+.orb::before { width: 110px; height: 110px; top: 14%; right: 12%; background: var(--o1); opacity: .75; }
+.orb::after { width: 80px; height: 80px; bottom: 18%; right: 36%; background: var(--o2); opacity: .7; }
+.orb-rim:hover .orb { transform: rotate(6deg); }
+.orb-rim:hover .orb::before { translate: 44px -44px; }
+.orb-rim:hover .orb::after { translate: 44px 64px; }
+.orb-num { font-family: "Bricolage Grotesque", sans-serif; font-size: 76px; font-weight: 800; line-height: 0.9; letter-spacing: -0.05em; color: oklch(98% 0.005 250); }
+#how .orb-rim:nth-child(2) { translate: 0 24px; }
+#how .orb-rim:nth-child(3) { translate: 0 48px; }
+@media (prefers-reduced-motion: reduce) {
+  .orb, .orb::before, .orb::after { transition: none; }
+  .orb-rim:hover .orb { transform: none; }
+}
+
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .faq-plus { rotate: 45deg; }
+.faq-plus { transition: rotate .2s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .sun, .speck, .task { animation: none; }
+  .sticker { animation: none; --p: 1; }
+}
+
+/* ── Hero side decor: dusk (left) → daybreak (right), desktop only ── */
+.hero-decor { display: none; }
+@media (min-width: 1260px) {
+  .hero-decor { display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+}
+.hd { position: absolute; top: 168px; height: 500px; width: min(270px, calc(50% - 434px)); }
+.hd--dusk { right: calc(50% + 410px); }
+.hd--dawn { left: calc(50% + 410px); }
+.hd-orbit { position: absolute; border-radius: 50%; border: 1px solid oklch(72% 0.12 255 / .22); }
+.hd-path { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.hd-path path { fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 2 7; vector-effect: non-scaling-stroke; }
+.hd-star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px oklch(95% 0.05 230); animation: hdTwinkle 3.8s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.hd-spark { position: absolute; width: 14px; height: 14px; color: oklch(90% 0.08 206); filter: drop-shadow(0 0 6px currentColor); animation: hdTwinkle 4.6s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.hd-moon { position: absolute; top: 4%; right: 8%; width: 34%; aspect-ratio: 1; filter: drop-shadow(0 0 14px oklch(88% 0.07 230 / .6)) drop-shadow(0 0 40px oklch(70% 0.14 260 / .45)); animation: hdFloat 9s ease-in-out infinite; }
+.hd-moon i { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 40%, oklch(97% 0.03 230), oklch(84% 0.07 240));
+  -webkit-mask: radial-gradient(circle at 72% 30%, transparent 47%, #000 48%); mask: radial-gradient(circle at 72% 30%, transparent 47%, #000 48%); }
+.hd-mug { position: absolute; top: 4%; left: 6%; width: 54%; aspect-ratio: 1;
+  filter: drop-shadow(0 0 16px oklch(85% 0.17 85 / .45)) drop-shadow(0 0 44px oklch(70% 0.18 45 / .35));
+  animation: hdFloat 9s ease-in-out infinite; animation-delay: -4s; }
+.hd-mug svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hd-steam path { fill: none; stroke: oklch(95% 0.03 230); stroke-width: 3.2; stroke-linecap: round; opacity: 0;
+  animation: hdSteam 4.2s ease-out infinite; animation-delay: var(--d, 0s); }
+.hd-chip { position: absolute; display: flex; align-items: center; gap: 12px; width: max-content; max-width: 100%; padding: 12px 16px 12px 12px; border-radius: 16px; color: #fff; text-align: left;
+  background: linear-gradient(135deg, oklch(33% 0.1 278 / .8), oklch(18% 0.06 265 / .88));
+  border: 1.5px solid oklch(74% 0.14 288 / .65);
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .14), 0 0 28px oklch(60% 0.2 285 / .45), 0 24px 48px oklch(0% 0 0 / .5);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  animation: hdFloat 7s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.hd-chip--warm { border-color: oklch(82% 0.12 55 / .75); box-shadow: inset 0 1px 0 oklch(100% 0 0 / .14), 0 0 28px oklch(70% 0.18 45 / .45), 0 24px 48px oklch(0% 0 0 / .5); }
+.hd-chip__ico { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; }
+.hd-chip__ico svg { width: 58%; height: 58%; }
+.hd-chip__ico--moon { background: oklch(28% 0.09 270); color: oklch(81.2% 0.139 206.5); box-shadow: 0 0 14px oklch(81.2% 0.139 206.5 / .45), inset 0 1px 0 oklch(100% 0 0 / .15); }
+.hd-chip__ico--check { background: oklch(80% 0.17 160); color: oklch(22% 0.06 200); box-shadow: 0 0 16px oklch(80% 0.17 160 / .55); }
+.hd-chip__time { display: block; margin-bottom: 5px; font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .12em; color: oklch(81.2% 0.139 206.5); }
+.hd-chip--warm .hd-chip__time { color: oklch(90.9% 0.189 99.9); }
+.hd-chip__title { display: block; font: 600 15px/1.15 "Bricolage Grotesque", sans-serif; letter-spacing: -0.01em; white-space: nowrap; }
+.hd-chip__sub { display: block; margin-top: 3px; font-size: 12px; line-height: 1.2; color: oklch(85% 0.06 280); white-space: nowrap; }
+.hd-tile { position: absolute; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; color: oklch(86% 0.08 250);
+  background: linear-gradient(135deg, oklch(30% 0.09 270 / .9), oklch(16% 0.05 265 / .92)); border: 1px solid oklch(80% 0.1 270 / .45);
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .15), 0 0 20px oklch(60% 0.2 280 / .45), 0 16px 32px oklch(0% 0 0 / .5);
+  animation: hdFloat 8s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.hd-tile svg { width: 52%; height: 52%; }
+@keyframes hdFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+@keyframes hdTwinkle { 0%, 100% { opacity: .9; scale: 1; } 50% { opacity: .25; scale: .6; } }
+@keyframes hdSteam { 0% { opacity: 0; translate: 0 8px; } 30% { opacity: .75; } 100% { opacity: 0; translate: 0 -14px; } }
+.db--still .hd-star, .db--still .hd-spark, .db--still .hd-moon, .db--still .hd-chip, .db--still .hd-tile, .db--still .hd-mug, .db--still .hd-steam path { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hd-star, .hd-spark, .hd-moon, .hd-chip, .hd-tile, .hd-mug, .hd-steam path { animation: none; }
+  .hd-steam path { opacity: .5; }
+}
+</style>
+</head>
+<body>
+<div class="db" id="daybreak" style="min-height: 100vh">
+
+  <!-- NAV -->
+  <header data-section="nav" style="position: relative; z-index: 2; max-width: 1360px; margin: 0 auto; padding: 24px clamp(20px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px">
+    <a href="#top" aria-label="Daybreak home" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: oklch(90% 0.08 206)">
+      <span class="dot" style="width: 30px; height: 30px; background: oklch(90.9% 0.189 99.9); box-shadow: 0 4px 10px oklch(0% 0 0 / .6), inset 0 -3px 0 oklch(80% 0.17 95)"></span>
+      <span class="display" style="font-size: 24px; font-weight: 800">Daybreak</span>
+    </a>
+    <nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; font-size: 15px; font-weight: 600">
+      <a href="#how" style="text-decoration: none; padding: 12px 0">How it works</a>
+      <a href="#features" style="text-decoration: none; padding: 12px 0">Product</a>
+      <a href="#pricing" style="text-decoration: none; padding: 12px 0">Pricing</a>
+      <a href="#faq" style="text-decoration: none; padding: 12px 0">FAQ</a>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 12px">
+      <a href="#signin" class="btn btn--ghost btn--small">Sign in</a>
+      <a href="#start" class="btn btn--sun btn--small">Start free</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main>
+  <section id="top" class="hero" data-section="hero">
+    <!-- Side decor (desktop only): dusk on the left, daybreak on the right -->
+    <div class="hero-decor" aria-hidden="true">
+      <div class="hd hd--dusk">
+        <span class="hd-orbit" style="left: -6%; top: 4%; width: 92%; height: 40%; rotate: -14deg"></span>
+        <svg class="hd-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs><linearGradient id="hdDusk" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="oklch(90% 0.08 206)"/><stop offset=".55" stop-color="oklch(68% 0.2 290)"/><stop offset="1" stop-color="oklch(70% 0.2 38)"/></linearGradient></defs>
+          <path d="M72 24 C 48 30, 22 42, 18 66" stroke="url(#hdDusk)"/>
+        </svg>
+        <span class="hd-moon"><i></i></span>
+        <span class="hd-star" style="left: 14%; top: 6%; --d: -1.2s"></span>
+        <span class="hd-star" style="left: 48%; top: 14%; --d: -2.6s"></span>
+        <span class="hd-star" style="left: 30%; top: 52%; --d: -.4s"></span>
+        <span class="hd-star" style="left: 86%; top: 46%; --d: -3.1s"></span>
+        <span class="hd-star" style="left: 62%; top: 90%; --d: -1.8s"></span>
+        <svg class="hd-spark" style="left: 6%; top: 34%; --d: -2s" viewBox="0 0 24 24"><path d="M12 2c.6 4.6 2.4 7.4 10 10-7.6 2.6-9.4 5.4-10 10-.6-4.6-2.4-7.4-10-10 7.6-2.6 9.4-5.4 10-10z" fill="currentColor"/></svg>
+        <span class="hd-tile" style="left: 58%; top: 50%; --d: -3s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span>
+        <div class="hd-chip" style="left: 0; top: 68%; --d: -1.5s">
+          <span class="hd-chip__ico hd-chip__ico--moon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></span>
+          <span><span class="hd-chip__time">6:00 PM</span><span class="hd-chip__title">Brief handed off</span><span class="hd-chip__sub">Refunds, triage + 3 more</span></span>
+        </div>
+      </div>
+      <div class="hd hd--dawn">
+        <span class="hd-orbit" style="left: 6%; top: 0%; width: 84%; height: 48%; rotate: 12deg; border-color: oklch(70% 0.14 290 / .18)"></span>
+        <svg class="hd-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs><linearGradient id="hdDawn" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="oklch(76.6% 0.174 63.4)"/><stop offset="1" stop-color="oklch(90.9% 0.189 99.9)"/></linearGradient></defs>
+          <path d="M44 46 C 50 56, 70 58, 78 64" stroke="url(#hdDawn)"/>
+        </svg>
+        <div class="hd-mug">
+          <svg viewBox="0 0 120 120">
+            <defs>
+              <linearGradient id="hdMug" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="oklch(94% 0.19 102)"/><stop offset=".5" stop-color="oklch(89% 0.19 92)"/><stop offset="1" stop-color="oklch(76.6% 0.174 63.4)"/></linearGradient>
+              <linearGradient id="hdBand" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="oklch(80% 0.13 225)"/><stop offset=".35" stop-color="oklch(68% 0.2 290)"/><stop offset=".65" stop-color="oklch(70% 0.2 350)"/><stop offset="1" stop-color="oklch(74% 0.18 45)"/></linearGradient>
+              <linearGradient id="hdSaucer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="oklch(34% 0.1 278)"/><stop offset="1" stop-color="oklch(18% 0.06 265)"/></linearGradient>
+              <clipPath id="hdMugClip"><path d="M24 50 H86 V76 a22 22 0 0 1 -22 22 H46 a22 22 0 0 1 -22 -22 Z"/></clipPath>
+            </defs>
+            <g class="hd-steam">
+              <path d="M44 40 c-6 -6 6 -10 0 -18" style="--d: 0s"/>
+              <path d="M56 38 c-6 -7 6 -12 0 -22" style="--d: -1.4s"/>
+              <path d="M68 40 c-6 -6 6 -10 0 -18" style="--d: -2.8s"/>
+            </g>
+            <ellipse cx="56" cy="102" rx="46" ry="9" fill="url(#hdSaucer)" stroke="oklch(74% 0.14 288 / .7)" stroke-width="1.5"/>
+            <path d="M86 58 h5 a12 12 0 0 1 0 24 h-7" fill="none" stroke="oklch(80% 0.17 75)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M24 50 H86 V76 a22 22 0 0 1 -22 22 H46 a22 22 0 0 1 -22 -22 Z" fill="url(#hdMug)"/>
+            <rect x="20" y="70" width="70" height="7" fill="url(#hdBand)" clip-path="url(#hdMugClip)"/>
+            <path d="M32 58 V78" stroke="oklch(100% 0 0 / .55)" stroke-width="4" stroke-linecap="round"/>
+            <ellipse cx="55" cy="50" rx="31" ry="6" fill="oklch(32% 0.06 50)" stroke="oklch(96% 0.12 100)" stroke-width="2"/>
+            <ellipse cx="50" cy="49" rx="12" ry="2" fill="oklch(60% 0.09 60 / .7)"/>
+          </svg>
+        </div>
+        <span class="hd-star" style="left: 76%; top: 4%; --d: -2.2s"></span>
+        <span class="hd-star" style="left: 92%; top: 30%; --d: -.8s"></span>
+        <span class="hd-star" style="left: 12%; top: 58%; --d: -3.4s"></span>
+        <span class="hd-star" style="left: 40%; top: 92%; --d: -1.4s"></span>
+        <svg class="hd-spark" style="left: 84%; top: 46%; --d: -1s; color: oklch(90.9% 0.189 99.9)" viewBox="0 0 24 24"><path d="M12 2c.6 4.6 2.4 7.4 10 10-7.6 2.6-9.4 5.4-10 10-.6-4.6-2.4-7.4-10-10 7.6-2.6 9.4-5.4 10-10z" fill="currentColor"/></svg>
+        <span class="hd-tile" style="left: 74%; top: 14%; --d: -1.2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M9 15l2 2 4-4"/></svg></span>
+        <div class="hd-chip hd-chip--warm" style="right: 0; top: 66%; --d: -4s">
+          <span class="hd-chip__ico hd-chip__ico--check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span><span class="hd-chip__time">7:00 AM</span><span class="hd-chip__title">Digest ready</span><span class="hd-chip__sub">38 done · 1 needs you</span></span>
+        </div>
+      </div>
+    </div>
+  <div style="max-width: 1360px; margin: 0 auto; padding: 56px clamp(20px, 4vw, 40px) 0; display: flex; flex-direction: column; align-items: center">
+    <div style="width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 28px">
+      <p style="margin: 0; display: inline-flex; align-items: center; gap: 14px; font-size: 15px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: oklch(96% 0.02 240)">
+        <span class="dot" style="width: 12px; height: 12px; background: oklch(60.1% 0.222 31.7); box-shadow: 0 0 10px oklch(60.1% 0.222 31.7 / .7)"></span>Agents for the night shift
+      </p>
+      <h1 class="display" style="margin: 0; font-size: clamp(44px, 7vw, 100px); line-height: 0.95; font-weight: 800; letter-spacing: -0.04em"><span class="hero-white" style="display: block">Hand it off at dusk.</span><span class="hero-spectrum" style="display: block; padding-bottom: 0.08em">Wake up to it done.</span></h1>
+      <p style="margin: 0; max-width: 39rem; font-size: 20px; line-height: 1.6; color: oklch(86% 0.035 250)">Daybreak runs AI agents on the work your team keeps pushing to tomorrow — triage, reconciliations, follow-ups, migrations — and has it waiting, checked and reviewable, when you log on.</p>
+      <form class="cmd" style="margin-top: 16px" data-on-submit="startRun">
+        <label for="brief" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Describe tonight's work</label>
+        <span class="cmd__prompt" aria-hidden="true">&gt;</span>
+        <input id="brief" name="brief" type="text" class="cmd__input" placeholder="Start a free night run" autocomplete="off">
+        <button type="submit" class="cmd__go" aria-label="Start a free night run"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+      </form>
+      <ul class="checks">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="oklch(58% 0.2 260)"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>No credit card</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="oklch(58% 0.2 260)"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Works with your tools</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="oklch(58% 0.2 260)"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Cancel anytime</li>
+      </ul>
+    </div>
+
+    <div class="art" style="width: 100%; max-width: 1080px; margin-top: 80px; padding: 0 5%">
+      <div class="art__orbit" aria-hidden="true" style="left: -4%; top: 6%; width: 108%; height: 84%; rotate: -8deg"></div>
+      <div class="art__orbit" aria-hidden="true" style="left: 0%; top: -4%; width: 100%; height: 96%; rotate: 10deg; border-color: oklch(70% 0.14 290 / .16)"></div>
+      <div class="art__floor" aria-hidden="true"></div>
+      <div class="panel3d">
+      <button type="button" class="panel-glass" aria-label="Night run panel — click to stick on another finished task" data-on-click="slap">
+        <svg class="scene" viewBox="0 0 760 700" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <defs>
+            <radialGradient id="dbSun" cx="50%" cy="42%" r="58%"><stop offset="0%" stop-color="#fff8dc"></stop><stop offset="35%" stop-color="#ffdb8c"></stop><stop offset="75%" stop-color="#ff9d4f"></stop><stop offset="100%" stop-color="#ff6d5e"></stop></radialGradient>
+            <radialGradient id="dbBloom" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff9d55" stop-opacity="0.55"></stop><stop offset="55%" stop-color="#ff7a4a" stop-opacity="0.18"></stop><stop offset="100%" stop-color="#ff7a4a" stop-opacity="0"></stop></radialGradient>
+            <linearGradient id="dbBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c3aa8" stop-opacity="0.85"></stop><stop offset="1" stop-color="#0e1336"></stop></linearGradient>
+            <linearGradient id="dbA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d4bd0"></stop><stop offset="1" stop-color="#131843"></stop></linearGradient>
+            <linearGradient id="dbB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6c36cc"></stop><stop offset="1" stop-color="#1c1248"></stop></linearGradient>
+            <linearGradient id="dbC" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c23a72"></stop><stop offset="0.5" stop-color="#ff7d3f"></stop><stop offset="1" stop-color="#ff9a4a"></stop></linearGradient>
+            <filter id="dbGlow" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+          </defs>
+          <g fill="#ffffff">
+            <circle cx="210" cy="120" r="1.2" opacity="0.6"></circle><circle cx="330" cy="170" r="1" opacity="0.5"></circle><circle cx="520" cy="300" r="1.4" opacity="0.6"></circle><circle cx="640" cy="250" r="1" opacity="0.5"></circle><circle cx="260" cy="300" r="1.2" opacity="0.4"></circle><circle cx="700" cy="120" r="1.3" opacity="0.5"></circle><circle cx="420" cy="230" r="0.9" opacity="0.5"></circle>
+          </g>
+          <circle cx="455" cy="430" r="250" fill="url(#dbBloom)"></circle>
+          <path d="M0 470 C 140 420, 280 450, 380 432 S 580 360, 760 398 L760 700 L0 700 Z" fill="url(#dbBack)"></path>
+          <circle cx="455" cy="430" r="118" fill="url(#dbSun)"></circle>
+          <path d="M0 520 C 150 470, 250 440, 360 478 S 520 560, 620 498 S 720 450, 760 458 L760 700 L0 700 Z" fill="url(#dbA)" opacity="0.94"></path>
+          <path d="M0 520 C 150 470, 250 440, 360 478 S 520 560, 620 498 S 720 450, 760 458" fill="none" stroke="#7f95ff" stroke-width="2.5" filter="url(#dbGlow)"></path>
+          <path d="M0 585 C 190 540, 300 560, 400 600 S 600 590, 760 556 L760 700 L0 700 Z" fill="url(#dbB)"></path>
+          <path d="M0 585 C 190 540, 300 560, 400 600 S 600 590, 760 556" fill="none" stroke="#c690ff" stroke-width="2.5" filter="url(#dbGlow)"></path>
+          <path d="M0 650 C 190 606, 320 640, 440 658 S 640 640, 760 606 L760 700 L0 700 Z" fill="url(#dbC)"></path>
+          <path d="M0 650 C 190 606, 320 640, 440 658 S 640 640, 760 606" fill="none" stroke="#ffbe7a" stroke-width="3" filter="url(#dbGlow)"></path>
+        </svg>
+
+        <div class="panel-side" aria-hidden="true">
+          <span class="dot" style="width: 2.4cqi; height: 2.4cqi; background: oklch(90.9% 0.189 99.9); box-shadow: 0 0 12px oklch(90.9% 0.189 99.9 / .6)"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"></path><path d="M6 10v10h12V10"></path></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"></path><path d="M4 6h.01M4 12h.01M4 18h.01"></path></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L5 14h6l-1 7 8-11h-6z"></path></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"></ellipse><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6"></path><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"></path></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l2.5-8h11L20 13v6H4z"></path><path d="M4 13h5l1 2h4l1-2h5"></path></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"></path></svg>
+        </div>
+
+        <div class="panel-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg>
+          <span style="display: flex; flex-direction: column; gap: 0.6cqi">
+            <span class="display" style="font-size: 2.5cqi; font-weight: 600; line-height: 1">Night run</span>
+            <span style="font-size: 1.55cqi; color: oklch(86% 0.04 250)"><span data-t="tasksLabel"></span></span>
+          </span>
+        </div>
+
+        <div class="stickers" aria-hidden="true">
+          <template data-for="stickers" data-as="s">
+            <div data-b-class="{{s.cls}}" data-b-style="{{s.style}}">
+              <div class="sticker__layer sticker__flat">
+                <div class="sticker__face" data-b-style="{{s.faceStyle}}">
+                  <svg class="sticker__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+                  <span><span data-t="s.label"></span></span>
+                </div>
+              </div>
+              <div class="sticker__layer sticker__flap-shadow">
+                <div class="sticker__layer sticker__flap-clip">
+                  <div class="sticker__layer sticker__flap-inner">
+                    <div class="sticker__layer sticker__flap-fill"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </button>
+
+      <div class="task" style="left: 54%; top: 6%; width: 36%; transform: translateZ(30px)">
+        <span class="task__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        <span class="task__text"><span class="task__title" style="font-size: 1.6cqi">All agents completed</span></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width: 2cqi; height: 2cqi; color: oklch(86% 0.05 260)"><path d="M9 6l6 6-6 6"></path></svg>
+      </div>
+      <div class="task" style="left: 15%; top: 21%; width: 31%; transform: translateZ(40px)">
+        <span class="task__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        <span class="task__text"><span class="task__title">Bug fixes</span><span class="task__sub">12 resolved</span></span>
+        <span class="task__icon"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(81.2% 0.139 206.5)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5"></path><path d="M16 7l5 5-5 5"></path><path d="M14 4l-4 16"></path></svg></span>
+      </div>
+      <div class="task" style="left: 6%; top: 44%; width: 29%; transform: translateZ(70px) rotate(1deg); animation-delay: -2s">
+        <span class="task__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        <span class="task__text"><span class="task__title">Reconciliations</span><span class="task__sub">Completed</span></span>
+        <span class="task__icon"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(76.6% 0.174 63.4)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"></path><path d="M5 7h14"></path><path d="M5 7l-3 7a3 3 0 0 0 6 0z"></path><path d="M19 7l-3 7a3 3 0 0 0 6 0z"></path></svg></span>
+      </div>
+      <div class="task" style="left: 57%; top: 27%; width: 28%; transform: translateZ(40px) rotate(1deg); animation-delay: -4s">
+        <span class="task__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        <span class="task__text"><span class="task__title">Reports filed</span><span class="task__sub">8 generated</span></span>
+        <span class="task__icon"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(90.9% 0.189 99.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11"></path><path d="M12 20V5"></path><path d="M19 20v-6"></path></svg></span>
+      </div>
+      <div class="task task--warm" style="left: 52%; top: 69%; width: 28%; transform: translateZ(60px) rotate(1deg); animation-delay: -1s">
+        <span class="task__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        <span class="task__text"><span class="task__title">Refunds</span><span class="task__sub">Processed</span></span>
+        <span class="task__icon"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(76% 0.13 290)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"></path><path d="M4 9h10a6 6 0 0 1 0 12h-3"></path></svg></span>
+      </div>
+      <div class="task" style="left: 73%; top: 50%; width: 28%; transform: translateZ(80px) rotate(1.5deg); animation-delay: -5s">
+        <span class="task__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        <span class="task__text"><span class="task__title">Follow-ups</span><span class="task__sub">24 sent</span></span>
+        <span class="task__icon"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(72% 0.2 32)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg></span>
+      </div>
+      </div>
+
+      <span class="tile" aria-hidden="true" style="left: 1%; top: 18%; animation-delay: -1s"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(92% 0.02 240)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg></span>
+      <span class="tile" aria-hidden="true" style="left: -3%; top: 40%; animation-delay: -3s"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(76% 0.13 290)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18"></path><path d="M7 15h4"></path></svg></span>
+      <span class="tile" aria-hidden="true" style="left: 91%; top: 3%; animation-delay: -2s"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(92% 0.02 240)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 4h6"></path><path d="M9 13l2 2 4-4"></path></svg></span>
+      <span class="tile" aria-hidden="true" style="left: 95%; top: 22%; animation-delay: -5s"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(81.2% 0.139 206.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5"></path><path d="M16 7l5 5-5 5"></path></svg></span>
+      <span class="tile" aria-hidden="true" style="left: 97%; top: 46%; animation-delay: -4s"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(90.9% 0.189 99.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"></path></svg></span>
+
+      <svg class="rocks" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 300 L0 110 L60 85 L120 104 L175 76 L235 112 L300 146 L360 188 L430 228 L530 252 L700 262 L820 238 L900 206 L960 176 L1010 152 L1060 122 L1110 138 L1160 108 L1200 122 L1200 300 Z" fill="#0d1128"></path>
+        <path d="M0 110 L60 85 L120 104 L175 76 L235 112 L300 146 L360 188 L430 228 L530 252 L700 262 L820 238 L900 206 L960 176 L1010 152 L1060 122 L1110 138 L1160 108 L1200 122" fill="none" stroke="#ff9a5a" stroke-opacity="0.35" stroke-width="2"></path>
+        <path d="M0 300 L0 172 L55 150 L110 176 L170 164 L240 200 L310 228 L390 262 L490 282 L700 292 L860 276 L940 248 L1000 226 L1070 204 L1130 214 L1200 190 L1200 300 Z" fill="#070a18"></path>
+      </svg>
+      <div class="rocks-fade" aria-hidden="true"></div>
+    </div>
+
+  </div>
+  </section>
+
+  <!-- HOW IT WORKS (marigold paper band) -->
+  <section id="how" data-section="how-it-works" class="band" style="margin-top: -48px; z-index: 3">
+    <div class="band__back" style="background: oklch(60.1% 0.222 31.7)"></div>
+    <div class="band__front">
+      <div class="band__paper" style="background: oklch(76.6% 0.174 63.4); color: oklch(20% 0.08 262); padding: 140px 0 140px">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 32px); display: flex; flex-direction: column; gap: 56px">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px">
+            <h2 class="display" style="margin: 0; max-width: 14ch; font-size: clamp(38px, 4.6vw, 64px); line-height: 1; font-weight: 800">One brief. One night. One review.</h2>
+            <p style="margin: 0; max-width: 30rem; font-size: 18px; line-height: 1.55; font-weight: 500">You decide what done looks like. Agents do the long middle. You check the result over coffee.</p>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px">
+            <div class="orb-rim" style="--rim: oklch(60.1% 0.222 31.7); --o1: oklch(74% 0.15 220); --o2: oklch(76.6% 0.174 63.4)"><article class="orb" style="padding: 32px; gap: 16px">
+              <span class="orb-num">5×</span>
+              <h3 class="display" style="margin: 0; font-size: 28px; font-weight: 800">Faster turnaround</h3>
+              <p style="margin: 0; font-size: 17px; line-height: 1.55">Work that sat in the queue for days comes back finished by morning.</p>
+            </article></div>
+            <div class="orb-rim" style="--rim: oklch(60.1% 0.222 31.7); --o1: oklch(74% 0.15 220); --o2: oklch(76.6% 0.174 63.4)"><article class="orb" style="padding: 32px; gap: 16px">
+              <span class="orb-num">Zero</span>
+              <h3 class="display" style="margin: 0; font-size: 28px; font-weight: 800">Manual busywork</h3>
+              <p style="margin: 0; font-size: 17px; line-height: 1.55">Triage, reconciliations and follow-ups run while your team is offline.</p>
+            </article></div>
+            <div class="orb-rim" style="--rim: oklch(60.1% 0.222 31.7); --o1: oklch(74% 0.15 220); --o2: oklch(76.6% 0.174 63.4)"><article class="orb" style="padding: 32px; gap: 16px">
+              <span class="orb-num">More</span>
+              <h3 class="display" style="margin: 0; font-size: 28px; font-weight: 800">Time for what matters</h3>
+              <p style="margin: 0; font-size: 17px; line-height: 1.55">Mornings start with decisions to make, not a backlog to dig out of.</p>
+            </article></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES (deep blue) -->
+  <section id="features" data-section="features" class="band" style="margin-top: -60px">
+    <div class="band__front" style="margin-top: 0">
+      <div class="band__paper" style="background: radial-gradient(ellipse 80% 60% at 50% 0%, oklch(30% 0.12 265), oklch(15% 0.05 265) 72%); padding: 150px 0 140px">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 32px); display: flex; flex-direction: column; align-items: center; gap: 64px">
+          <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; max-width: 44rem">
+            <p style="margin: 0; font: 500 13px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; color: oklch(81.2% 0.139 206.5)">One night, hour by hour</p>
+            <h2 class="display" style="margin: 0; font-size: clamp(38px, 4.6vw, 64px); line-height: 1; font-weight: 800; color: oklch(96% 0.03 206)">Built for work you'd actually hand over</h2>
+            <p style="margin: 0; font-size: 18px; line-height: 1.55; color: oklch(86% 0.05 230)">Autonomy is only useful if you can trust it overnight. Follow one run from dusk to daybreak and see what keeps it safe at every hour.</p>
+          </div>
+
+          <div style="width: 100%; display: flex; flex-direction: column; align-items: center">
+            <div class="night" role="group" aria-label="A night run, from dusk to daybreak">
+              <div class="night__sky" data-b-style="{{nightSky}}" aria-hidden="true">
+                <span class="night__star" data-b-style="left: 22%; top: 40%; {{starStyle}}"></span>
+                <span class="night__star" data-b-style="left: 34%; top: 22%; {{starStyle}}"></span>
+                <span class="night__star" data-b-style="left: 47%; top: 34%; {{starStyle}}"></span>
+                <span class="night__star" data-b-style="left: 58%; top: 18%; {{starStyle}}"></span>
+                <span class="night__star" data-b-style="left: 69%; top: 42%; {{starStyle}}"></span>
+                <span class="night__star" data-b-style="left: 79%; top: 60%; {{starStyle}}"></span>
+                <span class="night__star" data-b-style="left: 15%; top: 66%; {{starStyle}}"></span>
+                <span class="night__star" data-b-style="left: 40%; top: 58%; {{starStyle}}"></span>
+                <span class="night__sun" data-b-style="{{sunStyle}}"></span>
+              </div>
+              <svg class="night__arc" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="nightArc" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#ff7a45"></stop>
+                    <stop offset="0.35" stop-color="#b06cff"></stop>
+                    <stop offset="0.65" stop-color="#5fc8f0"></stop>
+                    <stop offset="1" stop-color="#ffe14a"></stop>
+                  </linearGradient>
+                </defs>
+                <path d="M 8 96 A 92 92 0 0 1 192 96" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5" stroke-dasharray="2 5" vector-effect="non-scaling-stroke"></path>
+                <path class="night__progress" d="M 8 96 A 92 92 0 0 1 192 96" fill="none" stroke="url(#nightArc)" stroke-width="2.5" stroke-linecap="round" pathLength="100" stroke-dasharray="100" data-b-style="{{arcStyle}}" vector-effect="non-scaling-stroke"></path>
+              </svg>
+              <div class="night__horizon" aria-hidden="true"></div>
+              <template data-for="stops" data-as="s">
+                <button type="button" data-b-class="{{s.cls}}" data-b-style="{{s.pos}}" data-b-aria-pressed="{{s.pressed}}" data-b-aria-label="{{s.label}}" data-on-click="s.pick">
+                  <span class="stop__orb" data-b-style="{{s.orbStyle}}"></span>
+                  <span data-b-class="{{s.labCls}}" aria-hidden="true"><span class="stop__time"><span data-t="s.time"></span></span><span class="stop__title"><span data-t="s.title"></span></span></span>
+                </button>
+              </template>
+            </div>
+
+            <div class="console" data-b-style="{{accentStyle}}; margin-top: 64px">
+              <div class="console__in">
+                <div class="console__bar">
+                  <span class="console__live"><span class="pulse" aria-hidden="true"></span>Night run · <span data-t="cur.phase"></span></span>
+                  <span><span data-t="countLabel"></span></span>
+                </div>
+                <div class="segs" aria-hidden="true">
+                  <template data-for="segs" data-as="g">
+                    <span class="seg"><span data-b-class="{{g.fill}}"></span></span>
+                  </template>
+                </div>
+                <div data-b-class="{{readoutClass}}" aria-live="polite">
+                  <p class="readout__kicker" data-b-style="{{kickerStyle}}"><span data-t="cur.time"></span></p>
+                  <h3 class="display" style="margin: 0; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.04; font-weight: 800; color: #fff"><span data-t="cur.title"></span></h3>
+                  <p style="margin: 0; max-width: 36rem; font-size: 17px; line-height: 1.6; color: oklch(82% 0.04 245)"><span data-t="cur.desc"></span></p>
+                  <div class="term"><span class="term__prompt" aria-hidden="true">›</span><code><span data-t="cur.snip"></span></code><span class="term__caret" aria-hidden="true"></span></div>
+                </div>
+                <div class="console__foot">
+                  <button type="button" class="navbtn" aria-label="Previous hour" data-on-click="prevNight"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+                  <span class="console__hint">Tap an hour on the arc, or step through the night</span>
+                  <button type="button" class="navbtn" aria-label="Next hour" data-on-click="nextNight"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAMPLE RUN -->
+  <section id="run" data-section="run-log" class="runsec" style="max-width: 1240px; margin: 0 auto; padding: 150px clamp(20px, 4vw, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 64px 80px">
+    <div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
+      <p style="margin: 0; display: inline-flex; align-items: center; gap: 12px; font: 500 13px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; color: oklch(81.2% 0.139 206.5)">
+        <span class="dot" style="width: 8px; height: 8px; background: oklch(81.2% 0.139 206.5); box-shadow: 0 0 10px oklch(81.2% 0.139 206.5 / .8)"></span>What a night looks like
+      </p>
+      <h2 class="display" style="margin: 0; font-size: clamp(40px, 5vw, 72px); line-height: 0.95; font-weight: 800; letter-spacing: -0.04em"><span class="hero-white" style="display: block">Every step,</span><span class="hero-spectrum" style="display: block; padding-bottom: 0.08em">written down.</span></h2>
+      <p style="margin: 0; max-width: 30rem; font-size: 18px; line-height: 1.6; color: oklch(84% 0.04 240)">Runs don't disappear into a black box. Each brief keeps a timeline you can read in two minutes or replay in full — including the moments the agent stopped to ask.</p>
+      <div style="max-width: 26rem; margin-top: 4px" aria-hidden="true">
+        <div class="metric"><span class="metric__label">Actions logged</span><span class="metric__num"><span data-t="runActions"></span></span></div>
+        <div class="metric"><span class="metric__label">Agents working</span><span class="metric__num"><span data-t="runAgents"></span></span></div>
+        <div class="metric"><span class="metric__label">Waiting on you</span><span class="metric__num" data-b-style="{{runWaitStyle}}"><span data-t="runWaiting"></span></span></div>
+      </div>
+      <div style="padding-top: 10px"><a href="#start" class="btn btn--sun">Try it on your backlog</a></div>
+    </div>
+    <figure class="runlog" style="flex: 1 1 520px; min-width: 0; margin: 0">
+      <div class="runlog__in">
+      <div class="runlog__scan" aria-hidden="true"></div>
+      <figcaption class="runlog__bar">
+        <span style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font: 500 11px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: oklch(70% 0.04 250)">Example run · brief</span>
+          <span class="runlog__brief">Clear the refund backlog under $200</span>
+        </span>
+        <span class="runlog__live"><span data-b-class="{{runDotCls}}" aria-hidden="true"></span><span data-t="runStatus"></span></span>
+      </figcaption>
+      <ol class="log">
+        <li class="log__track" aria-hidden="true" style="list-style: none"><div class="log__fill" data-b-style="{{runFillStyle}}"></div></li>
+        <template data-for="runRows" data-as="r">
+          <li data-b-class="{{r.cls}}" data-b-style="{{r.style}}">
+            <span class="logrow__time"><span data-t="r.time"></span></span>
+            <span class="logrow__node" aria-hidden="true"></span>
+            <span class="logrow__body">
+              <span class="logrow__head"><span class="logrow__title"><span data-t="r.title"></span></span><span class="chip" data-b-style="{{r.chipStyle}}"><span data-t="r.chip"></span></span></span>
+              <span class="logrow__text"><span data-t="r.text"></span></span>
+              <template data-if="r.canReview">
+                <button type="button" class="review" data-on-click="approve">Review 3 refunds</button>
+              </template>
+            </span>
+          </li>
+        </template>
+      </ol>
+      <template data-if="runDone">
+        <div class="runlog__foot">
+          <span style="display: flex; flex-direction: column; gap: 4px">
+            <span class="display" style="font-size: 18px; font-weight: 700; color: #fff">Morning digest ready</span>
+            <span style="font-size: 14px; color: oklch(84% 0.04 245)"><span data-t="digestLine"></span></span>
+          </span>
+          <button type="button" class="replay" data-on-click="replayRun"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>Replay the night</button>
+        </div>
+      </template>
+      </div>
+    </figure>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" data-section="pricing" style="max-width: 1200px; margin: 0 auto; padding: 40px clamp(20px, 4vw, 32px) 140px; display: flex; flex-direction: column; gap: 48px">
+    <div style="display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center">
+      <h2 class="display" style="margin: 0; font-size: clamp(38px, 4.6vw, 64px); line-height: 1; font-weight: 800; color: oklch(96% 0.03 206)">Pick your shift</h2>
+      <p style="margin: 0; max-width: 34rem; font-size: 18px; line-height: 1.55; color: oklch(84% 0.05 230)">Start with one agent on one backlog. Grow when the mornings get good.</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: stretch">
+      <div class="orb-rim" style="--rim: oklch(45% 0.17 260); --o1: oklch(74% 0.15 220); --o2: oklch(76.6% 0.174 63.4)"><article class="orb" style="padding: 36px; gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h3 class="display" style="margin: 0; font-size: 26px; font-weight: 800; color: oklch(96% 0.03 206)">Solo</h3>
+          <p style="margin: 0; font-size: 15px; color: oklch(80% 0.05 230)">For one person and one stubborn backlog.</p>
+        </div>
+        <p class="display" style="margin: 0; font-size: 44px; font-weight: 800; color: oklch(90.9% 0.189 99.9)">$29<span style="font-size: 16px; font-weight: 500; color: oklch(80% 0.05 230)"> / month</span></p>
+        <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 16px; color: oklch(88% 0.05 220)">
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(81.2% 0.139 206.5)"></span>One agent at a time</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(81.2% 0.139 206.5)"></span>5 connected apps</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(81.2% 0.139 206.5)"></span>Morning digest by email</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(81.2% 0.139 206.5)"></span>30-day replay history</li>
+        </ul>
+        <a href="#start" class="btn btn--ghost" style="margin-top: auto">Start free</a>
+      </article></div>
+      <div class="orb-rim" style="--rim: oklch(86% 0.18 95); --o1: oklch(74% 0.15 220); --o2: oklch(70% 0.2 38); translate: 0 -12px"><article class="orb" style="padding: 36px; gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+            <h3 class="display" style="margin: 0; font-size: 26px; font-weight: 800">Team</h3>
+            <span style="font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: oklch(20% 0.08 262); color: oklch(90.9% 0.189 99.9)">For teams</span>
+          </div>
+          <p style="margin: 0; font-size: 15px">Shared briefs, approvals and a common digest.</p>
+        </div>
+        <p class="display" style="margin: 0; font-size: 44px; font-weight: 800">$99<span style="font-size: 16px; font-weight: 500"> / month</span></p>
+        <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 16px; font-weight: 500">
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(60.1% 0.222 31.7)"></span>Up to 8 agents in parallel</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(60.1% 0.222 31.7)"></span>Unlimited connected apps</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(60.1% 0.222 31.7)"></span>Approval roles and checkpoints</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(60.1% 0.222 31.7)"></span>Digest in email and team chat</li>
+        </ul>
+        <a href="#start" class="btn btn--sun" style="margin-top: auto">Start a team trial</a>
+      </article></div>
+      <div class="orb-rim" style="--rim: oklch(45% 0.17 260); --o1: oklch(74% 0.15 220); --o2: oklch(76.6% 0.174 63.4)"><article class="orb" style="padding: 36px; gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <h3 class="display" style="margin: 0; font-size: 26px; font-weight: 800; color: oklch(96% 0.03 206)">Enterprise</h3>
+          <p style="margin: 0; font-size: 15px; color: oklch(80% 0.05 230)">For work that needs an audit trail.</p>
+        </div>
+        <p class="display" style="margin: 0; font-size: 44px; font-weight: 800; color: oklch(90.9% 0.189 99.9)">Let's talk</p>
+        <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 16px; color: oklch(88% 0.05 220)">
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(76.6% 0.174 63.4)"></span>SSO and audit-log export</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(76.6% 0.174 63.4)"></span>Private deployment options</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(76.6% 0.174 63.4)"></span>Custom data retention</li>
+          <li style="display: flex; gap: 12px; align-items: center"><span class="dot" style="width: 10px; height: 10px; background: oklch(76.6% 0.174 63.4)"></span>99.9% uptime SLA</li>
+        </ul>
+        <a href="#contact" class="btn btn--ghost" style="margin-top: auto">Talk to us</a>
+      </article></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" data-section="faq" style="max-width: 860px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 32px) 140px; display: flex; flex-direction: column; gap: 32px">
+    <h2 class="display" style="margin: 0; font-size: clamp(34px, 4vw, 52px); line-height: 1; font-weight: 800; color: oklch(96% 0.03 206)">Questions before bedtime</h2>
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <details style="background: oklch(22% 0.07 262); border-radius: 18px; padding: 0 24px">
+        <summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; font-size: 18px; font-weight: 700; color: oklch(96% 0.03 206)">What happens when an agent gets stuck?<span class="faq-plus display" aria-hidden="true" style="font-size: 28px; color: oklch(90.9% 0.189 99.9)">+</span></summary>
+        <p style="margin: 0; padding: 0 0 24px; font-size: 16px; line-height: 1.6; color: oklch(86% 0.05 220)">It writes down what it tried, parks that piece of work, and moves on to the rest. You'll see it at the top of the morning digest with everything you need to unblock it.</p>
+      </details>
+      <details style="background: oklch(22% 0.07 262); border-radius: 18px; padding: 0 24px">
+        <summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; font-size: 18px; font-weight: 700; color: oklch(96% 0.03 206)">Can it do anything irreversible without me?<span class="faq-plus display" aria-hidden="true" style="font-size: 28px; color: oklch(90.9% 0.189 99.9)">+</span></summary>
+        <p style="margin: 0; padding: 0 0 24px; font-size: 16px; line-height: 1.6; color: oklch(86% 0.05 220)">Only if you say so. Sending, paying and deleting are checkpoints by default, and you choose which apps and actions each brief can use.</p>
+      </details>
+      <details style="background: oklch(22% 0.07 262); border-radius: 18px; padding: 0 24px">
+        <summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; font-size: 18px; font-weight: 700; color: oklch(96% 0.03 206)">Where does my data go?<span class="faq-plus display" aria-hidden="true" style="font-size: 28px; color: oklch(90.9% 0.189 99.9)">+</span></summary>
+        <p style="margin: 0; padding: 0 0 24px; font-size: 16px; line-height: 1.6; color: oklch(86% 0.05 220)">Runs execute in an isolated workspace, data is encrypted in transit and at rest, and nothing you connect is used to train models. Enterprise plans can pin data to a region.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA (sky paper band) -->
+  <section id="start" class="cta" data-section="cta">
+    <div style="position: relative; max-width: 1100px; margin: 0 auto; padding: 160px clamp(20px, 4vw, 40px) 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 28px">
+      <div class="art__orbit" aria-hidden="true" style="left: -6%; top: 22%; width: 112%; height: 90%; rotate: -8deg"></div>
+      <div class="art__orbit" aria-hidden="true" style="left: 6%; top: 12%; width: 88%; height: 104%; rotate: 12deg; border-color: oklch(70% 0.14 290 / .16)"></div>
+      <span class="dot" aria-hidden="true" style="position: absolute; left: 8%; top: 38%; width: 10px; height: 10px; background: oklch(90% 0.08 206); box-shadow: 0 0 14px oklch(90% 0.08 206 / .8)"></span>
+      <span class="dot" aria-hidden="true" style="position: absolute; right: 10%; top: 30%; width: 8px; height: 8px; background: oklch(76.6% 0.174 63.4); box-shadow: 0 0 14px oklch(76.6% 0.174 63.4 / .8)"></span>
+      <p style="position: relative; margin: 0; display: inline-flex; align-items: center; gap: 14px; font-size: 15px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: oklch(96% 0.02 240)">
+        <span class="dot" style="width: 12px; height: 12px; background: oklch(60.1% 0.222 31.7); box-shadow: 0 0 10px oklch(60.1% 0.222 31.7 / .7)"></span>Before you log off
+      </p>
+      <h2 class="display" style="position: relative; margin: 0; font-size: clamp(44px, 6.6vw, 96px); line-height: 0.95; font-weight: 800; letter-spacing: -0.04em"><span class="hero-white" style="display: block">Leave tonight's backlog</span><span class="hero-spectrum" style="display: block; padding-bottom: 0.08em">with us.</span></h2>
+      <p style="position: relative; margin: 0; max-width: 34rem; font-size: 20px; line-height: 1.6; color: oklch(86% 0.035 250)">Write one brief before you log off. See what's waiting, checked and reviewable, in the morning.</p>
+      <form class="cmd" style="margin-top: 12px" data-on-submit="ctaSubmit">
+        <label for="brief-cta" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Describe tonight's backlog</label>
+        <span class="cmd__prompt" aria-hidden="true">&gt;</span>
+        <input id="brief-cta" name="brief" type="text" class="cmd__input" placeholder="Describe tonight's backlog" autocomplete="off">
+        <button type="submit" class="cmd__go" aria-label="Start a free night run"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+      </form>
+      <template data-if="ctaSent">
+        <p class="cta__done" role="status">Brief received. Check your inbox to confirm your workspace, and your first digest lands tomorrow at 7 AM.</p>
+      </template>
+      <ul class="checks" style="position: relative">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="oklch(58% 0.2 260)"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>No credit card</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="oklch(58% 0.2 260)"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Works with your tools</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="oklch(58% 0.2 260)"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Cancel anytime</li>
+      </ul>
+      <a href="#contact" style="position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 8px; font-weight: 600; color: oklch(81.2% 0.139 206.5); text-underline-offset: 4px">Rather talk first? Book a walkthrough
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+      </a>
+    </div>
+
+    <svg class="cta__scene" viewBox="0 0 1440 460" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <radialGradient id="ctaSun" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fff8dc"></stop><stop offset="35%" stop-color="#ffdb8c"></stop><stop offset="75%" stop-color="#ff9d4f"></stop><stop offset="100%" stop-color="#ff6d5e"></stop></radialGradient>
+        <radialGradient id="ctaBloom" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff9d55" stop-opacity="0.5"></stop><stop offset="55%" stop-color="#ff7a4a" stop-opacity="0.16"></stop><stop offset="100%" stop-color="#ff7a4a" stop-opacity="0"></stop></radialGradient>
+        <linearGradient id="ctaBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c3aa8" stop-opacity="0.8"></stop><stop offset="1" stop-color="#0e1336"></stop></linearGradient>
+        <linearGradient id="ctaA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d4bd0"></stop><stop offset="1" stop-color="#131843"></stop></linearGradient>
+        <linearGradient id="ctaB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6c36cc"></stop><stop offset="1" stop-color="#1c1248"></stop></linearGradient>
+        <linearGradient id="ctaC" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c23a72"></stop><stop offset="0.5" stop-color="#ff7d3f"></stop><stop offset="1" stop-color="#ff9a4a"></stop></linearGradient>
+        <filter id="ctaGlow" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+      </defs>
+      <circle cx="720" cy="330" r="420" fill="url(#ctaBloom)"></circle>
+      <path d="M0 300 C 260 240, 520 290, 720 270 S 1120 200, 1440 250 L1440 460 L0 460 Z" fill="url(#ctaBack)"></path>
+      <circle cx="720" cy="330" r="150" fill="url(#ctaSun)"></circle>
+      <path d="M0 340 C 280 280, 480 262, 700 312 S 1000 392, 1180 332 S 1380 292, 1440 302 L1440 460 L0 460 Z" fill="url(#ctaA)" opacity="0.95"></path>
+      <path d="M0 340 C 280 280, 480 262, 700 312 S 1000 392, 1180 332 S 1380 292, 1440 302" fill="none" stroke="#7f95ff" stroke-width="2.5" filter="url(#ctaGlow)"></path>
+      <path d="M0 392 C 340 342, 560 362, 760 402 S 1140 392, 1440 352 L1440 460 L0 460 Z" fill="url(#ctaB)"></path>
+      <path d="M0 392 C 340 342, 560 362, 760 402 S 1140 392, 1440 352" fill="none" stroke="#c690ff" stroke-width="2.5" filter="url(#ctaGlow)"></path>
+      <path d="M0 432 C 340 394, 600 422, 840 436 S 1200 422, 1440 394 L1440 460 L0 460 Z" fill="url(#ctaC)"></path>
+      <path d="M0 432 C 340 394, 600 422, 840 436 S 1200 422, 1440 394" fill="none" stroke="#ffbe7a" stroke-width="3" filter="url(#ctaGlow)"></path>
+      <path d="M0 460 L0 452 C 400 442, 1040 442, 1440 450 L1440 460 Z" style="fill: oklch(12% 0.04 265)"></path>
+    </svg>
+  </section>
+
+  </main>
+  <!-- FOOTER -->
+  <footer class="foot" data-section="footer">
+    <div class="foot__reflect" aria-hidden="true"></div>
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <a href="#top" aria-label="Daybreak home" style="display: inline-flex; align-items: center; gap: 12px; align-self: flex-start; text-decoration: none; color: #fff">
+          <span class="dot" style="width: 30px; height: 30px; background: oklch(90.9% 0.189 99.9); box-shadow: 0 0 18px oklch(90.9% 0.189 99.9 / .55), inset 0 -3px 0 oklch(80% 0.17 95)"></span>
+          <span class="display" style="font-size: 26px; font-weight: 800">Daybreak</span>
+        </a>
+        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: oklch(78% 0.04 245)">Agents for the night shift. Hand it off at dusk, wake up to it done — checked, logged and ready for your review.</p>
+        <a href="#status" class="foot__status"><span class="runlog__dot" aria-hidden="true"></span>System status</a>
+      </div>
+      <nav class="foot__col" aria-label="Product">
+        <p class="foot__head">Product</p>
+        <a class="foot__link" href="#how">How it works</a>
+        <a class="foot__link" href="#features">Safeguards</a>
+        <a class="foot__link" href="#run">Sample run</a>
+        <a class="foot__link" href="#pricing">Pricing</a>
+      </nav>
+      <nav class="foot__col" aria-label="Resources">
+        <p class="foot__head">Resources</p>
+        <a class="foot__link" href="#docs">Docs</a>
+        <a class="foot__link" href="#security">Security</a>
+        <a class="foot__link" href="#changelog">Changelog</a>
+        <a class="foot__link" href="#faq">FAQ</a>
+      </nav>
+      <nav class="foot__col" aria-label="Company">
+        <p class="foot__head">Company</p>
+        <a class="foot__link" href="#about">About</a>
+        <a class="foot__link" href="#careers">Careers</a>
+        <a class="foot__link" href="#contact">Contact</a>
+      </nav>
+    </div>
+    <div class="foot__bar">
+      <span>© 2026 Daybreak. All rights reserved.</span>
+      <nav aria-label="Legal" style="display: flex; flex-wrap: wrap; gap: 4px 24px">
+        <a class="foot__link" href="#privacy" style="font-size: 14px">Privacy</a>
+        <a class="foot__link" href="#terms" style="font-size: 14px">Terms</a>
+      </nav>
+      <a href="#top" class="foot__top">Back to top
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg>
+      </a>
+    </div>
+  </footer>
+</div>
+<script>
+class PageLogic {
+  constructor(props) { this.props = props || {}; this.state = {}; this._queued = false; }
+  setState(patch) {
+    Object.assign(this.state, typeof patch === "function" ? patch(this.state) : patch);
+    if (this._queued) return;
+    this._queued = true;
+    queueMicrotask(() => { this._queued = false; this._render && this._render(); });
+  }
+}
+
+var LABELS = ["PR merged", "Refund sent", "Bug fixed", "Report filed", "Leads synced", "Invoice paid", "Inbox zero", "Tests green", "Tickets triaged", "Data cleaned"];
+var COLORS = ["oklch(90.9% 0.189 99.9)", "oklch(81.2% 0.139 206.5)", "oklch(76.6% 0.174 63.4)", "oklch(90% 0.08 206)", "oklch(93.5% 0.18 101)"];
+
+var NIGHT = [
+  { time: "6:00 PM", phase: "Dusk", title: "Plain-language briefs", color: "oklch(76.6% 0.174 63.4)", sky: "oklch(64.7% 0.24 31.5 / .55)",
+    desc: "Describe the outcome the way you'd tell a colleague. Daybreak turns it into a plan you can read and edit before anything runs.",
+    snip: "brief: clear refunds under $200, ask before anything larger" },
+  { time: "8:00 PM", phase: "Evening", title: "Your tools, scoped", color: "oklch(70% 0.2 38)", sky: "oklch(55% 0.2 340 / .42)",
+    desc: "Connect the apps your team lives in. Permissions are set per app and per brief, and start read-only.",
+    snip: "billing: read-only   ·   tickets: read + write" },
+  { time: "11:00 PM", phase: "Late night", title: "Many hands, one run", color: "oklch(81.2% 0.139 206.5)", sky: "oklch(45% 0.17 275 / .4)",
+    desc: "Big backlogs split across agents working in parallel, then come back together as a single result to review.",
+    snip: "4 agents working  →  1 shared result" },
+  { time: "2:00 AM", phase: "Deep night", title: "Checkpoints that hold", color: "oklch(64.7% 0.24 31.5)", sky: "oklch(38% 0.14 262 / .35)",
+    desc: "Anything irreversible — sending, paying, deleting — waits for a human. The rest of the run keeps going around it.",
+    snip: "paused for you: 3 refunds flagged, run continues" },
+  { time: "5:00 AM", phase: "Before dawn", title: "Full replay", color: "oklch(90% 0.08 206)", sky: "oklch(58% 0.15 305 / .42)",
+    desc: "Step through every action an agent took, like scrubbing a recording. See the inputs, the output and why it chose what it did.",
+    snip: "step 214  ·  why: matched a duplicate order" },
+  { time: "7:00 AM", phase: "Daybreak", title: "The morning digest", color: "oklch(90.9% 0.189 99.9)", sky: "oklch(82% 0.17 75 / .6)",
+    desc: "One page in your inbox or team chat: done, blocked, needs you. Approve straight from it.",
+    snip: "done  ·  blocked  ·  needs you  →  approve from here" }
+];
+
+var RUN = [
+  { time: "11:40 PM", title: "Brief received", text: "Plan drafted and approved before anything ran.", chip: "Done", color: "oklch(81.2% 0.139 206.5)", actions: 3, agents: 1 },
+  { time: "11:44 PM", title: "Work split four ways", text: "One agent per region, each with read-only billing access.", chip: "Running", color: "oklch(70% 0.17 280)", actions: 18, agents: 4 },
+  { time: "12:31 AM", title: "Orders matched", text: "Orders matched to payment records; duplicates set aside.", chip: "Done", color: "oklch(76.6% 0.174 63.4)", actions: 126, agents: 4 },
+  { time: "2:05 AM", title: "Paused for you", text: "Three refunds look unusual. Flagged with notes; the rest of the run keeps going.", chip: "Needs you", color: "oklch(64.7% 0.24 31.5)", actions: 214, agents: 4, flag: true },
+  { time: "4:18 AM", title: "Refunds issued", text: "Remaining refunds sent; customers notified from your template.", chip: "Done", color: "oklch(76.6% 0.174 63.4)", actions: 341, agents: 2 },
+  { time: "6:58 AM", title: "Digest ready", text: "Everything that changed, with a diff, waiting in your inbox.", chip: "Ready", color: "oklch(90.9% 0.189 99.9)", actions: 380, agents: 0 }
+];
+
+function rnd(lo, hi) { return lo + Math.random() * (hi - lo); }
+function clampN(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+function r4(n) { return Math.round(n * 10000) / 10000; }
+
+function makeSticker(id, fx, fy, o) {
+  var S = Math.round(o.size);
+  var angleDeg = o.angleDeg;
+  var a = angleDeg * Math.PI / 180;
+  var u0 = Math.cos(a), u1 = Math.sin(a);
+  var w0 = -u1, w1 = u0;
+  var projs = [0, S * u0, S * u0 + S * u1, S * u1];
+  var minP = Math.min.apply(null, projs);
+  var span = Math.max.apply(null, projs) - minP;
+  var style =
+    "left:calc(" + r4(fx * 100) + "% - " + (S / 2) + "px);" +
+    "top:calc(" + r4(fy * 100) + "% - " + (S / 2) + "px);" +
+    "width:" + S + "px;height:" + S + "px;" +
+    "--rot:" + r4(o.rot) + "deg;" +
+    "--u0:" + r4(u0) + ";--u1:" + r4(u1) + ";--w0:" + r4(w0) + ";--w1:" + r4(w1) + ";" +
+    "--minp:" + r4(minP) + ";--span:" + r4(span) + ";--big:" + (S * 6) + ";--s:" + S + ";" +
+    "--ca:" + r4(90 + angleDeg) + ";" +
+    "--a:" + r4(1 - 2 * u0 * u0) + ";--b:" + r4(-2 * u0 * u1) + ";--d:" + r4(1 - 2 * u1 * u1) + ";" +
+    "--p0:" + o.p0 + ";";
+  return {
+    id: id,
+    cls: o.seed ? "sticker sticker--seed" : "sticker",
+    style: style,
+    faceStyle: "background:" + o.color + ";font-size:" + Math.round(S * 0.135) + "px;",
+    label: o.label
+  };
+}
+
+class Component extends PageLogic {
+  constructor(props) {
+    super(props);
+    this.n = 2;
+    this.slaps = 0;
+    this.state = { done: 12, stickers: [], fi: 0, auto: true, ctaSent: false, rt: 0, approved: false };
+  }
+
+  componentDidMount() {
+    var self = this;
+    var motion = this.props.motion ?? true;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (motion && !reduce) {
+      this.timer = setInterval(function () {
+        self.setState({ fi: ((self.state.fi || 0) + 1) % NIGHT.length });
+      }, 4500);
+    } else {
+      this.setState({ auto: false });
+    }
+    if (motion && !reduce) {
+      this.startRunLog();
+    } else {
+      this.setState({ rt: RUN.length });
+    }
+  }
+
+  startRunLog() {
+    var self = this;
+    if (this.runTimer) clearInterval(this.runTimer);
+    this.runTimer = setInterval(function () {
+      var next = (self.state.rt || 0) + 1;
+      // hold the finished log for ~4 ticks, then replay from the top
+      if (next > RUN.length + 4) { self.setState({ rt: 0, approved: false }); return; }
+      self.setState({ rt: next });
+    }, 1400);
+  }
+
+  componentWillUnmount() {
+    this.stopAuto();
+    if (this.runTimer) clearInterval(this.runTimer);
+  }
+
+  stopAuto() {
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+  }
+
+  goNight(i) {
+    this.stopAuto();
+    this.setState({ fi: (i + NIGHT.length) % NIGHT.length, auto: false });
+  }
+
+  renderVals() {
+    var self = this;
+    var motion = this.props.motion ?? true;
+    var fi = this.state.fi || 0;
+    var cur = NIGHT[fi];
+    var t = fi / (NIGHT.length - 1);
+    var stops = NIGHT.map(function (n, i) {
+      var th = Math.PI - (i + 0.5) * Math.PI / NIGHT.length;
+      var x = 50 + 46 * Math.cos(th);
+      var y = 96 - 92 * Math.sin(th);
+      return {
+        time: n.time,
+        title: n.title,
+        label: n.time + ", " + n.title,
+        pos: "left:" + x.toFixed(2) + "%;top:" + y.toFixed(2) + "%;--c:" + n.color + ";",
+        labCls: "stop__label lab--" + ["r", "br", "b", "b", "bl", "l"][i],
+        cls: i === fi ? "stop stop--on" : (i < fi ? "stop stop--past" : "stop"),
+        pressed: i === fi ? "true" : "false",
+        orbStyle: "background:" + n.color + ";--c:" + n.color + ";",
+        pick: function () { self.goNight(i); }
+      };
+    });
+    return {
+      runRows: RUN.map(function (r, i) {
+        var shown = Math.min(self.state.rt || 0, RUN.length);
+        var isIn = i < shown;
+        var isNow = i === shown - 1 && shown < RUN.length;
+        var approved = r.flag && self.state.approved;
+        var c = approved ? "oklch(80% 0.17 160)" : r.color;
+        var cls = "logrow" + (isIn ? " logrow--in" : "") + (isNow ? " logrow--now" : "") + (r.flag && isIn && !approved ? " logrow--flag" : "");
+        return {
+          time: r.time, title: approved ? "Reviewed by you" : r.title, text: r.text,
+          chip: approved ? "Approved" : (r.chip === "Running" && !isNow && isIn ? "Done" : r.chip),
+          cls: cls, style: "--c:" + c + ";", chipStyle: "--c:" + c + ";",
+          canReview: !!(r.flag && isIn && !approved)
+        };
+      }),
+      runFillStyle: "height:" + (Math.max(0, Math.min(self.state.rt || 0, RUN.length) - 1) / (RUN.length - 1) * 100).toFixed(1) + "%;",
+      runStatus: (self.state.rt || 0) >= RUN.length ? "Complete · 6:58 AM" : "Live · " + RUN[Math.max(0, (self.state.rt || 1) - 1)].time,
+      runDotCls: (self.state.rt || 0) >= RUN.length ? "runlog__dot runlog__dot--done" : "runlog__dot",
+      runDone: (self.state.rt || 0) >= RUN.length,
+      runActions: String(RUN[Math.max(0, Math.min(self.state.rt || 1, RUN.length) - 1)].actions),
+      runAgents: String((self.state.rt || 0) === 0 ? 0 : RUN[Math.min(self.state.rt, RUN.length) - 1].agents),
+      runWaiting: String((self.state.rt || 0) >= 4 && !self.state.approved ? 1 : 0),
+      runWaitStyle: (self.state.rt || 0) >= 4 && !self.state.approved ? "color: oklch(70% 0.22 35)" : "",
+      digestLine: self.state.approved ? "Nothing waiting on you. Every refund is accounted for." : "One decision still waiting on you.",
+      approve: function () { self.setState({ approved: true }); },
+      replayRun: function () { self.setState({ rt: 0, approved: false }); self.startRunLog(); },
+      stops: stops,
+      cur: cur,
+      segs: NIGHT.map(function (n, i) {
+        var fill = "seg__fill";
+        if (i < fi) fill += " seg__fill--past";
+        else if (i === fi) fill += (self.state.auto ? " seg__fill--run-" + (fi % 2 ? "a" : "b") : " seg__fill--full");
+        return { fill: fill };
+      }),
+      countLabel: "0" + (fi + 1) + " / 0" + NIGHT.length,
+      accentStyle: "--accent:" + cur.color,
+      ctaSent: !!this.state.ctaSent,
+      ctaSubmit: function (e) { e.preventDefault(); self.setState({ ctaSent: true }); },
+      readoutClass: "readout readout--" + (fi % 2 ? "a" : "b"),
+      kickerStyle: "color:" + cur.color + ";",
+      nightSky: "background: radial-gradient(ellipse 75% 65% at 50% 100%, " + cur.sky + ", transparent 72%), linear-gradient(180deg, oklch(13% 0.04 265 / .6), oklch(20% 0.07 265 / .7));",
+      starStyle: "opacity:" + (0.85 - t * 0.7).toFixed(2) + ";",
+      sunStyle: "transform: translate(-50%, -" + (t * 15).toFixed(1) + "cqi); opacity:" + (0.25 + t * 0.75).toFixed(2) + ";",
+      arcStyle: "stroke-dashoffset:" + (100 - (fi + 0.5) / NIGHT.length * 100).toFixed(1) + ";",
+      prevNight: function () { self.goNight(fi - 1); },
+      nextNight: function () { self.goNight(fi + 1); },
+      rootClass: motion ? "db" : "db db--still",
+      stickers: this.state.stickers,
+      tasksLabel: this.state.done + " tasks completed",
+      startRun: function (e) {
+        e.preventDefault();
+        var t = document.getElementById("start");
+        if (t) t.scrollIntoView({ behavior: "smooth" });
+      },
+      slap: function (e) {
+        var el = e.currentTarget;
+        var r = el.getBoundingClientRect();
+        var fx, fy;
+        if (!e.detail || (e.clientX === 0 && e.clientY === 0)) {
+          fx = rnd(0.2, 0.8); fy = rnd(0.2, 0.8);
+        } else {
+          fx = (e.clientX - r.left) / r.width;
+          fy = (e.clientY - r.top) / r.height;
+        }
+        fx = clampN(fx, 0.12, 0.88);
+        fy = clampN(fy, 0.08, 0.92);
+        self.n += 1;
+        self.slaps += 1;
+        var size = clampN(r.width * rnd(0.09, 0.13), 64, 120);
+        var s = makeSticker(self.n, fx, fy, {
+          size: size,
+          angleDeg: rnd(0, 360),
+          rot: rnd(-12, 12),
+          p0: 0.15,
+          seed: false,
+          color: COLORS[self.slaps % COLORS.length],
+          label: LABELS[self.slaps % LABELS.length]
+        });
+        var next = self.state.stickers.concat([s]).slice(-14);
+        self.setState({ stickers: next, done: self.state.done + 1 });
+      }
+    };
+  }
+}
+
+/* ── A tiny binder for the markup above ─────────────────────────────────
+   Attributes named data-b-<attr> hold a template ("left: 22%; {{starStyle}}"),
+   <span data-t="path"> holds text, <template data-for="list" data-as="x"> repeats
+   its content once per item and <template data-if="path"> shows it when truthy.
+   Event attributes data-on-click / data-on-submit name a function in the values.
+   Every render re-applies the same nodes in place, so CSS transitions run and
+   inputs keep focus; lists only add or remove the items that changed. */
+(function () {
+  const get = (scope, path) => path.split(".").reduce((o, k) => (o == null ? o : o[k]), scope);
+  const fill = (tpl, scope) => tpl.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, p) => { const v = get(scope, p); return v == null ? "" : String(v); });
+
+  // Bind one subtree to a scope. Returns an updater for later renders.
+  function bind(root, scopeRef) {
+    const ups = [];
+    const walk = (node) => {
+      if (node.nodeType !== 1) return;
+      if (node.tagName === "TEMPLATE") { ups.push(block(node, scopeRef)); return; }
+      for (const a of Array.from(node.attributes)) {
+        if (a.name.startsWith("data-b-")) {
+          const name = a.name.slice(7), tpl = a.value;
+          ups.push(() => node.setAttribute(name, fill(tpl, scopeRef.s)));
+        } else if (a.name === "data-t") {
+          const path = a.value;
+          ups.push(() => { const v = get(scopeRef.s, path); node.textContent = v == null ? "" : String(v); });
+        } else if (a.name === "data-on-click" || a.name === "data-on-submit") {
+          const path = a.value, type = a.name.slice(8);
+          node.addEventListener(type, (e) => { const fn = get(scopeRef.s, path); if (typeof fn === "function") fn(e); });
+        }
+      }
+      Array.from(node.childNodes).forEach(walk);
+    };
+    walk(root);
+    return () => ups.forEach((u) => u());
+  }
+
+  function block(tpl, scopeRef) {
+    const anchor = document.createComment(tpl.dataset.for ? "for " + tpl.dataset.for : "if " + tpl.dataset.if);
+    tpl.replaceWith(anchor);
+    if (tpl.dataset.for) {
+      const items = [];                      // [{ nodes, ref, update }]
+      return () => {
+        const list = get(scopeRef.s, tpl.dataset.for) || [];
+        while (items.length > list.length) items.pop().nodes.forEach((n) => n.remove());
+        while (items.length < list.length) {
+          const frag = tpl.content.cloneNode(true), nodes = Array.from(frag.childNodes);
+          const ref = { s: null };
+          const updates = nodes.map((n) => bind(n, ref));
+          const after = items.length ? items[items.length - 1].nodes[items[items.length - 1].nodes.length - 1] : anchor;
+          after.after(frag);
+          items.push({ nodes, ref, update: () => updates.forEach((u) => u()) });
+        }
+        items.forEach((it, i) => { it.ref.s = Object.assign(Object.create(scopeRef.s), { [tpl.dataset.as]: list[i] }); it.update(); });
+      };
+    }
+    let shown = null;
+    return () => {
+      const on = !!get(scopeRef.s, tpl.dataset.if);
+      if (on && !shown) {
+        const frag = tpl.content.cloneNode(true), nodes = Array.from(frag.childNodes);
+        const ref = scopeRef, updates = nodes.map((n) => bind(n, ref));
+        anchor.after(frag);
+        shown = { nodes, update: () => updates.forEach((u) => u()) };
+      } else if (!on && shown) { shown.nodes.forEach((n) => n.remove()); shown = null; }
+      if (shown) shown.update();
+    };
+  }
+
+  const root = document.getElementById("daybreak");
+  const comp = new Component({ motion: true });
+  const scopeRef = { s: {} };
+  const update = bind(root, scopeRef);
+  comp._render = () => { scopeRef.s = comp.renderVals(); update(); };
+  comp._render();
+  if (comp.componentDidMount) comp.componentDidMount();
+})();
+
+</script>
+</body>
+</html>

@@ -2,14 +2,396 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 20,
+  "count": 26,
   "pages": [
+    {
+      "slug": "card-scanner-finance-page",
+      "title": "Card Scanner Finance Page",
+      "description": "Autonomous finance agents: tilted cards in an orbit ring, a scroll-pinned scanner that turns cards into code, and a live control bento",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 12, 2026",
+      "bestFor": [
+        "fintech and payments",
+        "AI agents for finance teams",
+        "card issuing and treasury tools",
+        "B2B SaaS with a live product story"
+      ],
+      "style": [
+        "dark",
+        "violet",
+        "glassmorphism",
+        "scroll-pinned",
+        "canvas",
+        "threejs",
+        "gsap",
+        "credit-cards"
+      ],
+      "sections": [
+        "hero",
+        "nav",
+        "scanner",
+        "control",
+        "faq",
+        "cta"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.12.5",
+            "cdn": "cdnjs"
+          },
+          {
+            "name": "three",
+            "version": "r128",
+            "cdn": "cdnjs"
+          }
+        ],
+        "fonts": [
+          "Inter Tight",
+          "Inter",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "Made by Beings",
+          "href": "https://madebybeings.com",
+          "note": "The page's design and build, as credited in its footer."
+        },
+        {
+          "label": "Card scanner inspired by evervault",
+          "href": "https://evervault.com/",
+          "note": "The scroll-driven scanner that turns cards into code follows the effect on evervault's site."
+        }
+      ],
+      "files": {
+        "html": "pages/card-scanner-finance-page/index.html",
+        "prompt": "pages/card-scanner-finance-page/PROMPT.md",
+        "preview": "pages/card-scanner-finance-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/nova-agentic-finance.html",
+      "page": "https://instalanding.ai/prompt/card-scanner-finance-page"
+    },
+    {
+      "slug": "paper-sun-agent-page",
+      "title": "Paper Sun Agent Page",
+      "description": "AI agents for the night shift: a paper-cut sunset panel you can slap stickers on, a dusk-to-daybreak arc, and a run log that stops to ask",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 12, 2026",
+      "bestFor": [
+        "AI agent products",
+        "automation and back-office tools",
+        "async and overnight workflows",
+        "B2B SaaS with personality"
+      ],
+      "style": [
+        "dark",
+        "night",
+        "sunset-gradient",
+        "paper-cut",
+        "3d-panel",
+        "playful",
+        "spectrum-type"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "how-it-works",
+        "features",
+        "run-log",
+        "pricing",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Bricolage Grotesque",
+          "Figtree",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/paper-sun-agent-page/index.html",
+        "prompt": "pages/paper-sun-agent-page/PROMPT.md",
+        "preview": "pages/paper-sun-agent-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/daybreak-night-shift.html",
+      "page": "https://instalanding.ai/prompt/paper-sun-agent-page"
+    },
+    {
+      "slug": "tide-reveal-agent-page",
+      "title": "Tide Reveal Agent Page",
+      "description": "An AI agent platform over a live WebGL sea that, on scroll, ebbs into a terminal window, then a clickable workspace and a run trace",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 12, 2026",
+      "bestFor": [
+        "AI agent platforms",
+        "workflow automation",
+        "developer tools with a CLI",
+        "B2B SaaS with a product demo"
+      ],
+      "style": [
+        "dark",
+        "navy",
+        "webgl",
+        "shader",
+        "scroll-driven",
+        "glassmorphism",
+        "product-ui"
+      ],
+      "sections": [
+        "nav",
+        "menu",
+        "hero",
+        "product",
+        "workspace",
+        "inspector",
+        "trust",
+        "api",
+        "pricing",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.12.5",
+            "cdn": "cdnjs"
+          }
+        ],
+        "fonts": [
+          "Archivo",
+          "IBM Plex Mono",
+          "Instrument Sans"
+        ],
+        "features": [
+          "webgl",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/tide-reveal-agent-page/index.html",
+        "prompt": "pages/tide-reveal-agent-page/PROMPT.md",
+        "preview": "pages/tide-reveal-agent-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/undertow-agents.html",
+      "page": "https://instalanding.ai/prompt/tide-reveal-agent-page"
+    },
+    {
+      "slug": "manga-panel-dev-tool-page",
+      "title": "Manga Panel Dev Tool Page",
+      "description": "A deploy CLI pitched as a black-and-white manga issue: a sliced retro sun over a city skyline, a typing terminal, three villains defeated and a reader-mail FAQ",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 11, 2026",
+      "bestFor": [
+        "developer tools and CLIs",
+        "deploy and hosting platforms",
+        "indie dev launches",
+        "playful B2B SaaS"
+      ],
+      "style": [
+        "black-and-white",
+        "manga",
+        "comic",
+        "halftone",
+        "hand-drawn",
+        "svg-animation",
+        "retro-sun"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "stats",
+        "features",
+        "how-it-works",
+        "pricing",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Anton",
+          "Bangers",
+          "Barlow Condensed",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/manga-panel-dev-tool-page/index.html",
+        "prompt": "pages/manga-panel-dev-tool-page/PROMPT.md",
+        "preview": "pages/manga-panel-dev-tool-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/overclock-deploy.html",
+      "page": "https://instalanding.ai/prompt/manga-panel-dev-tool-page"
+    },
+    {
+      "slug": "ghost-agent-landing-page",
+      "title": "Ghost Agent Landing Page",
+      "description": "Invisible AI agents pitched as ghosts: pixel ghosts float up a curved hero, and three SVG ghosts clear a 100-task board live",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 11, 2026",
+      "bestFor": [
+        "AI agent startups",
+        "automation and ops tools",
+        "B2B SaaS launches",
+        "marketing agencies"
+      ],
+      "style": [
+        "dark",
+        "neon-gradient",
+        "playful",
+        "pixel-art",
+        "3d-tilt-cards",
+        "expanded-type"
+      ],
+      "sections": [
+        "nav",
+        "menu",
+        "hero",
+        "agents",
+        "customers",
+        "live-demo",
+        "how-it-works",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Archivo"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/ghost-agent-landing-page/index.html",
+        "prompt": "pages/ghost-agent-landing-page/PROMPT.md",
+        "preview": "pages/ghost-agent-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/haunt-agents.html",
+      "page": "https://instalanding.ai/prompt/ghost-agent-landing-page"
+    },
+    {
+      "slug": "sunset-scroll-story-page",
+      "title": "Sunset Scroll Story Page",
+      "description": "A fusion company told as one long sunset: scroll and the sun goes down over a layered SVG landscape, night falls, then a live canvas tokamak takes over",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 11, 2026",
+      "bestFor": [
+        "climate and energy startups",
+        "deep-tech company sites",
+        "hardware launches",
+        "storytelling homepages"
+      ],
+      "style": [
+        "illustrated",
+        "parallax",
+        "scroll-driven",
+        "sunset-gradient",
+        "canvas",
+        "gsap"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "story",
+        "scene",
+        "stats",
+        "features",
+        "reactor",
+        "how-it-works",
+        "timeline",
+        "careers",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.12.5",
+            "cdn": "cdnjs"
+          }
+        ],
+        "fonts": [
+          "Space Grotesk",
+          "Inter",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "Parallax scroll landscape by isladjan",
+          "href": "https://isladjan.com/work/4/",
+          "note": "The layered SVG landscape and its sunset-to-night scroll choreography come from this piece."
+        }
+      ],
+      "files": {
+        "html": "pages/sunset-scroll-story-page/index.html",
+        "prompt": "pages/sunset-scroll-story-page/PROMPT.md",
+        "preview": "pages/sunset-scroll-story-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/solstice-fusion.html",
+      "page": "https://instalanding.ai/prompt/sunset-scroll-story-page"
+    },
     {
       "slug": "radiating-rings-hero-page",
       "title": "Radiating Rings Hero Page",
       "description": "Concentric stadium rings radiating out of the call to action, under a streaked orb, with glass readouts floating in the gaps",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 27, 2026",
       "bestFor": [
         "AI inference and edge networks",
         "cloud infrastructure",
@@ -64,6 +446,7 @@
       "description": "A marked-up document: every highlight is a real highlighter, rough-edged by an SVG displacement filter, with a colour per verdict",
       "category": "web",
       "theme": "light",
+      "added": "Sep 26, 2026",
       "bestFor": [
         "LLM grounding and evals",
         "RAG citation checking",
@@ -128,6 +511,7 @@
       "description": "Soft UI in a violet palette: an aperture sunk into the page, tokens drifting across it, and a working run dial below",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 26, 2026",
       "bestFor": [
         "agent memory infrastructure",
         "LLM platform APIs",
@@ -187,6 +571,7 @@
       "description": "A product announcement lit like a stage: conic spotlights, rising dust, a hairline grid and a light sweep running through the wordmark",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 25, 2026",
       "bestFor": [
         "AI infrastructure launches",
         "developer runtime announcements",
@@ -245,6 +630,7 @@
       "description": "The landing page is the front panel: it boots itself on load, runs a needle self-test, then hands the switches to you",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 25, 2026",
       "bestFor": [
         "on-prem AI hardware",
         "AI infrastructure",
@@ -301,6 +687,7 @@
       "description": "Frosted panels lit by a comet that races their border, and a chat bar that opens into a breathing voice orb",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 29, 2026",
       "bestFor": [
         "AI platform launches",
         "enterprise knowledge assistants",
@@ -366,6 +753,7 @@
       "description": "An autumn lake painted in pure CSS, die-cut sticker type, and a live agent run that stops for a human checkpoint",
       "category": "web",
       "theme": "light",
+      "added": "Sep 24, 2026",
       "bestFor": [
         "AI agent runtimes",
         "developer tools",
@@ -428,6 +816,7 @@
       "description": "Glass cards with their icon punched clean through, on gradient throughlines that travel as you scroll",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 23, 2026",
       "bestFor": [
         "AI infrastructure",
         "LLM ops and eval platforms",
@@ -487,6 +876,7 @@
       "description": "A WebGL agent swarm you can shove out of the way, and die-cut holographic tickets masked out of one conic gradient",
       "category": "web",
       "theme": "light",
+      "added": "Sep 29, 2026",
       "bestFor": [
         "AI research labs",
         "multi-agent platforms",
@@ -549,6 +939,7 @@
       "description": "Interlocking cobalt panels, moulded-plastic controls, model cards with CSS benchmark plates",
       "category": "web",
       "theme": "light",
+      "added": "Sep 23, 2026",
       "bestFor": [
         "LLM gateways and model routers",
         "AI API platforms",
@@ -604,6 +995,7 @@
       "description": "Generated SVG keycaps inside a neo-brutalist bento shell, with a hero key that runs a live runbook",
       "category": "web",
       "theme": "light",
+      "added": "Sep 23, 2026",
       "bestFor": [
         "incident response and SRE tools",
         "runbook automation",
@@ -660,6 +1052,7 @@
       "description": "Fashion-editorial layout for an AI product, every image a gooey generative composition",
       "category": "web",
       "theme": "light",
+      "added": "Sep 22, 2026",
       "bestFor": [
         "LLM eval platforms",
         "AI quality and CI gates",
@@ -726,6 +1119,7 @@
       "description": "Live WebGL wind field hero, six pressure presets, broken-frame buttons and cards",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 22, 2026",
       "bestFor": [
         "logistics and routing",
         "fleet operations",
@@ -796,6 +1190,7 @@
       "description": "A tilted live chat demo in a cloud of clay stat cards, pixel-type accents, and buttons that measure themselves",
       "category": "web",
       "theme": "light",
+      "added": "Sep 22, 2026",
       "bestFor": [
         "AI analytics",
         "product analytics SaaS",
@@ -865,6 +1260,7 @@
       "description": "Iridescence shader hero + CSS power switch: one light source for buttons, cards and charts",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 22, 2026",
       "bestFor": [
         "clinical and healthcare AI",
         "medical imaging",
@@ -923,6 +1319,7 @@
       "description": "Glass torus knot refracting giant type, scroll-lit statement, Swiss monochrome AI platform site",
       "category": "web",
       "theme": "light",
+      "added": "Sep 22, 2026",
       "bestFor": [
         "AI platforms",
         "agent and RAG infrastructure",
@@ -986,6 +1383,7 @@
       "description": "Procedural canvas flame toggle with embers, hold-to-supercharge and a live playground",
       "category": "motion",
       "theme": "dark",
+      "added": "Sep 21, 2026",
       "bestFor": [
         "playful CTAs and toggles",
         "gamified streak UIs",
@@ -1044,6 +1442,7 @@
       "description": "Dithered WebGL halftone panels, glossy 3D orbs, tabbed product demo, bento + pricing",
       "category": "web",
       "theme": "light",
+      "added": "Sep 21, 2026",
       "bestFor": [
         "analytics SaaS",
         "BI and data platforms",
@@ -1104,6 +1503,7 @@
       "description": "Liquid-glass agent platform with a three-theme switcher, dark terminal cards and circuit-trace module graphics",
       "category": "web",
       "theme": "light",
+      "added": "Sep 21, 2026",
       "bestFor": [
         "AI agent platforms",
         "developer APIs",
@@ -1166,6 +1566,7 @@
       "description": "Skewed marquee lanes of agent runs behind a working run console, with approval gates and a fleet kill switch",
       "category": "web",
       "theme": "dark",
+      "added": "Sep 22, 2026",
       "bestFor": [
         "AI agents for operations",
         "e-commerce automation",

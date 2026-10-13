@@ -14,6 +14,21 @@ produces the page in one pass.
 
 Browse them live at **[instalanding.ai](https://instalanding.ai)**.
 
+## New drops
+
+<!-- NEW-DROPS:START -->
+**Updated Oct 12, 2026 · 26 pages.** New pages land here first. Every page is listed under [The pages](#the-pages).
+
+| | |
+| --- | --- |
+| <a href="pages/card-scanner-finance-page"><img src="pages/card-scanner-finance-page/preview.jpg" width="240" alt="Card Scanner Finance Page"></a> | **[Card Scanner Finance Page](pages/card-scanner-finance-page)** · <sub>Oct 12, 2026</sub><br>Autonomous finance agents: tilted cards in an orbit ring, a scroll-pinned scanner that turns cards into code, and a live control bento<br><sub>[Live demo](https://instalanding.ai/demos/nova-agentic-finance.html) · [Prompt](pages/card-scanner-finance-page/PROMPT.md)</sub> |
+| <a href="pages/paper-sun-agent-page"><img src="pages/paper-sun-agent-page/preview.jpg" width="240" alt="Paper Sun Agent Page"></a> | **[Paper Sun Agent Page](pages/paper-sun-agent-page)** · <sub>Oct 12, 2026</sub><br>AI agents for the night shift: a paper-cut sunset panel you can slap stickers on, a dusk-to-daybreak arc, and a run log that stops to ask<br><sub>[Live demo](https://instalanding.ai/demos/daybreak-night-shift.html) · [Prompt](pages/paper-sun-agent-page/PROMPT.md)</sub> |
+| <a href="pages/tide-reveal-agent-page"><img src="pages/tide-reveal-agent-page/preview.jpg" width="240" alt="Tide Reveal Agent Page"></a> | **[Tide Reveal Agent Page](pages/tide-reveal-agent-page)** · <sub>Oct 12, 2026</sub><br>An AI agent platform over a live WebGL sea that, on scroll, ebbs into a terminal window, then a clickable workspace and a run trace<br><sub>[Live demo](https://instalanding.ai/demos/undertow-agents.html) · [Prompt](pages/tide-reveal-agent-page/PROMPT.md)</sub> |
+| <a href="pages/manga-panel-dev-tool-page"><img src="pages/manga-panel-dev-tool-page/preview.jpg" width="240" alt="Manga Panel Dev Tool Page"></a> | **[Manga Panel Dev Tool Page](pages/manga-panel-dev-tool-page)** · <sub>Oct 11, 2026</sub><br>A deploy CLI pitched as a black-and-white manga issue: a sliced retro sun over a city skyline, a typing terminal, three villains defeated and a reader-mail FAQ<br><sub>[Live demo](https://instalanding.ai/demos/overclock-deploy.html) · [Prompt](pages/manga-panel-dev-tool-page/PROMPT.md)</sub> |
+| <a href="pages/ghost-agent-landing-page"><img src="pages/ghost-agent-landing-page/preview.jpg" width="240" alt="Ghost Agent Landing Page"></a> | **[Ghost Agent Landing Page](pages/ghost-agent-landing-page)** · <sub>Oct 11, 2026</sub><br>Invisible AI agents pitched as ghosts: pixel ghosts float up a curved hero, and three SVG ghosts clear a 100-task board live<br><sub>[Live demo](https://instalanding.ai/demos/haunt-agents.html) · [Prompt](pages/ghost-agent-landing-page/PROMPT.md)</sub> |
+| <a href="pages/sunset-scroll-story-page"><img src="pages/sunset-scroll-story-page/preview.jpg" width="240" alt="Sunset Scroll Story Page"></a> | **[Sunset Scroll Story Page](pages/sunset-scroll-story-page)** · <sub>Oct 11, 2026</sub><br>A fusion company told as one long sunset: scroll and the sun goes down over a layered SVG landscape, night falls, then a live canvas tokamak takes over<br><sub>[Live demo](https://instalanding.ai/demos/solstice-fusion.html) · [Prompt](pages/sunset-scroll-story-page/PROMPT.md)</sub> |
+<!-- NEW-DROPS:END -->
+
 ## Use a page
 
 **Open it.** Every `pages/<name>/index.html` runs from `file://`. No install, no build step.
@@ -41,8 +56,15 @@ at [instalanding.ai/llms.txt](https://instalanding.ai/llms.txt),
 
 ## The pages
 
+<!-- PAGES:START -->
 | | |
 | --- | --- |
+| <a href="pages/card-scanner-finance-page"><img src="pages/card-scanner-finance-page/preview.jpg" width="240" alt="Card Scanner Finance Page"></a> | **[Card Scanner Finance Page](pages/card-scanner-finance-page)**<br>Autonomous finance agents: tilted cards in an orbit ring, a scroll-pinned scanner that turns cards into code, and a live control bento<br><sub>dark · violet · glassmorphism · scroll-pinned</sub> |
+| <a href="pages/paper-sun-agent-page"><img src="pages/paper-sun-agent-page/preview.jpg" width="240" alt="Paper Sun Agent Page"></a> | **[Paper Sun Agent Page](pages/paper-sun-agent-page)**<br>AI agents for the night shift: a paper-cut sunset panel you can slap stickers on, a dusk-to-daybreak arc, and a run log that stops to ask<br><sub>dark · night · sunset-gradient · paper-cut</sub> |
+| <a href="pages/tide-reveal-agent-page"><img src="pages/tide-reveal-agent-page/preview.jpg" width="240" alt="Tide Reveal Agent Page"></a> | **[Tide Reveal Agent Page](pages/tide-reveal-agent-page)**<br>An AI agent platform over a live WebGL sea that, on scroll, ebbs into a terminal window, then a clickable workspace and a run trace<br><sub>dark · navy · webgl · shader</sub> |
+| <a href="pages/manga-panel-dev-tool-page"><img src="pages/manga-panel-dev-tool-page/preview.jpg" width="240" alt="Manga Panel Dev Tool Page"></a> | **[Manga Panel Dev Tool Page](pages/manga-panel-dev-tool-page)**<br>A deploy CLI pitched as a black-and-white manga issue: a sliced retro sun over a city skyline, a typing terminal, three villains defeated and a reader-mail FAQ<br><sub>light · black-and-white · manga · comic</sub> |
+| <a href="pages/ghost-agent-landing-page"><img src="pages/ghost-agent-landing-page/preview.jpg" width="240" alt="Ghost Agent Landing Page"></a> | **[Ghost Agent Landing Page](pages/ghost-agent-landing-page)**<br>Invisible AI agents pitched as ghosts: pixel ghosts float up a curved hero, and three SVG ghosts clear a 100-task board live<br><sub>dark · neon-gradient · playful · pixel-art</sub> |
+| <a href="pages/sunset-scroll-story-page"><img src="pages/sunset-scroll-story-page/preview.jpg" width="240" alt="Sunset Scroll Story Page"></a> | **[Sunset Scroll Story Page](pages/sunset-scroll-story-page)**<br>A fusion company told as one long sunset: scroll and the sun goes down over a layered SVG landscape, night falls, then a live canvas tokamak takes over<br><sub>light · illustrated · parallax · scroll-driven</sub> |
 | <a href="pages/radiating-rings-hero-page"><img src="pages/radiating-rings-hero-page/preview.jpg" width="240" alt="Radiating Rings Hero Page"></a> | **[Radiating Rings Hero Page](pages/radiating-rings-hero-page)**<br>Concentric stadium rings radiating out of the call to action, under a streaked orb, with glass readouts floating in the gaps<br><sub>dark · blue · glassmorphism · concentric-rings</sub> |
 | <a href="pages/highlighter-markup-page"><img src="pages/highlighter-markup-page/preview.jpg" width="240" alt="Highlighter Markup Page"></a> | **[Highlighter Markup Page](pages/highlighter-markup-page)**<br>A marked-up document: every highlight is a real highlighter, rough-edged by an SVG displacement filter, with a colour per verdict<br><sub>light · editorial · paper · serif</sub> |
 | <a href="pages/recessed-aperture-hero-page"><img src="pages/recessed-aperture-hero-page/preview.jpg" width="240" alt="Recessed Aperture Hero Page"></a> | **[Recessed Aperture Hero Page](pages/recessed-aperture-hero-page)**<br>Soft UI in a violet palette: an aperture sunk into the page, tokens drifting across it, and a working run dial below<br><sub>dark · purple · neumorphic · soft-ui</sub> |
@@ -63,6 +85,7 @@ at [instalanding.ai/llms.txt](https://instalanding.ai/llms.txt),
 | <a href="pages/monax-analytics-landing-page"><img src="pages/monax-analytics-landing-page/preview.jpg" width="240" alt="Monax Analytics Landing Page"></a> | **[Monax Analytics Landing Page](pages/monax-analytics-landing-page)**<br>Dithered WebGL halftone panels, glossy 3D orbs, tabbed product demo, bento + pricing<br><sub>light · warm-paper · 3d-orbs · webgl</sub> |
 | <a href="pages/clay-saas-platform-page"><img src="pages/clay-saas-platform-page/preview.jpg" width="240" alt="Clay SaaS Platform Page"></a> | **[Clay SaaS Platform Page](pages/clay-saas-platform-page)**<br>Liquid-glass agent platform with a three-theme switcher, dark terminal cards and circuit-trace module graphics<br><sub>light · clay · neumorphic · soft-ui</sub> |
 | <a href="pages/skewed-marquee-wall"><img src="pages/skewed-marquee-wall/preview.jpg" width="240" alt="Skewed Marquee Wall"></a> | **[Skewed Marquee Wall](pages/skewed-marquee-wall)**<br>Skewed marquee lanes of agent runs behind a working run console, with approval gates and a fleet kill switch<br><sub>dark · industrial · pixel-type · marquee</sub> |
+<!-- PAGES:END -->
 
 ## Repo layout
 
