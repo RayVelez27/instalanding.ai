@@ -2,8 +2,180 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 26,
+  "count": 29,
   "pages": [
+    {
+      "slug": "retro-messenger-agent-page",
+      "title": "Retro Messenger Agent Page",
+      "description": "An AI agent pitched as your old instant-messenger buddy: a working chat window that plans and runs tasks, nudges that shake the screen, and a buddy-list footer",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 13, 2026",
+      "bestFor": [
+        "consumer AI assistants",
+        "AI agents with a friendly face",
+        "chat and messaging products",
+        "nostalgic or playful brands"
+      ],
+      "style": [
+        "dark",
+        "y2k",
+        "retro-ui",
+        "skeuomorphic",
+        "purple",
+        "interactive-demo"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "features",
+        "how",
+        "faq",
+        "cta"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Oswald",
+          "Neuton"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/retro-messenger-agent-page/index.html",
+        "prompt": "pages/retro-messenger-agent-page/PROMPT.md",
+        "preview": "pages/retro-messenger-agent-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/hollr-messenger.html",
+      "page": "https://instalanding.ai/prompt/retro-messenger-agent-page"
+    },
+    {
+      "slug": "event-horizon-orbital-page",
+      "title": "Event Horizon Orbital Page",
+      "description": "Satellite servicing under a ray-marched black hole you can drag to orbit, with nine live three.js mission scenes inside amber glass cards",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 13, 2026",
+      "bestFor": [
+        "space and aerospace companies",
+        "deep-tech and hardware startups",
+        "technical services with a showcase hero",
+        "products that want a WebGL wow moment"
+      ],
+      "style": [
+        "dark",
+        "amber",
+        "webgl",
+        "shader",
+        "threejs",
+        "glassmorphism",
+        "hud"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "stats",
+        "services",
+        "process",
+        "coverage",
+        "fleet",
+        "cta"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "three",
+            "version": "r128",
+            "cdn": "cdnjs"
+          }
+        ],
+        "fonts": [
+          "Archivo Narrow",
+          "Archivo",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "webgl",
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/event-horizon-orbital-page/index.html",
+        "prompt": "pages/event-horizon-orbital-page/PROMPT.md",
+        "preview": "pages/event-horizon-orbital-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/halcyon-orbital.html",
+      "page": "https://instalanding.ai/prompt/event-horizon-orbital-page"
+    },
+    {
+      "slug": "faceted-iceberg-platform-page",
+      "title": "Faceted Iceberg Platform Page",
+      "description": "An AI agent platform drawn in low-poly crystal: a shape-mosaic hero, an iceberg whose waterline drops as the platform takes on the stack, and a faceted sunrise footer",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 13, 2026",
+      "bestFor": [
+        "AI agent platforms",
+        "enterprise AI and orchestration",
+        "developer platforms with a pricing page",
+        "B2B SaaS that needs a stack diagram"
+      ],
+      "style": [
+        "dark",
+        "low-poly",
+        "faceted",
+        "spectrum-gradient",
+        "glassmorphism",
+        "svg-illustration"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "logos",
+        "how",
+        "platform",
+        "stack",
+        "performance",
+        "use-cases",
+        "integrations",
+        "testimonial",
+        "pricing",
+        "faq",
+        "cta"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Outfit"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/faceted-iceberg-platform-page/index.html",
+        "prompt": "pages/faceted-iceberg-platform-page/PROMPT.md",
+        "preview": "pages/faceted-iceberg-platform-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/halcyra-agents.html",
+      "page": "https://instalanding.ai/prompt/faceted-iceberg-platform-page"
+    },
     {
       "slug": "card-scanner-finance-page",
       "title": "Card Scanner Finance Page",

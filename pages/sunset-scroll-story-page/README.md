@@ -16,7 +16,7 @@ A fusion company told as one long sunset: scroll and the sun goes down over a la
 | Libraries | gsap 3.12.5 |
 | Fonts | Space Grotesk, Inter, JetBrains Mono (Google Fonts) |
 | Uses | canvas-2d, inline-svg, reduced-motion |
-| Size | 150 KB · brief ~1,395 tokens |
+| Size | 162 KB · brief ~1,594 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 

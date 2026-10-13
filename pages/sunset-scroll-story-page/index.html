@@ -30,6 +30,8 @@
   - The hero and captions are fixed overlays; keep their z-index (5) between the SVG (3) and the nav (30).
   - The reactor canvas reads its size from #reactorViz through a ResizeObserver; give that box an
     aspect-ratio, never a fixed height, or the tokamak projection squashes.
+  - Milestones is a vertical timeline: .ms-side sticks, JS sets --p on #msTrack (rail fill to a reading line
+    55% down the viewport) and toggles .lit/.active on each .ms-item as its node crosses that line.
   - Under prefers-reduced-motion the section reveals and star twinkle are skipped and the reactor draws
     a settled frame; the landscape still follows the scrollbar because the reader is driving it.
 -->
@@ -281,15 +283,60 @@ a { color: inherit; }
 .steps p { margin: 0; color: var(--muted); font-size: .94rem; line-height: 1.6; }
 
 /* Timeline */
-.timeline { position: relative; margin-top: 56px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-.timeline::before { content: ""; position: absolute; top: 9px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--sun), var(--pink) 45%, var(--line) 60%); }
-.tl-item { position: relative; padding-top: 38px; }
-.tl-item::before { content: ""; position: absolute; top: 2px; left: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--ink); border: 2px solid var(--muted); }
-.tl-item.done::before { background: var(--pink); border-color: var(--pink); box-shadow: 0 0 0 5px rgba(253, 117, 168, .18); }
-.tl-item.now::before { background: var(--sun); border-color: var(--sun); box-shadow: 0 0 0 6px rgba(245, 197, 78, .2); animation: pulse 2s infinite; }
-.tl-item .year { font-family: var(--mono); font-size: .8rem; color: var(--muted); }
-.tl-item h4 { font-family: var(--display); font-size: 1.08rem; margin: 6px 0 8px; }
-.tl-item p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; }
+/* Milestones: a vertical timeline driven by scroll. The left column sticks; the rail fills to the
+   reading line (55% down the viewport) and each card lights as its node crosses it. */
+.ms-grid { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: clamp(40px, 6vw, 88px); align-items: start; }
+.ms-side { position: sticky; top: 110px; }
+.ms-side .intro { max-width: 34ch; }
+.ms-year { margin-top: 40px; height: 1em; overflow: hidden; font-family: var(--display); font-weight: 700; font-size: clamp(5rem, 10vw, 9.5rem); line-height: 1; letter-spacing: -.05em; }
+.ms-year-track { display: flex; flex-direction: column; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
+.ms-year-track span { display: block; height: 1em; background: linear-gradient(180deg, var(--sun) 12%, var(--pink) 62%, var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ms-state { margin: 16px 0 0; font-family: var(--mono); font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.ms-state b { font-weight: 500; color: var(--text); }
+.ms-meter { position: relative; max-width: 320px; height: 2px; margin-top: 22px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.ms-meter i { position: absolute; inset: 0; transform-origin: left; transform: scaleX(var(--m, 0)); background: linear-gradient(90deg, var(--sun), var(--pink)); transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
+.ms-meter-l { display: flex; justify-content: space-between; max-width: 320px; margin-top: 8px; font-family: var(--mono); font-size: .7rem; color: var(--muted); }
+
+.ms-track { position: relative; padding-left: 58px; }
+.ms-rail { position: absolute; left: 17px; top: 26px; bottom: 26px; width: 2px; border-radius: 2px; background: var(--line); }
+.ms-rail i { position: absolute; inset: 0; border-radius: 2px; transform-origin: top; transform: scaleY(var(--p, 0));
+    background: linear-gradient(180deg, var(--sun), var(--pink) 55%, var(--violet)); box-shadow: 0 0 14px rgba(253, 117, 168, .55); }
+.ms-rail b { position: absolute; left: 50%; top: calc(var(--p, 0) * 100%); width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%;
+    background: #fff; box-shadow: 0 0 0 4px rgba(253, 117, 168, .25), 0 0 24px 6px rgba(253, 117, 168, .5); }
+.ms-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: clamp(20px, 3.4vh, 34px); }
+.ms-item { position: relative; }
+.ms-node { position: absolute; left: -49px; top: 26px; width: 18px; height: 18px; border-radius: 50%; background: var(--ink);
+    border: 2px solid rgba(255, 255, 255, .28); transition: background .5s, border-color .5s, box-shadow .5s; }
+.ms-item.done .ms-node { background: var(--pink); border-color: var(--pink); box-shadow: 0 0 0 5px rgba(253, 117, 168, .16); }
+.ms-item.now .ms-node { background: var(--sun); border-color: var(--sun); box-shadow: 0 0 0 6px rgba(245, 197, 78, .18), 0 0 22px rgba(245, 197, 78, .6); }
+.ms-item.lit:not(.done):not(.now) .ms-node { border-color: var(--violet); box-shadow: 0 0 0 5px rgba(143, 116, 224, .16), 0 0 18px rgba(143, 116, 224, .45); }
+.ms-item.now .ms-node::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 1px solid rgba(245, 197, 78, .6); animation: msPing 2.2s ease-out infinite; }
+@keyframes msPing { from { transform: scale(.6); opacity: 1; } to { transform: scale(1.8); opacity: 0; } }
+.ms-card { position: relative; overflow: hidden; padding: 26px 28px 24px; border-radius: 20px; border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .012));
+    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .7); opacity: .34; transform: translateY(16px);
+    transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1), border-color .4s, box-shadow .4s; }
+.ms-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent); }
+.ms-card::after { content: ""; position: absolute; right: -90px; top: -90px; width: 240px; height: 240px; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(253, 117, 168, .2), transparent 70%); opacity: 0; transition: opacity .5s; }
+.ms-item.now .ms-card::after { background: radial-gradient(circle, rgba(245, 197, 78, .24), transparent 70%); }
+.ms-item.lit .ms-card { opacity: 1; transform: none; }
+.ms-item.active .ms-card { border-color: rgba(253, 117, 168, .34);
+    box-shadow: 0 30px 70px -30px rgba(0, 0, 0, .8), 0 24px 60px -24px rgba(253, 117, 168, .28); }
+.ms-item.now.active .ms-card { border-color: rgba(245, 197, 78, .4); box-shadow: 0 30px 70px -30px rgba(0, 0, 0, .8), 0 24px 60px -24px rgba(245, 197, 78, .28); }
+.ms-item.active .ms-card::after { opacity: 1; }
+.ms-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: .78rem; letter-spacing: .08em; color: var(--muted); }
+.ms-tag { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+.ms-item.done .ms-tag { color: var(--pink); border-color: rgba(253, 117, 168, .35); background: rgba(253, 117, 168, .08); }
+.ms-item.now .ms-tag { color: #1c1505; border-color: var(--sun); background: var(--sun); }
+.ms-card h3 { font-family: var(--display); font-size: clamp(1.3rem, 2vw, 1.6rem); letter-spacing: -.02em; line-height: 1.15; margin: 14px 0 8px; }
+.ms-card p { margin: 0; color: var(--muted); line-height: 1.6; }
+.ms-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 20px 0 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--line); }
+.ms-metrics > div { padding: 12px 14px; background: rgba(8, 7, 15, .62); }
+.ms-metrics dt { font-family: var(--mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.ms-metrics dd { margin: 4px 0 0; font-family: var(--display); font-weight: 600; font-size: 1.15rem; }
+.ms-bar { height: 4px; margin-top: 8px; border-radius: 4px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+.ms-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--sun), var(--pink)); }
 
 /* Careers */
 .roles { margin-top: 48px; border-top: 1px solid var(--line); }
@@ -323,10 +370,14 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 @media (max-width: 960px) {
     .grid-4 { grid-template-columns: repeat(2, 1fr); }
     .reactor-wrap, .split { grid-template-columns: 1fr; }
-    .timeline { grid-template-columns: 1fr; gap: 0; }
-    .timeline::before { top: 0; bottom: 0; left: 7px; right: auto; width: 2px; height: auto; background: linear-gradient(180deg, var(--sun), var(--pink) 45%, var(--line) 60%); }
-    .tl-item { padding: 0 0 32px 40px; }
-    .tl-item::before { top: 2px; }
+    .ms-grid { grid-template-columns: 1fr; gap: 36px; }
+    .ms-side { position: static; }
+    .ms-year { margin-top: 24px; font-size: clamp(3.6rem, 18vw, 5rem); }
+    .ms-track { padding-left: 40px; }
+    .ms-rail { left: 8px; }
+    .ms-node { left: -40px; top: 24px; }
+    .ms-card { padding: 20px 18px 18px; border-radius: 16px; }
+    .ms-metrics dd { font-size: 1.02rem; }
     .stats { grid-template-columns: repeat(2, 1fr); }
     .stat:nth-child(3) { border-left: 0; }
     .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
@@ -395,6 +446,9 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
     .grid-4 { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
+    .ms-card { opacity: 1; transform: none; transition: none; }
+    .ms-year-track, .ms-meter i { transition: none; }
+    .ms-item.now .ms-node::after { animation: none; }
     html { scroll-behavior: auto; }
     .nav.open, .nav.open * { animation: none !important; }
     .plasma-glow, .tl-item.now::before { animation: none; }
@@ -1012,14 +1066,66 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 
     <!-- Milestones -->
     <section class="section" id="milestones" data-section="timeline">
-        <p class="kicker reveal">// 04 — Milestones</p>
-        <h2 class="reveal">From magnet to megawatt.</h2>
-        <div class="timeline">
-            <div class="tl-item done reveal"><div class="year">2023</div><h4>20 T coil</h4><p>Large-bore HTS test coil reaches 20.1 T and survives a deliberate quench.</p></div>
-            <div class="tl-item done reveal"><div class="year">2025</div><h4>Integrated magnet test</h4><p>Full TF sector energized with the cryoplant and power supplies in the loop.</p></div>
-            <div class="tl-item now reveal"><div class="year">2026 · now</div><h4>Ember-1 assembly</h4><p>18 of 18 TF coils delivered. Vacuum vessel closure underway.</p></div>
-            <div class="tl-item reveal"><div class="year">2028</div><h4>First plasma → Q &gt; 1</h4><p>Commissioning campaign targeting scientific breakeven in deuterium–tritium.</p></div>
-            <div class="tl-item reveal"><div class="year">2032</div><h4>Electrons on the grid</h4><p>First commercial Ember plant delivers 400 MWe of firm power.</p></div>
+        <div class="ms-grid">
+            <div class="ms-side">
+                <p class="kicker reveal">// 04 — Milestones</p>
+                <h2 class="reveal">From magnet to megawatt.</h2>
+                <p class="intro reveal">Nine years from a test coil to electrons on the grid. Two milestones are behind us; Ember-1 is on the floor now.</p>
+                <div class="ms-year" aria-hidden="true"><div class="ms-year-track" id="msYear"><span>2023</span><span>2025</span><span>2026</span><span>2028</span><span>2032</span></div></div>
+                <p class="ms-state" id="msState" aria-hidden="true"><b>Done</b> · 20 T coil</p>
+                <div class="ms-meter" aria-hidden="true"><i id="msMeter"></i></div>
+                <div class="ms-meter-l" aria-hidden="true"><span>2023</span><span>2032</span></div>
+            </div>
+            <div class="ms-track" id="msTrack">
+                <div class="ms-rail" aria-hidden="true"><i></i><b></b></div>
+                <ol class="ms-list">
+                    <li class="ms-item done" data-status="Done">
+                        <span class="ms-node" aria-hidden="true"></span>
+                        <article class="ms-card">
+                            <div class="ms-head"><span>2023</span><span class="ms-tag">Done</span></div>
+                            <h3>20 T coil</h3>
+                            <p>Large-bore HTS test coil reaches 20.1 T and survives a deliberate quench.</p>
+                            <dl class="ms-metrics"><div><dt>Peak field</dt><dd>20.1 T</dd></div><div><dt>Quench</dt><dd>No damage</dd></div></dl>
+                        </article>
+                    </li>
+                    <li class="ms-item done" data-status="Done">
+                        <span class="ms-node" aria-hidden="true"></span>
+                        <article class="ms-card">
+                            <div class="ms-head"><span>2025</span><span class="ms-tag">Done</span></div>
+                            <h3>Integrated magnet test</h3>
+                            <p>Full TF sector energized with the cryoplant and power supplies in the loop.</p>
+                            <dl class="ms-metrics"><div><dt>Scope</dt><dd>Full TF sector</dd></div><div><dt>In the loop</dt><dd>Cryo + power</dd></div></dl>
+                        </article>
+                    </li>
+                    <li class="ms-item now" data-status="Now">
+                        <span class="ms-node" aria-hidden="true"></span>
+                        <article class="ms-card">
+                            <div class="ms-head"><span>2026</span><span class="ms-tag">In progress</span></div>
+                            <h3>Ember-1 assembly</h3>
+                            <p>18 of 18 TF coils delivered. Vacuum vessel closure underway.</p>
+                            <dl class="ms-metrics"><div><dt>TF coils</dt><dd>18 / 18</dd><div class="ms-bar" aria-hidden="true"><i style="width:100%"></i></div></div><div><dt>Vessel closure</dt><dd>Underway</dd></div></dl>
+                        </article>
+                    </li>
+                    <li class="ms-item" data-status="Next">
+                        <span class="ms-node" aria-hidden="true"></span>
+                        <article class="ms-card">
+                            <div class="ms-head"><span>2028</span><span class="ms-tag">Next</span></div>
+                            <h3>First plasma → Q &gt; 1</h3>
+                            <p>Commissioning campaign targeting scientific breakeven in deuterium–tritium.</p>
+                            <dl class="ms-metrics"><div><dt>Target</dt><dd>Q &gt; 1</dd></div><div><dt>Fuel</dt><dd>D–T</dd></div></dl>
+                        </article>
+                    </li>
+                    <li class="ms-item" data-status="Goal">
+                        <span class="ms-node" aria-hidden="true"></span>
+                        <article class="ms-card">
+                            <div class="ms-head"><span>2032</span><span class="ms-tag">Goal</span></div>
+                            <h3>Electrons on the grid</h3>
+                            <p>First commercial Ember plant delivers 400 MWe of firm power.</p>
+                            <dl class="ms-metrics"><div><dt>Output</dt><dd>400 MWe</dd></div><div><dt>Power</dt><dd>Firm, 24/7</dd></div></dl>
+                        </article>
+                    </li>
+                </ol>
+            </div>
         </div>
     </section>
 
@@ -1368,7 +1474,7 @@ if (!reduceMotion) gsap.utils.toArray(".reveal").forEach((el) => {
 
     // Geometry (units: major radius = 1)
     const A = 0.36, KAP = 1.75, DEL = 0.38;         // plasma minor radius, elongation, triangularity
-    const RC = 0.56, KC = 1.45, DC = 0.3, NCOIL = 18; // TF coil shape
+    const RC = 0.56, KC = 1.45, DC = 0.3, NCOIL = 18, RIN = 0.5, SEG = 48; // TF coil shape; RIN = straight inner leg (Princeton-D)
     const SOL_R = 0.19, SOL_H = 0.9, FLOOR = -1.12, CAM = 8;
 
     let W = 0, H = 0, S = 1, cx = 0, cy = 0, U = 1;
@@ -1396,7 +1502,7 @@ if (!reduceMotion) gsap.utils.toArray(".reveal").forEach((el) => {
         const r = 0.04 + 0.96 * Math.pow(random(), 0.85);
         const q = 1 + 2.6 * r * r;
         const w = 0.3 + 0.32 * (1 - r);
-        P.push({ r, z: random() * TAU, th: random() * TAU, w, tw: (w * 2.6) / q, s: r < 0.38 ? 0 : r < 0.72 ? 1 : 2, j: 0.8 + random() * 0.4 });
+        P.push({ r, z: random() * TAU, th: random() * TAU, w, tw: w / q, s: r < 0.38 ? 0 : r < 0.72 ? 1 : 2, j: 0.8 + random() * 0.4 });
     }
 
     function plasmaPos(r, th, zeta) {
@@ -1454,20 +1560,34 @@ if (!reduceMotion) gsap.utils.toArray(".reveal").forEach((el) => {
         }
     }
 
-    function coil(k, a, front) {
+    // TF coils are split into segments so each one can sit in front of or behind the plasma on its own
+    // (a coil at the side of the machine passes both in front of and behind the ring). Each coil is a
+    // Princeton-D: the inner leg is straight where it wedges against the central column.
+    function coilSegs(k, a, list) {
         if (a <= 0.001) return;
         const zeta = (k / NCOIL) * TAU + spin + yaw;
-        const pts = [];
-        for (let i = 0; i <= 56; i++) {
-            const t = (i / 56) * TAU, R = 1 + RC * cos(t + DC * sin(t));
-            pts.push(proj(R * cos(zeta), KC * RC * sin(t), R * sin(zeta)));
+        let prev = null;
+        for (let i = 0; i <= SEG; i++) {
+            const t = (i / SEG) * TAU, R = max(RIN, 1 + RC * cos(t + DC * sin(t)));
+            const p = proj(R * cos(zeta), KC * RC * sin(t), R * sin(zeta));
+            if (prev) list.push({ d: (prev[3] + p[3]) / 2, kind: 1, a, p0: prev, p1: p, t: t - PI / SEG });
+            prev = p;
         }
-        const path = () => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); };
-        const f = pts[0][2];
-        ctx.lineJoin = "round";
-        if (front) { path(); ctx.lineWidth = 9 * U * f; ctx.strokeStyle = `rgba(143,116,224,${0.07 * a})`; ctx.stroke(); }
-        path(); ctx.lineWidth = 4.2 * U * f; ctx.strokeStyle = `rgba(30,24,58,${(front ? 0.95 : 0.8) * a})`; ctx.stroke();
-        path(); ctx.lineWidth = 1.1 * U * f; ctx.strokeStyle = `rgba(190,172,255,${(front ? 0.7 : 0.3) * a})`; ctx.stroke();
+    }
+    function seg(s, pl) {
+        const f = (s.p0[2] + s.p1[2]) / 2;
+        const near = clamp(0.5 - s.d * 0.6);                        // 1 at the front of the machine, 0 at the back
+        const lit = pl * (0.3 + 0.7 * Math.exp(-3 * sin(s.t) ** 2)); // the casing is lit hardest beside the plasma midplane
+        ctx.beginPath(); ctx.moveTo(s.p0[0], s.p0[1]); ctx.lineTo(s.p1[0], s.p1[1]);
+        ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = s.a;
+        ctx.lineCap = "butt"; ctx.lineWidth = 4.6 * U * f;   // butt caps: a round cap would eat the previous segment's rim line
+        ctx.strokeStyle = `rgb(${22 + 8 * near | 0},${18 + 6 * near | 0},${40 + 18 * near | 0})`; ctx.stroke();
+        ctx.lineWidth = 1.2 * U * f;
+        ctx.strokeStyle = `rgba(${190 + 65 * lit | 0},${172 + 18 * lit | 0},${255 - 120 * lit | 0},${0.26 + 0.44 * near})`; ctx.stroke();
+        if (lit > 0.02) {                                            // plasma light spilling onto the casing
+            ctx.globalCompositeOperation = "lighter"; ctx.lineWidth = 7 * U * f;
+            ctx.strokeStyle = `rgba(253,128,108,${0.07 * lit})`; ctx.stroke();
+        }
     }
 
     function solenoid(a, mag) {
@@ -1537,58 +1657,59 @@ if (!reduceMotion) gsap.utils.toArray(".reveal").forEach((el) => {
         ctx.clearRect(0, 0, W, H);
         floor();
 
-        // order coils by depth
-        const order = [];
-        for (let k = 0; k < NCOIL; k++) {
-            const zeta = (k / NCOIL) * TAU + spin + yaw;
-            order.push({ k, z2: proj(cos(zeta), 0, sin(zeta))[3] });
-        }
-        order.filter((o) => o.z2 > 0).forEach((o) => coil(o.k, st.coil(o.k), false));
-
-        // plasma
+        // Everything with a depth goes in one list and is drawn far to near: coil segments are opaque
+        // (source-over), the plasma is optically thin and emissive (lighter), so the casings occlude the
+        // plasma behind them and sit behind the plasma in front of them, piece by piece.
         const pl = st.plasma, flick = 1 + 0.05 * sin(clock * 9) + 0.03 * sin(clock * 23);
-        const back = [], front = [];
+        const L = [];
+        for (let k = 0; k < NCOIL; k++) coilSegs(k, st.coil(k), L);
         if (pl > 0.001) {
             for (const p of P) {
                 p.z += p.w * dt; p.th += p.tw * dt;
                 const pos = plasmaPos(p.r, p.th, p.z + spin + yaw), q = proj(pos[0], pos[1], pos[2]);
-                (q[3] > 0 ? back : front).push([p, q]);
+                L.push({ d: q[3], kind: 0, p, q });
             }
-        }
-        const band = (sideFront) => {
             for (let k = 0; k < 120; k++) {
                 const zeta = (k / 120) * TAU, pos = plasmaPos(0, 0, zeta), q = proj(pos[0], pos[1], pos[2]);
-                if ((q[3] <= 0) !== sideFront) continue;
+                L.push({ d: q[3], kind: 2, q });
+            }
+            for (let k = 0; k < 90; k++) {
+                const zeta = (k / 90) * TAU, q = proj(1.02 * cos(zeta), -KAP * A - 0.07, 1.02 * sin(zeta));
+                L.push({ d: q[3], kind: 3, q, k });
+            }
+        }
+        L.push({ d: 0, kind: 4 });
+        L.sort((x, y) => y.d - x.d);
+        for (const it of L) {
+            if (it.kind === 1) { seg(it, pl); continue; }
+            if (it.kind === 4) { ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1; solenoid(st.coil(0), st.mag); continue; }
+            ctx.globalCompositeOperation = "lighter";
+            const q = it.q, far = it.d > 0;
+            if (it.kind === 0) {
+                const p = it.p, sz = (1.4 + 3.4 * (1 - p.r)) * U * q[2] * (0.7 + 0.3 * pl);
+                ctx.globalAlpha = pl * (0.25 + 0.5 * (1 - p.r)) * (far ? 0.75 : 1) * p.j * flick;
+                ctx.drawImage(SP[p.s], q[0] - sz, q[1] - sz, sz * 2, sz * 2);
+            } else if (it.kind === 2) {
                 const sz = A * 0.95 * S * q[2];
                 ctx.globalAlpha = 0.05 * pl * flick; ctx.drawImage(SP[1], q[0] - sz * 1.4, q[1] - sz * 1.4, sz * 2.8, sz * 2.8);
                 ctx.globalAlpha = 0.07 * pl * flick; ctx.drawImage(SP[0], q[0] - sz * 0.7, q[1] - sz * 0.7, sz * 1.4, sz * 1.4);
-            }
-        };
-        const particles = (list, back) => {
-            for (const [p, q] of list) {
-                const sz = (1.4 + 3.4 * (1 - p.r)) * U * q[2] * (0.7 + 0.3 * pl);
-                ctx.globalAlpha = pl * (0.25 + 0.5 * (1 - p.r)) * (back ? 0.55 : 1) * p.j * flick;
-                ctx.drawImage(SP[p.s], q[0] - sz, q[1] - sz, sz * 2, sz * 2);
-            }
-        };
-        const divertor = (sideFront) => {
-            for (let k = 0; k < 90; k++) {
-                const zeta = (k / 90) * TAU, q = proj(1.02 * cos(zeta), -KAP * A - 0.07, 1.02 * sin(zeta));
-                if ((q[3] <= 0) !== sideFront) continue;
-                const sz = (3 + 2 * sin(clock * 6 + k)) * U * q[2];
-                ctx.globalAlpha = 0.5 * pl * (sideFront ? 1 : 0.5);
+            } else {
+                const sz = (3 + 2 * sin(clock * 6 + it.k)) * U * q[2];
+                ctx.globalAlpha = 0.5 * pl * (far ? 0.6 : 1);
                 ctx.drawImage(SP[0], q[0] - sz, q[1] - sz, sz * 2, sz * 2);
             }
-        };
-
-        ctx.globalCompositeOperation = "lighter";
-        if (pl > 0.001) { band(false); particles(back, true); divertor(false); }
-        ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
-        solenoid(st.coil(0), st.mag);
-        ctx.globalCompositeOperation = "lighter";
-        if (pl > 0.001) { band(true); particles(front, false); divertor(true); }
-        ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
-        order.filter((o) => o.z2 <= 0).forEach((o) => coil(o.k, st.coil(o.k), true));
+        }
+        // Camera bloom: a soft halo of the ring laid over everything, so the near casings sit inside the
+        // glow the way a lens sees a bright source behind a dark edge.
+        if (pl > 0.001) {
+            ctx.globalCompositeOperation = "lighter";
+            for (let k = 0; k < 60; k++) {
+                const zeta = (k / 60) * TAU, pos = plasmaPos(0, 0, zeta), q = proj(pos[0], pos[1], pos[2]);
+                const sz = A * 2.1 * S * q[2];
+                ctx.globalAlpha = 0.022 * pl * flick; ctx.drawImage(SP[1], q[0] - sz, q[1] - sz, sz * 2, sz * 2);
+            }
+        }
+        ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1; ctx.lineCap = "butt";
 
         // labels (camera-fixed anchors; the machine is axisymmetric so these stay on target)
         const narrow = W < 460;
@@ -1669,6 +1790,40 @@ if (!reduceMotion) gsap.utils.toArray(".reveal").forEach((el) => {
         });
     }, { threshold: [0, 0.35, 0.6] }).observe(root);
     resize();
+})();
+
+/* ===== Milestones: vertical scroll timeline ===== */
+(function () {
+    const track = document.getElementById("msTrack");
+    if (!track) return;
+    const items = [...track.querySelectorAll(".ms-item")];
+    const rail = track.querySelector(".ms-rail");
+    const yearTrack = document.getElementById("msYear"), state = document.getElementById("msState"), meter = document.getElementById("msMeter");
+    const years = items.map((it) => +it.querySelector(".ms-head span").textContent);
+    let active = -1, ticking = false;
+    function update() {
+        ticking = false;
+        const line = innerHeight * 0.55, r = rail.getBoundingClientRect();
+        track.style.setProperty("--p", Math.max(0, Math.min(1, (line - r.top) / r.height)).toFixed(4));
+        let a = 0;
+        items.forEach((it, i) => {
+            const n = it.querySelector(".ms-node").getBoundingClientRect();
+            const lit = i === 0 || n.top + n.height / 2 <= line;
+            it.classList.toggle("lit", lit);
+            if (lit) a = i;
+        });
+        if (a === active) return;
+        active = a;
+        items.forEach((it, i) => it.classList.toggle("active", i === a));
+        yearTrack.style.transform = `translateY(${-a}em)`;
+        const b = document.createElement("b");
+        b.textContent = items[a].dataset.status;
+        state.replaceChildren(b, " · " + items[a].querySelector("h3").textContent);
+        meter.style.setProperty("--m", ((years[a] - years[0]) / (years[years.length - 1] - years[0])).toFixed(3));
+    }
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener("resize", update);
+    update();
 })();
 
 //reset scrollbar position after refresh
