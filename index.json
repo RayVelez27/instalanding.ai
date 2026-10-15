@@ -2,8 +2,198 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 29,
+  "count": 32,
   "pages": [
+    {
+      "slug": "blackletter-biology-workbench",
+      "title": "Blackletter Biology Workbench",
+      "description": "A computational biology platform set like an illuminated manuscript: blackletter headings lit by a WebGL shader, spinning conic frame borders, and hand-drawn lab sketches in the margins",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 15, 2026",
+      "bestFor": [
+        "biotech and life-science platforms",
+        "scientific and research software",
+        "computational tools for academic labs",
+        "brands with a literary or archival voice"
+      ],
+      "style": [
+        "light",
+        "editorial",
+        "blackletter",
+        "webgl",
+        "hand-drawn",
+        "manuscript"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "modules",
+        "workflow",
+        "pricing",
+        "cta-footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "roughjs",
+            "version": "4.6.6",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Fanwood Text",
+          "Cinzel",
+          "UnifrakturMaguntia",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "webgl",
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "Rough.js by Preet Shihn",
+          "href": "https://roughjs.com",
+          "note": "The hand-drawn rendering library behind the margin sketches (MIT)"
+        }
+      ],
+      "files": {
+        "html": "pages/blackletter-biology-workbench/index.html",
+        "prompt": "pages/blackletter-biology-workbench/PROMPT.md",
+        "preview": "pages/blackletter-biology-workbench/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/mistfold-biology-workbench.html",
+      "page": "https://instalanding.ai/prompt/blackletter-biology-workbench"
+    },
+    {
+      "slug": "led-metro-tech-storefront",
+      "title": "LED Metro Tech Storefront",
+      "description": "A big-tech devices homepage in warm clay and glass, with a live LED metro map for a hero, a Personal/Business switch that rewrites the page, and a dot-matrix ticker",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 15, 2026",
+      "bestFor": [
+        "consumer electronics and hardware launches",
+        "big-tech style company homepages",
+        "software suites with personal and business audiences",
+        "AI assistant announcements"
+      ],
+      "style": [
+        "light",
+        "claymorphism",
+        "glassmorphism",
+        "led-dot-matrix",
+        "editorial",
+        "gsap"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "quick-links",
+        "featured",
+        "travel",
+        "ai",
+        "faq",
+        "ballot",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.12.2",
+            "cdn": "cdnjs"
+          }
+        ],
+        "fonts": [
+          "Bricolage Grotesque",
+          "Fraunces",
+          "Instrument Sans",
+          "Inter"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "CSS LED Challenge by Ben Evans (ivorjetski) on CodePen",
+          "href": "https://codepen.io/editor/ivorjetski/pen/01a07dcf-a1e8-7ab6-aea1-aa98135803b3",
+          "note": "The LED dot-matrix style the metro maps are adapted from"
+        }
+      ],
+      "files": {
+        "html": "pages/led-metro-tech-storefront/index.html",
+        "prompt": "pages/led-metro-tech-storefront/PROMPT.md",
+        "preview": "pages/led-metro-tech-storefront/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/meridian-led-storefront.html",
+      "page": "https://instalanding.ai/prompt/led-metro-tech-storefront"
+    },
+    {
+      "slug": "hazard-terminal-security-page",
+      "title": "Hazard Terminal Security Page",
+      "description": "Antivirus as an amber hazard terminal: a spinning seal HUD, a live scan where three cores vote, and a searchable grid of 72 spirits, each guarding a threat",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 14, 2026",
+      "bestFor": [
+        "security and antivirus products",
+        "developer tools with a strong theme",
+        "games and occult or horror brands",
+        "sci-fi or HUD-heavy launches"
+      ],
+      "style": [
+        "dark",
+        "hud",
+        "terminal",
+        "amber",
+        "occult",
+        "interactive-demo"
+      ],
+      "sections": [
+        "menu",
+        "nav",
+        "hero",
+        "stats",
+        "features",
+        "demo",
+        "catalog",
+        "values",
+        "pricing",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/hazard-terminal-security-page/index.html",
+        "prompt": "pages/hazard-terminal-security-page/PROMPT.md",
+        "preview": "pages/hazard-terminal-security-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/lemegeton-antivirus.html",
+      "page": "https://instalanding.ai/prompt/hazard-terminal-security-page"
+    },
     {
       "slug": "retro-messenger-agent-page",
       "title": "Retro Messenger Agent Page",
