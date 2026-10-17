@@ -2,8 +2,73 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 35,
+  "count": 36,
   "pages": [
+    {
+      "slug": "game-dev-agent-landing-page",
+      "title": "Game Dev Agent Landing Page",
+      "description": "An AI agent for game studios whose hero is a playable three.js diorama: a toy biplane with a corgi pilot flying a low-poly cherry-blossom road under bloom and tilt-shift, a full-page loader, a crew picker that repaints the plane live, in-engine card stills and generated sound",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 17, 2026",
+      "bestFor": [
+        "AI agents and developer tools",
+        "game studios and game dev tooling",
+        "interactive product heroes",
+        "playful launch and waitlist pages"
+      ],
+      "style": [
+        "light",
+        "playful",
+        "three.js",
+        "low-poly",
+        "toon-shaded",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "world",
+        "corgis",
+        "controls",
+        "stats",
+        "press",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "three",
+            "version": "0.170.0",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Fredoka",
+          "Nunito",
+          "M PLUS Rounded 1c"
+        ],
+        "features": [
+          "webgl",
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/game-dev-agent-landing-page/index.html",
+        "prompt": "pages/game-dev-agent-landing-page/PROMPT.md",
+        "preview": "pages/game-dev-agent-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/sortie-game-agent.html",
+      "page": "https://instalanding.ai/prompt/game-dev-agent-landing-page"
+    },
     {
       "slug": "maasai-inspired-event-landing-page",
       "title": "Maasai-Inspired Event Landing Page",
