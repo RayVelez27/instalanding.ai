@@ -2,8 +2,191 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 32,
+  "count": 35,
   "pages": [
+    {
+      "slug": "maasai-inspired-event-landing-page",
+      "title": "Maasai-Inspired Event Landing Page",
+      "description": "A cultural events studio page on Maasai-inspired dusk: a Rive hero rebuilt in SVG where four warriors leap into the adumu, a scroll-driven frieze of leaping silhouettes, generated beadwork and gala art, and textures cut from the warriors' own shapes",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 16, 2026",
+      "bestFor": [
+        "event and experience studios",
+        "cultural festivals and tourism",
+        "hospitality and destination brands",
+        "interactive illustrated heroes"
+      ],
+      "style": [
+        "light",
+        "warm",
+        "editorial",
+        "illustrated",
+        "svg",
+        "dark-mode"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "frieze",
+        "approach",
+        "experiences",
+        "stats",
+        "season",
+        "process",
+        "testimonial",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Archivo Black",
+          "Instrument Serif",
+          "Jost"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "Maasai-Inspired Event Hero Banner Concept — Rive Marketplace",
+          "href": "https://rive.app/marketplace/27773-52471-maasai-inspired-event-hero-banner-concept/",
+          "note": "The Rive file whose hero this page recreates in plain SVG and CSS, with no Rive runtime"
+        }
+      ],
+      "files": {
+        "html": "pages/maasai-inspired-event-landing-page/index.html",
+        "prompt": "pages/maasai-inspired-event-landing-page/PROMPT.md",
+        "preview": "pages/maasai-inspired-event-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/maasai-event-hero.html",
+      "page": "https://instalanding.ai/prompt/maasai-inspired-event-landing-page"
+    },
+    {
+      "slug": "ai-work-assistant-chat-landing-page",
+      "title": "AI Work Assistant Chat Landing Page",
+      "description": "A soft pastel AI-assistant launch page whose hero is a working chat: it types its own first question, streams answers with thread cards, drafts and calendar slots, and is ringed by agent badges that spin, tick and fail on their own",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 16, 2026",
+      "bestFor": [
+        "AI assistants and copilots",
+        "email and productivity apps",
+        "B2B SaaS launches",
+        "products with a demoable chat"
+      ],
+      "style": [
+        "light",
+        "minimal",
+        "pastel",
+        "chat-ui",
+        "dark-mode",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "logos",
+        "product",
+        "how-it-works",
+        "integrations",
+        "testimonials",
+        "pricing",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Geist",
+          "Geist Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/ai-work-assistant-chat-landing-page/index.html",
+        "prompt": "pages/ai-work-assistant-chat-landing-page/PROMPT.md",
+        "preview": "pages/ai-work-assistant-chat-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/tidewell-ai-for-work.html",
+      "page": "https://instalanding.ai/prompt/ai-work-assistant-chat-landing-page"
+    },
+    {
+      "slug": "peptide-skincare-store-landing-page",
+      "title": "Peptide Skincare Store Landing Page",
+      "description": "A warm, cream-toned peptide skincare store whose hero is a spinning sphere of code-drawn product tiles behind a glass search bar that types its own queries, with springy lab-style product renders, a draggable Dose lab vial, bubble-popping add-to-bag and a day-to-night routine",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 17, 2026",
+      "bestFor": [
+        "skincare and beauty brands",
+        "DTC ecommerce stores",
+        "ingredient-led or science-backed products",
+        "product catalogs with filters"
+      ],
+      "style": [
+        "light",
+        "warm",
+        "premium",
+        "glassmorphism",
+        "svg",
+        "generative",
+        "gsap"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "ticker",
+        "how-it-works",
+        "formulas",
+        "dose-lab",
+        "ingredients",
+        "routine",
+        "journal-footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.12.5",
+            "cdn": "cdnjs"
+          }
+        ],
+        "fonts": [
+          "Wix Madefor Display",
+          "Wix Madefor Text",
+          "IBM Plex Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/peptide-skincare-store-landing-page/index.html",
+        "prompt": "pages/peptide-skincare-store-landing-page/PROMPT.md",
+        "preview": "pages/peptide-skincare-store-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/cosmos-peptides.html",
+      "page": "https://instalanding.ai/prompt/peptide-skincare-store-landing-page"
+    },
     {
       "slug": "blackletter-biology-workbench",
       "title": "Blackletter Biology Workbench",

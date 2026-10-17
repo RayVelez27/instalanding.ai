@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<!--
+  INSTALANDING.AI · AI Work Assistant Chat Landing Page
+  slug     ai-work-assistant-chat-landing-page
+  prompt   https://instalanding.ai/p/ai-work-assistant-chat-landing-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/ai-work-assistant-chat-landing-page
+  license  MIT. Fictional brand ("Tidewell"), investor, customers, senders and testimonials; replace names, copy,
+           numbers and pricing before shipping.
+
+  MAP
+  tokens    :root custom properties at the top of the <style>: --bg / --bg-soft / --surface, --ink / --ink-2 / --ink-3,
+            --line / --line-strong, the pastel pairs --blue-1/2 + --blue-ink, --violet-1/2 + --violet-ink, --pink-1,
+            --mint-1 + --mint-ink, --amber / --amber-soft, --red-soft / --red-ink, --btn / --btn-ink, two shadows and
+            the hero glows. A dark set follows (prefers-color-scheme, and :root[data-theme="dark"]). Fonts from
+            Google Fonts: Geist and Geist Mono.
+  sections  nav, hero, logos, product, how-it-works, integrations, testimonials, pricing, faq, cta, footer
+  scripts   one inline script, in order:
+            0. page grid spotlight: a 64px grid behind the whole page, plus a lit patch of the same grid and a soft
+               glow that ease toward the cursor (fine pointers only), its lines kept aligned to the base grid
+            1. nav hairline after 8px of scroll; section reveals (IntersectionObserver adds .in)
+            2. agent badges around the hero: each cycles idle → processing (spinner) → success (drawn tick) or a
+               rare error (drawn cross) on its own loop, with a blur-swap label whose width is measured first
+            3. the hero chat: chips or the composer send a prompt; a keyword router picks a canned response that
+               shows a "thinking" spinner, streams words and drops in rich blocks (threads, a draft with a working
+               Send, calendar slots); the first prompt types itself once the chat is 40% on screen
+            4. product vignettes: a typed-and-erased command loop, inbox category tabs, a tone switcher for a draft
+            5. testimonial rail arrows (scrollBy on the rail itself), monthly / yearly pricing toggle
+  assets    none: avatars are gradients, icons are inline SVG. The integrations hub is six tiles wired to a central
+            mark by an SVG whose pulses run along pathLength-normalised dashes
+
+  ADAPTING
+  - The chat scrolls with its own scrollTop, never scrollIntoView, so an embedding page is never scrolled.
+  - Badge labels animate width: measure the new text in the hidden measurer span before swapping, or the pill
+    snaps instead of stretching.
+  - Floating cards hang outside the 620px stage (negative left/right); they hide under 1040px and the badges
+    under 1180px, which is what keeps 390px free of horizontal scroll. Keep those breakpoints if you move them.
+  - body uses overflow-x: clip, not hidden, so the sticky nav keeps sticking.
+  - The page grid sits behind main and footer (z-index 0 vs 1). The spotlight's background-position is offset by
+    the base grid's centring (ox) so its lit lines land exactly on the base lines; change --cell in both CSS and
+    the CELL constant together.
+  - The integration wires use a 0-100 viewBox stretched over the hub (preserveAspectRatio none) with
+    vector-effect: non-scaling-stroke; they hide under 900px, where the tiles stack.
+  - Reduced motion shortens every wait() to 40ms and stops the badge loops and the typing loop after one pass.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tidewell · the ai for work</title>
+<meta name="description" content="Tidewell, a fictional AI assistant for work: it reads your inbox, calendar and docs, then summarizes, drafts and schedules.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ───────────── Tokens ───────────── */
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f7f7f8;
+  --surface: #ffffff;
+  --ink: #0f1115;
+  --ink-2: #4f535b;
+  --ink-3: #9b9b9b;
+  --line: #ececee;
+  --line-strong: #e2e2e5;
+  --badge: #f5f5f5;
+  --blue-1: #dbe5ff;
+  --blue-2: #cbdaff;
+  --blue-ink: #1d6ad9;
+  --violet-1: #dfceff;
+  --violet-2: #d4bbff;
+  --violet-ink: #422c6f;
+  --pink-1: #ffd3e1;
+  --mint-1: #d3f5e4;
+  --mint-ink: #136c45;
+  --amber: #d97706;
+  --amber-soft: #fff4e0;
+  --red-soft: #ffe2e0;
+  --red-ink: #b42318;
+  --btn: #0f1115;
+  --btn-ink: #ffffff;
+  --shadow-sm: 0 1px 2px rgba(15,17,21,.05), 0 2px 8px rgba(15,17,21,.04);
+  --shadow-lg: 0 1px 1px rgba(15,17,21,.04), 0 12px 24px -8px rgba(15,17,21,.10), 0 40px 80px -24px rgba(15,17,21,.18);
+  --glow-a: rgba(134,169,255,.45);
+  --glow-b: rgba(192,159,255,.45);
+  --font: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0d10; --bg-soft: #131418; --surface: #16171b;
+    --ink: #f3f3f4; --ink-2: #a9abb2; --ink-3: #6c6f77;
+    --line: #23252b; --line-strong: #2c2e35; --badge: #1d1f24;
+    --blue-1: #18233f; --blue-2: #1c2c55; --blue-ink: #95b6ff;
+    --violet-1: #241b38; --violet-2: #2f2349; --violet-ink: #dccbff;
+    --pink-1: #3a1f2b; --mint-1: #12301f; --mint-ink: #7fe0ae;
+    --amber: #f2a93b; --amber-soft: #33240c; --red-soft: #3a1714; --red-ink: #ff9a8f;
+    --btn: #f3f3f4; --btn-ink: #0c0d10;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+    --shadow-lg: 0 1px 1px rgba(0,0,0,.3), 0 20px 40px -12px rgba(0,0,0,.6), 0 40px 80px -24px rgba(0,0,0,.6);
+    --glow-a: rgba(80,120,255,.28); --glow-b: rgba(150,100,255,.28);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c0d10; --bg-soft: #131418; --surface: #16171b;
+  --ink: #f3f3f4; --ink-2: #a9abb2; --ink-3: #6c6f77;
+  --line: #23252b; --line-strong: #2c2e35; --badge: #1d1f24;
+  --blue-1: #18233f; --blue-2: #1c2c55; --blue-ink: #95b6ff;
+  --violet-1: #241b38; --violet-2: #2f2349; --violet-ink: #dccbff;
+  --pink-1: #3a1f2b; --mint-1: #12301f; --mint-ink: #7fe0ae;
+  --amber: #f2a93b; --amber-soft: #33240c; --red-soft: #3a1714; --red-ink: #ff9a8f;
+  --btn: #f3f3f4; --btn-ink: #0c0d10;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow-lg: 0 1px 1px rgba(0,0,0,.3), 0 20px 40px -12px rgba(0,0,0,.6), 0 40px 80px -24px rgba(0,0,0,.6);
+  --glow-a: rgba(80,120,255,.28); --glow-b: rgba(150,100,255,.28);
+  color-scheme: dark;
+}
+
+/* ───────────── Base ───────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(80px + env(safe-area-inset-top, 0px)); }
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  line-height: 1.5;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 60; background: var(--bg);
+}
+img, svg { max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--blue-ink); outline-offset: 3px; border-radius: 8px; }
+.wrap { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+/* ───────────── Nav ───────────── */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s;
+}
+.nav.scrolled { border-bottom-color: var(--line); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.03em; font-size: 18px; }
+.brand-mark { width: 26px; height: 26px; position: relative; }
+.brand-mark span { position: absolute; width: 18px; height: 18px; border-radius: 6px; }
+.brand-mark span:first-child { left: 0; top: 0; background: linear-gradient(135deg, #a9c1ff, #6f95ff); }
+.brand-mark span:last-child { right: 0; bottom: 0; background: linear-gradient(135deg, #d9c2ff, #a77dff); mix-blend-mode: multiply; }
+:root[data-theme="dark"] .brand-mark span:last-child { mix-blend-mode: screen; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brand-mark span:last-child { mix-blend-mode: screen; } }
+.nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--ink-2); font-weight: 500; }
+.nav-links a:hover { color: var(--ink); }
+.nav-cta { display: flex; gap: 8px; align-items: center; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 40px; padding: 0 18px; border-radius: 999px; border: 0; cursor: pointer;
+  font-size: 14px; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap;
+  transition: transform .2s, box-shadow .2s, background .2s;
+}
+.btn-primary { background: var(--btn); color: var(--btn-ink); box-shadow: 0 1px 0 rgba(255,255,255,.15) inset, 0 6px 16px -6px rgba(15,17,21,.5); }
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line-strong); }
+.btn-ghost:hover { background: var(--bg-soft); }
+.btn-lg { height: 48px; padding: 0 24px; font-size: 15px; }
+.nav-signin { font-size: 14px; color: var(--ink-2); font-weight: 500; padding: 0 10px; }
+@media (max-width: 860px) { .nav-links, .nav-signin { display: none; } }
+
+/* ───────────── Hero ───────────── */
+.hero { position: relative; padding: 72px 0 96px; overflow: hidden; }
+.hero-glow {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(40% 35% at 35% 62%, var(--glow-a), transparent 70%),
+    radial-gradient(40% 35% at 65% 70%, var(--glow-b), transparent 70%);
+  filter: blur(20px);
+}
+.hero-head { position: relative; z-index: 2; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 500; letter-spacing: -0.01em; color: var(--amber);
+  border: 1px solid color-mix(in srgb, var(--amber) 35%, transparent);
+  background: var(--amber-soft);
+  padding: 5px 12px 5px 6px; border-radius: 999px; margin-bottom: 28px;
+}
+.eyebrow-y { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; background: #f26522; color: #fff; font-weight: 700; font-size: 11px; }
+.hero h1 {
+  margin: 0; font-size: clamp(48px, 9vw, 112px); line-height: .92; font-weight: 700;
+  letter-spacing: -0.065em; max-width: 12ch;
+}
+.hero h1 .soft { color: var(--ink-3); }
+.hero-sub { margin: 24px 0 0; font-size: clamp(16px, 1.6vw, 19px); color: var(--ink-2); max-width: 34rem; letter-spacing: -0.015em; }
+.hero-ctas { display: flex; gap: 10px; margin-top: 32px; flex-wrap: wrap; justify-content: center; }
+.hero-note { margin-top: 14px; font-size: 13px; color: var(--ink-3); }
+
+/* stage */
+.stage { position: relative; z-index: 2; margin: 64px auto 0; max-width: 620px; }
+
+/* Chat module */
+.chat {
+  position: relative; z-index: 3;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 28px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  text-align: left;
+}
+.chat::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  padding: 1px; background: linear-gradient(180deg, rgba(255,255,255,.7), transparent 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; opacity: .6;
+}
+.chat-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.chat-id { display: flex; align-items: center; gap: 10px; }
+.chat-avatar { width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, var(--blue-2), var(--violet-2)); display: grid; place-items: center; }
+.chat-avatar svg { color: var(--violet-ink); }
+.chat-name { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+.chat-status { font-size: 12px; color: var(--ink-3); display: flex; align-items: center; gap: 6px; }
+.dot-live { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.18); }
+.chat-sources { display: flex; gap: 6px; }
+.src { font-size: 11px; font-weight: 500; color: var(--ink-2); background: var(--bg-soft); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
+@media (max-width: 520px) { .chat-sources { display: none; } }
+
+.chat-body { height: 400px; overflow-y: auto; padding: 22px 18px 8px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; scrollbar-width: thin; }
+.chat-empty { margin: auto; text-align: center; color: var(--ink-3); font-size: 14px; }
+.chat-empty strong { display: block; color: var(--ink); font-size: 20px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 4px; }
+
+.msg { display: flex; gap: 10px; max-width: 100%; animation: msgIn .35s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.msg-user { justify-content: flex-end; }
+.msg-user .bubble {
+  background: linear-gradient(135deg, var(--blue-1), var(--blue-2)); color: var(--blue-ink);
+  font-weight: 500; border-radius: 18px 18px 6px 18px; padding: 10px 14px; font-size: 14px; letter-spacing: -0.015em; max-width: 80%;
+}
+.msg-ai .ai-ic { flex: 0 0 26px; height: 26px; border-radius: 9px; background: linear-gradient(135deg, var(--blue-2), var(--violet-2)); display: grid; place-items: center; margin-top: 2px; }
+.msg-ai .ai-ic svg { color: var(--violet-ink); }
+.msg-ai .ai-content { flex: 1; min-width: 0; font-size: 14px; color: var(--ink); letter-spacing: -0.01em; line-height: 1.55; }
+.ai-text p { margin: 0 0 8px; }
+.typing { display: inline-flex; gap: 4px; padding: 8px 0; }
+.typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); animation: blink 1.2s infinite; }
+.typing span:nth-child(2) { animation-delay: .15s; } .typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
+.thinking { font-size: 12px; color: var(--ink-3); display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.spin { width: 12px; height: 12px; border: 1.5px solid var(--line-strong); border-top-color: var(--blue-ink); border-radius: 50%; animation: rot .8s linear infinite; }
+@keyframes rot { to { transform: rotate(360deg); } }
+
+/* rich blocks */
+.rich { margin: 6px 0 10px; display: flex; flex-direction: column; gap: 8px; animation: msgIn .4s both; }
+.thread { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg-soft); }
+.thread .av { width: 28px; height: 28px; border-radius: 50%; }
+.thread-from { font-size: 12px; font-weight: 600; letter-spacing: -0.02em; }
+.thread-subj { font-size: 12px; color: var(--ink-3); font-weight: 500; }
+.thread-note { font-size: 12.5px; color: var(--ink-2); margin-top: 3px; line-height: 1.45; }
+.tag { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; white-space: nowrap; letter-spacing: -0.01em; }
+.tag-blue { background: var(--blue-1); color: var(--blue-ink); }
+.tag-mint { background: var(--mint-1); color: var(--mint-ink); }
+.tag-red { background: var(--red-soft); color: var(--red-ink); }
+.tag-violet { background: var(--violet-1); color: var(--violet-ink); }
+.draft { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+.draft-meta { padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--ink-3); display: grid; gap: 2px; }
+.draft-meta b { color: var(--ink); font-weight: 500; }
+.draft-body { padding: 12px 14px; font-size: 13.5px; color: var(--ink); line-height: 1.6; }
+.draft-body p { margin: 0 0 8px; }
+.draft-actions { display: flex; gap: 6px; padding: 0 14px 12px; }
+.mini-btn { height: 30px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer; }
+.mini-btn.primary { background: var(--btn); color: var(--btn-ink); border-color: transparent; }
+.mini-btn.done { background: var(--mint-1); color: var(--mint-ink); border-color: transparent; }
+.slot { display: grid; grid-template-columns: 64px 1fr auto; gap: 10px; align-items: center; padding: 9px 12px; border-radius: 12px; background: var(--bg-soft); border: 1px solid var(--line); }
+.slot-time { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+.slot-title { font-size: 13px; font-weight: 500; letter-spacing: -0.015em; }
+.slot.focus { background: linear-gradient(135deg, var(--violet-1), var(--violet-2)); border-color: transparent; }
+.slot.focus .slot-title, .slot.focus .slot-time { color: var(--violet-ink); }
+
+/* composer */
+.chat-foot { padding: 10px 14px 14px; }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 10px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; height: 30px; padding: 0 12px; border-radius: 999px; font-size: 12.5px; font-weight: 500; letter-spacing: -0.01em;
+  background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink-2); cursor: pointer; transition: all .2s;
+}
+.chip:hover { color: var(--ink); border-color: var(--line-strong); transform: translateY(-1px); }
+.composer { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line-strong); border-radius: 18px; padding: 6px 6px 6px 16px; background: var(--surface); transition: border-color .2s, box-shadow .2s; }
+.composer:focus-within { border-color: color-mix(in srgb, var(--blue-ink) 50%, var(--line-strong)); box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue-ink) 12%, transparent); }
+.composer input { flex: 1; border: 0; outline: 0; background: transparent; font: inherit; font-size: 14.5px; color: var(--ink); letter-spacing: -0.01em; min-width: 0; height: 36px; }
+.composer input::placeholder { color: var(--ink-3); }
+.send { width: 36px; height: 36px; border-radius: 12px; border: 0; background: var(--btn); color: var(--btn-ink); display: grid; place-items: center; cursor: pointer; transition: opacity .2s, transform .2s; }
+.send:disabled { opacity: .35; cursor: default; }
+.send:not(:disabled):hover { transform: scale(1.05); }
+.composer-hint { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-3); padding: 8px 4px 0; }
+kbd { font-family: var(--mono); font-size: 10.5px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; background: var(--bg-soft); }
+
+/* floating cards around chat */
+.float-card { position: absolute; z-index: 4; pointer-events: auto; }
+.fc-email {
+  left: -170px; top: 40px; width: 300px; transform: rotate(-4deg);
+  display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center;
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: 20px; padding: 14px 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.10); animation: float 5s ease-in-out infinite; --r: -4deg;
+}
+.fc-email .av { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #E0BBE4, #FFDFD3); }
+.fc-from { font-size: 12px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+.fc-subj { font-size: 12px; color: var(--ink-3); font-weight: 500; letter-spacing: -0.04em; margin-top: 3px; }
+.fc-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-size: 11px; font-weight: 600; }
+.fc-dot { width: 14px; height: 14px; border-radius: 50%; background: linear-gradient(135deg, #FFD3E1, #C3B1E1); animation: pulse 2s infinite; }
+.fc-summary {
+  right: -190px; bottom: 120px; width: 290px; transform: rotate(3.5deg);
+  background: linear-gradient(135deg, var(--violet-1), var(--violet-2)); color: var(--violet-ink);
+  border-radius: 20px; padding: 18px 18px; box-shadow: 0 15px 30px rgba(192,159,255,.35);
+  animation: float 6s ease-in-out infinite reverse; --r: 3.5deg;
+}
+.fc-summary .lbl { font-size: 11px; font-weight: 600; opacity: .75; margin-bottom: 6px; letter-spacing: -0.01em; }
+.fc-summary p { margin: 0; font-size: 13px; font-weight: 600; line-height: 1.35; letter-spacing: -0.035em; }
+.fc-command {
+  right: -120px; top: -26px; transform: rotate(3deg);
+  background: linear-gradient(135deg, var(--blue-1), var(--blue-2)); color: var(--blue-ink);
+  border-radius: 22px; padding: 14px 18px; font-size: 14px; font-weight: 600; letter-spacing: -0.04em;
+  box-shadow: 0 10px 25px rgba(134,169,255,.35); animation: float 4.5s ease-in-out infinite; --r: 3deg;
+}
+@keyframes float { 0%, 100% { transform: translateY(0) rotate(var(--r)); } 50% { transform: translateY(-10px) rotate(var(--r)); } }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .7; transform: scale(1.1); } }
+
+/* agent badges */
+.badge-btn { position: absolute; z-index: 1; background: none; border: 0; padding: 0; cursor: pointer; opacity: 0; animation: fadeIn .6s ease-out forwards; }
+@keyframes fadeIn { to { opacity: 1; } }
+.badge {
+  display: flex; align-items: center; background: var(--badge); color: var(--ink);
+  padding: 11px 18px; border-radius: 999px; font-size: 14px; font-weight: 500; letter-spacing: -0.02em;
+  box-shadow: 0 4px 12px rgba(0,0,0,.07); border: 1px solid var(--line);
+  animation: gentle 4s ease-in-out infinite; transition: box-shadow .3s;
+}
+.badge-btn:hover .badge { box-shadow: 0 8px 18px rgba(0,0,0,.12); }
+@keyframes gentle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.badge-icon { width: 0; height: 18px; overflow: hidden; display: flex; align-items: center; transition: width .35s cubic-bezier(.34,1.56,.64,1), margin .35s; }
+.badge.has-icon .badge-icon { width: 18px; margin-right: 8px; }
+.badge-icon svg { flex: none; }
+.badge-icon .spinner { animation: rot 1s linear infinite; }
+.badge-icon .draw { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw .45s ease-out forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.badge-label { position: relative; height: 20px; overflow: hidden; transition: width .35s cubic-bezier(.34,1.56,.64,1); }
+.badge-label span { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 20px; }
+.badge-label .in { animation: labIn .25s ease forwards; }
+.badge-label .out { animation: labOut .25s ease forwards; }
+@keyframes labIn { from { transform: translateY(-14px); opacity: 0; filter: blur(6px); } to { transform: none; opacity: 1; filter: none; } }
+@keyframes labOut { to { transform: translateY(14px); opacity: 0; filter: blur(6px); } }
+.badge.success { animation: pop .35s ease, gentle 4s ease-in-out infinite .35s; }
+.badge.error { animation: shake .35s ease, gentle 4s ease-in-out infinite .35s; }
+@keyframes pop { 50% { transform: scale(1.1) rotate(3deg); } }
+@keyframes shake { 25% { transform: translateX(-5px) rotate(-2deg); } 50% { transform: translateX(5px) rotate(2deg); } 75% { transform: translateX(-4px); } }
+.b1 { left: 2%; top: 8%; transform: rotate(-3deg); animation-delay: .2s; }
+.b2 { right: 3%; top: 4%; transform: rotate(2deg); animation-delay: .4s; }
+.b3 { left: 6%; top: 46%; transform: rotate(-2deg); animation-delay: .6s; }
+.b4 { right: 1%; top: 52%; transform: rotate(3deg); animation-delay: .8s; }
+.b5 { left: 0%; bottom: 6%; transform: rotate(-4deg); animation-delay: 1s; }
+.b6 { right: 6%; bottom: 2%; transform: rotate(2.5deg); animation-delay: 1.2s; }
+.badges { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.badges .badge-btn { pointer-events: auto; }
+.stage-outer { position: relative; max-width: 1160px; margin: 0 auto; }
+@media (max-width: 1180px) { .badges { display: none; } }
+@media (max-width: 1040px) { .float-card { display: none; } }
+
+/* ───────────── Logos ───────────── */
+.logos { padding: 8px 0 96px; }
+.logos p { text-align: center; font-size: 13px; color: var(--ink-3); margin: 0 0 24px; }
+.logo-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px 48px; color: var(--ink-3); }
+.logo-row span { font-size: 20px; font-weight: 600; letter-spacing: -0.04em; opacity: .8; }
+.logo-row span:nth-child(2) { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 400; }
+.logo-row span:nth-child(4) { font-family: var(--mono); font-size: 17px; letter-spacing: -0.02em; }
+.logo-row span:nth-child(5) { font-weight: 700; letter-spacing: -0.06em; }
+
+/* ───────────── Sections ───────────── */
+section { position: relative; }
+.sec { padding: 120px 0; }
+.sec-head { max-width: 640px; margin-bottom: 64px; }
+.sec-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+.sec-kicker { font-size: 13px; font-weight: 500; color: var(--blue-ink); margin-bottom: 14px; letter-spacing: -0.01em; }
+.sec h2 { margin: 0; font-size: clamp(34px, 5vw, 56px); line-height: 1.02; font-weight: 600; letter-spacing: -0.05em; }
+.sec h2 .soft { color: var(--ink-3); }
+.sec-lede { margin: 18px 0 0; font-size: 18px; color: var(--ink-2); letter-spacing: -0.015em; line-height: 1.5; }
+
+.feature { display: grid; grid-template-columns: 1fr 1.1fr; gap: 72px; align-items: center; padding: 48px 0; }
+.feature.flip .feature-copy { order: 2; }
+.feature-copy h3 { margin: 0 0 14px; font-size: clamp(26px, 3vw, 36px); line-height: 1.08; font-weight: 600; letter-spacing: -0.045em; }
+.feature-copy p { margin: 0; font-size: 17px; color: var(--ink-2); max-width: 30rem; letter-spacing: -0.012em; }
+.feature-list { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 10px; }
+.feature-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--ink-2); }
+.feature-list svg { flex: none; margin-top: 3px; color: var(--blue-ink); }
+.canvas {
+  position: relative; aspect-ratio: 1 / .86; border-radius: 32px; overflow: hidden;
+  background: var(--bg-soft); border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center; padding: 32px;
+}
+.canvas.blue { background: radial-gradient(120% 90% at 20% 0%, var(--blue-1), var(--bg-soft) 60%); }
+.canvas.violet { background: radial-gradient(120% 90% at 80% 0%, var(--violet-1), var(--bg-soft) 60%); }
+.canvas.mint { background: radial-gradient(120% 90% at 50% 0%, var(--mint-1), var(--bg-soft) 60%); }
+@media (max-width: 880px) {
+  .feature { grid-template-columns: 1fr; gap: 36px; }
+  .feature.flip .feature-copy { order: 0; }
+}
+
+/* vignette 1: email → command → summary */
+.stack { display: flex; flex-direction: column; align-items: center; gap: 34px; width: 100%; }
+.v-email { width: min(330px, 100%); display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center; border-radius: 20px; border: 1px solid var(--line-strong); background: var(--surface); padding: 14px 20px; box-shadow: 0 8px 20px rgba(0,0,0,.10); transform: rotate(-2.5deg); animation: float 3s ease-in-out infinite; --r: -2.5deg; }
+.v-email .av { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #E0BBE4, #FFDFD3); }
+.v-cmd { width: min(286px, 100%); align-self: center; margin-left: 60px; height: 47px; display: flex; align-items: center; padding: 0 14px; border-radius: 22px; background: linear-gradient(135deg, var(--blue-1), var(--blue-2)); color: var(--blue-ink); font-weight: 600; font-size: 14px; letter-spacing: -0.04em; box-shadow: 0 10px 25px rgba(134,169,255,.4); transform: rotate(2.87deg); animation: float 4s ease-in-out infinite reverse; --r: 2.87deg; }
+.v-cmd .caret { display: inline-block; width: 1.5px; height: 15px; background: currentColor; margin-left: 2px; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.v-sum { width: min(325px, 100%); border-radius: 20px; padding: 22px 16px; background: linear-gradient(135deg, var(--violet-1), var(--violet-2)); color: var(--violet-ink); box-shadow: 0 15px 30px rgba(192,159,255,.4); transform: rotate(-4deg); animation: float 5s ease-in-out infinite; --r: -4deg; }
+.v-sum .lbl { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+.v-sum p { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: -0.05em; line-height: 1.35; }
+@media (max-width: 480px) { .v-cmd { margin-left: 0; } }
+
+/* vignette 2: categories */
+.inbox { width: min(420px, 100%); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; }
+.inbox-tabs { display: flex; gap: 4px; padding: 10px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.inbox-tab { flex: none; font-size: 12px; font-weight: 500; padding: 6px 11px; border-radius: 999px; color: var(--ink-3); border: 0; background: none; cursor: pointer; }
+.inbox-tab.on { background: var(--bg-soft); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.inbox-tab .n { font-family: var(--mono); font-size: 10.5px; margin-left: 4px; opacity: .7; }
+.inbox-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); align-items: center; transition: background .2s, opacity .3s; }
+.inbox-row:last-child { border-bottom: 0; }
+.inbox-row .f { font-size: 13px; font-weight: 600; letter-spacing: -0.02em; }
+.inbox-row .s { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.inbox-row.hide { display: none; }
+
+/* vignette 3: draft */
+.vd { width: min(420px, 100%); }
+.vd .draft { box-shadow: var(--shadow-lg); border-color: var(--line-strong); }
+.voice { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.voice button { font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer; color: var(--ink-2); }
+.voice button.on { background: var(--btn); color: var(--btn-ink); border-color: transparent; }
+.vd .draft-body { min-height: 150px; transition: opacity .2s; }
+
+/* ───────────── Integrations: a hub panel ───────────── */
+.integ-panel {
+  position: relative; overflow: hidden; border-radius: 36px; padding: 64px 48px 0;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(45% 60% at 50% 45%, color-mix(in srgb, var(--violet-1) 80%, transparent), transparent 70%),
+    radial-gradient(35% 45% at 50% 55%, color-mix(in srgb, var(--blue-1) 90%, transparent), transparent 70%),
+    var(--bg-soft);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent), var(--shadow-sm);
+}
+.integ-panel::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .7;
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 14%, transparent) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(55% 60% at 50% 45%, #000 10%, transparent 80%);
+  -webkit-mask-image: radial-gradient(55% 60% at 50% 45%, #000 10%, transparent 80%);
+}
+.integ-map { position: relative; display: grid; grid-template-columns: 1fr 1.1fr 1fr; align-items: center; }
+.integ-col { position: relative; z-index: 2; display: grid; gap: 20px; }
+.integ-wires { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: visible; pointer-events: none; }
+.integ-wires .base { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+.integ-wires .pulse { fill: none; stroke: url(#wireGrad); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 10 90; animation: wire 3.2s cubic-bezier(.5,0,.5,1) infinite; }
+.integ-wires .pulse.rev { animation-direction: reverse; }
+@keyframes wire { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+
+.integ-hub { position: relative; z-index: 2; justify-self: center; display: grid; place-items: center; gap: 12px; }
+.hub-core {
+  position: relative; width: 132px; height: 132px; border-radius: 38px; display: grid; place-items: center;
+  background: linear-gradient(160deg, var(--surface), color-mix(in srgb, var(--violet-1) 45%, var(--surface)));
+  border: 1px solid var(--line-strong);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 70%, transparent), 0 0 0 8px color-mix(in srgb, var(--surface) 55%, transparent), var(--shadow-lg);
+}
+.hub-core::before, .hub-core::after {
+  content: ""; position: absolute; inset: -8px; border-radius: 46px; pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--violet-ink) 30%, transparent);
+  animation: ring 3.2s ease-out infinite;
+}
+.hub-core::after { animation-delay: 1.6s; }
+@keyframes ring { from { transform: scale(1); opacity: .8; } to { transform: scale(1.45); opacity: 0; } }
+.hub-core .brand-mark { width: 54px; height: 54px; }
+.hub-core .brand-mark span { width: 37px; height: 37px; border-radius: 12px; }
+.hub-label { font-size: 12px; font-weight: 500; color: var(--ink-2); display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; border-radius: 999px; background: color-mix(in srgb, var(--surface) 80%, transparent); border: 1px solid var(--line); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+.integ-tile {
+  --c: var(--blue-ink);
+  display: grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items: center;
+  padding: 15px 16px; border-radius: 20px; background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 60%, transparent), var(--shadow-sm);
+  transition: transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .35s, border-color .35s;
+}
+.integ-tile:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--c) 35%, var(--line));
+  box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--c) 45%, transparent), var(--shadow-sm);
+}
+.integ-ic {
+  width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; color: var(--c);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--c) 20%, var(--surface)), color-mix(in srgb, var(--c) 6%, var(--surface)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 22%, transparent), inset 0 1px 0 color-mix(in srgb, #fff 50%, transparent);
+}
+.integ-name { font-size: 15px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; }
+.integ-meta { font-size: 12.5px; color: var(--ink-3); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.integ-live { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10.5px; color: var(--mint-ink); background: var(--mint-1); padding: 3px 7px; border-radius: 999px; }
+.integ-live::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+.integ-foot {
+  position: relative; z-index: 2; margin: 56px -48px 0; padding: 20px 32px;
+  border-top: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 65%, transparent);
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 32px; font-size: 13px; color: var(--ink-2);
+}
+.integ-foot span { display: inline-flex; align-items: center; gap: 8px; }
+.integ-foot svg { color: var(--ink-3); }
+.integ-foot a { color: var(--ink); font-weight: 500; }
+.integ-foot a:hover { color: var(--blue-ink); }
+
+@media (max-width: 900px) {
+  .integ-panel { padding: 40px 20px 0; border-radius: 28px; }
+  .integ-map { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .integ-hub { grid-column: 1 / -1; order: -1; margin-bottom: 18px; }
+  .integ-col { gap: 14px; }
+  .integ-wires { display: none; }
+  .integ-foot { margin: 40px -20px 0; padding: 18px 20px; gap: 10px 20px; }
+}
+@media (max-width: 560px) {
+  .integ-map { grid-template-columns: 1fr; }
+  .hub-core { width: 108px; height: 108px; border-radius: 32px; }
+}
+
+/* ───────────── Page grid + cursor spotlight ───────────── */
+body { position: relative; }
+main, footer { position: relative; z-index: 1; }
+.page-grid {
+  --cell: 64px; --gl: color-mix(in srgb, var(--ink) 4%, transparent);
+  --hl: color-mix(in srgb, var(--blue-ink) 42%, transparent);
+  --hd: color-mix(in srgb, var(--violet-ink) 70%, transparent);
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+}
+.pg-base {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(var(--gl) 1px, transparent 1px), linear-gradient(90deg, var(--gl) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+  background-position: calc(50% - var(--cell) / 2) 0;
+  mask-image: linear-gradient(to bottom, transparent, #000 160px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 160px);
+}
+.pg-spot, .pg-glow { position: absolute; left: 0; top: 0; opacity: 0; transition: opacity .6s ease; will-change: transform; }
+.page-grid.active .pg-spot { opacity: 1; }
+.page-grid.active .pg-glow { opacity: .55; }
+.pg-spot {
+  width: 520px; height: 520px;
+  background-image:
+    radial-gradient(circle at 0.5px 0.5px, var(--hd) 1.6px, transparent 2.2px),
+    linear-gradient(var(--hl) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hl) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+  mask-image: radial-gradient(closest-side, #000 0%, rgba(0,0,0,.45) 45%, transparent 100%);
+  -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0,0,0,.45) 45%, transparent 100%);
+}
+.pg-glow {
+  width: 560px; height: 560px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 45%, var(--glow-a), transparent 60%), radial-gradient(circle at 60% 55%, var(--glow-b), transparent 60%);
+  filter: blur(70px);
+}
+:root[data-theme="dark"] .page-grid { --gl: color-mix(in srgb, var(--ink) 5%, transparent); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .page-grid { --gl: color-mix(in srgb, var(--ink) 5%, transparent); } }
+
+/* ───────────── How it works ───────────── */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.step { border: 1px solid var(--line); border-radius: 24px; padding: 28px; background: var(--surface); }
+.step-n { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-bottom: 40px; }
+.step h3 { margin: 0 0 8px; font-size: 19px; font-weight: 600; letter-spacing: -0.035em; }
+.step p { margin: 0; font-size: 15px; color: var(--ink-2); }
+@media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
+
+/* ───────────── Testimonials ───────────── */
+.t-rail { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px max(24px, calc((100vw - 1112px) / 2)) 24px; scrollbar-width: none; }
+.t-rail::-webkit-scrollbar { display: none; }
+.t-card { flex: 0 0 360px; scroll-snap-align: start; border: 1px solid var(--line); background: var(--surface); border-radius: 24px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 260px; }
+.t-card blockquote { margin: 0; font-size: 18px; font-weight: 500; line-height: 1.42; letter-spacing: -0.025em; }
+.t-who { display: flex; gap: 12px; align-items: center; padding-top: 20px; margin-top: 20px; border-top: 1px solid var(--line); }
+.t-av { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 14px; flex: none; }
+.t-name { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+.t-role { font-size: 14px; color: var(--ink-3); line-height: 1.2; }
+.t-role b { color: var(--ink-2); font-weight: 600; }
+.t-nav { display: flex; gap: 8px; }
+.t-arrow { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line-strong); background: var(--surface); display: grid; place-items: center; cursor: pointer; }
+.t-arrow:hover { background: var(--bg-soft); }
+.t-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 40px; }
+@media (max-width: 600px) { .t-card { flex-basis: 290px; } .t-nav { display: none; } }
+
+/* ───────────── Pricing ───────────── */
+.toggle { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--bg-soft); border: 1px solid var(--line); margin-top: 28px; }
+.toggle button { border: 0; background: none; height: 34px; padding: 0 16px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--ink-2); cursor: pointer; }
+.toggle button.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+.toggle .save { color: var(--mint-ink); font-size: 11px; margin-left: 4px; }
+.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+.plan { border: 1px solid var(--line); border-radius: 28px; padding: 28px; background: var(--surface); display: flex; flex-direction: column; }
+.plan.pop { background: linear-gradient(180deg, var(--violet-1), var(--surface) 55%); border-color: color-mix(in srgb, var(--violet-ink) 22%, var(--line)); box-shadow: var(--shadow-lg); }
+.plan-name { display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+.plan-price { margin: 22px 0 4px; display: flex; align-items: baseline; gap: 6px; }
+.plan-price .amt { font-size: 48px; font-weight: 600; letter-spacing: -0.06em; line-height: 1; }
+.plan-price .per { font-size: 14px; color: var(--ink-3); }
+.plan-desc { font-size: 14px; color: var(--ink-2); margin: 0 0 24px; min-height: 42px; }
+.plan ul { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 10px; font-size: 14px; color: var(--ink-2); }
+.plan li { display: flex; gap: 10px; }
+.plan li svg { flex: none; margin-top: 3px; color: var(--ink); }
+.plan .btn { margin-top: auto; width: 100%; }
+@media (max-width: 900px) { .plans { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; } }
+
+/* ───────────── FAQ ───────────── */
+.faq { max-width: 760px; margin: 0 auto; }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { list-style: none; cursor: pointer; padding: 22px 0; display: flex; justify-content: space-between; gap: 24px; font-size: 17px; font-weight: 500; letter-spacing: -0.025em; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary .pm { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line-strong); display: grid; place-items: center; transition: transform .3s; }
+.faq details[open] summary .pm { transform: rotate(45deg); }
+.faq details p { margin: 0 0 22px; color: var(--ink-2); font-size: 15.5px; max-width: 60ch; }
+
+/* ───────────── Final CTA ───────────── */
+.final { padding: 40px 0 120px; }
+.final-card {
+  position: relative; overflow: hidden; border-radius: 40px; padding: 96px 32px; text-align: center;
+  background: var(--ink); color: var(--bg);
+}
+.final-card::before {
+  content: ""; position: absolute; inset: -40%; pointer-events: none;
+  background: radial-gradient(30% 30% at 35% 70%, rgba(134,169,255,.45), transparent 70%), radial-gradient(30% 30% at 65% 75%, rgba(192,159,255,.45), transparent 70%);
+  filter: blur(30px);
+}
+.final-card > * { position: relative; }
+.final-card h2 { margin: 0; font-size: clamp(40px, 7vw, 84px); line-height: .95; font-weight: 700; letter-spacing: -0.065em; }
+.final-card p { margin: 20px auto 0; font-size: 18px; opacity: .7; max-width: 30rem; }
+.final-card .btn-primary { background: var(--bg); color: var(--ink); margin-top: 32px; }
+
+/* ───────────── Footer ───────────── */
+footer { border-top: 1px solid var(--line); padding: 56px 0 40px; font-size: 14px; color: var(--ink-2); }
+.foot { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 32px; }
+.foot h2 { margin: 0 0 14px; font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.foot a:hover { color: var(--ink); }
+.foot-blurb { margin: 14px 0 0; max-width: 18rem; color: var(--ink-3); }
+.foot-base { display: flex; justify-content: space-between; gap: 16px; margin-top: 56px; color: var(--ink-3); font-size: 13px; flex-wrap: wrap; }
+@media (max-width: 720px) { .foot { grid-template-columns: 1fr 1fr; } .foot > :first-child { grid-column: 1 / -1; } }
+
+/* reveal */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .8s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+<div class="page-grid" id="pageGrid" aria-hidden="true">
+  <div class="pg-base"></div>
+  <div class="pg-glow"></div>
+  <div class="pg-spot"></div>
+</div>
+
+<!-- ═════════ NAV ═════════ -->
+<header class="nav" id="nav" data-section="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand" aria-label="Tidewell home">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span></span>
+      Tidewell
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#product">Product</a>
+      <a href="#integrations">Integrations</a>
+      <a href="#customers">Customers</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#" class="nav-signin">Sign in</a>
+      <a href="#pricing" class="btn btn-primary">Start free</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ═════════ HERO ═════════ -->
+<section class="hero" id="top" data-section="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+
+  <div class="wrap hero-head">
+    <div class="eyebrow"><span class="eyebrow-y" aria-hidden="true">F</span>backed by foundry row</div>
+    <h1>the ai for <span class="soft">work</span></h1>
+    <p class="hero-sub">Tidewell reads your inbox, calendar and docs, then summarizes, drafts and schedules so you can get back to the work that needs you.</p>
+    <div class="hero-ctas">
+      <a href="#pricing" class="btn btn-primary btn-lg">Start free</a>
+      <a href="#product" class="btn btn-ghost btn-lg">See how it works</a>
+    </div>
+    <div class="hero-note">Free for 14 days. Works with any work inbox.</div>
+  </div>
+
+  <div class="stage-outer">
+    <div class="badges" aria-hidden="true" data-component="agent-badges">
+      <button class="badge-btn b1" tabindex="-1"><div class="badge"><div class="badge-icon"></div><div class="badge-label"></div></div></button>
+      <button class="badge-btn b2" tabindex="-1"><div class="badge"><div class="badge-icon"></div><div class="badge-label"></div></div></button>
+      <button class="badge-btn b3" tabindex="-1"><div class="badge"><div class="badge-icon"></div><div class="badge-label"></div></div></button>
+      <button class="badge-btn b4" tabindex="-1"><div class="badge"><div class="badge-icon"></div><div class="badge-label"></div></div></button>
+      <button class="badge-btn b5" tabindex="-1"><div class="badge"><div class="badge-icon"></div><div class="badge-label"></div></div></button>
+      <button class="badge-btn b6" tabindex="-1"><div class="badge"><div class="badge-icon"></div><div class="badge-label"></div></div></button>
+    </div>
+
+    <div class="wrap">
+      <div class="stage">
+        <!-- floating cards -->
+        <div class="float-card fc-email" aria-hidden="true">
+          <div class="av"></div>
+          <div><div class="fc-from">Alex, Ali, Sarah (6)</div><div class="fc-subj">Re: Design review feedback</div></div>
+          <div class="fc-meta">1:40 PM<span class="fc-dot"></span></div>
+        </div>
+        <div class="float-card fc-command" aria-hidden="true">Summarize this email…</div>
+        <div class="float-card fc-summary" aria-hidden="true">
+          <div class="lbl">AI summary</div>
+          <p>Design review of new email client features. Team discussed command center improvements and category system. General positive feedback…</p>
+        </div>
+
+        <!-- chat module -->
+        <div class="chat" role="region" aria-label="Tidewell chat demo" data-component="chat-demo">
+          <div class="chat-top">
+            <div class="chat-id">
+              <div class="chat-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8z"/></svg></div>
+              <div>
+                <div class="chat-name">Tidewell</div>
+                <div class="chat-status"><span class="dot-live"></span>Connected to your workspace</div>
+              </div>
+            </div>
+            <div class="chat-sources"><span class="src">Mail</span><span class="src">Calendar</span><span class="src">Docs</span></div>
+          </div>
+
+          <div class="chat-body" id="chatBody" aria-live="polite">
+            <div class="chat-empty" id="chatEmpty"><strong>Good afternoon, Jordan</strong>Ask anything about your work.</div>
+          </div>
+
+          <div class="chat-foot">
+            <div class="chips" id="chips">
+              <button class="chip" data-q="Summarize what I missed this morning">Summarize what I missed</button>
+              <button class="chip" data-q="Draft a reply to Sarah about the design review">Draft a reply to Sarah</button>
+              <button class="chip" data-q="What’s on my plate this afternoon?">Plan my afternoon</button>
+            </div>
+            <form class="composer" id="composer" autocomplete="off">
+              <input id="chatInput" type="text" placeholder="Ask Tidewell to summarize, draft or schedule…" aria-label="Message Tidewell">
+              <button class="send" id="sendBtn" type="submit" aria-label="Send" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+              </button>
+            </form>
+            <div class="composer-hint"><span>Demo with a sample inbox</span><span><kbd>Enter</kbd> to send</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ LOGOS ═════════ -->
+<section class="logos" data-section="logos" aria-label="Customers">
+  <div class="wrap">
+    <p>Trusted by fast-moving teams at</p>
+    <div class="logo-row">
+      <span>Northwind</span><span>Halcyon</span><span>Parallax</span><span>orbit.dev</span><span>KITEBIRD</span><span>Meridian</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ FEATURES ═════════ -->
+<section class="sec" id="product" style="padding-top: 40px;" data-section="product">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-kicker">Product</div>
+      <h2>Less inbox.<br><span class="soft">More of the work you were hired for.</span></h2>
+    </div>
+
+    <div class="feature reveal">
+      <div class="feature-copy">
+        <h3>Summaries that read the whole thread</h3>
+        <p>Point Tidewell at a forty-message thread and get the decision, the open questions and who’s waiting on you, in three lines.</p>
+        <ul class="feature-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Catches action items buried in replies</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Links every claim back to the original message</li>
+        </ul>
+      </div>
+      <div class="canvas blue" data-component="summary-vignette">
+        <div class="stack">
+          <div class="v-email">
+            <div class="av"></div>
+            <div><div class="fc-from">Alex, Ali, Sarah (6)</div><div class="fc-subj">Re: Design review feedback</div></div>
+            <div class="fc-meta">1:40 PM<span class="fc-dot"></span></div>
+          </div>
+          <div class="v-cmd"><span id="typeTarget"></span><span class="caret"></span></div>
+          <div class="v-sum">
+            <div class="lbl">AI summary</div>
+            <p>Design review of new email client features. Team discussed command center improvements and category system. General positive feedback…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature flip reveal">
+      <div class="feature-copy">
+        <h3>An inbox that sorts itself</h3>
+        <p>Tidewell learns what matters to you and files the rest. Newsletters, receipts and FYIs stay out of the way until you want them.</p>
+        <ul class="feature-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Categories you define in plain words</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Gets sharper every time you move a message</li>
+        </ul>
+      </div>
+      <div class="canvas violet">
+        <div class="inbox" id="inbox" data-component="inbox-categories">
+          <div class="inbox-tabs" role="tablist" aria-label="Inbox categories">
+            <button class="inbox-tab on" role="tab" aria-selected="true" data-cat="all">All<span class="n">7</span></button>
+            <button class="inbox-tab" role="tab" aria-selected="false" data-cat="reply">Needs reply<span class="n">3</span></button>
+            <button class="inbox-tab" role="tab" aria-selected="false" data-cat="fyi">FYI<span class="n">2</span></button>
+            <button class="inbox-tab" role="tab" aria-selected="false" data-cat="later">Later<span class="n">2</span></button>
+          </div>
+          <div class="inbox-row" data-cat="reply"><div style="min-width:0"><div class="f">Sarah Kim</div><div class="s">Need a call on the category system by Friday</div></div><span class="tag tag-blue">Needs reply</span></div>
+          <div class="inbox-row" data-cat="reply"><div style="min-width:0"><div class="f">Priya Shah</div><div class="s">Q4 budget, revised numbers attached</div></div><span class="tag tag-blue">Needs reply</span></div>
+          <div class="inbox-row" data-cat="fyi"><div style="min-width:0"><div class="f">Trackline</div><div class="s">3 issues moved to Done</div></div><span class="tag tag-mint">FYI</span></div>
+          <div class="inbox-row" data-cat="reply"><div style="min-width:0"><div class="f">Marcus Webb</div><div class="s">Offsite dates, can you do Nov 12–14?</div></div><span class="tag tag-blue">Needs reply</span></div>
+          <div class="inbox-row" data-cat="later"><div style="min-width:0"><div class="f">The Long Read</div><div class="s">Five essays worth your weekend</div></div><span class="tag tag-violet">Later</span></div>
+          <div class="inbox-row" data-cat="fyi"><div style="min-width:0"><div class="f">Paylark</div><div class="s">Your October invoice is ready</div></div><span class="tag tag-mint">FYI</span></div>
+          <div class="inbox-row" data-cat="later"><div style="min-width:0"><div class="f">Canvasly</div><div class="s">What’s new in Canvasly 4</div></div><span class="tag tag-violet">Later</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature reveal">
+      <div class="feature-copy">
+        <h3>Drafts that sound like you</h3>
+        <p>Tidewell studies how you actually write, so replies come out in your voice. Pick a tone, glance, send.</p>
+        <ul class="feature-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Pulls context from docs and past threads</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Nothing sends without your say-so</li>
+        </ul>
+      </div>
+      <div class="canvas mint">
+        <div class="vd" data-component="voice-draft">
+          <div class="voice" id="voice" role="group" aria-label="Tone">
+            <button class="on" data-v="direct" aria-pressed="true">Direct</button>
+            <button data-v="warm" aria-pressed="false">Warm</button>
+            <button data-v="brief" aria-pressed="false">Brief</button>
+          </div>
+          <div class="draft">
+            <div class="draft-meta"><span>To <b>Sarah Kim</b></span><span>Re: <b>Design review feedback</b></span></div>
+            <div class="draft-body" id="voiceBody"></div>
+            <div class="draft-actions"><button class="mini-btn primary" type="button">Send</button><button class="mini-btn" type="button">Edit</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ HOW IT WORKS ═════════ -->
+<section class="sec" style="padding-top: 40px;" data-section="how-it-works">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-kicker">Setup</div>
+      <h2>Running in two minutes.</h2>
+    </div>
+    <div class="steps reveal">
+      <div class="step"><div class="step-n">01</div><h3>Connect your accounts</h3><p>Sign in with your work account. Tidewell reads with the permissions you grant and nothing more.</p></div>
+      <div class="step"><div class="step-n">02</div><h3>Let it learn for a day</h3><p>Tidewell studies how you sort, reply and schedule, then starts suggesting instead of guessing.</p></div>
+      <div class="step"><div class="step-n">03</div><h3>Ask for anything</h3><p>Summaries, replies, meeting times, follow-ups. Type it the way you’d ask a colleague.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ INTEGRATIONS ═════════ -->
+<section class="sec" id="integrations" style="padding-top: 40px;" data-section="integrations">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="sec-kicker">Integrations</div>
+      <h2>Works where <span class="soft">you already work.</span></h2>
+      <p class="sec-lede">Tidewell connects to the tools that hold your context, so its answers come from your real work.</p>
+    </div>
+    <div class="integ-panel reveal" data-component="integrations-hub">
+      <div class="integ-map">
+        <svg class="integ-wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="wireGrad" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#86a9ff"/><stop offset=".5" stop-color="#a77dff"/><stop offset="1" stop-color="#86a9ff"/>
+            </linearGradient>
+          </defs>
+          <g vector-effect="non-scaling-stroke">
+            <path class="base" vector-effect="non-scaling-stroke" d="M30 14 C 42 14, 40 50, 50 50"/>
+            <path class="base" vector-effect="non-scaling-stroke" d="M30 50 L 50 50"/>
+            <path class="base" vector-effect="non-scaling-stroke" d="M30 86 C 42 86, 40 50, 50 50"/>
+            <path class="base" vector-effect="non-scaling-stroke" d="M70 14 C 58 14, 60 50, 50 50"/>
+            <path class="base" vector-effect="non-scaling-stroke" d="M70 50 L 50 50"/>
+            <path class="base" vector-effect="non-scaling-stroke" d="M70 86 C 58 86, 60 50, 50 50"/>
+            <path class="pulse" pathLength="100" vector-effect="non-scaling-stroke" d="M30 14 C 42 14, 40 50, 50 50"/>
+            <path class="pulse rev" pathLength="100" vector-effect="non-scaling-stroke" d="M30 50 L 50 50" style="animation-delay:-.8s"/>
+            <path class="pulse" pathLength="100" vector-effect="non-scaling-stroke" d="M30 86 C 42 86, 40 50, 50 50" style="animation-delay:-1.6s"/>
+            <path class="pulse rev" pathLength="100" vector-effect="non-scaling-stroke" d="M70 14 C 58 14, 60 50, 50 50" style="animation-delay:-2.2s"/>
+            <path class="pulse" pathLength="100" vector-effect="non-scaling-stroke" d="M70 50 L 50 50" style="animation-delay:-.4s"/>
+            <path class="pulse rev" pathLength="100" vector-effect="non-scaling-stroke" d="M70 86 C 58 86, 60 50, 50 50" style="animation-delay:-1.2s"/>
+          </g>
+        </svg>
+
+        <div class="integ-col">
+          <div class="integ-tile" style="--c:#e5484d">
+            <div class="integ-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg></div>
+            <div style="min-width:0"><div class="integ-name">Mail</div><div class="integ-meta">Threads and attachments</div></div>
+            <span class="integ-live">Live</span>
+          </div>
+          <div class="integ-tile" style="--c:#3b82f6">
+            <div class="integ-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+            <div style="min-width:0"><div class="integ-name">Calendar</div><div class="integ-meta">Events and availability</div></div>
+            <span class="integ-live">Live</span>
+          </div>
+          <div class="integ-tile" style="--c:#a855f7">
+            <div class="integ-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M9 11h6M9 14h4"/></svg></div>
+            <div style="min-width:0"><div class="integ-name">Team chat</div><div class="integ-meta">Channels and DMs</div></div>
+            <span class="integ-live">Live</span>
+          </div>
+        </div>
+
+        <div class="integ-hub">
+          <div class="hub-core"><span class="brand-mark" aria-hidden="true"><span></span><span></span></span></div>
+          <span class="hub-label"><span class="dot-live"></span>6 sources in sync</span>
+        </div>
+
+        <div class="integ-col">
+          <div class="integ-tile" style="--c:#10b981">
+            <div class="integ-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
+            <div style="min-width:0"><div class="integ-name">Docs</div><div class="integ-meta">Specs, notes and decks</div></div>
+            <span class="integ-live">Live</span>
+          </div>
+          <div class="integ-tile" style="--c:#f59e0b">
+            <div class="integ-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2z"/><path d="M4 20a2 2 0 0 0 2 1h13v-3"/><path d="M9 8h6"/></svg></div>
+            <div style="min-width:0"><div class="integ-name">Wiki</div><div class="integ-meta">Policies and how-tos</div></div>
+            <span class="integ-live">Live</span>
+          </div>
+          <div class="integ-tile" style="--c:#6366f1">
+            <div class="integ-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg></div>
+            <div style="min-width:0"><div class="integ-name">Tasks</div><div class="integ-meta">Issues and owners</div></div>
+            <span class="integ-live">Live</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="integ-foot">
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/></svg>SOC 2 Type II</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Encrypted end to end</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Read-only by default</span>
+        <a href="#">40+ more via API →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ TESTIMONIALS ═════════ -->
+<section class="sec" id="customers" style="padding-top: 40px;" data-section="testimonials">
+  <div class="wrap">
+    <div class="t-head reveal">
+      <div class="sec-head" style="margin:0">
+        <div class="sec-kicker">Customers</div>
+        <h2>What our users say.</h2>
+      </div>
+      <div class="t-nav">
+        <button class="t-arrow" id="tPrev" aria-label="Previous testimonials"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button class="t-arrow" id="tNext" aria-label="Next testimonials"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="t-rail" id="tRail" role="region" aria-label="Testimonials" tabindex="0">
+    <figure class="t-card" style="margin:0"><blockquote>“This AI has completely revolutionized how I manage my inbox.”</blockquote><figcaption class="t-who"><div class="t-av" style="background:linear-gradient(135deg,#f9a8d4,#c084fc)" aria-hidden="true">SC</div><div><div class="t-name">Sarah Chen</div><div class="t-role">Product Manager at <b>TechCorp</b></div></div></figcaption></figure>
+    <figure class="t-card" style="margin:0"><blockquote>“The smart categorization feature is incredible. My emails are automatically organized.”</blockquote><figcaption class="t-who"><div class="t-av" style="background:linear-gradient(135deg,#93c5fd,#6366f1)" aria-hidden="true">MR</div><div><div class="t-name">Michael Rodriguez</div><div class="t-role">CEO at <b>StartupXYZ</b></div></div></figcaption></figure>
+    <figure class="t-card" style="margin:0"><blockquote>“As someone who receives 200+ emails daily, this tool has been a game-changer for my productivity.”</blockquote><figcaption class="t-who"><div class="t-av" style="background:linear-gradient(135deg,#fcd34d,#f97316)" aria-hidden="true">EW</div><div><div class="t-name">Emily Watson</div><div class="t-role">Marketing Director at <b>Global Inc</b></div></div></figcaption></figure>
+    <figure class="t-card" style="margin:0"><blockquote>“The AI summaries are so accurate, I can quickly understand long email threads without reading everything.”</blockquote><figcaption class="t-who"><div class="t-av" style="background:linear-gradient(135deg,#6ee7b7,#0d9488)" aria-hidden="true">DP</div><div><div class="t-name">David Park</div><div class="t-role">Engineer at <b>DevTools</b></div></div></figcaption></figure>
+    <figure class="t-card" style="margin:0"><blockquote>“Finally, an email tool that actually understands context and helps me prioritize what matters most.”</blockquote><figcaption class="t-who"><div class="t-av" style="background:linear-gradient(135deg,#fda4af,#e11d48)" aria-hidden="true">JL</div><div><div class="t-name">Jennifer Liu</div><div class="t-role">Consultant at <b>Strategy Co</b></div></div></figcaption></figure>
+    <figure class="t-card" style="margin:0"><blockquote>“The command center feature lets me process emails with simple commands.”</blockquote><figcaption class="t-who"><div class="t-av" style="background:linear-gradient(135deg,#a5b4fc,#7c3aed)" aria-hidden="true">RT</div><div><div class="t-name">Robert Thompson</div><div class="t-role">VP Sales at <b>SaaS Plus</b></div></div></figcaption></figure>
+    <figure class="t-card" style="margin:0"><blockquote>“I’ve tried many email tools, but this is the first one that actually learns and adapts to my workflow.”</blockquote><figcaption class="t-who"><div class="t-av" style="background:linear-gradient(135deg,#67e8f9,#0284c7)" aria-hidden="true">AF</div><div><div class="t-name">Amanda Foster</div><div class="t-role">Operations Lead at <b>FinTech Pro</b></div></div></figcaption></figure>
+    <figure class="t-card" style="margin:0"><blockquote>“The time I save on email management now goes into actual work.”</blockquote><figcaption class="t-who"><div class="t-av" style="background:linear-gradient(135deg,#d9f99d,#65a30d)" aria-hidden="true">JM</div><div><div class="t-name">James Martinez</div><div class="t-role">Team Lead at <b>Design Studio</b></div></div></figcaption></figure>
+  </div>
+</section>
+
+<!-- ═════════ PRICING ═════════ -->
+<section class="sec" id="pricing" style="padding-top: 40px;" data-section="pricing">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="sec-kicker">Pricing</div>
+      <h2>Simple pricing. <span class="soft">Start free.</span></h2>
+      <div class="toggle" id="billing" role="group" aria-label="Billing period">
+        <button class="on" data-b="m" aria-pressed="true">Monthly</button>
+        <button data-b="y" aria-pressed="false">Yearly<span class="save">−20%</span></button>
+      </div>
+    </div>
+    <div class="plans reveal">
+      <div class="plan">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price"><span class="amt">$0</span><span class="per">forever</span></div>
+        <p class="plan-desc">For trying Tidewell on one inbox.</p>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>1 email account</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>50 AI actions a month</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Smart categories</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-lg">Get started</a>
+      </div>
+      <div class="plan pop">
+        <div class="plan-name">Pro <span class="tag tag-violet">Most popular</span></div>
+        <div class="plan-price"><span class="amt" data-m="$20" data-y="$16">$20</span><span class="per">per month</span></div>
+        <p class="plan-desc">For people who live in their inbox.</p>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Unlimited accounts and AI actions</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Drafts in your voice</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Calendar and docs context</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Daily briefing</li>
+        </ul>
+        <a href="#" class="btn btn-primary btn-lg">Start 14-day trial</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Team</div>
+        <div class="plan-price"><span class="amt" data-m="$32" data-y="$26">$32</span><span class="per">per seat / month</span></div>
+        <p class="plan-desc">For teams that share threads and calendars.</p>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Everything in Pro</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Shared inboxes and handoffs</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>SSO and admin controls</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 6"/></svg>Audit logs and data residency</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-lg">Talk to sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ FAQ ═════════ -->
+<section class="sec" style="padding-top: 40px;" data-section="faq">
+  <div class="wrap">
+    <div class="sec-head center reveal"><h2>Questions, answered.</h2></div>
+    <div class="faq reveal">
+      <details><summary>Does Tidewell send anything without asking me?<span class="pm" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>No. Tidewell drafts, sorts and suggests. Anything that leaves your account, like a sent reply or a calendar invite, waits for your approval unless you turn on auto-send for a specific rule.</p></details>
+      <details><summary>Is my email used to train AI models?<span class="pm" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Never. Your messages are encrypted in transit and at rest, processed only to serve your requests, and you can delete everything Tidewell has stored with one click.</p></details>
+      <details><summary>Which email providers work?<span class="pm" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Every major work email provider, plus IMAP in beta on the Pro and Team plans.</p></details>
+      <details><summary>Can I cancel any time?<span class="pm" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Yes. Cancel from settings and you keep access until the end of your billing period. Your inbox stays exactly as you left it.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ FINAL CTA ═════════ -->
+<section class="final" data-section="cta">
+  <div class="wrap">
+    <div class="final-card reveal">
+      <h2>get your afternoons back</h2>
+      <p>Connect your inbox in two minutes. Free for 14 days, no card needed.</p>
+      <a href="#" class="btn btn-primary btn-lg">Start free</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer data-section="footer">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"><span></span><span></span></span>Tidewell</a>
+        <p class="foot-blurb">The AI for work. Made in San Francisco.</p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="#product">Features</a></li><li><a href="#integrations">Integrations</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Changelog</a></li></ul></div>
+      <div><h2>Company</h2><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div><h2>Legal</h2><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Security</a></li></ul></div>
+    </div>
+    <div class="foot-base"><span>© 2026 Tidewell Labs, Inc. Tidewell, Foundry Row, the customers, senders and testimonials are fictional, made for the INSTALANDING.AI library.</span><span>All systems normal</span></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 40) : ms));
+  const sparkle = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>';
+
+  /* ── page grid spotlight: eases toward the cursor, lines stay aligned to the base grid ── */
+  const pg = document.getElementById('pageGrid');
+  if (pg && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const spot = pg.querySelector('.pg-spot'), glow = pg.querySelector('.pg-glow');
+    const CELL = 64, SR = 260, GR = 280;
+    let ox = 0, cx = 0, cy = 0, tx = 0, ty = 0, vx = 0, vy = 0, on = false;
+    const measure = () => { ox = (((pg.clientWidth / 2 - CELL / 2) % CELL) + CELL) % CELL; };
+    measure(); window.addEventListener('resize', measure);
+    const target = () => { tx = vx + window.scrollX; ty = vy + window.scrollY; };
+    document.addEventListener('pointermove', e => {
+      vx = e.clientX; vy = e.clientY; target();
+      if (!on) { on = true; cx = tx + 1; cy = ty; pg.classList.add('active'); }
+    }, { passive: true });
+    window.addEventListener('scroll', () => { if (on) target(); }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', () => { on = false; pg.classList.remove('active'); });
+    (function tick() {
+      const k = reduce ? 1 : .12;
+      const dx = tx - cx, dy = ty - cy;
+      if (Math.abs(dx) > .1 || Math.abs(dy) > .1) {
+        cx += dx * k; cy += dy * k;
+        const sx = cx - SR, sy = cy - SR;
+        spot.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
+        spot.style.backgroundPosition = `${ox - sx}px ${-sy}px`;
+        glow.style.transform = `translate3d(${cx - GR}px, ${cy - GR}px, 0)`;
+      }
+      requestAnimationFrame(tick);
+    })();
+  }
+
+  /* ── nav border on scroll ── */
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* ── reveal ── */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ── agent badges ── */
+  const STATES = [
+    { idle: 'Analyze', processing: 'Analyzing…', success: 'Analyzed', error: 'Failed' },
+    { idle: 'Categorize', processing: 'Sorting…', success: 'Sorted', error: 'Error' },
+    { idle: 'Summarize', processing: 'Reading…', success: 'Summary ready', error: 'Failed' },
+    { idle: 'Reply', processing: 'Drafting…', success: 'Draft ready', error: 'Error' },
+    { idle: 'Schedule', processing: 'Checking…', success: 'Scheduled', error: 'Failed' },
+    { idle: 'Archive', processing: 'Filing…', success: 'Archived', error: 'Error' }
+  ];
+  const svgA = 'width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+  const ICONS = {
+    processing: `<svg ${svgA} class="spinner"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`,
+    success: `<svg ${svgA}><polyline class="draw" points="4 12 9 17 20 6"/></svg>`,
+    error: `<svg ${svgA}><line class="draw" x1="6" y1="6" x2="18" y2="18"/><line class="draw" x1="18" y1="6" x2="6" y2="18" style="animation-delay:.1s"/></svg>`
+  };
+  // Labels animate width, so each new label is measured here before it swaps in
+  const measurer = document.createElement('span');
+  measurer.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:500 14px/20px var(--font);letter-spacing:-0.02em;left:-9999px';
+  document.body.appendChild(measurer);
+
+  class Badge {
+    constructor(btn, cfg, i) {
+      this.btn = btn; this.cfg = cfg; this.i = i;
+      this.badge = btn.querySelector('.badge');
+      this.icon = btn.querySelector('.badge-icon');
+      this.label = btn.querySelector('.badge-label');
+      this.state = null;
+      this.set('idle');
+      btn.addEventListener('click', () => {
+        const order = ['idle', 'processing', 'success', 'error'];
+        this.set(order[(order.indexOf(this.state) + 1) % order.length]);
+      });
+      setTimeout(() => this.loop(), 800 + i * 220);
+    }
+    set(state) {
+      this.state = state;
+      const text = this.cfg[state];
+      measurer.textContent = text;
+      this.label.style.width = measurer.getBoundingClientRect().width + 'px';
+      const old = this.label.querySelector('.in, span:not(.out)');
+      if (old) { old.className = 'out'; setTimeout(() => old.remove(), 260); }
+      const s = document.createElement('span'); s.className = 'in'; s.textContent = text;
+      this.label.appendChild(s);
+      this.icon.innerHTML = ICONS[state] || '';
+      this.badge.classList.toggle('has-icon', !!ICONS[state]);
+      this.badge.classList.remove('success', 'error');
+      void this.badge.offsetWidth;
+      if (state === 'success' || state === 'error') this.badge.classList.add(state);
+    }
+    async loop() {
+      while (true) {
+        await wait(1200 + Math.random() * 2200);
+        if (this.state !== 'idle') continue;
+        this.set('processing');
+        await wait(900 + Math.random() * 700);
+        this.set(Math.random() > .06 ? 'success' : 'error');
+        await wait(1000);
+        this.set('idle');
+      }
+    }
+  }
+  if (!reduce) document.querySelectorAll('.badge-btn').forEach((b, i) => new Badge(b, STATES[i], i));
+  else document.querySelectorAll('.badge-btn').forEach((b, i) => { const l = b.querySelector('.badge-label'); measurer.textContent = STATES[i].idle; l.style.width = measurer.getBoundingClientRect().width + 'px'; l.innerHTML = `<span>${STATES[i].idle}</span>`; });
+
+  /* ── chat ── */
+  const body = document.getElementById('chatBody');
+  const empty = document.getElementById('chatEmpty');
+  const form = document.getElementById('composer');
+  const input = document.getElementById('chatInput');
+  const send = document.getElementById('sendBtn');
+  const chips = document.getElementById('chips');
+  let busy = false, userTouched = false;
+
+  // The chat's own scrollTop, never scrollIntoView: that would also scroll any page embedding this one
+  const scrollDown = () => { body.scrollTop = body.scrollHeight; };
+  input.addEventListener('input', () => { send.disabled = busy || !input.value.trim(); userTouched = true; });
+
+  const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
+
+  function addUser(text) {
+    if (empty) empty.remove();
+    const m = el('div', 'msg msg-user');
+    const b = el('div', 'bubble'); b.textContent = text;
+    m.appendChild(b); body.appendChild(m); scrollDown();
+  }
+
+  const RESPONSES = {
+    summary: {
+      thinking: 'Reading 14 new emails',
+      parts: [
+        { t: 'You have 14 new emails since 9 AM. Three need you today:' },
+        { html: `
+          <div class="thread"><div class="av" style="background:linear-gradient(135deg,#E0BBE4,#FFDFD3)"></div><div><div class="thread-from">Alex, Ali, Sarah (6)</div><div class="thread-subj">Re: Design review feedback</div><div class="thread-note">Positive overall. Sarah wants your call on the category system by Friday.</div></div><span class="tag tag-blue">Reply</span></div>
+          <div class="thread"><div class="av" style="background:linear-gradient(135deg,#bfe3ff,#9ab8ff)"></div><div><div class="thread-from">Priya Shah</div><div class="thread-subj">Q4 budget</div><div class="thread-note">Finance approved the revised number. Waiting on your sign-off.</div></div><span class="tag tag-mint">Approve</span></div>
+          <div class="thread"><div class="av" style="background:linear-gradient(135deg,#ffe0b3,#ffb38a)"></div><div><div class="thread-from">Marcus Webb</div><div class="thread-subj">Offsite dates</div><div class="thread-note">Proposes Nov 12–14, which overlaps your board prep.</div></div><span class="tag tag-red">Conflict</span></div>` },
+        { t: 'The other 11 are newsletters and FYIs. I’ve filed them under Later.' }
+      ]
+    },
+    draft: {
+      thinking: 'Reading the thread and your past replies',
+      parts: [
+        { t: 'Here’s a reply to Sarah in your usual tone:' },
+        { html: `<div class="draft"><div class="draft-meta"><span>To <b>Sarah Kim</b></span><span>Re: <b>Design review feedback</b></span></div><div class="draft-body"><p>Thanks Sarah, great session. Let’s go with the three-category version for launch and revisit custom categories after we see usage.</p><p>I’ll share the updated spec by Thursday so you have it before Friday.</p></div><div class="draft-actions"><button class="mini-btn primary js-send" type="button">Send</button><button class="mini-btn" type="button">Edit</button></div></div>` }
+      ]
+    },
+    schedule: {
+      thinking: 'Checking your calendar',
+      parts: [
+        { t: 'Your afternoon looks like this:' },
+        { html: `
+          <div class="slot"><span class="slot-time">1:00 PM</span><span class="slot-title">Design review follow-up</span><span class="tag tag-blue">30 min</span></div>
+          <div class="slot focus"><span class="slot-time">2:00 PM</span><span class="slot-title">Focus time: Q4 budget</span><span class="tag tag-violet">Protected</span></div>
+          <div class="slot"><span class="slot-time">4:00 PM</span><span class="slot-title">1:1 with Priya</span><span class="tag tag-mint">45 min</span></div>` },
+        { t: 'I blocked 2:00 to 3:30 so you can sign off on the budget before your 1:1. Want me to tell Priya it’ll be ready?' }
+      ]
+    },
+    fallback: {
+      thinking: 'Thinking',
+      parts: [{ t: 'This demo runs on a sample inbox, so I can only show a few things here. Try asking me to summarize what you missed, draft a reply, or plan your afternoon.' }]
+    }
+  };
+
+  function pick(text) {
+    const q = text.toLowerCase();
+    if (/draft|reply|respond|write|answer/.test(q)) return 'draft';
+    if (/summar|miss|unread|inbox|catch|new email/.test(q)) return 'summary';
+    if (/today|afternoon|schedule|calendar|plate|meeting|plan|day|week/.test(q)) return 'schedule';
+    return 'fallback';
+  }
+
+  async function streamText(container, text) {
+    const p = el('p'); container.appendChild(p);
+    const words = text.split(/(\s+)/);
+    for (const w of words) { p.textContent += w; scrollDown(); if (w.trim()) await wait(22 + Math.random() * 30); }
+  }
+
+  async function respond(key) {
+    const r = RESPONSES[key];
+    const m = el('div', 'msg msg-ai');
+    m.appendChild(el('div', 'ai-ic', sparkle));
+    const c = el('div', 'ai-content');
+    m.appendChild(c); body.appendChild(m);
+    const th = el('div', 'thinking', `<span class="spin"></span>${r.thinking}…`);
+    c.appendChild(th); scrollDown();
+    await wait(1100);
+    th.remove();
+    const txt = el('div', 'ai-text'); c.appendChild(txt);
+    for (const part of r.parts) {
+      if (part.t) await streamText(txt, part.t);
+      else {
+        const rich = el('div', 'rich', part.html);
+        txt.appendChild(rich); scrollDown();
+        rich.querySelectorAll('.js-send').forEach(b => b.addEventListener('click', () => { b.textContent = 'Sent'; b.classList.remove('primary'); b.classList.add('done'); }));
+        await wait(500);
+      }
+    }
+  }
+
+  async function ask(text) {
+    if (busy || !text.trim()) return;
+    busy = true; send.disabled = true; input.value = '';
+    addUser(text.trim());
+    await wait(350);
+    await respond(pick(text));
+    busy = false; send.disabled = !input.value.trim();
+  }
+
+  form.addEventListener('submit', e => { e.preventDefault(); userTouched = true; ask(input.value); });
+  chips.addEventListener('click', e => { const b = e.target.closest('.chip'); if (b) { userTouched = true; ask(b.dataset.q); } });
+
+  // autoplay first prompt once the chat is on screen
+  async function autoplay() {
+    const q = 'Summarize what I missed this morning';
+    await wait(900);
+    if (userTouched) return;
+    for (const ch of q) { if (userTouched) return; input.value += ch; await wait(28 + Math.random() * 30); }
+    await wait(250);
+    if (!userTouched) ask(q);
+  }
+  const chatIO = new IntersectionObserver(es => { if (es[0].isIntersecting) { chatIO.disconnect(); autoplay(); } }, { threshold: .4 });
+  chatIO.observe(document.querySelector('.chat'));
+
+  /* ── vignette 1: typed command ── */
+  const tt = document.getElementById('typeTarget');
+  const cmds = ['Summarize this email…', 'What did Sarah decide?', 'Pull out the action items…'];
+  (async function typeLoop() {
+    let i = 0;
+    while (true) {
+      const s = cmds[i++ % cmds.length];
+      for (let k = 1; k <= s.length; k++) { tt.textContent = s.slice(0, k); await wait(45); }
+      await wait(1800);
+      if (reduce) { tt.textContent = cmds[0]; break; }
+      for (let k = s.length; k >= 0; k--) { tt.textContent = s.slice(0, k); await wait(18); }
+      await wait(300);
+    }
+  })();
+
+  /* ── vignette 2: inbox tabs ── */
+  const inbox = document.getElementById('inbox');
+  inbox.querySelectorAll('.inbox-tab').forEach(t => t.addEventListener('click', () => {
+    inbox.querySelectorAll('.inbox-tab').forEach(x => { x.classList.toggle('on', x === t); x.setAttribute('aria-selected', x === t); });
+    const cat = t.dataset.cat;
+    inbox.querySelectorAll('.inbox-row').forEach(r => r.classList.toggle('hide', cat !== 'all' && r.dataset.cat !== cat));
+  }));
+
+  /* ── vignette 3: voice ── */
+  const VOICES = {
+    direct: '<p>Thanks Sarah. Let’s ship the three-category version and revisit custom categories after launch.</p><p>Updated spec to you by Thursday.</p>',
+    warm: '<p>Hi Sarah, thank you for running such a thoughtful review. I really liked where the team landed.</p><p>Let’s go with three categories for launch and explore custom ones once we see how people use it. I’ll have the updated spec to you by Thursday!</p>',
+    brief: '<p>Three categories for launch. Spec by Thursday.</p>'
+  };
+  const vb = document.getElementById('voiceBody');
+  vb.innerHTML = VOICES.direct;
+  document.getElementById('voice').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#voice button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
+    vb.style.opacity = 0;
+    setTimeout(() => { vb.innerHTML = VOICES[b.dataset.v]; vb.style.opacity = 1; }, 180);
+  });
+
+  /* ── testimonials ── */
+  const rail = document.getElementById('tRail');
+  const step = () => (rail.querySelector('.t-card').getBoundingClientRect().width + 16) * 2;
+  document.getElementById('tPrev').addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
+  document.getElementById('tNext').addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+
+  /* ── billing toggle ── */
+  document.getElementById('billing').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#billing button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
+    document.querySelectorAll('.amt[data-m]').forEach(a => a.textContent = a.dataset[b.dataset.b]);
+  });
+})();
+</script>
+</body>
+</html>
