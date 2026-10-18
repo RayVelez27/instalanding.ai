@@ -12,7 +12,13 @@ come from Google Fonts, and a few pages load GSAP or Three.js from a CDN. Next t
 **one-shot prompt** it was built from: a brief detailed enough that an AI builder or coding agent
 produces the page in one pass.
 
-Browse them live at **[instalanding.ai](https://instalanding.ai)**.
+Alongside the pages are **design systems**: the visual language behind a page, pulled out of it so
+you (or your agent) can build more in that style — design tokens as CSS custom properties, the
+page's own components scoped so they can't clash with yours, and the conventions that hold them
+together. See [Design systems](#design-systems).
+<!-- SYSTEMS-INTRO -->
+
+Browse them live at **[instalanding.ai](https://instalanding.ai)** and **[instalanding.ai/systems](https://instalanding.ai/systems)**.
 
 ## New drops
 
@@ -99,6 +105,20 @@ at [instalanding.ai/llms.txt](https://instalanding.ai/llms.txt),
 | <a href="pages/skewed-marquee-wall"><img src="pages/skewed-marquee-wall/preview.jpg" width="240" alt="Skewed Marquee Wall"></a> | **[Skewed Marquee Wall](pages/skewed-marquee-wall)**<br>Skewed marquee lanes of agent runs behind a working run console, with approval gates and a fleet kill switch<br><sub>dark · industrial · pixel-type · marquee</sub> |
 <!-- PAGES:END -->
 
+## Design systems
+
+<!-- SYSTEMS:START -->
+Each system is extracted from one of the pages above. Open `specimen.html` to see every component,
+link the system's CSS to use it, or explore it live with a token playground at
+[instalanding.ai/systems](https://instalanding.ai/systems).
+
+| | |
+| --- | --- |
+| <a href="systems/kind-swarm"><img src="systems/kind-swarm/preview.jpg" width="240" alt="Kind Swarm design system"></a> | **[Kind Swarm](systems/kind-swarm)** · <sub>`kind-swarm@1.0.0`</sub><br>Loud neo-brutalism: stencil type, op-art rings, hard shadows and animoji<br><sub>14 components · 89 tokens · from [Social Work Agent Swarm Landing Page](pages/social-work-agent-swarm-landing-page)</sub> |
+| <a href="systems/kiln"><img src="systems/kiln/preview.jpg" width="240" alt="Kiln design system"></a> | **[Kiln](systems/kiln)** · <sub>`kiln@1.0.0`</sub><br>Dark machined hardware: anodised plates, copper screws, recessed wells and amber lamps<br><sub>14 components · 86 tokens · from [Machine Front Panel Page](pages/machine-front-panel-page)</sub> |
+| <a href="systems/footnote"><img src="systems/footnote/preview.jpg" width="240" alt="Footnote design system"></a> | **[Footnote](systems/footnote)** · <sub>`footnote@1.0.0`</sub><br>Quiet editorial paper: serif type, mono labels and a real, rough-edged highlighter<br><sub>14 components · 65 tokens · from [Highlighter Markup Page](pages/highlighter-markup-page)</sub> |
+<!-- SYSTEMS:END -->
+
 ## Repo layout
 
 ```
@@ -107,6 +127,12 @@ pages/<slug>/
   PROMPT.md     the one-shot brief it was built from
   README.md     what it is for, its style, sections, stack, and credits
   preview.jpg   1200x600 screenshot
+systems/<slug>/
+  specimen.html every component of the system, live, in one file
+  tokens.css    the design tokens as CSS custom properties
+  <slug>.css    tokens + component CSS, scoped under the system's root class
+  README.md     how to use it, its components, conventions and source page
+  preview.jpg   1200x600 preview
 index.json      every page's metadata, for agents and scripts
 AGENTS.md       how an agent should use this repo
 ```

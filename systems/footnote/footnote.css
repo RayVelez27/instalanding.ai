@@ -1,0 +1,557 @@
+/* InstaLanding design system · Footnote · footnote@1.0.0
+   Extracted from https://instalanding.ai/demos/footnote-grounding.html
+   Fonts (Google Fonts): Source Serif 4 400/600/700 + italic, JetBrains Mono 400/500/700, Caveat 400-700 */
+:root {
+  /* Color · core */
+  --fn-paper: #FFFCF0;
+  --fn-paper-2: #F2F0E5;
+  --fn-paper-3: #E6E4D9;
+  --fn-sheet: #FFFDF6;
+  --fn-ink: #100F0F;
+  --fn-ink-2: #6F6E69;
+  --fn-ink-3: #B7B5AC;
+  --fn-rule: #DAD8CE;
+  --fn-shore: #2F2B33;
+  --fn-print: #205EA6;
+
+  /* Color · highlighters */
+  --fn-hl-red: #F5A69E;
+  --fn-hl-orange: #FED2AE;
+  --fn-hl-yellow: #F6E3A2;
+  --fn-hl-green: #DDE2B1;
+  --fn-hl-cyan: #BFE8D9;
+  --fn-hl-blue: #C5DCE7;
+  --fn-hl-purple: #E2D8E9;
+  --fn-hl-magenta: #FCCFDA;
+
+  /* Color · pencil & text */
+  --fn-pencil: #B1382F;
+  --fn-margin-rule: #EA8C86;
+  --fn-graphite: #2B2926;
+  --fn-ink-hover: #2A2827;
+  --fn-text-soft: #2C2A28;
+  --fn-text-muted: #46443F;
+  --fn-text-card: #4A4843;
+
+  /* Color · terminal & shore */
+  --fn-term-dim: #8F8B94;
+  --fn-term-dot: #55505C;
+  --fn-foot-text: #BFBAB0;
+
+  /* Type · families */
+  --fn-font-display: "Source Serif 4", Georgia, serif;
+  --fn-font-body: "Source Serif 4", Georgia, serif;
+  --fn-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --fn-font-hand: "Caveat", cursive;
+
+  /* Type · scale */
+  --fn-step-6: clamp(2.99rem, 2.3rem + 3.44vw, 5.15rem);
+  --fn-step-close: clamp(2.6rem, 1.6rem + 4vw, 5rem);
+  --fn-step-4: clamp(2.07rem, 1.76rem + 1.55vw, 3.05rem);
+  --fn-step-2: clamp(1.44rem, 1.32rem + 0.58vw, 1.8rem);
+  --fn-step-1: clamp(1.2rem, 1.13rem + 0.35vw, 1.42rem);
+  --fn-step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
+  --fn-step--1: clamp(0.83rem, 0.8rem + 0.16vw, 0.92rem);
+
+  /* Type · rhythm */
+  --fn-leading: 1.6;
+  --fn-leading-sheet: 1.75;
+  --fn-tracking-label: .14em;
+
+  /* Shape · radii */
+  --fn-radius-sm: 3px;
+  --fn-radius-md: 8px;
+
+  /* Shape · borders */
+  --fn-border: 1px;
+  --fn-border-note: 3px;
+
+  /* Shape · tilt */
+  --fn-tilt-sheet: -0.25deg;
+  --fn-tilt-listing: 0.6deg;
+
+  /* Depth · paper shadows */
+  --fn-shadow-sheet: 0 1px 0 var(--fn-paper-3), 0 18px 40px -28px rgba(16, 15, 15, 0.45);
+  --fn-shadow-card: 0 1px 0 var(--fn-paper-3), 0 14px 28px -22px rgba(16, 15, 15, 0.5);
+  --fn-shadow-glow: 0 14px 34px -14px rgba(16, 15, 15, 0.55), 0 0 0 4px hsl(46 83% 80% / 0.45);
+  --fn-shadow-term: 0 22px 44px -22px rgba(0, 0, 0, 0.65), 0 0 0 1px hsl(270 6% 26%);
+
+  /* Motion · easing */
+  --fn-ease-pen: cubic-bezier(0.55, 0.06, 0.3, 1);
+  --fn-ease-blob: cubic-bezier(0.3, 1.7, 0.5, 1);
+
+  /* Motion · durations */
+  --fn-dur-press: .18s;
+  --fn-dur-pen: 480ms;
+  --fn-dur-blob: 420ms;
+  --fn-dur-blink: 1s;
+
+  /* Space · layout */
+  --fn-measure: 74ch;
+  --fn-page-max: 1100px;
+  --fn-gutter: 3rem;
+  --fn-section-y: clamp(3.5rem, 7vw, 6rem);
+  --fn-gap: 1.5rem;
+
+  /* Texture · grain */
+  --fn-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  --fn-grain-page: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.09'/%3E%3C/svg%3E");
+}
+
+/* Components · scoped under .fn; class names use the fn- prefix */
+/* ============================================================
+   FOOTNOTE — the page is a marked-up document.
+   Every highlight is a real highlighter: a pseudo-element behind
+   the text, roughened by an SVG displacement filter, with a blob
+   at the end where the pen rested.
+   One file, no images, no libraries.
+   ============================================================ */
+:where(.fn), :where(.fn) * { margin: 0; padding: 0; box-sizing: border-box; }
+.fn {
+  font-family: var(--fn-font-body);
+  font-size: var(--fn-step-0);
+  line-height: var(--fn-leading);
+  color: var(--fn-ink);
+  background: var(--fn-paper);
+  background-image: var(--fn-grain-page);
+  background-blend-mode: multiply;
+  -webkit-font-smoothing: antialiased;
+}
+:where(.fn) a { color: inherit; }
+:where(.fn) button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:where(.fn) ul, :where(.fn) ol { list-style: none; }
+.fn-wrap { width: min(var(--fn-measure), 100% - var(--fn-gutter)); margin: 0 auto; }
+.fn-wide { width: min(var(--fn-page-max), 100% - var(--fn-gutter)); margin: 0 auto; }
+.fn-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.fn-label {
+  font-family: var(--fn-font-mono); font-size: var(--fn-step--1); font-weight: 500;
+  letter-spacing: var(--fn-tracking-label); text-transform: uppercase; color: var(--fn-ink-2);
+}
+
+/* ============================================================
+   THE HIGHLIGHTER
+   The colour, the noise and the rough edge all sit on ::before so
+   the displacement filter never touches the glyphs — run it on the
+   text and the letters themselves come out wobbling.
+   ============================================================ */
+:where(.fn) mark {
+  --color: var(--fn-hl-yellow);
+  position: relative;
+  display: inline-block;   /* see THE WRAP below */
+  background-color: unset; /* the pseudo does the colour */
+  color: inherit;
+  isolation: isolate;
+}
+:where(.fn) mark::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  /* nudged by hand until it sat like a pen stroke: wider than the word,
+     a touch taller, and pulled left so the stroke starts before the glyph */
+  width: calc(100% + 1ch); left: -0.25ch;
+  height: 112%; top: -6%;
+  border-bottom-right-radius: 20px 30px;
+  background-color: var(--color);
+  background-image: var(--fn-grain);
+  opacity: 0.75;
+  box-shadow:
+    inset -2px 0 1px hsl(from var(--color) h s calc(l - 20)),
+    inset -4px 0 5px hsl(from var(--color) h s calc(l - 20));
+  filter: url(#fn-rough);
+}
+/* the blob where the pen rested a beat too long */
+:where(.fn) mark::after {
+  content: ""; position: absolute; z-index: -1;
+  height: 1ch; width: 0.5ch; top: 2px; right: -0.25em;
+  background: radial-gradient(hsl(from var(--color) h s calc(l - 30)), hsl(from var(--color) h s l));
+  opacity: 0.4;
+  border-radius: 10px 0 50px / 200px 0;
+  rotate: 15deg;
+  filter: url(#fn-rough);
+}
+/* THE WRAP — a mark is inline-block so the filter has a box to work on,
+   which means a long phrase cannot break across lines. The fix is to stop
+   marking phrases: script splits one into a mark per word, so the line
+   breaks between them, and only the last word keeps the pen blob. */
+:where(.fn) mark[data-fn-split] { display: inline; }
+:where(.fn) mark.fn-w { margin-right: 0.24ch; }
+:where(.fn) mark.fn-w:not(.fn-last)::after { content: none; }
+
+/* once a phrase is split, its words carry the strokes; the outer mark is
+   only a wrapper and must not lay a second stroke over the whole phrase */
+:where(.fn) mark[data-fn-split]:has(> mark.fn-w)::before, :where(.fn) mark[data-fn-split]:has(> mark.fn-w)::after { content: none; }
+
+/* THE PEN — marks draw on as they come into view. The stroke is uncovered
+   left to right by a clip on the pseudo, so the rough edge and grain are
+   there from the first frame instead of stretching in. The clip reaches past
+   the box on every side so the displaced edge is never trimmed. Only set up
+   when script is running and motion is allowed; otherwise the marks are
+   simply there. */
+.fn-hl-anim mark::before {
+  clip-path: inset(-40% 100% -40% -30%);
+  transition: clip-path var(--dur, var(--fn-dur-pen)) var(--fn-ease-pen);
+}
+.fn-hl-anim mark.fn-is-drawn::before { clip-path: inset(-40% -30% -40% -30%); }
+.fn-hl-anim mark::after {
+  opacity: 0; scale: 0.3;
+  transition: opacity 260ms ease, scale var(--fn-dur-blob) var(--fn-ease-blob);
+  transition-delay: calc(var(--dur, var(--fn-dur-pen)) - 80ms);
+}
+.fn-hl-anim mark.fn-is-drawn::after { opacity: 0.4; scale: 1; }
+
+.fn-hl-red { --color: var(--fn-hl-red); }
+.fn-hl-orange { --color: var(--fn-hl-orange); }
+.fn-hl-green { --color: var(--fn-hl-green); }
+.fn-hl-cyan { --color: var(--fn-hl-cyan); }
+.fn-hl-blue { --color: var(--fn-hl-blue); }
+.fn-hl-purple { --color: var(--fn-hl-purple); }
+.fn-hl-magenta { --color: var(--fn-hl-magenta); }
+
+/* ============================================================
+   CHROME
+   ============================================================ */
+:where(.fn) header.fn-top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  background: color-mix(in srgb, var(--fn-paper) 88%, transparent);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border-bottom: var(--fn-border) solid var(--fn-rule);
+}
+.fn-top .fn-wide { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 1.5rem; }
+.fn-brand { font-family: var(--fn-font-mono); font-weight: 700; letter-spacing: 0.1em; font-size: var(--fn-step--1); text-decoration: none; }
+.fn-brand sup { color: var(--fn-ink-3); margin-left: 2px; }
+.fn-nav { display: flex; gap: 1.75rem; }
+.fn-nav a { font-family: var(--fn-font-mono); font-size: var(--fn-step--1); letter-spacing: 0.06em; color: var(--fn-ink-2); text-decoration: none; }
+.fn-nav a:hover { color: var(--fn-ink); }
+
+.fn-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--fn-font-mono); font-size: var(--fn-step--1); font-weight: 500; letter-spacing: 0.06em;
+  padding: 0.65rem 1.15rem; border-radius: var(--fn-radius-sm); text-decoration: none;
+  border: 1px solid var(--fn-ink); transition: var(--fn-dur-press) ease;
+}
+.fn-btn--fill { background: var(--fn-ink); color: var(--fn-paper); }
+.fn-btn--fill:hover { background: var(--fn-ink-hover); }
+.fn-btn--line:hover { background: var(--fn-paper-2); }
+.fn-btn:focus-visible { outline: 2px solid var(--fn-ink); outline-offset: 3px; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+/* the ridgeline bottoms out on the section edge, so no bottom padding */
+.fn-hero { padding: 0; }
+/* THE HERO SHEET — the copy sits on wrinkled stock. Its paper colour is the
+   page's own, and the creases fade out toward the bottom so the sheet runs
+   into the sky above the ridges without a seam. */
+.fn-hero-sheet.fn-paper {
+  padding: clamp(4rem, 9vw, 7.5rem) 0 clamp(2.5rem, 5vw, 4.5rem);
+  /* exactly the page's own surface, grain and all, so once the creases have
+     faded out there is nothing left to tell the sheet from what follows */
+  background-color: var(--fn-paper);
+  background-image: var(--fn-grain-page);
+  background-blend-mode: multiply;
+}
+/* creases strongest at the top, thinning the whole way down, gone before the
+   sheet ends. Eased stops, so there is no point where the fade turns a corner. */
+.fn-hero-sheet::before {
+  opacity: 0.75;
+  --fade: linear-gradient(to bottom,
+    #000 0%, rgb(0 0 0 / 0.92) 15%, rgb(0 0 0 / 0.75) 32%, rgb(0 0 0 / 0.52) 50%,
+    rgb(0 0 0 / 0.3) 66%, rgb(0 0 0 / 0.13) 80%, rgb(0 0 0 / 0.03) 90%, transparent 97%);
+  -webkit-mask-image: var(--fade);
+  mask-image: var(--fade);
+}
+.fn-hero .fn-wrap { position: relative; z-index: 0; }
+.fn-hero { overflow-x: clip; } /* the sun hangs past the measure; never past the page */
+/* THE SUN */
+.fn-hero-sun {
+  position: absolute; z-index: -1;
+  top: -9.5rem; right: -9rem;
+  width: clamp(240px, 34vw, 480px); aspect-ratio: 1;
+  pointer-events: none;
+}
+.fn-hero-sun i {
+  position: absolute; left: 50%; top: 50%;
+  width: var(--d); aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--c);
+  will-change: transform;
+}
+.fn-hero-sun i:nth-child(1) { --d: 100%; --c: hsl(345 88% 94%); }
+.fn-hero-sun i:nth-child(2) { --d: 82%;  --c: hsl(10 88% 89%); }
+.fn-hero-sun i:nth-child(3) { --d: 65%;  --c: hsl(27 98% 85%); }
+.fn-hero-sun i:nth-child(4) { --d: 50%;  --c: hsl(38 96% 80%); }
+.fn-hero-sun i:nth-child(5) { --d: 36%;  --c: hsl(46 92% 72%); }
+@media (max-width: 720px) {
+  /* smaller and tucked in, still behind the top of the headline */
+  .fn-hero-sun { right: -3rem; top: -6rem; width: clamp(170px, 52vw, 260px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fn-hero-sun i { transform: none !important; }
+}
+/* THE LOG — as the ridges go under, the run prints line by line beside the
+   fir: the terminal stacks up from the ground while the scenery leaves, and
+   what is left at the end is the tree and the verdict. The window is the
+   ground's own colour, so it reads as part of the land, not a popup. */
+.fn-term {
+  position: absolute; z-index: 3;
+  left: clamp(1rem, 6vw, 5rem);
+  bottom: calc(var(--cover) + clamp(1.25rem, 5vh, 3.25rem));
+  width: min(30rem, 52%);
+  background: var(--fn-shore); color: var(--fn-paper-3);
+  border-radius: var(--fn-radius-md);
+  box-shadow: var(--fn-shadow-term);
+  font-family: var(--fn-font-mono);
+  font-size: clamp(0.68rem, 0.6rem + 0.32vw, 0.86rem);
+  line-height: 1.8;
+  overflow: hidden;
+}
+.fn-term__bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid hsl(270 6% 26%);
+  color: var(--fn-term-dim); font-size: 0.92em; letter-spacing: 0.04em;
+}
+.fn-term__bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--fn-term-dot); }
+.fn-term__bar span { margin-left: 0.6rem; }
+.fn-term__body { padding: 0.7rem 1rem 0.85rem; }
+.fn-term .fn-ln { display: block; white-space: pre; overflow: hidden; }
+.fn-term .fn-ok { color: var(--fn-hl-green); }
+.fn-term .fn-pa { color: var(--fn-hl-cyan); }
+.fn-term .fn-st { color: var(--fn-hl-orange); }
+.fn-term .fn-no { color: var(--fn-hl-red); }
+.fn-term .fn-dim { color: var(--fn-term-dim); }
+.fn-term .fn-pr { color: var(--fn-hl-yellow); }
+
+/* live: the window rises with its first line, and each line types itself in.
+   Without script, or with motion reduced, the log is simply all there. */
+.fn-is-live .fn-term { opacity: 0; translate: 0 14px; transition: opacity 0.3s ease, translate 0.3s ease; }
+.fn-is-live .fn-term.fn-is-open { opacity: 1; translate: 0 0; }
+.fn-is-live .fn-term .fn-ln {
+  max-height: 0;
+  clip-path: inset(0 100% 0 0);
+  transition: max-height 0.16s ease, clip-path 0.42s steps(26, end) 0.1s;
+}
+.fn-is-live .fn-term .fn-ln.fn-on { max-height: 1.9em; clip-path: inset(0 0 0 0); }
+.fn-term .fn-ln.fn-cur::after {
+  content: "▍"; color: var(--fn-hl-yellow);
+  animation: fn-term-blink var(--fn-dur-blink) steps(1) infinite;
+}
+@keyframes fn-term-blink { 50% { opacity: 0; } }
+
+@media (max-width: 720px) {
+  /* narrow screens: the fir steps right and the log hangs from the top-left
+     sky, where the tree is still only a spire */
+  .fn-term { top: 1rem; bottom: auto; width: min(17.5rem, 64%); left: 0.85rem; }
+}
+
+.fn-hero h1 {
+  font-size: var(--fn-step-6); font-weight: 600; line-height: 1.06; letter-spacing: -0.025em;
+  text-wrap: balance; margin: 1.1rem 0 1.5rem;
+}
+.fn-hero .fn-lede { font-size: var(--fn-step-1); max-width: 46ch; color: var(--fn-text-soft); }
+.fn-hero .fn-cta { display: flex; gap: 0.75rem; margin-top: 2.25rem; flex-wrap: wrap; }
+
+/* ============================================================
+   THE TRAY
+   ============================================================ */
+.fn-sec { padding: var(--fn-section-y) 0; border-top: var(--fn-border) solid var(--fn-rule); }
+.fn-sec-head { max-width: 58ch; margin-bottom: 2.75rem; }
+.fn-sec-head h2 { font-size: var(--fn-step-4); font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; margin: 0.75rem 0 0.85rem; text-wrap: balance; }
+.fn-sec-head p { color: var(--fn-text-muted); max-width: 52ch; }
+
+.fn-tray { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.fn-swatch h3 { font-size: var(--fn-step-1); font-weight: 600; margin-bottom: 0.4rem; }
+.fn-swatch p { font-size: var(--fn-step--1); line-height: 1.55; color: var(--fn-ink-2); font-family: var(--fn-font-mono); }
+
+/* ============================================================
+   THE SHEET
+   ============================================================ */
+.fn-sheet {
+  position: relative; padding: clamp(1.75rem, 4vw, 3rem);
+  border: var(--fn-border) solid var(--fn-rule);
+  rotate: var(--fn-tilt-sheet);
+  box-shadow: var(--fn-shadow-sheet);
+}
+.fn-sheet-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  padding-bottom: 1rem; margin-bottom: 1.5rem; border-bottom: var(--fn-border) solid var(--fn-rule); flex-wrap: wrap;
+}
+.fn-sheet-body p { font-size: var(--fn-step-1); line-height: 1.75; max-width: 58ch; }
+.fn-sheet-body p + p { margin-top: 1.1rem; }
+
+.fn-claim { font: inherit; color: inherit; padding: 0; text-align: left; cursor: pointer; }
+.fn-claim mark { pointer-events: none; }
+.fn-claim:focus-visible { outline: 2px solid var(--fn-ink); outline-offset: 3px; }
+
+.fn-note {
+  margin-top: 1.75rem; padding: 1.15rem 1.35rem;
+  background: var(--fn-paper-2); border-left: var(--fn-border-note) solid var(--fn-ink);
+  font-size: var(--fn-step--1); line-height: 1.65;
+}
+.fn-note .fn-who { font-family: var(--fn-font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--fn-ink-2); display: block; margin-bottom: 0.35rem; }
+.fn-note q { font-style: italic; }
+.fn-note cite { display: block; margin-top: 0.5rem; font-family: var(--fn-font-mono); font-style: normal; color: var(--fn-ink-2); }
+
+/* ============================================================
+   NUMBERS / STEPS / CLOSE
+   ============================================================ */
+.fn-figures { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.fn-fig b { display: block; font-size: var(--fn-step-4); font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+.fn-fig span { display: block; margin-top: 0.5rem; font-family: var(--fn-font-mono); font-size: var(--fn-step--1); color: var(--fn-ink-2); line-height: 1.5; }
+.fn-caveat { margin-top: 2rem; font-family: var(--fn-font-mono); font-size: var(--fn-step--1); color: var(--fn-ink-3); }
+
+.fn-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; counter-reset: s; }
+.fn-step {
+  counter-increment: s; padding: 1.5rem 1.4rem 1.6rem;
+  box-shadow: var(--fn-shadow-card);
+  rotate: var(--r, 0deg);
+}
+.fn-step h3::before {
+  content: counter(s, decimal-leading-zero);
+  display: block; font-family: var(--fn-font-mono); font-size: var(--fn-step--1);
+  letter-spacing: 0.14em; color: var(--fn-ink-3); margin-bottom: 0.75rem;
+}
+.fn-step h3 { font-size: var(--fn-step-1); font-weight: 600; margin-bottom: 0.45rem; }
+.fn-step p { font-size: var(--fn-step--1); line-height: 1.65; color: var(--fn-ink-2); }
+
+/* ============================================================
+   THE CLOSE — the sea in daylight. The hero's kit turned to the
+   water: a sky that starts as the page itself and warms toward
+   the horizon, layered swells in the highlighter blues, a pale
+   stacked-disc moon, and a lighthouse whose beam is a highlighter
+   stroke that sweeps across the line it's selling.
+   ============================================================ */
+.fn-close {
+  --sea: 44%;
+  position: relative; isolation: isolate; overflow: hidden;
+  min-height: clamp(660px, 100svh, 940px);
+  padding: clamp(5.5rem, 14vh, 9rem) 0 0;
+  text-align: center;
+  /* no background of its own: the top of the section is the page */
+}
+/* THE COPY */
+.fn-close__copy { position: relative; }
+.fn-close h2 {
+  font-size: var(--fn-step-close); font-weight: 600; line-height: 1.04;
+  letter-spacing: -0.028em; text-wrap: balance;
+  max-width: 15ch; margin: 0 auto 1.25rem; color: var(--fn-ink);
+}
+.fn-close p { font-size: var(--fn-step-1); max-width: 34ch; margin: 0 auto 2.25rem; color: var(--fn-text-muted); }
+.fn-btn--glow {
+  background: var(--fn-ink); color: var(--fn-paper); border-color: var(--fn-ink);
+  padding: 0.95rem 1.6rem; font-size: var(--fn-step-0); letter-spacing: 0.04em;
+  box-shadow: var(--fn-shadow-glow);
+}
+.fn-btn--glow span { display: inline-block; transition: translate 0.2s ease; }
+.fn-btn--glow:hover { background: var(--fn-ink-hover); box-shadow: 0 16px 40px -14px rgba(16, 15, 15, 0.6), 0 0 0 5px hsl(46 83% 76% / 0.6); }
+.fn-btn--glow:hover span { translate: 4px 0; }
+
+/* the footer is the shore the page ends on: the near swell's own colour,
+   which is the hero's ground colour too */
+:where(.fn) footer { background: var(--fn-shore); padding: 2.25rem 0 3rem; }
+.fn-foot { display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  font-family: var(--fn-font-mono); font-size: var(--fn-step--1); line-height: 1.8; color: var(--fn-foot-text); }
+.fn-foot a { color: var(--fn-paper); }
+
+
+/* ============================================================
+   PAPER — wrinkled stock for sheets and cards. The
+   texture is a lit noise field on ::before, multiplied into the
+   card's own colour so it creases without greying the page.
+   ============================================================ */
+.fn-paper { position: relative; isolation: isolate; background-color: var(--fn-sheet); }
+.fn-paper::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  filter: url(#fn-paper); mix-blend-mode: multiply; opacity: 0.6;
+  border-radius: inherit; pointer-events: none;
+  /* the filter region runs 10% past the box on every side; clip after the
+     filter so the creases stop exactly at the card's edge */
+  clip-path: inset(0 round var(--paper-r, 0px));
+}
+/* pencil in the margins: a crayon-roughened hand */
+.fn-scrawl {
+  display: inline-block; font-family: var(--fn-font-hand); font-size: 1.4em; line-height: 1;
+  color: var(--fn-pencil); filter: url(#fn-crayon); white-space: nowrap; rotate: -2deg;
+}
+
+/* ---------- THE PAYLOAD ---------- */
+.fn-payload { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.fn-payload .fn-sec-head { margin-bottom: 0; }
+.fn-payload .fn-sec-head p + p { margin-top: 1rem; }
+.fn-payload code { font-family: var(--fn-font-mono); font-size: 0.86em; background: var(--fn-paper-2); padding: 0.1em 0.35em; border-radius: var(--fn-radius-sm); }
+.fn-listing {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  box-shadow: var(--fn-shadow-sheet);
+  rotate: var(--fn-tilt-listing);
+}
+.fn-listing-head { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 0.85rem; margin-bottom: 1rem; border-bottom: 1px dashed var(--fn-ink-3); }
+.fn-listing pre { font-family: var(--fn-font-mono); font-size: var(--fn-step--1); line-height: 1.9; overflow-x: auto; color: var(--fn-text-soft); padding-bottom: 0.25rem; }
+.fn-listing pre code { background: none; padding: 0; font-size: inherit; }
+.fn-listing .fn-k { color: var(--fn-ink-2); }
+.fn-listing pre .fn-scrawl { margin-left: 1.25ch; font-size: 1.5em; vertical-align: -0.12em; }
+
+/* ---------- WHERE IT GOES ---------- */
+.fn-uses { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 1.75rem; padding-top: 0.75rem; }
+.fn-card {
+  padding: 1.75rem 1.35rem 1.5rem;
+  box-shadow: var(--fn-shadow-card);
+  rotate: var(--r, 0deg);
+}
+.fn-card::after { /* a strip of tape */
+  content: ""; position: absolute; top: -12px; left: 50%; width: 84px; height: 24px;
+  translate: -50% 0; rotate: var(--tr, -3deg);
+  background: hsl(46 55% 86% / 0.72);
+  box-shadow: 0 1px 2px #0002;
+}
+.fn-card .fn-scrawl { font-size: 1.45rem; }
+.fn-card h3 { font-size: var(--fn-step-1); font-weight: 600; margin: 0.25rem 0 0.5rem; }
+.fn-card p { font-size: var(--fn-step--1); line-height: 1.6; color: var(--fn-text-card); }
+
+/* ---------- MARGIN NOTES ---------- */
+/* the list itself is bare; each question is its own sheet */
+.fn-faq { --gut: clamp(2.75rem, 6vw, 4rem); display: grid; gap: 1.1rem; }
+.fn-faq details {
+  padding: 0 clamp(1.1rem, 3vw, 1.75rem) 0 var(--gut);
+  box-shadow: var(--fn-shadow-card);
+  rotate: var(--r, 0deg);
+}
+.fn-faq details::after { /* the red margin rule */
+  content: ""; position: absolute; top: 0; bottom: 0; left: calc(var(--gut) * 0.68);
+  width: 1px; background: var(--fn-margin-rule); pointer-events: none;
+}
+.fn-faq summary {
+  position: relative; list-style: none; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: 1.1rem 0; font-size: var(--fn-step-1); font-weight: 600;
+}
+.fn-faq summary::-webkit-details-marker { display: none; }
+.fn-faq summary::before {
+  content: "?"; position: absolute; left: calc(var(--gut) * -0.78); top: 50%; translate: 0 -50%;
+  font-family: var(--fn-font-hand); font-size: 1.6em; font-weight: 400; color: var(--fn-pencil);
+  filter: url(#fn-crayon); rotate: -8deg;
+}
+.fn-faq summary:focus-visible { outline: 2px solid var(--fn-ink); outline-offset: 3px; }
+.fn-faq .fn-tick { font-family: var(--fn-font-hand); font-size: 1.8em; font-weight: 400; line-height: 1; color: var(--fn-pencil); transition: rotate 0.2s ease; }
+.fn-faq details[open] .fn-tick { rotate: 45deg; }
+.fn-faq details p { padding: 0 0 1.25rem; max-width: 62ch; color: var(--fn-text-muted); }
+
+@media (max-width: 900px) {
+  .fn-tray, .fn-figures, .fn-uses { grid-template-columns: repeat(2, 1fr); }
+  .fn-steps { grid-template-columns: 1fr; gap: 1.75rem; }
+  .fn-payload { grid-template-columns: 1fr; }
+  .fn-nav { display: none; }
+}
+@media (max-width: 520px) {
+  .fn-tray, .fn-figures, .fn-uses { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.fn), :where(.fn) *, :where(.fn) *::before, :where(.fn) *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* A split phrase's words keep the phrase's verdict colour. On the page every
+   word of a split mark fell back to the default yellow, because the bare mark
+   rule resets --color on each new word; here a word inherits it instead. */
+:where(.fn) mark.fn-w { --color: inherit; }
+/* Stacked under 900px the listing's grid track is a bare 1fr, which grows to
+   the longest JSON line; let it shrink so the <pre> scrolls instead. */
+.fn-payload > * { min-width: 0; }

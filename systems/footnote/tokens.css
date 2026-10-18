@@ -1,0 +1,99 @@
+/* InstaLanding design system · Footnote · footnote@1.0.0
+   Extracted from https://instalanding.ai/demos/footnote-grounding.html
+   Fonts (Google Fonts): Source Serif 4 400/600/700 + italic, JetBrains Mono 400/500/700, Caveat 400-700 */
+:root {
+  /* Color · core */
+  --fn-paper: #FFFCF0;
+  --fn-paper-2: #F2F0E5;
+  --fn-paper-3: #E6E4D9;
+  --fn-sheet: #FFFDF6;
+  --fn-ink: #100F0F;
+  --fn-ink-2: #6F6E69;
+  --fn-ink-3: #B7B5AC;
+  --fn-rule: #DAD8CE;
+  --fn-shore: #2F2B33;
+  --fn-print: #205EA6;
+
+  /* Color · highlighters */
+  --fn-hl-red: #F5A69E;
+  --fn-hl-orange: #FED2AE;
+  --fn-hl-yellow: #F6E3A2;
+  --fn-hl-green: #DDE2B1;
+  --fn-hl-cyan: #BFE8D9;
+  --fn-hl-blue: #C5DCE7;
+  --fn-hl-purple: #E2D8E9;
+  --fn-hl-magenta: #FCCFDA;
+
+  /* Color · pencil & text */
+  --fn-pencil: #B1382F;
+  --fn-margin-rule: #EA8C86;
+  --fn-graphite: #2B2926;
+  --fn-ink-hover: #2A2827;
+  --fn-text-soft: #2C2A28;
+  --fn-text-muted: #46443F;
+  --fn-text-card: #4A4843;
+
+  /* Color · terminal & shore */
+  --fn-term-dim: #8F8B94;
+  --fn-term-dot: #55505C;
+  --fn-foot-text: #BFBAB0;
+
+  /* Type · families */
+  --fn-font-display: "Source Serif 4", Georgia, serif;
+  --fn-font-body: "Source Serif 4", Georgia, serif;
+  --fn-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --fn-font-hand: "Caveat", cursive;
+
+  /* Type · scale */
+  --fn-step-6: clamp(2.99rem, 2.3rem + 3.44vw, 5.15rem);
+  --fn-step-close: clamp(2.6rem, 1.6rem + 4vw, 5rem);
+  --fn-step-4: clamp(2.07rem, 1.76rem + 1.55vw, 3.05rem);
+  --fn-step-2: clamp(1.44rem, 1.32rem + 0.58vw, 1.8rem);
+  --fn-step-1: clamp(1.2rem, 1.13rem + 0.35vw, 1.42rem);
+  --fn-step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
+  --fn-step--1: clamp(0.83rem, 0.8rem + 0.16vw, 0.92rem);
+
+  /* Type · rhythm */
+  --fn-leading: 1.6;
+  --fn-leading-sheet: 1.75;
+  --fn-tracking-label: .14em;
+
+  /* Shape · radii */
+  --fn-radius-sm: 3px;
+  --fn-radius-md: 8px;
+
+  /* Shape · borders */
+  --fn-border: 1px;
+  --fn-border-note: 3px;
+
+  /* Shape · tilt */
+  --fn-tilt-sheet: -0.25deg;
+  --fn-tilt-listing: 0.6deg;
+
+  /* Depth · paper shadows */
+  --fn-shadow-sheet: 0 1px 0 var(--fn-paper-3), 0 18px 40px -28px rgba(16, 15, 15, 0.45);
+  --fn-shadow-card: 0 1px 0 var(--fn-paper-3), 0 14px 28px -22px rgba(16, 15, 15, 0.5);
+  --fn-shadow-glow: 0 14px 34px -14px rgba(16, 15, 15, 0.55), 0 0 0 4px hsl(46 83% 80% / 0.45);
+  --fn-shadow-term: 0 22px 44px -22px rgba(0, 0, 0, 0.65), 0 0 0 1px hsl(270 6% 26%);
+
+  /* Motion · easing */
+  --fn-ease-pen: cubic-bezier(0.55, 0.06, 0.3, 1);
+  --fn-ease-blob: cubic-bezier(0.3, 1.7, 0.5, 1);
+
+  /* Motion · durations */
+  --fn-dur-press: .18s;
+  --fn-dur-pen: 480ms;
+  --fn-dur-blob: 420ms;
+  --fn-dur-blink: 1s;
+
+  /* Space · layout */
+  --fn-measure: 74ch;
+  --fn-page-max: 1100px;
+  --fn-gutter: 3rem;
+  --fn-section-y: clamp(3.5rem, 7vw, 6rem);
+  --fn-gap: 1.5rem;
+
+  /* Texture · grain */
+  --fn-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  --fn-grain-page: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.09'/%3E%3C/svg%3E");
+}

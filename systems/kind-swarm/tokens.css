@@ -1,0 +1,121 @@
+/* InstaLanding design system · Kind Swarm · kind-swarm@1.0.0
+   Extracted from https://instalanding.ai/demos/kindswarm-casework.html
+   Fonts (Google Fonts): Stardos Stencil 400/700, IBM Plex Sans Condensed 400-700 + italics, IBM Plex Mono 500/600 */
+:root {
+  /* Color · core */
+  --ks-ink: #15111F;
+  --ks-paper: #F4EFE6;
+  --ks-white: #FFFFFF;
+  --ks-flame: #FF5A3C;
+  --ks-flame-deep: #F0361A;
+  --ks-flame-hot: #FF3D1F;
+  --ks-lime: #D4FF3A;
+  --ks-lime-deep: #C6F230;
+  --ks-focus: #3D7BFF;
+
+  /* Color · text */
+  --ks-text-soft: #3A3347;
+  --ks-text-muted: #5A5168;
+  --ks-text-card: #2A2436;
+  --ks-on-ink-soft: #CFC6E8;
+  --ks-on-ink-muted: #B9B0CC;
+  --ks-on-ink-faint: #E4DEF2;
+
+  /* Color · dark surfaces */
+  --ks-ink-raised: #1F1A2E;
+  --ks-ink-line: #3B3358;
+  --ks-ink-ring: #221C3A;
+  --ks-flame-shadow: #5A160C;
+
+  /* Color · character gradients */
+  --ks-moji-blue: #3D7BFF;
+  --ks-moji-violet: #B56CFF;
+  --ks-moji-sun: #FFD24A;
+  --ks-moji-sun-deep: #FF9A1C;
+  --ks-moji-peach: #FFB36B;
+  --ks-moji-pink: #FF6FB5;
+
+  /* Color · stage pastels */
+  --ks-stage-1: #9CC8FF;
+  --ks-stage-1-ring: #84B6F7;
+  --ks-stage-2: #FFE08A;
+  --ks-stage-2-ring: #FFD15C;
+  --ks-stage-3: #FFC4A8;
+  --ks-stage-3-ring: #FFAE8A;
+  --ks-stage-4: #D6C2FF;
+  --ks-stage-4-ring: #C3A8FF;
+  --ks-stage-5: #FFB8D9;
+  --ks-stage-5-ring: #FF9CC8;
+  --ks-stage-6: #C9F26B;
+  --ks-stage-6-ring: #B6E34A;
+  --ks-stage-7: #A8E6FF;
+  --ks-stage-7-ring: #86D8F7;
+  --ks-stage-8: #F2C4FF;
+  --ks-stage-8-ring: #E6A8FA;
+
+  /* Type · families */
+  --ks-font-display: "Stardos Stencil", "Courier New", serif;
+  --ks-font-body: "IBM Plex Sans Condensed", "Arial Narrow", Arial, sans-serif;
+  --ks-font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  /* Type · scale */
+  --ks-display-xl: clamp(60px, 17vw, 260px);
+  --ks-display-lg: clamp(48px, 8.4vw, 136px);
+  --ks-display-md: clamp(40px, 4.4vw, 72px);
+  --ks-display-sm: 34px;
+  --ks-body-lg: 20px;
+  --ks-body: 17px;
+  --ks-label: 13px;
+  --ks-label-tracking: .16em;
+  --ks-leading-display: .92;
+  --ks-leading-body: 1.55;
+
+  /* Shape · radii */
+  --ks-radius-pill: 999px;
+  --ks-radius-card: 30px;
+  --ks-radius-plan: 28px;
+  --ks-radius-panel: 24px;
+  --ks-radius-stage: 22px;
+  --ks-radius-inset: 14px;
+
+  /* Shape · borders */
+  --ks-border: 3px;
+  --ks-border-stage: 2.5px;
+  --ks-border-thin: 2px;
+
+  /* Depth · hard shadows */
+  --ks-shadow-offset: 8px;
+  --ks-shadow: var(--ks-shadow-offset) var(--ks-shadow-offset) 0 var(--ks-ink);
+  --ks-shadow-hover: calc(var(--ks-shadow-offset) + 2px) calc(var(--ks-shadow-offset) + 2px) 0 var(--ks-ink);
+  --ks-shadow-lime: var(--ks-shadow-offset) var(--ks-shadow-offset) 0 var(--ks-lime);
+  --ks-shadow-lime-hover: calc(var(--ks-shadow-offset) + 3px) calc(var(--ks-shadow-offset) + 3px) 0 var(--ks-lime);
+
+  /* Pattern · rings */
+  --ks-ring-size: 120px;
+  --ks-ring-size-sm: 90px;
+  --ks-ring-size-stage: 76px;
+  --ks-grain-opacity: .22;
+
+  /* Space · layout */
+  --ks-page-max: 1440px;
+  --ks-gutter: clamp(16px, 4vw, 56px);
+  --ks-section-y: clamp(80px, 10vw, 160px);
+  --ks-gap: 36px;
+  --ks-gap-lg: 56px;
+
+  /* Motion · easing */
+  --ks-ease-press: cubic-bezier(.2, .8, .2, 1);
+  --ks-ease-spring: cubic-bezier(.3, 1.4, .5, 1);
+  --ks-ease-bob: cubic-bezier(.45, 0, .55, 1);
+  --ks-ease-rise: cubic-bezier(.16, 1, .3, 1);
+
+  /* Motion · durations */
+  --ks-dur-press: .14s;
+  --ks-dur-hover: .25s;
+  --ks-dur-poke: .76s;
+  --ks-dur-bob: 3.4s;
+  --ks-dur-blink: 5.6s;
+  --ks-dur-rise: 1s;
+  --ks-dur-marquee: 56s;
+  --ks-dur-drift: 16s;
+}

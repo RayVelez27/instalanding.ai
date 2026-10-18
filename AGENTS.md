@@ -37,3 +37,11 @@ Instructions for coding agents using this repository to build or restyle a landi
 - Where a page's `README.md` lists **Built on**, keep that attribution.
 - Do not hotlink other sites' images or assets when adapting a page.
 - License: MIT.
+
+## Design systems
+
+`systems/<slug>/` holds design systems extracted from the pages. To restyle a project in one,
+read its README.md (conventions), link or copy `<slug>.css` (tokens + components scoped under its
+root class), take component markup from `specimen.html` (`<section data-component>` blocks), and use
+the tokens for every colour, font, radius, shadow and timing. Keep the project's logic as it is.
+Live, with a copyable agent instruction: https://instalanding.ai/systems

@@ -1,0 +1,129 @@
+/* InstaLanding design system · Kiln · kiln@1.0.0
+   Extracted from https://instalanding.ai/demos/kiln-panel.html
+   Fonts (Google Fonts): Archivo 500-900, JetBrains Mono 400/500/700 */
+:root {
+  /* Color · core */
+  --kn-void: #08090B;
+  --kn-alu-hi: #2A2D33;
+  --kn-alu: #1E2025;
+  --kn-alu-lo: #16171B;
+  --kn-text: #D4D8DE;
+  --kn-mute: #7C828C;
+  --kn-amber: #FF9426;
+  --kn-ember: #FF4F14;
+  --kn-green: #3FD96E;
+  --kn-red: #FF3B3B;
+  --kn-cyan: #35E6DE;
+
+  /* Color · metal & wells */
+  --kn-seam: #07080A;
+  --kn-dim: #4D535C;
+  --kn-engrave: #5F656E;
+  --kn-well-floor: #050607;
+  --kn-well: #0C0D10;
+  --kn-well-hi: #0D0E11;
+  --kn-well-lo: #141519;
+  --kn-edge: #15161A;
+  --kn-line: #3A3E46;
+  --kn-led-off: #24272D;
+  --kn-bar-off: #2C3037;
+  --kn-bright: #EEF0F3;
+  --kn-title: #E3E6EA;
+  --kn-log: #A9B0B8;
+
+  /* Color · copper */
+  --kn-copper-hi: #FFD9B8;
+  --kn-copper: #E07830;
+  --kn-copper-mid: #8A4218;
+  --kn-copper-lo: #4A2718;
+  --kn-copper-deep: #2A0F06;
+  --kn-copper-rim: #0D0500;
+  --kn-copper-fill: #A34A0C;
+
+  /* Color · lamps */
+  --kn-lamp-green: #DCFFE8;
+  --kn-lamp-amber: #FFF0DC;
+  --kn-lamp-red: #FFDEDE;
+
+  /* Color · rating plate */
+  --kn-plate-hi: #DFE7E2;
+  --kn-plate: #B9C6BF;
+  --kn-plate-mid: #93A49C;
+  --kn-plate-lo: #6D7F77;
+  --kn-plate-text: #17221D;
+  --kn-plate-ink: #111C18;
+  --kn-plate-brand: #0F1A16;
+  --kn-plate-label: #3C4D46;
+  --kn-plate-fine: #45564F;
+
+  /* Type · families */
+  --kn-font-display: "Archivo", system-ui, sans-serif;
+  --kn-font-body: "Archivo", system-ui, sans-serif;
+  --kn-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Type · scale */
+  --kn-display-xl: clamp(40px, 4.5vw, 70px);
+  --kn-display-rack: clamp(44px, 5.4vw, 68px);
+  --kn-display-lg: clamp(26px, 4vw, 42px);
+  --kn-title-md: 20px;
+  --kn-body-lg: 16px;
+  --kn-body: 15px;
+  --kn-body-sm: 13.5px;
+  --kn-readout: 30px;
+  --kn-label: 11px;
+  --kn-legend: 9.5px;
+  --kn-legend-tracking: .34em;
+
+  /* Shape · radii */
+  --kn-radius-plate: 14px;
+  --kn-radius-well: 12px;
+  --kn-radius-badge: 10px;
+  --kn-radius-window: 9px;
+  --kn-radius-btn: 8px;
+  --kn-radius-unit: 4px;
+  --kn-radius-switch: 24px;
+
+  /* Shape · borders */
+  --kn-border-hair: 1px;
+  --kn-border-rating: 2px;
+
+  /* Depth · laminate, wells and glow */
+  --kn-stack:
+    0 3px 0 #0b0d10,
+    0 5px 0 #180702,
+    0 6px 0 #3d190a,
+    0 7px 0 #8a4218,
+    0 8px 0 #d1783a,
+    0 9px 0 #ffdcb8,
+    0 10px 0 #c1692c,
+    0 11px 0 #6e3416,
+    0 12px 0 #180702,
+    0 14px 0 #0b0d10,
+    0 16px 0 #06080a;
+  --kn-well-inset: inset 0 0 0 1px rgba(0, 0, 0, 0.7), inset 0 3px 7px rgba(0, 0, 0, 0.85), inset 0 -1px 0 rgba(255, 255, 255, 0.04), 0 1px 0 rgba(255, 255, 255, 0.06);
+  --kn-glow-amber: 0 0 0 1px var(--kn-amber), 0 0 24px -6px rgba(255, 148, 38, 0.55), 0 4px 10px rgba(0, 0, 0, 0.7);
+  --kn-drop: 0 30px 60px -24px #000, 0 18px 26px -12px rgba(0, 0, 0, 0.8);
+
+  /* Motion · easing */
+  --kn-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --kn-spring: cubic-bezier(0.34, 1.7, 0.5, 1);
+
+  /* Motion · durations */
+  --kn-dur-quick: .25s;
+  --kn-dur-btn: .32s;
+  --kn-dur-switch: .36s;
+  --kn-dur-led: .45s;
+  --kn-dur-roll: .55s;
+  --kn-dur-caret: .9s;
+  --kn-dur-wave: 2.4s;
+
+  /* Space · layout */
+  --kn-page-max: 1160px;
+  --kn-gutter: 18px;
+  --kn-section-y: 92px;
+  --kn-panel-gap: 16px;
+  --kn-bay-gap: 14px;
+
+  /* Pattern · machine state */
+  --kn-heat: 0;
+}
