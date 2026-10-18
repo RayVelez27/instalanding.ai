@@ -1,6 +1,6 @@
 # Kiln · design system
 
-`kiln@1.0.0` · 14 components · 86 tokens · dark
+`kiln@1.0.0` · 14 components · 85 tokens · dark
 
 Bead-blasted aluminium plates on a laminated copper edge, turned copper screws, recessed wells, engraved mono legends, amber and green lamps, analogue gauges and rocker switches that tip on a spring. Extracted from the Machine Front Panel landing page.
 
