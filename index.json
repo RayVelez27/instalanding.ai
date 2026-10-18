@@ -2,8 +2,119 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 36,
+  "count": 38,
   "pages": [
+    {
+      "slug": "social-work-agent-swarm-landing-page",
+      "title": "Social Work Agent Swarm Landing Page",
+      "description": "A loud neo-brutalist page for a swarm of AI agents that help social workers: huge stencil type over op-art ring patterns, animoji characters whose eyes follow the cursor, a filterable crew of eight agent cards, an approval queue, guardrails and pricing",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 17, 2026",
+      "bestFor": [
+        "AI agent and multi-agent products",
+        "social services and nonprofit tech",
+        "B2B products with pricing tiers",
+        "character-led brands"
+      ],
+      "style": [
+        "bold",
+        "playful",
+        "neo-brutalist",
+        "stencil-type",
+        "characters",
+        "interactive"
+      ],
+      "sections": [
+        "hero",
+        "nav",
+        "marquee",
+        "how",
+        "zero",
+        "crew",
+        "queue",
+        "guardrails",
+        "pricing",
+        "book",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Stardos Stencil",
+          "IBM Plex Sans Condensed",
+          "IBM Plex Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/social-work-agent-swarm-landing-page/index.html",
+        "prompt": "pages/social-work-agent-swarm-landing-page/PROMPT.md",
+        "preview": "pages/social-work-agent-swarm-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/kindswarm-casework.html",
+      "page": "https://instalanding.ai/prompt/social-work-agent-swarm-landing-page"
+    },
+    {
+      "slug": "starfork-game-studio-landing-page",
+      "title": "Starfork Game Studio Landing Page",
+      "description": "A premium indie game studio page set in a cosmic toy world: eight sprite-rigged characters with real animation poses standing on a glowing planet, a character select with pose and frame-rate controls, a playable 30-second endless runner with coins and fireworks, live game cards, and a careers quiz",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 17, 2026",
+      "bestFor": [
+        "game studios and indie games",
+        "playful product launches",
+        "interactive brand pages",
+        "careers and recruiting pages"
+      ],
+      "style": [
+        "dark",
+        "playful",
+        "cosmic",
+        "characters",
+        "sprite-animation",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "crew",
+        "play",
+        "games",
+        "studio",
+        "careers",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Bricolage Grotesque",
+          "JetBrains Mono",
+          "Lilita One"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/starfork-game-studio-landing-page/index.html",
+        "prompt": "pages/starfork-game-studio-landing-page/PROMPT.md",
+        "preview": "pages/starfork-game-studio-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/starfork-studio.html",
+      "page": "https://instalanding.ai/prompt/starfork-game-studio-landing-page"
+    },
     {
       "slug": "game-dev-agent-landing-page",
       "title": "Game Dev Agent Landing Page",
