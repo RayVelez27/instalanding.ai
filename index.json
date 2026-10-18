@@ -2,8 +2,179 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 38,
+  "count": 41,
   "pages": [
+    {
+      "slug": "cyber-bird-arcade-game-page",
+      "title": "Cyber Bird Arcade Game Page",
+      "description": "A pixel-art arcade game launch page with the game playable right in the hero: a one-button flyer threading an armored cyber-pickup through stainless rocket stacks, night, dawn and day skies drawn by code, difficulty presets and a local mission log",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 18, 2026",
+      "bestFor": [
+        "indie games and game launches",
+        "interactive product demos",
+        "playful brand pages",
+        "pixel-art and retro sites"
+      ],
+      "style": [
+        "dark",
+        "pixel-art",
+        "retro",
+        "playable-game",
+        "canvas",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "marquee",
+        "features",
+        "modes",
+        "manual",
+        "mission-log",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Jersey 10",
+          "Geist",
+          "Geist Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "Tesla Bird by Pavel Troshkin",
+          "href": "https://github.com/troshkinpavel/tesla-bird",
+          "note": "The open-source one-button game this page's game logic is built on; the sprites here are redrawn in code"
+        }
+      ],
+      "files": {
+        "html": "pages/cyber-bird-arcade-game-page/index.html",
+        "prompt": "pages/cyber-bird-arcade-game-page/PROMPT.md",
+        "preview": "pages/cyber-bird-arcade-game-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/cyber-bird-arcade.html",
+      "page": "https://instalanding.ai/prompt/cyber-bird-arcade-game-page"
+    },
+    {
+      "slug": "facetry-security-landing-page",
+      "title": "Facetry Security Landing Page",
+      "description": "A black-and-chrome security platform page: an extruded metal logo on a rough stone pedestal in a CSS 3D scene, spring-morphing between three shapes, glass panels floating around it, a live spring tuner, and a footer with live region clocks",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 18, 2026",
+      "bestFor": [
+        "security and access-control products",
+        "developer infrastructure",
+        "B2B SaaS launches",
+        "premium dark product pages"
+      ],
+      "style": [
+        "dark",
+        "chrome",
+        "css-3d",
+        "monochrome",
+        "interactive",
+        "svg-morph"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "marquee",
+        "platform",
+        "motion-lab",
+        "stats",
+        "pricing",
+        "faq",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/facetry-security-landing-page/index.html",
+        "prompt": "pages/facetry-security-landing-page/PROMPT.md",
+        "preview": "pages/facetry-security-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/facetry-security.html",
+      "page": "https://instalanding.ai/prompt/facetry-security-landing-page"
+    },
+    {
+      "slug": "kestrel-ai-finance-landing-page",
+      "title": "Kestrel AI Finance Landing Page",
+      "description": "A bright fintech page for an AI finance platform: a 3D-tilting cash-runway dashboard with a self-drawing forecast chart and a live agent feed, orbiting integration chips, glossy diamond icon tiles, product rows with dark live panels, hover-flip agent cards and a demo booking widget",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 18, 2026",
+      "bestFor": [
+        "fintech and finance software",
+        "AI agent platforms",
+        "B2B SaaS dashboards",
+        "CFO and accounting tools"
+      ],
+      "style": [
+        "light",
+        "fintech",
+        "glassmorphism",
+        "3d-tilt",
+        "dashboard",
+        "interactive"
+      ],
+      "sections": [
+        "ticker",
+        "nav",
+        "hero",
+        "about",
+        "platform",
+        "how-it-works",
+        "agents",
+        "proof",
+        "pricing",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Bagel Fat One",
+          "Poppins",
+          "Space Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/kestrel-ai-finance-landing-page/index.html",
+        "prompt": "pages/kestrel-ai-finance-landing-page/PROMPT.md",
+        "preview": "pages/kestrel-ai-finance-landing-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/kestrel-finance.html",
+      "page": "https://instalanding.ai/prompt/kestrel-ai-finance-landing-page"
+    },
     {
       "slug": "social-work-agent-swarm-landing-page",
       "title": "Social Work Agent Swarm Landing Page",

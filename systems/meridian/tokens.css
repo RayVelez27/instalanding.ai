@@ -1,0 +1,114 @@
+/* InstaLanding design system · Meridian · meridian@1.0.0
+   Extracted from https://instalanding.ai/demos/meridian-led-storefront.html
+   Fonts (Google Fonts): Bricolage Grotesque 400-800, Fraunces italic 300-600, Instrument Sans 400-700, Inter 400-800 */
+:root {
+  /* Color · core */
+  --md-bg: #F6F5F1;
+  --md-surface: #FFFFFF;
+  --md-ink: #111317;
+  --md-gray: #6F747C;
+  --md-dark: #16191E;
+  --md-clay: #F1F0EC;
+  --md-purple: #9D8CDC;
+  --md-purple-deep: #6C5BBD;
+  --md-green: #8FDEA0;
+  --md-blue: #2F6FE0;
+
+  /* Color · accents */
+  --md-hairline: rgba(17, 19, 23, 0.08);
+  --md-live: #6EE86E;
+  --md-blue-glow: #5B9BFF;
+  --md-blue-soft: #9CC0FF;
+  --md-pink: #F59AFF;
+  --md-btn-dark: #1D2129;
+  --md-rule: #D4D3CF;
+
+  /* Color · LED lines */
+  --md-led-a: #FF4136;
+  --md-led-b: #29B6FF;
+  --md-led-c: #FFD60A;
+  --md-led-d: #6EE86E;
+  --md-led-e: #FF53B0;
+  --md-led-f: #FF9A1F;
+  --md-led-glyph: #B6F5C3;
+
+  /* Color · LED housing */
+  --md-led-panel: #0C0C10;
+  --md-led-panel-hi: #1D1A26;
+  --md-led-screen: #17151D;
+  --md-led-dot: #1F1C26;
+  --md-led-ticker: #0B0C0F;
+  --md-led-mute: #8B8F98;
+
+  /* Color · clay tints */
+  --md-lilac: #DDD5FB;
+  --md-lilac-deep: #B4A6E6;
+  --md-mint: #D9F5DF;
+  --md-mint-deep: #9FDFAF;
+  --md-night: #2B2442;
+
+  /* Type · families */
+  --md-font-display: "Bricolage Grotesque", "Inter", sans-serif;
+  --md-font-serif: "Fraunces", Georgia, serif;
+  --md-font-body: "Instrument Sans", "Inter", sans-serif;
+  --md-font-ui: "Inter", sans-serif;
+
+  /* Type · scale */
+  --md-display-xl: 88px;
+  --md-display-lg: 60px;
+  --md-display-md: 56px;
+  --md-title-lg: 34px;
+  --md-title: 26px;
+  --md-title-sm: 22px;
+  --md-body-lg: 17px;
+  --md-body: 15px;
+  --md-body-sm: 14px;
+  --md-label: 12px;
+  --md-label-sm: 11px;
+
+  /* Shape · radii */
+  --md-radius-pill: 999px;
+  --md-radius-xl: 40px;
+  --md-radius-lg: 32px;
+  --md-radius-card: 26px;
+  --md-radius-md: 22px;
+  --md-radius-sm: 14px;
+  --md-radius-xs: 10px;
+
+  /* Shape · borders */
+  --md-border: 1px;
+  --md-border-strong: 2px;
+
+  /* Depth · clay and glass */
+  --md-shadow-soft: 0 1px 2px rgba(17,19,23,0.04), 0 8px 24px rgba(17,19,23,0.06), 0 32px 64px -24px rgba(17,19,23,0.12);
+  --md-shadow-clay: 15px 15px 30px rgba(0,0,0,0.05), -10px -10px 20px rgba(255,255,255,0.8), inset 2px 2px 5px rgba(255,255,255,1), inset -3px -3px 10px rgba(0,0,0,0.04);
+  --md-shadow-clay-dark: 10px 15px 25px rgba(0,0,0,0.18), inset 2px 2px 5px rgba(255,255,255,0.15), inset -3px -3px 8px rgba(0,0,0,0.4);
+  --md-shadow-clay-purple: 15px 20px 35px rgba(157,140,220,0.25), inset 2px 2px 8px rgba(255,255,255,0.4), inset -4px -4px 12px rgba(0,0,0,0.15);
+  --md-shadow-clay-green: 8px 12px 20px rgba(143,222,160,0.3), inset 2px 2px 6px rgba(255,255,255,0.6), inset -3px -3px 8px rgba(0,0,0,0.1);
+  --md-glass: rgba(255,255,255,0.72);
+  --md-glass-blur: blur(18px) saturate(1.4);
+
+  /* Motion · easing */
+  --md-ease-out: cubic-bezier(.2, .8, .2, 1);
+  --md-ease-switch: cubic-bezier(.215, .61, .355, 1);
+  --md-ease-in-out: cubic-bezier(.42, 0, .58, 1);
+
+  /* Motion · durations */
+  --md-dur-press: 0.2s;
+  --md-dur-fast: 0.25s;
+  --md-dur: 0.3s;
+  --md-dur-turn: 0.35s;
+  --md-dur-slide: 0.45s;
+  --md-dur-mode: 0.6s;
+  --md-dur-blink: 1.6s;
+  --md-dur-chase: 2s;
+  --md-dur-breathe: 5s;
+  --md-dur-hues: 9s;
+
+  /* Space · layout */
+  --md-page-max: 1320px;
+  --md-gutter: 40px;
+  --md-section-y: 130px;
+  --md-gap: 20px;
+  --md-gap-sm: 12px;
+}

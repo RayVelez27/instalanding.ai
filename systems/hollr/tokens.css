@@ -1,0 +1,118 @@
+/* InstaLanding design system · Hollr · hollr@1.0.0
+   Extracted from https://instalanding.ai/demos/hollr-messenger.html
+   Fonts (Google Fonts): Oswald 400-700, Neuton 400/700 + italic; Verdana and Tahoma are system faces */
+:root {
+  /* Color · core */
+  --hl-ink-2: #1D1C45;
+  --hl-ink: #2C2B5C;
+  --hl-ink-3: #3B3A78;
+  --hl-win: #D7E4F5;
+  --hl-win-2: #EEF0FD;
+  --hl-lilac: #F5F2F9;
+  --hl-p1: #6A2FC4;
+  --hl-p2: #C0169F;
+  --hl-gold: #E6E82A;
+  --hl-online: #5EE36A;
+
+  /* Color · chrome */
+  --hl-bar-a: #D8E8F7;
+  --hl-win-top: #E3ECF9;
+  --hl-win-bottom: #D4E2F5;
+  --hl-line: #586170;
+  --hl-line-soft: #ABB0C6;
+  --hl-rule: #D8DEF0;
+  --hl-track: #E3E7F5;
+  --hl-face: #FBFBFB;
+  --hl-edge: #93989C;
+  --hl-bevel: #C0C9E0;
+  --hl-status: #FDFDFF;
+  --hl-frame: #505E67;
+
+  /* Color · text */
+  --hl-text: #1B2340;
+  --hl-muted: #3B4458;
+  --hl-grey: #434C4B;
+  --hl-navy: #1D2A8C;
+  --hl-status-ink: #000080;
+  --hl-whisper: #6B6F78;
+  --hl-plum: #8A1576;
+  --hl-haze: #A9B3E0;
+  --hl-periwinkle: #CFD3FF;
+  --hl-tab: #E2C47B;
+
+  /* Color · titlebars */
+  --hl-blue-hi: #7B9DE6;
+  --hl-blue: #3F60C0;
+  --hl-blue-lo: #2F4FAE;
+  --hl-blue-end: #4A6FD0;
+  --hl-violet-hi: #9A6BE8;
+  --hl-violet-lo: #5A24AD;
+  --hl-violet-end: #8A3FD0;
+  --hl-rose-hi: #E870C8;
+  --hl-rose-lo: #A3118A;
+  --hl-rose-end: #D03AB0;
+  --hl-sky: #2F6FD6;
+
+  /* Color · state */
+  --hl-ok: #3FBF5A;
+  --hl-ok-deep: #25A046;
+  --hl-lilac-tint: #F1E7FF;
+  --hl-lilac-edge: #CBB6F2;
+
+  /* Type · families */
+  --hl-font-display: "Oswald", "Arial Narrow", sans-serif;
+  --hl-font-body: Verdana, Tahoma, sans-serif;
+  --hl-font-mono: Tahoma, Verdana, sans-serif;
+  --hl-font-copy: "Neuton", Georgia, serif;
+
+  /* Type · scale */
+  --hl-step-hero: clamp(40px, 7vw, 104px);
+  --hl-step-xl: clamp(34px, 4.6vw, 64px);
+  --hl-step-lg: clamp(32px, 4.2vw, 52px);
+  --hl-step-num: 56px;
+  --hl-step-copy-lg: 20px;
+  --hl-step-title: 19px;
+  --hl-step-copy: 16.5px;
+  --hl-step-ui: 14px;
+  --hl-step-small: 12px;
+  --hl-step-label: 11px;
+  --hl-step-micro: 10.5px;
+
+  /* Shape · radii */
+  --hl-radius-pill: 999px;
+  --hl-radius-window: 20px;
+  --hl-radius-card: 14px;
+  --hl-radius-md: 12px;
+  --hl-radius-btn: 9px;
+  --hl-radius-sm: 7px;
+
+  /* Shape · borders */
+  --hl-border: 1px;
+  --hl-border-ring: 1.5px;
+  --hl-border-frame: 4px;
+
+  /* Depth · shadows */
+  --hl-shadow-window: 0 60px 140px rgba(8, 4, 40, 0.75), 0 24px 50px rgba(0, 0, 0, 0.45), 0 0 0 8px rgba(255, 255, 255, 0.03);
+  --hl-shadow-card: 0 14px 30px rgba(0, 0, 0, 0.35);
+  --hl-shadow-bevel: -4px -4px 6px var(--hl-bevel) inset, 0 2px 0 rgba(0, 0, 0, 0.08);
+  --hl-glow-prime: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 10px 30px rgba(192, 22, 159, 0.45);
+
+  /* Motion · easing */
+  --hl-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --hl-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Motion · durations */
+  --hl-dur-fast: .2s;
+  --hl-dur: .25s;
+  --hl-dur-msg: .45s;
+  --hl-dur-pop: .7s;
+  --hl-dur-sheen: 3.6s;
+  --hl-dur-ring: 7s;
+
+  /* Space · layout */
+  --hl-page-max: 1200px;
+  --hl-gutter: 20px;
+  --hl-section-y: 110px;
+  --hl-gap: 20px;
+  --hl-pane-gap: 10px;
+}

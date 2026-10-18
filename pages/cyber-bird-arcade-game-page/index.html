@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Bird — One-Button Arcade</title>
+<meta name="description" content="Cyber Bird: a one-button pixel arcade game concept. Thread an armored cyber-pickup through a forest of stainless-steel rockets.">
+<meta name="theme-color" content="#04050b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@property --glow  { syntax: '<color>'; inherits: true; initial-value: #3b5bff; }
+@property --glow2 { syntax: '<color>'; inherits: true; initial-value: #4fd8ff; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    color-scheme: dark;
+    --bg: #04050b;
+    --ink: #eef3ff;
+    --muted: #98a0b3;
+    --dim: #5d6477;
+    --line: rgba(238, 243, 255, .09);
+    --line2: rgba(238, 243, 255, .17);
+    --accent: #2fe0ff;
+    --accent-hi: #7af0ff;
+    --accent-ink: #031218;
+    --key: #0b0a1a;
+    --glow: #3b5bff;
+    --glow2: #4fd8ff;
+    --display: "Jersey 10", monospace;
+    --sans: "Geist", system-ui, -apple-system, sans-serif;
+    --mono: "Geist Mono", ui-monospace, monospace;
+    transition: --glow .9s ease, --glow2 .9s ease;
+}
+html[data-theme="dawn"] { --glow: #9b37ff; --glow2: #ff8a5c; }
+html[data-theme="day"]  { --glow: #2d7bff; --glow2: #9fd0ff; }
+
+html { scroll-behavior: smooth; background: var(--bg); }
+body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.aura {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+        radial-gradient(70% 55% at 50% -5%, color-mix(in oklab, var(--glow) 30%, transparent), transparent 70%),
+        radial-gradient(35% 35% at 90% 35%, color-mix(in oklab, var(--glow2) 10%, transparent), transparent 70%),
+        radial-gradient(35% 35% at 5% 70%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 70%);
+}
+.scan {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(to bottom, rgba(255,255,255,.022) 0 1px, transparent 1px 3px);
+}
+header, main, footer, .marquee { position: relative; z-index: 2; }
+.wrap { width: min(1200px, 100% - 32px); margin-inline: auto; }
+.pix { image-rendering: pixelated; display: block; }
+
+/* ---------- nav ---------- */
+.nav {
+    position: fixed; top: 14px; left: 50%; translate: -50% 0; z-index: 50;
+    width: min(1200px, 100% - 24px);
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 8px 8px 16px;
+    border: 1px solid var(--line); border-radius: 14px;
+    background: rgba(6, 8, 18, .62);
+    backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+.brand { display: flex; align-items: center; gap: 10px; font: 400 28px/1 var(--display); letter-spacing: .06em; color: var(--ink); text-decoration: none; }
+.brand canvas { width: 50px; height: 18px; }
+.nav-links { display: flex; gap: 2px; margin-left: auto; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; padding: 8px 12px; border-radius: 8px; transition: color .2s, background .2s; }
+.nav-links a:hover { color: var(--ink); background: rgba(255,255,255,.05); }
+.seg { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.03); }
+.seg button {
+    font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); background: none; border: 0; padding: 8px 10px; border-radius: 7px; cursor: pointer;
+    transition: color .2s, background .2s;
+}
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { color: var(--key); background: var(--ink); }
+.icon-btn {
+    display: grid; place-items: center; width: 38px; height: 38px; border-radius: 9px;
+    border: 1px solid var(--line); color: var(--ink); background: rgba(255,255,255,.03); transition: background .2s;
+}
+.icon-btn:hover { background: rgba(255,255,255,.08); }
+.icon-btn svg { width: 18px; height: 18px; shape-rendering: crispEdges; }
+@media (max-width: 900px) { .nav-links { display: none; } .nav .seg { margin-left: auto; } }
+@media (max-width: 420px) { .brand span { display: none; } }
+
+:focus-visible { outline: 2px solid var(--accent-hi); outline-offset: 3px; }
+
+/* ---------- buttons ---------- */
+.btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    font: 600 15px/1 var(--sans); padding: 15px 20px; border-radius: 12px;
+    text-decoration: none; cursor: pointer; border: 1px solid transparent;
+    transition: transform .25s cubic-bezier(.2,.7,.2,1), background .2s, border-color .2s, box-shadow .25s;
+}
+.btn-primary {
+    background: var(--accent); color: var(--accent-ink);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 14px 40px -12px color-mix(in oklab, var(--accent) 90%, transparent);
+}
+.btn-primary:hover { transform: translateY(-2px); background: var(--accent-hi); }
+.btn-ghost { color: var(--ink); border-color: var(--line2); background: rgba(255,255,255,.03); }
+.btn-ghost:hover { border-color: rgba(255,255,255,.32); background: rgba(255,255,255,.07); transform: translateY(-2px); }
+.kbd { font: 500 11px/1 var(--mono); padding: 4px 6px; border: 1px solid currentColor; border-radius: 5px; }
+
+/* ---------- hero ---------- */
+.hero { padding: 150px 0 0; text-align: center; }
+.eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 500 12px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+    padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.03);
+}
+.dot { width: 7px; height: 7px; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: blink 1.4s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.title {
+    position: relative; display: block; width: fit-content; margin: 34px auto 0;
+    font: 400 clamp(108px, 19vw, 270px)/.78 var(--display); letter-spacing: .02em; color: #eaf3ff;
+    text-shadow: .035em .035em 0 #000, 0 0 90px color-mix(in oklab, var(--glow) 50%, transparent);
+}
+.title .sticker {
+    position: absolute; right: -.3em; bottom: -.46em; font-size: .56em; rotate: -6deg; letter-spacing: .05em;
+    background: linear-gradient(180deg, #8af3ff 0%, #2fc8ff 45%, #2d6bff 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
+    filter: drop-shadow(.06em .06em 0 #000) drop-shadow(0 0 28px rgba(47, 170, 255, .5));
+}
+@media (max-width: 640px) { .title .sticker { right: -.12em; } }
+.brand em { font-style: normal; color: var(--accent); }
+.lede { max-width: 590px; margin: 84px auto 0; color: var(--muted); font-size: clamp(16px, 1.6vw, 19px); }
+.lede strong { color: var(--ink); font-weight: 500; }
+.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
+
+/* ---------- console ---------- */
+.console {
+    position: relative; margin: 72px auto 0; max-width: 1180px; padding: 10px;
+    border: 1px solid var(--line2); border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.015));
+    box-shadow: 0 50px 140px -50px color-mix(in oklab, var(--glow) 80%, transparent), 0 0 0 1px rgba(0,0,0,.6);
+}
+.console::before {
+    content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(140deg, color-mix(in oklab, var(--glow2) 70%, transparent), transparent 28%, transparent 72%, color-mix(in oklab, var(--accent) 60%, transparent));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.console-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    padding: 6px 8px 12px; font: 500 11px/1 var(--mono); letter-spacing: .14em; color: var(--muted); text-transform: uppercase;
+}
+.console-bar .left, .console-bar .right { display: flex; align-items: center; gap: 12px; }
+.lamps { display: flex; gap: 6px; }
+.lamps i { width: 9px; height: 9px; border-radius: 50%; background: #2a2d36; }
+.lamps i:first-child { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.console .seg button { padding: 7px 10px; }
+.fs-btn {
+    font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px; cursor: pointer;
+}
+.fs-btn:hover { color: var(--ink); }
+.screen { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; }
+.screen:fullscreen { border-radius: 0; aspect-ratio: auto; width: 100vw; height: 100vh; }
+#game { position: absolute; inset: 0; outline: none; }
+#game:focus-visible::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 3px var(--accent-hi); pointer-events: none; z-index: 5; }
+.telemetry { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 10px; border-radius: 12px; overflow: hidden; background: var(--line); }
+.tm { background: rgba(6, 8, 16, .94); padding: 14px 16px; text-align: left; }
+.tm span { display: block; font: 500 10px/1 var(--mono); letter-spacing: .16em; color: var(--dim); text-transform: uppercase; }
+.tm b { display: block; font: 400 40px/1 var(--display); margin-top: 8px; letter-spacing: .03em; font-weight: 400; }
+.tm b.red { color: var(--accent-hi); }
+.spec { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 26px; margin-top: 24px; font: 500 11px/1 var(--mono); letter-spacing: .14em; color: var(--dim); text-transform: uppercase; }
+.spec b { color: var(--muted); font-weight: 500; }
+@media (max-width: 640px) {
+    .screen { aspect-ratio: 4 / 3; }
+    .telemetry { grid-template-columns: repeat(2, 1fr); }
+    .hide-sm { display: none !important; }
+}
+
+/* ---------- game (embedded) ---------- */
+.flappy-game { position: absolute; inset: 0; overflow: hidden; background: #000; touch-action: none; user-select: none; -webkit-user-select: none; cursor: pointer; }
+.tb-stage { position: absolute; top: 50%; left: 50%; overflow: hidden; background: #13163a; transform-origin: center; }
+.tb-stage > .tb-background, .tb-stage > .tb-dim, .tb-stage > .tb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tb-background { image-rendering: pixelated; filter: saturate(.6) blur(1.5px); }
+.tb-canvas { image-rendering: pixelated; }
+.tb-theme-toggle { position: absolute; top: calc(50% + 236px); left: 50%; display: flex; border: 4px solid var(--ink); translate: -50% 0; }
+.tb-theme-toggle[hidden] { display: none; }
+.tb-theme-toggle button { padding: 0 24px; border: 0; background: var(--key); color: var(--ink); font: 40px/1.2 "Jersey 10", monospace; letter-spacing: 3px; cursor: pointer; }
+.tb-theme-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--key); }
+.tb-theme-toggle button:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
+.tb-social { position: absolute; top: 48px; right: 48px; display: flex; gap: 16px; }
+.tb-social[hidden] { display: none; }
+.tb-social a { display: grid; place-items: center; width: 80px; height: 80px; border: 4px solid var(--ink); background: var(--key); color: var(--ink); }
+.tb-social a:hover { background: var(--ink); color: var(--key); }
+.tb-social a:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
+.tb-social svg { width: 48px; height: 48px; shape-rendering: crispEdges; }
+.tb-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- marquee ---------- */
+.marquee {
+    margin-top: 110px; border-block: 1px solid var(--line); overflow: hidden; background: rgba(255,255,255,.015);
+    -webkit-mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.marquee-track { display: flex; width: max-content; animation: scroll 46s linear infinite; }
+.mq { display: flex; align-items: center; }
+.mq span { font: 400 46px/1 var(--display); letter-spacing: .06em; color: var(--muted); padding: 22px 30px; white-space: nowrap; }
+.mq span.hl { color: var(--ink); }
+.mq i { width: 10px; height: 10px; background: var(--accent); rotate: 45deg; flex: none; }
+@keyframes scroll { to { transform: translateX(-50%); } }
+
+/* ---------- sections ---------- */
+.block { padding-top: 150px; }
+.head { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; margin-bottom: 48px; }
+.kicker { display: flex; align-items: center; gap: 12px; font: 500 12px/1 var(--mono); letter-spacing: .18em; color: var(--accent-hi); text-transform: uppercase; }
+.kicker::before { content: ""; width: 24px; height: 1px; background: currentColor; }
+.h2 { font: 400 clamp(54px, 7.2vw, 100px)/.84 var(--display); letter-spacing: .015em; margin-top: 18px; text-shadow: .04em .04em 0 #000; }
+.h2 .muted { color: var(--dim); }
+.sub { color: var(--muted); max-width: 470px; }
+
+.card {
+    position: relative; isolation: isolate; overflow: hidden;
+    border: 1px solid var(--line); border-radius: 18px; padding: 28px;
+    background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012));
+    transition: border-color .3s, transform .4s cubic-bezier(.2,.7,.2,1);
+}
+.card::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .35s;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklab, var(--glow2) 15%, transparent), transparent 60%);
+}
+.card:hover { border-color: var(--line2); }
+.card:hover::before { opacity: 1; }
+.card h3 { font: 400 40px/.92 var(--display); letter-spacing: .02em; margin-bottom: 12px; }
+.card p { color: var(--muted); font-size: 15px; }
+.tag { display: block; margin-bottom: 18px; font: 500 10px/1 var(--mono); letter-spacing: .16em; color: var(--dim); text-transform: uppercase; }
+
+.bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.bento .card { grid-column: span 2; }
+.bento .wide { grid-column: span 4; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+.bento .tall { grid-row: span 2; display: flex; flex-direction: column; }
+.stage-mini {
+    border-radius: 12px; border: 1px solid var(--line); overflow: hidden;
+    background: radial-gradient(120% 90% at 50% 100%, color-mix(in oklab, var(--glow) 30%, transparent), rgba(0,0,0,.4));
+}
+.stage-mini canvas { width: 100%; height: auto; }
+.rocket-mini { margin-top: auto; padding-top: 22px; display: flex; justify-content: center; }
+.rocket-mini canvas { height: 290px; width: auto; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chip { font: 500 11px/1 var(--mono); letter-spacing: .1em; color: var(--muted); padding: 7px 9px; border: 1px solid var(--line); border-radius: 7px; }
+.chip b { color: var(--ink); font-weight: 500; }
+.swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
+.swatch { background: none; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; color: var(--muted); text-align: left; transition: border-color .2s, transform .2s; }
+.swatch:hover { transform: translateY(-2px); }
+.swatch canvas { width: 100%; aspect-ratio: 16 / 9; }
+.swatch span { display: block; padding: 7px 9px; font: 500 10px/1 var(--mono); letter-spacing: .14em; }
+.swatch[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); }
+.gauge-wrap { display: flex; align-items: center; gap: 22px; margin-top: 22px; }
+.gauge { position: relative; width: 132px; flex: none; aspect-ratio: 1; }
+.gauge::before {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 225deg, var(--accent) calc(var(--v, 0) * 270deg), #2a2d36 0 270deg, transparent 0);
+    -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%, #000 70%, transparent 71%);
+    mask: radial-gradient(circle, transparent 60%, #000 61%, #000 70%, transparent 71%);
+    transition: --v 1s;
+}
+.gauge div { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.gauge b { font: 400 46px/.9 var(--display); }
+.gauge small { font: 500 10px/1 var(--mono); letter-spacing: .16em; color: var(--dim); }
+.ladder { display: grid; gap: 6px; font: 500 11px/1 var(--mono); letter-spacing: .1em; color: var(--dim); }
+.ladder div { display: flex; gap: 10px; align-items: center; }
+.ladder i { width: 8px; height: 8px; border: 1px solid var(--dim); }
+.ladder .on { color: var(--ink); }
+.ladder .on i { background: var(--accent); border-color: var(--accent); }
+pre.code {
+    margin-top: 18px; padding: 16px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.45);
+    font: 400 12.5px/1.7 var(--mono); color: #c9d1e3; overflow-x: auto;
+}
+.code .k { color: #ff7a8a; } .code .s { color: #9fe0a8; } .code .n { color: #ffcf6b; } .code .c { color: var(--dim); }
+@media (max-width: 960px) {
+    .bento { grid-template-columns: 1fr 1fr; }
+    .bento .card, .bento .wide { grid-column: span 2; }
+    .bento .tall { grid-row: auto; }
+    .rocket-mini canvas { height: 220px; }
+}
+@media (max-width: 600px) { .bento .wide { grid-template-columns: 1fr; } }
+
+/* modes */
+.modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.mode { display: flex; flex-direction: column; gap: 22px; }
+.mode.current { border-color: color-mix(in oklab, var(--accent) 65%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent); }
+.mode-top { display: flex; justify-content: space-between; align-items: start; }
+.mode .name { font: 400 72px/.8 var(--display); letter-spacing: .02em; }
+.badge { font: 500 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line2); color: var(--muted); }
+.mode.current .badge { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.meters { display: grid; gap: 14px; }
+.meter-row { display: flex; justify-content: space-between; font: 500 11px/1 var(--mono); letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin-bottom: 7px; }
+.meter-row b { color: var(--ink); font-weight: 500; }
+.cells { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
+.cells i { height: 8px; background: rgba(255,255,255,.07); }
+.cells i.on { background: var(--ink); }
+.mode-foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); }
+.mode-foot small { font: 500 11px/1 var(--mono); letter-spacing: .12em; color: var(--dim); text-transform: uppercase; }
+.mode-foot small b { color: var(--ink); font: 400 26px/1 var(--display); letter-spacing: .04em; margin-left: 6px; }
+.mode .btn { padding: 11px 14px; font-size: 14px; }
+@media (max-width: 900px) { .modes { grid-template-columns: 1fr; } }
+
+/* manual */
+.manual { display: grid; grid-template-columns: 1.15fr .85fr; gap: 14px; }
+.controls { display: grid; gap: 18px; }
+.control { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.control:last-child { border-bottom: 0; padding-bottom: 0; }
+.keys { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.keys em { font: 500 11px/1 var(--mono); color: var(--dim); font-style: normal; letter-spacing: .12em; }
+.key { font: 400 30px/1 var(--display); letter-spacing: .08em; padding: 8px 16px 10px; border: 3px solid var(--ink); background: var(--key); color: var(--ink); box-shadow: 4px 4px 0 #000; }
+.control span.what { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.tips { list-style: none; display: grid; gap: 16px; counter-reset: tip; }
+.tips li { counter-increment: tip; display: grid; grid-template-columns: 38px 1fr; gap: 12px; color: var(--muted); font-size: 15px; }
+.tips li::before { content: counter(tip, decimal-leading-zero); font: 400 30px/1 var(--display); color: var(--accent-hi); }
+.tips b { color: var(--ink); font-weight: 500; }
+@media (max-width: 900px) { .manual { grid-template-columns: 1fr; } }
+
+/* log */
+.log { display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)); }
+.log > div { padding: 26px 24px; border-right: 1px solid var(--line); }
+.log > div:last-child { border-right: 0; }
+.log span { display: block; font: 500 10px/1 var(--mono); letter-spacing: .16em; color: var(--dim); text-transform: uppercase; }
+.log b { display: block; margin-top: 14px; font: 400 64px/.85 var(--display); letter-spacing: .02em; font-weight: 400; }
+.log b.red { color: var(--accent-hi); }
+.log-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 16px; font: 500 11px/1.5 var(--mono); letter-spacing: .1em; color: var(--dim); text-transform: uppercase; }
+.link-btn { background: none; border: 0; color: var(--muted); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.link-btn:hover { color: var(--accent-hi); }
+@media (max-width: 900px) {
+    .log { grid-template-columns: repeat(2, 1fr); }
+    .log > div { border-bottom: 1px solid var(--line); }
+    .log > div:last-child { grid-column: span 2; }
+}
+
+/* final + footer */
+.final { padding: 170px 0 130px; text-align: center; }
+.final .h2 { font-size: clamp(66px, 11.5vw, 176px); }
+.final .h2 span { color: var(--accent); }
+.final p { color: var(--muted); margin: 26px auto 0; max-width: 460px; }
+footer { border-top: 1px solid var(--line); padding: 34px 0 44px; }
+.foot { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.foot p { font: 500 11px/1.6 var(--mono); letter-spacing: .08em; color: var(--dim); max-width: 620px; }
+.foot .social { display: flex; gap: 8px; }
+
+/* reveal */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .marquee-track, .dot { animation: none; }
+}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="aura" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="nav" data-section="nav">
+    <a class="brand" href="#top" aria-label="Cyber Bird home">
+        <canvas class="pix" data-sprite="car" width="42" height="15" aria-hidden="true"></canvas>
+        <span>CYBER <em>BIRD</em></span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+        <a href="#play">Play</a>
+        <a href="#features">Features</a>
+        <a href="#modes">Modes</a>
+        <a href="#manual">Manual</a>
+        <a href="#log">Mission log</a>
+    </nav>
+    <div class="seg" role="group" aria-label="Sky theme">
+        <button type="button" data-set-theme="night">Night</button>
+        <button type="button" data-set-theme="dawn">Dawn</button>
+        <button type="button" data-set-theme="day">Day</button>
+    </div>
+    <a class="icon-btn" href="https://github.com/troshkinpavel/tesla-bird" target="_blank" rel="noopener noreferrer" aria-label="Original Tesla Bird source on GitHub" data-icon="github"></a>
+</header>
+
+<main id="top">
+    <section class="hero wrap" data-section="hero">
+        <span class="eyebrow reveal"><i class="dot"></i>Game concept · One-button arcade</span>
+        <h1 class="title reveal" aria-label="Cyber Bird">CYBER<span class="sticker">BIRD</span></h1>
+        <p class="lede reveal">Thread an <strong>armored cyber-pickup</strong> through a forest of <strong>stainless-steel rockets</strong>. Tap to fire the hover-jets. Fall, and you land with the whole starbase watching.</p>
+        <div class="cta-row reveal">
+            <button class="btn btn-primary" type="button" data-launch>Launch the game <span class="kbd">SPACE</span></button>
+            <a class="btn btn-ghost" href="#features">See the build</a>
+        </div>
+
+        <div class="console reveal" id="play">
+            <div class="console-bar">
+                <div class="left">
+                    <span class="lamps" aria-hidden="true"><i></i><i></i><i></i></span>
+                    <span class="hide-sm">CB-01 · Live feed</span>
+                    <span id="clock">T+00:00:00</span>
+                </div>
+                <div class="right">
+                    <div class="seg" role="group" aria-label="Difficulty">
+                        <button type="button" data-diff="easy">Easy</button>
+                        <button type="button" data-diff="normal">Normal</button>
+                        <button type="button" data-diff="hard">Hard</button>
+                    </div>
+                    <button class="fs-btn hide-sm" type="button" id="fullscreen">Fullscreen</button>
+                </div>
+            </div>
+            <div class="screen" id="screen">
+                <div id="game" tabindex="0"></div>
+            </div>
+            <div class="telemetry" aria-live="off">
+                <div class="tm"><span>Score</span><b id="tm-score">0</b></div>
+                <div class="tm"><span>Best · <em id="tm-mode" style="font-style:normal">normal</em></span><b id="tm-best">0</b></div>
+                <div class="tm"><span>Charge</span><b id="tm-charge" class="red">0%</b></div>
+                <div class="tm"><span>Status</span><b id="tm-status">STANDBY</b></div>
+            </div>
+        </div>
+        <div class="spec reveal">
+            <span><b>640×360</b> native</span>
+            <span><b>3×</b> pixel render</span>
+            <span><b>0</b> image files</span>
+            <span><b>1</b> html file</span>
+        </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true" data-section="marquee">
+        <div class="marquee-track">
+            <div class="mq"><span class="hl">LIFTOFF</span><i></i><span>25% CHARGE</span><i></i><span>50% CHARGE</span><i></i><span>75% CHARGE</span><i></i><span class="hl">FULL CHARGE</span><i></i><span>T+00:00:42</span><i></i><span>CLICK OR SPACE</span><i></i></div>
+            <div class="mq"><span class="hl">LIFTOFF</span><i></i><span>25% CHARGE</span><i></i><span>50% CHARGE</span><i></i><span>75% CHARGE</span><i></i><span class="hl">FULL CHARGE</span><i></i><span>T+00:00:42</span><i></i><span>CLICK OR SPACE</span><i></i></div>
+        </div>
+    </div>
+
+    <section class="block wrap" id="features" data-section="features">
+        <div class="head reveal">
+            <div>
+                <span class="kicker">01 — The build</span>
+                <h2 class="h2">Small game.<br><span class="muted">Big launch.</span></h2>
+            </div>
+            <p class="sub">Every pixel on this page is drawn by code at runtime — the truck, the rockets, the smoke, the skies. No sprites to download, nothing to wait for.</p>
+        </div>
+        <div class="bento">
+            <article class="card wide reveal">
+                <div>
+                    <span class="tag">Flight model</span>
+                    <h3>Hover-jets,<br>hard angles.</h3>
+                    <p>Every tap fires twin wheel-jets and a lungful of smoke. The truck noses up on the climb and tilts into the fall — readable, fair, and unforgiving.</p>
+                    <div class="chips">
+                        <span class="chip">GRAVITY <b>1100</b></span>
+                        <span class="chip">BOOST <b>−270</b></span>
+                        <span class="chip">SPEED <b>115</b></span>
+                    </div>
+                </div>
+                <div class="stage-mini"><canvas class="pix" id="mini-car" width="120" height="68" aria-label="The cyber-pickup hovering on its jets" role="img"></canvas></div>
+            </article>
+            <article class="card tall reveal">
+                <span class="tag">Obstacles</span>
+                <h3>A forest<br>of steel.</h3>
+                <p>Rockets stack from the pad — heat-shield tiles, flaps and all. Each gap drifts only so far from the last, so runs are random but never impossible.</p>
+                <div class="rocket-mini"><canvas class="pix" id="mini-rocket" width="96" height="210" aria-label="Two rocket stacks with a gap between them" role="img"></canvas></div>
+            </article>
+            <article class="card reveal">
+                <span class="tag">Atmosphere</span>
+                <h3>Three skies.</h3>
+                <p>Night, dawn or day — your pick is remembered.</p>
+                <div class="swatches">
+                    <button class="swatch" type="button" data-set-theme="night"><canvas class="pix" data-sky="night" width="160" height="90"></canvas><span>NIGHT</span></button>
+                    <button class="swatch" type="button" data-set-theme="dawn"><canvas class="pix" data-sky="dawn" width="160" height="90"></canvas><span>DAWN</span></button>
+                    <button class="swatch" type="button" data-set-theme="day"><canvas class="pix" data-sky="day" width="160" height="90"></canvas><span>DAY</span></button>
+                </div>
+            </article>
+            <article class="card reveal">
+                <span class="tag">Progression</span>
+                <h3>Charge to full.</h3>
+                <p>Every 10 points adds a quarter to the pack.</p>
+                <div class="gauge-wrap">
+                    <div class="gauge" id="gauge"><div><b id="gauge-val">0</b><small>% PEAK</small></div></div>
+                    <div class="ladder" id="ladder">
+                        <div data-at="40"><i></i>FULL · 40</div>
+                        <div data-at="30"><i></i>75% · 30</div>
+                        <div data-at="20"><i></i>50% · 20</div>
+                        <div data-at="10"><i></i>25% · 10</div>
+                    </div>
+                </div>
+            </article>
+            <article class="card wide reveal" style="grid-template-columns: .9fr 1.1fr;">
+                <div>
+                    <span class="tag">Drop-in</span>
+                    <h3>One call<br>to embed.</h3>
+                    <p>The game mounts into any element, cleans up after itself, and exposes a tiny API for state, score and theme.</p>
+                </div>
+<pre class="code"><span class="k">const</span> game = <span class="n">CyberBird</span>(<span class="s">'container'</span>, {
+  difficulty: <span class="s">'hard'</span>,
+  theme: <span class="s">'dawn'</span>
+});
+
+game.<span class="n">getBestScore</span>(); <span class="c">// → 27</span>
+game.<span class="n">destroy</span>();      <span class="c">// back to zero</span></pre>
+            </article>
+        </div>
+    </section>
+
+    <section class="block wrap" id="modes" data-section="modes">
+        <div class="head reveal">
+            <div>
+                <span class="kicker">02 — Difficulty</span>
+                <h2 class="h2">Pick your<br><span class="muted">launch window.</span></h2>
+            </div>
+            <p class="sub">Three tuned presets change rocket spacing, gap height and how far each gap can wander. Bests are tracked per mode.</p>
+        </div>
+        <div class="modes" id="mode-cards"></div>
+    </section>
+
+    <section class="block wrap" id="manual" data-section="manual">
+        <div class="head reveal">
+            <div>
+                <span class="kicker">03 — Flight manual</span>
+                <h2 class="h2">One button.<br><span class="muted">No excuses.</span></h2>
+            </div>
+        </div>
+        <div class="manual">
+            <div class="card controls reveal">
+                <div class="control">
+                    <div class="keys"><span class="key">SPACE</span><em>OR</em><span class="key">CLICK</span></div>
+                    <span class="what">Launch · Boost</span>
+                </div>
+                <div class="control">
+                    <div class="keys"><span class="key">↑</span><em>OR</em><span class="key">W</span></div>
+                    <span class="what">Boost</span>
+                </div>
+                <div class="control">
+                    <div class="keys"><span class="key">SPACE</span><em>OR</em><span class="key">▶ PLAY</span></div>
+                    <span class="what">Fly again</span>
+                </div>
+            </div>
+            <div class="card reveal">
+                <span class="tag">Pilot notes</span>
+                <ol class="tips">
+                    <li><span><b>Short taps beat panic.</b> One boost lifts you about a truck-length — chain them, don't spam them.</span></li>
+                    <li><span><b>Aim for the middle.</b> The next gap can only drift so far, so centered flight leaves room either way.</span></li>
+                    <li><span><b>Watch the nose.</b> The truck tilts with your velocity — when it dips past level, it's time.</span></li>
+                    <li><span><b>Ten is a battery.</b> Every 10 points charges 25%. Forty is a full pack.</span></li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section class="block wrap" id="log" data-section="mission-log">
+        <div class="head reveal">
+            <div>
+                <span class="kicker">04 — Mission log</span>
+                <h2 class="h2">Your record,<br><span class="muted">on this device.</span></h2>
+            </div>
+        </div>
+        <div class="log reveal">
+            <div><span>Best · Easy</span><b id="log-easy">0</b></div>
+            <div><span>Best · Normal</span><b id="log-normal">0</b></div>
+            <div><span>Best · Hard</span><b id="log-hard">0</b></div>
+            <div><span>Total runs</span><b id="log-runs">0</b></div>
+            <div><span>Peak charge</span><b id="log-charge" class="red">0%</b></div>
+        </div>
+        <div class="log-foot reveal">
+            <span>Stored locally in your browser — nothing leaves this page.</span>
+            <button class="link-btn" type="button" id="reset-log">Reset mission log</button>
+        </div>
+    </section>
+
+    <section class="final wrap" data-section="cta">
+        <span class="kicker reveal" style="justify-content:center">T-minus</span>
+        <h2 class="h2 reveal">YOU<span>.</span></h2>
+        <p class="reveal">The pad is clear and the pack is cold. Ten points warms it up.</p>
+        <div class="cta-row reveal">
+            <button class="btn btn-primary" type="button" data-launch>Fly now <span class="kbd">SPACE</span></button>
+        </div>
+    </section>
+</main>
+
+<footer data-section="footer">
+    <div class="wrap foot">
+        <p>Cyber Bird is an independent fan game concept built on Tesla Bird by Pavel Troshkin. Not affiliated with, endorsed or sponsored by Tesla, Inc. or SpaceX.</p>
+        <div class="social">
+            <a class="icon-btn" href="https://github.com/troshkinpavel/tesla-bird" target="_blank" rel="noopener noreferrer" aria-label="Original Tesla Bird source on GitHub" data-icon="github"></a>
+            <a class="icon-btn" href="https://x.com/troshkin_pavel" target="_blank" rel="noopener noreferrer" aria-label="@troshkin_pavel on X" data-icon="x"></a>
+        </div>
+    </div>
+</footer>
+
+<script>
+'use strict';
+
+/* =========================================================================
+   SPRITES — every graphic is generated here at runtime. No image files.
+   ========================================================================= */
+const Sprites = (() => {
+    function make(w, h, draw) {
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const g = c.getContext('2d');
+        const p = (color, x, y, ww = 1, hh = 1) => { g.fillStyle = color; g.fillRect(x, y, ww, hh); };
+        draw(g, p);
+        return c;
+    }
+    function hex(h) { const v = parseInt(h.slice(1), 16); return [v >> 16, (v >> 8) & 255, v & 255]; }
+    function rng(seed) {
+        return () => {
+            seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+            let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+    }
+    function disc(p, cx, cy, r, color) {
+        for (let y = Math.floor(cy - r); y <= cy + r; y++) {
+            for (let x = Math.floor(cx - r); x <= cx + r; x++) {
+                if (Math.hypot(x + .5 - cx, y + .5 - cy) < r) p(color, x, y);
+            }
+        }
+    }
+
+    /* ---- Cyber-pickup (42×15): one triangle roofline, steel slab sides ---- */
+    function car(crashed) {
+        return make(42, 15, (g, p) => {
+            const C = crashed
+                ? {body: '#2a3038', panel: '#323941', edge: '#6c757f', ridge: '#8a9199', glass: '#07090c', glassHi: '#eef3f8', sill: '#4a525b', clad: '#0c0f12', light: '#2c4448', tail: '#4a1a20'}
+                : {body: '#3a434d', panel: '#46505b', edge: '#c9d1d9', ridge: '#f2f5f8', glass: '#0a0d12', glassHi: '#3d4d5e', sill: '#dddddd', clad: '#121519', light: '#eaffff', tail: '#ff3344'};
+            const APEX = 24;
+            const top = (x) => x <= APEX ? Math.round(6 - 6 * x / APEX) : Math.round((x - APEX) * 7 / 17);
+            const bottom = (x) => x === 0 ? 9 : x >= 40 ? 9 - (x - 40) : 10;
+            for (let x = 0; x < 42; x++) {
+                const t = top(x), b = bottom(x);
+                for (let y = t; y <= b; y++) {
+                    let c = (x + y) % 8 === 0 ? C.panel : C.body;
+                    if (y === t) c = x === APEX ? C.ridge : C.edge;
+                    else if (y >= 9) c = C.clad;
+                    p(c, x, y);
+                }
+            }
+            for (let x = 12; x <= 32; x++) {
+                const t = top(x);
+                for (let y = t + 1; y <= 4; y++) p((x - y) % 8 === 0 ? C.glassHi : C.glass, x, y);
+                p(C.sill, x, 5);
+            }
+            p(C.body, 21, 1, 1, 4);
+            p(C.panel, 0, 7, 11, 1);
+            p(C.clad, 21, 6, 1, 3);
+            p(C.light, 38, 7, 4, 1);
+            p(C.tail, 0, 6, 1, 3);
+            for (const c of [9, 33]) {
+                for (let y = 6; y < 15; y++) {
+                    const hw = y === 6 ? 3 : 5;
+                    for (let x = c - 5; x <= c + 5; x++) {
+                        if (y <= 11 && x >= c - hw && x < c + hw) p('#050608', x, y);
+                        const d = Math.hypot(x + .5 - c, y + .5 - 12);
+                        if (d < 3.4) p('#0e1013', x, y);
+                        if (d < 2.4) p(((x + y) & 1) && !crashed ? '#68727c' : '#2b3138', x, y);
+                        if (d < .8) p(crashed ? '#4a525a' : '#c3cbd3', x, y);
+                    }
+                }
+            }
+            if (crashed) {
+                for (const [x, y] of [[17, 3], [18, 2], [16, 4], [18, 4], [19, 3], [15, 3], [20, 4], [27, 3], [28, 4], [26, 2]]) p(C.glassHi, x, y);
+                g.clearRect(34, 4, 3, 1);
+                p(C.clad, 34, 5, 3, 1);
+                p('#05070a', 4, 7); p('#05070a', 14, 8); p('#05070a', 38, 8);
+            }
+        });
+    }
+    function beam() {
+        return make(36, 5, (g, p) => {
+            for (let x = 0; x < 36; x++) {
+                const a = Math.pow(1 - x / 36, 1.6);
+                p(`rgba(110,245,255,${(a * .85).toFixed(3)})`, x, 2);
+                p(`rgba(60,230,255,${(a * .35).toFixed(3)})`, x, 1);
+                p(`rgba(60,230,255,${(a * .35).toFixed(3)})`, x, 3);
+                if (x % 2 === 0) { p(`rgba(40,220,255,${(a * .15).toFixed(3)})`, x, 0); p(`rgba(40,220,255,${(a * .15).toFixed(3)})`, x, 4); }
+            }
+        });
+    }
+
+    /* ---- Jet smoke strip (14 frames of 12×34) ---- */
+    function smoke() {
+        return make(168, 34, (g, p) => {
+            for (let f = 0; f < 14; f++) {
+                const ox = f * 12, t = f / 13;
+                if (f < 6) {
+                    const len = 6 - f;
+                    for (let y = 0; y < len; y++) {
+                        p('#ff6a3d', ox + 4, y); p('#fff3b0', ox + 5, y, 2, 1); p('#ffb347', ox + 7, y);
+                    }
+                }
+                for (let k = 0; k < 3; k++) {
+                    const cy = 3 + t * 22 + k * 3.6;
+                    const r = Math.max(.8, 1.6 + t * 3.8 - k * .45);
+                    const alpha = Math.max(0, (1 - t) * (.95 - k * .22));
+                    const sway = Math.sin(f * .9 + k) * t * 1.4;
+                    g.globalAlpha = alpha;
+                    for (let y = 0; y < 34; y++) {
+                        for (let x = 0; x < 12; x++) {
+                            const d = Math.hypot(x + .5 - 6 - sway, y + .5 - cy);
+                            if (d >= r) continue;
+                            if (alpha < .45 && (x + y) & 1) continue;
+                            p(d < r * .45 ? '#f4f6fa' : d < r * .8 ? '#c4c9d2' : '#8d939e', ox + x, y);
+                        }
+                    }
+                    g.globalAlpha = 1;
+                }
+            }
+        });
+    }
+
+    /* ---- Stainless rocket pieces ---- */
+    const STEEL = ['#4a515c', '#6b7380', '#8d96a2', '#b4bcc6', '#d9e0e7', '#eef2f6', '#d0d7df', '#aab3bd', '#848d99', '#646c78', '#4a515c'];
+    function hull(u, x, y) {
+        if (u < .28) {
+            const row = Math.floor(y / 3);
+            return (y % 3 === 0 || (x + (row % 2) * 2) % 4 === 0) ? '#2d3139' : '#1f2228';
+        }
+        const v = (u - .28) / .72;
+        return STEEL[Math.max(0, Math.min(STEEL.length - 1, Math.round(v * (STEEL.length - 1))))];
+    }
+    function body() {
+        return make(26, 8, (g, p) => {
+            for (let x = 0; x < 26; x++) {
+                for (let y = 0; y < 8; y++) {
+                    const u = (x + .5) / 26;
+                    let c = hull(u, x, y);
+                    if (y === 7 && u >= .28 && x % 2 === 0) c = '#7c8592';
+                    p(c, x, y);
+                }
+            }
+        });
+    }
+    function nose() {
+        return make(40, 44, (g, p) => {
+            for (let y = 0; y < 44; y++) {
+                const hw = 13 * Math.pow((y + 1) / 44, .55);
+                const x0 = 20 - hw;
+                for (let x = Math.floor(x0); x < Math.ceil(20 + hw); x++) {
+                    const u = (x + .5 - x0) / (2 * hw);
+                    if (u < 0 || u > 1) continue;
+                    p(hull(u, x - 7, y), x, y);
+                }
+            }
+            for (let y = 18; y <= 34; y++) {
+                const hw = 13 * Math.pow((y + 1) / 44, .55);
+                const outer = Math.round(1 + (34 - y) * .45);
+                const l = Math.floor(20 - hw), r = Math.ceil(20 + hw);
+                for (let x = outer; x < l; x++) p(x === outer ? '#4d535e' : '#2b2f37', x, y);
+                for (let x = r; x < 40 - outer; x++) p(x === 39 - outer ? '#4d535e' : '#2b2f37', x, y);
+            }
+        });
+    }
+    function engine() {
+        return make(40, 36, (g, p) => {
+            for (let y = 0; y < 30; y++) {
+                for (let x = 7; x < 33; x++) p(y === 0 ? '#7c8592' : hull((x - 7 + .5) / 26, x - 7, y), x, y);
+            }
+            for (let y = 4; y < 30; y++) {
+                const ext = Math.min(7, Math.floor((y - 4) * .45) + 1);
+                for (let x = 7 - ext; x < 7; x++) p(x === 7 - ext ? '#454b56' : '#2b2f37', x, y);
+                for (let x = 33; x < 33 + ext; x++) p(x === 32 + ext ? '#454b56' : '#2b2f37', x, y);
+            }
+            p('#1b1d23', 9, 30, 22, 6);
+            for (let y = 31; y < 36; y++) {
+                const w = 1 + Math.floor((y - 31) * .6);
+                for (const c of [13, 20, 27]) p(y === 35 ? '#8a919c' : '#5a606b', c - w, y, w * 2 + 1, 1);
+            }
+        });
+    }
+    function arrow() {
+        const map = ['....#....', '...###...', '..#####..', '.#######.', '...###...', '...###...', '...###...', '...###...'];
+        return make(9, 8, (g, p) => map.forEach((row, y) => [...row].forEach((ch, x) => ch === '#' && p('#eaf3ff', x, y))));
+    }
+
+    /* ---- Starbase skies ---- */
+    const SKIES = {
+        night: {sky: ['#02040f', '#070c26', '#121a45', '#232a63', '#38336f'], far: '#141a3e', mid: '#0b0f27', near: '#05070f', edge: '#232b5c', light: '#ff4d55', warm: '#ffcf6b', road: '#0b0d18', seed: 11},
+        dawn: {sky: ['#120a2e', '#2c1250', '#5e1f63', '#a33a62', '#e86a55', '#ffb06a'], far: '#5a2350', mid: '#33143c', near: '#170a1f', edge: '#7a3560', light: '#ff5a5f', warm: '#ffd59a', road: '#1c0f24', seed: 23},
+        day: {sky: ['#1450b8', '#2a6fd6', '#4f93ea', '#86bdf6', '#c4e3ff'], far: '#7da2cf', mid: '#53739f', near: '#2b3d5c', edge: '#9bbbe0', light: '#ff5a5f', warm: '#fff2c4', road: '#22314b', seed: 37}
+    };
+    function sample(stops, u) {
+        const s = Math.max(0, Math.min(1, u)) * (stops.length - 1);
+        const i = Math.min(stops.length - 2, Math.floor(s));
+        const t = s - i;
+        return [0, 1, 2].map((k) => Math.round(stops[i][k] + (stops[i + 1][k] - stops[i][k]) * t));
+    }
+    function background(name, w, h) {
+        const cfg = SKIES[name];
+        return make(w, h, (g, p) => {
+            const rnd = rng(cfg.seed);
+            const stops = cfg.sky.map(hex);
+            const img = g.createImageData(w, h);
+            const bands = 16;
+            for (let y = 0; y < h; y++) {
+                const f = (y / h) * bands, b0 = Math.floor(f), frac = f - b0;
+                const c0 = sample(stops, b0 / bands), c1 = sample(stops, (b0 + 1) / bands);
+                for (let x = 0; x < w; x++) {
+                    const c = (frac > .75 || (frac > .5 && ((x + y) & 1))) ? c1 : c0;
+                    const i = (y * w + x) * 4;
+                    img.data[i] = c[0]; img.data[i + 1] = c[1]; img.data[i + 2] = c[2]; img.data[i + 3] = 255;
+                }
+            }
+            g.putImageData(img, 0, 0);
+
+            if (name === 'night') {
+                const count = Math.round(w * h / 900);
+                for (let i = 0; i < count; i++) {
+                    const x = rnd() * w | 0, y = rnd() * h * .68 | 0, b = rnd();
+                    p(b > .92 ? '#ffffff' : b > .6 ? '#c8d4ff' : '#6f7aa8', x, y);
+                    if (b > .975) { p('#8fa0d8', x - 1, y); p('#8fa0d8', x + 1, y); p('#8fa0d8', x, y - 1); p('#8fa0d8', x, y + 1); }
+                }
+                const mx = w * .8 | 0, my = h * .17 | 0;
+                disc(p, mx, my, 11, '#efe9d2');
+                disc(p, mx - 3, my - 2, 2.4, '#d6cfb4');
+                disc(p, mx + 4, my + 3, 1.8, '#d6cfb4');
+                disc(p, mx + 2, my - 5, 1.2, '#d6cfb4');
+            } else if (name === 'dawn') {
+                for (let i = 0; i < 50; i++) p('rgba(255,220,240,.6)', rnd() * w | 0, rnd() * h * .3 | 0);
+                const cx = w * .5, cy = h * .7, r = 46;
+                const top = hex('#ffe08a'), bot = hex('#ff5a6a');
+                for (let y = Math.floor(cy - r); y <= cy + r; y++) {
+                    const ty = (y - (cy - r)) / (2 * r);
+                    if (y > cy - r * .15 && ((y - Math.floor(cy)) % 7 + 7) % 7 < 1 + (y - cy) / 14) continue;
+                    const c = top.map((v, k) => Math.round(v + (bot[k] - v) * ty));
+                    for (let x = Math.floor(cx - r); x <= cx + r; x++) {
+                        if (Math.hypot(x + .5 - cx, y + .5 - cy) < r) p(`rgb(${c})`, x, y);
+                    }
+                }
+            } else {
+                const sx = w * .84, sy = h * .16;
+                for (let y = sy - 15; y < sy + 15; y++) for (let x = sx - 15; x < sx + 15; x++) {
+                    const d = Math.hypot(x + .5 - sx, y + .5 - sy);
+                    if (d < 15 && d > 9 && ((x + y) & 1)) p('rgba(255,250,230,.45)', x | 0, y | 0);
+                }
+                disc(p, sx, sy, 9, '#fff7dc');
+                g.globalAlpha = .9;
+                for (let i = 0; i < 7; i++) {
+                    const cx = rnd() * w, cy = h * (.1 + rnd() * .32);
+                    for (let k = 0; k < 5; k++) disc(p, cx + k * 7 - 14 + rnd() * 4, cy + rnd() * 3 - (k === 2 ? 4 : 0), 4 + rnd() * 5, '#ffffff');
+                    p('#e6f2ff', Math.round(cx - 18), Math.round(cy + 5), 40, 2);
+                }
+                g.globalAlpha = 1;
+            }
+
+            for (let x = 0; x < w; x++) {
+                const hy = Math.round(h * .66 + Math.sin(x * .013 + 1.3) * 8 + Math.sin(x * .047) * 4);
+                p(cfg.far, x, hy, 1, h - hy);
+            }
+
+            const gy = Math.round(h * .84);
+            const mid = cfg.mid;
+            for (let x = 0; x < w; x += 6 + (rnd() * 10 | 0)) {
+                const bh = 4 + (rnd() * 12 | 0);
+                p(mid, x, gy - bh, 5 + (rnd() * 8 | 0), bh);
+            }
+            const tower = (x, ht) => {
+                x = Math.round(x); ht = Math.round(ht);
+                p(mid, x, gy - ht, 12, ht);
+                for (let yy = gy - ht + 4; yy < gy - 6; yy += 8) { p(cfg.far, x + 2, yy, 3, 3); p(cfg.far, x + 7, yy + 4, 3, 3); }
+                p(mid, x + 12, gy - ht + 14, 20, 2);
+                p(mid, x + 12, gy - ht + 22, 20, 2);
+                p(mid, x + 30, gy - ht + 12, 2, 12);
+                p(mid, x + 5, gy - ht - 10, 2, 10);
+                p(cfg.light, x + 5, gy - ht - 12, 2, 2);
+            };
+            const rocket = (x, ht) => {
+                x = Math.round(x); ht = Math.round(ht);
+                p(mid, x, gy - ht + 10, 10, ht - 10);
+                for (let i = 0; i < 10; i++) { const inset = Math.round((10 - i) * .45); p(mid, x + inset, gy - ht + i, 10 - 2 * inset, 1); }
+                p(mid, x - 3, gy - ht + 16, 3, 8); p(mid, x + 10, gy - ht + 16, 3, 8);
+                p(mid, x - 4, gy - 16, 4, 14); p(mid, x + 10, gy - 16, 4, 14);
+            };
+            const tanks = (x, n) => {
+                for (let i = 0; i < n; i++) {
+                    const th = 18 + (rnd() * 22 | 0), tx = Math.round(x + i * 10);
+                    p(mid, tx, gy - th, 8, th);
+                    p(mid, tx + 1, gy - th - 1, 6, 1);
+                    if (name === 'night' && rnd() > .4) p(cfg.warm, tx + 3, gy - th + 5, 1, 1);
+                }
+            };
+            tower(w * .1, h * .46); rocket(w * .1 + 36, h * .5);
+            tanks(w * .32, 5); tanks(w * .55, 3);
+            tower(w * .74, h * .38); rocket(w * .74 + 34, h * .42);
+
+            p(cfg.near, 0, gy, w, h - gy);
+            p(cfg.edge, 0, gy, w, 1);
+            for (let x = 4; x < w; x += 24) p(name === 'day' ? cfg.edge : cfg.warm, x, gy + 3);
+            p(cfg.road, 0, h - 4, w, 4);
+            for (let x = 0; x < w; x += 18) p(cfg.edge, x, h - 3, 8, 1);
+        });
+    }
+
+    let cache = null;
+    function all() {
+        if (!cache) {
+            cache = {
+                car_idle: car(false), car_crashed: car(true), smoke_v3_strip: smoke(),
+                rocket_nose: nose(), rocket_body: body(), rocket_engine: engine(), hint_arrow: arrow(), light_beam: beam()
+            };
+        }
+        return cache;
+    }
+    return {all, background};
+})();
+
+/* =========================================================================
+   GAME — original Tesla Bird logic, with sprites drawn by code.
+   ========================================================================= */
+const GAME_WIDTH = 640;
+const GAME_HEIGHT = 360;
+const RENDER_SCALE = 3;
+const PIPE_WIDTH = 26;
+const MIN_PILLAR_LENGTH = 88;
+const THEMES = Object.freeze({
+    night: Object.freeze({dimColor: '#030716', dim: 0.5}),
+    dawn: Object.freeze({dimColor: '#160a2a', dim: 0.42}),
+    day: Object.freeze({dimColor: '#0a1c3c', dim: 0.38})
+});
+
+const DIFFICULTY_PRESETS = Object.freeze({
+    easy: Object.freeze({step: 200, innerColumn: 96, maxGapShift: 50}),
+    normal: Object.freeze({step: 170, innerColumn: 80, maxGapShift: 60}),
+    hard: Object.freeze({step: 145, innerColumn: 70, maxGapShift: 72})
+});
+
+const DEFAULT_SETTINGS = Object.freeze({
+    difficulty: 'normal',
+    theme: 'night',
+    step: 170,
+    innerColumn: 80,
+    maxGapShift: 60,
+    debug: false,
+    speed: 115,
+    gravity: 1100,
+    jumpVelocity: -270,
+    hitboxInset: 2,
+    pipeWidth: PIPE_WIDTH,
+    storageKey: 'cyberbird-best-score',
+    runsKey: 'cyberbird-runs',
+    themeKey: 'cyberbird-theme'
+});
+
+function createSettings(options = {}) {
+    const difficulty = options.difficulty ?? DEFAULT_SETTINGS.difficulty;
+    const preset = DIFFICULTY_PRESETS[difficulty];
+    if (!preset) throw new RangeError('FlappyBird option "difficulty" must be easy, normal or hard');
+
+    const settings = {...DEFAULT_SETTINGS, ...preset, ...options, difficulty};
+
+    if (!Object.hasOwn(THEMES, settings.theme)) {
+        throw new RangeError(`FlappyBird option "theme" must be one of ${Object.keys(THEMES).join(', ')}`);
+    }
+    validatePositiveNumber('step', settings.step);
+    validatePositiveNumber('innerColumn', settings.innerColumn);
+    validatePositiveNumber('maxGapShift', settings.maxGapShift);
+    validatePositiveNumber('speed', settings.speed);
+    validatePositiveNumber('gravity', settings.gravity);
+    validatePositiveNumber('pipeWidth', settings.pipeWidth);
+    if (settings.step < settings.pipeWidth) throw new RangeError('FlappyBird option "step" must be at least the pipe width');
+    if (settings.innerColumn > GAME_HEIGHT - MIN_PILLAR_LENGTH * 2) throw new RangeError('FlappyBird option "innerColumn" leaves no room for both pillars');
+    if (!Number.isFinite(settings.jumpVelocity) || settings.jumpVelocity >= 0) throw new TypeError('FlappyBird option "jumpVelocity" must be a finite negative number');
+    if (!Number.isFinite(settings.hitboxInset) || settings.hitboxInset < 0 || settings.hitboxInset > 6) throw new RangeError('FlappyBird option "hitboxInset" must be between 0 and 6 game pixels');
+    for (const key of ['storageKey', 'runsKey', 'themeKey']) {
+        if (typeof settings[key] !== 'string' || !settings[key].trim()) throw new TypeError(`FlappyBird option "${key}" must be a non-empty string`);
+    }
+    return Object.freeze(settings);
+}
+
+function validatePositiveNumber(name, value) {
+    if (!Number.isFinite(value) || value <= 0) throw new TypeError(`FlappyBird option "${name}" must be a finite positive number`);
+}
+
+function advanceVertical(position, velocity, gravity, deltaSeconds) {
+    const nextVelocity = velocity + gravity * deltaSeconds;
+    return {position: position + nextVelocity * deltaSeconds, velocity: nextVelocity};
+}
+
+function advanceHorizontal(position, speed, deltaSeconds) {
+    return position - speed * deltaSeconds;
+}
+
+function getBirdHitbox({x, y, width, height, inset}) {
+    const horizontalInset = Math.min(inset, width / 2);
+    const verticalInset = Math.min(inset, height / 2);
+    return {left: x + horizontalInset, right: x + width - horizontalInset, top: y + verticalInset, bottom: y + height - verticalInset};
+}
+
+function hasBoundaryCollision(hitbox, playableBottom) {
+    return hitbox.top <= 0 || hitbox.bottom >= playableBottom;
+}
+
+function findPipeCollision(hitbox, pipes, pipeWidth) {
+    for (const pipe of pipes) {
+        const overlapsHorizontally = hitbox.right >= pipe.x && hitbox.left <= pipe.x + pipeWidth;
+        if (!overlapsHorizontally) continue;
+        if (hitbox.top <= pipe.gapTop) return {pipe, section: pipe.upper};
+        if (hitbox.bottom >= pipe.gapTop + pipe.gapSize) return {pipe, section: pipe.lower};
+    }
+    return null;
+}
+
+function constrainGapTop(candidate, minimum, maximum, previousGapTop, maxShift) {
+    let allowedMinimum = minimum;
+    let allowedMaximum = maximum;
+    if (Number.isFinite(previousGapTop)) {
+        allowedMinimum = Math.max(allowedMinimum, previousGapTop - maxShift);
+        allowedMaximum = Math.min(allowedMaximum, previousGapTop + maxShift);
+    }
+    return Math.min(allowedMaximum, Math.max(allowedMinimum, candidate));
+}
+
+function getCharge(score) {
+    return Math.min(4, Math.floor(score / 10)) * 25;
+}
+
+function formatClock(seconds) {
+    const total = Math.floor(seconds);
+    return [total / 3600, (total % 3600) / 60, total % 60].map((part) => String(Math.floor(part)).padStart(2, '0')).join(':');
+}
+
+function getBrowserStorage() {
+    try { return globalThis.localStorage; } catch { return null; }
+}
+function readBestScore(key, storage = getBrowserStorage()) {
+    try { const v = Number.parseInt(storage?.getItem(key), 10); return Number.isFinite(v) && v >= 0 ? v : 0; } catch { return 0; }
+}
+function writeBestScore(key, value, storage = getBrowserStorage()) {
+    try { storage?.setItem(key, String(value)); return Boolean(storage); } catch { return false; }
+}
+function readText(key, storage = getBrowserStorage()) {
+    try { return storage?.getItem(key) ?? null; } catch { return null; }
+}
+function writeText(key, value, storage = getBrowserStorage()) {
+    try { storage?.setItem(key, value); return Boolean(storage); } catch { return false; }
+}
+function removeKey(key, storage = getBrowserStorage()) {
+    try { storage?.removeItem(key); } catch { /* ignore */ }
+}
+function isNewBestScore(score, bestScore, debug = false) {
+    return !debug && score > bestScore;
+}
+
+const SOCIAL_LINKS = [
+    {
+        id: 'github',
+        label: 'Tesla Bird source code on GitHub',
+        href: 'https://github.com/troshkinpavel/tesla-bird',
+        path: 'M2 12h2v-1H3v-1H2V9H1V8h1v1h1v1h1V9h1V8H3V7H2V4h1V2h1v1h3V2h1v2h1v3H8v1H6v1h1v3h2v-1h1v-1h1V3h-1V2H9V1H2v1H1v1H0v7h1v1h1Zm0 0'
+    },
+    {
+        id: 'x',
+        label: '@troshkin_pavel on X',
+        href: 'https://x.com/troshkin_pavel',
+        path: 'M1 3h1V2h2V1H0v1h1Zm-1 9h1v-1H0Zm1-1h1v-1H1Zm1-1h1V9H2Zm1-1h1V8H3Zm3 2h1V9H6ZM5 9h1V8H5ZM4 8h1V6H4ZM3 6h1V5H3Zm4 6h4v-1h-1v-1H9v1H7ZM2 5h1V3H2Zm6 5h1V8H8ZM7 8h1V7H7ZM6 7h1V5H6ZM5 5h1V4H5ZM4 4h1V2H4Zm3 1h1V4H7Zm1-1h1V3H8Zm1-1h1V2H9Zm1-1h1V1h-1Zm0 0'
+    }
+];
+
+function FlappyBird(elementId, options = {}) {
+    const settings = createSettings(options);
+    const container = document.getElementById(elementId);
+    if (!container) throw new Error(`Element with id "${elementId}" not found`);
+
+    const State = Object.freeze({READY: 'ready', PLAYING: 'playing', GAME_OVER: 'game-over', DESTROYED: 'destroyed'});
+    const BASE_WIDTH = GAME_WIDTH * RENDER_SCALE;
+    const BASE_HEIGHT = GAME_HEIGHT * RENDER_SCALE;
+    const FONT = '"Jersey 10", monospace';
+    const CAR = {x: 120, width: 42, height: 12, spriteHeight: 15};
+    const WHEELS = [{x: 9, frameOffset: 0}, {x: 33, frameOffset: 2}];
+    const SMOKE = {frames: 14, splashFrames: 4, width: 12, height: 34, seconds: 0.5};
+    const FIN_OVERHANG = 7;
+    const INPUT_DELAY_MS = 400;
+    const TOGGLE_THEMES = [{name: 'night', label: 'NIGHT'}, {name: 'dawn', label: 'DAWN'}, {name: 'day', label: 'DAY'}];
+    const PLAY_BUTTON = {x: 840, y: 864, width: 240, height: 96};
+    const TIMELINE_NODES = [
+        {score: 0, label: 'LIFTOFF'}, {score: 10, label: '25%'}, {score: 20, label: '50%'}, {score: 30, label: '75%'}, {score: 40, label: 'FULL'}
+    ];
+    const COLOR = {
+        text: '#f4f4f4', label: '#d8dade', secondary: '#9a9da4', red: '#e0262f', redLight: '#ff5a5f',
+        panel: '#101114', inactive: '#4a4d55', track: '#7a7d85', title: '#eaf3ff', key: '#0b0a1a', cyan: '#2fe0ff'
+    };
+
+    const images = {};
+    const gaugeCache = new Map();
+    const gaugeGeometry = createGaugeGeometry();
+
+    let state = State.READY;
+    let isLoaded = false;
+    let pipes = [];
+    let smokes = [];
+    let score = 0;
+    let bestScore = readBestScore(settings.storageKey);
+    let runs = readBestScore(settings.runsKey);
+    let isNewBest = false;
+    let screenWidth = BASE_WIDTH;
+    let screenHeight = BASE_HEIGHT;
+    let gameWidth = GAME_WIDTH;
+    let gameHeight = GAME_HEIGHT;
+    let carX = 0;
+    let carY = 0;
+    let velocityY = 0;
+    let carAngle = 0;
+    let elapsed = 0;
+    let clock = 0;
+    let hasLanded = false;
+    let gameOverShownAt = 0;
+    let frameId = 0;
+    let lastFrameTime = 0;
+
+    container.classList.add('flappy-game');
+    container.setAttribute('role', 'region');
+    container.setAttribute('aria-label', 'Cyber Bird game. Press Space to play.');
+
+    const stage = document.createElement('div');
+    stage.className = 'tb-stage';
+
+    const background = document.createElement('canvas');
+    background.className = 'tb-background';
+    background.setAttribute('aria-hidden', 'true');
+    const bgContext = background.getContext('2d');
+
+    const dim = document.createElement('div');
+    dim.className = 'tb-dim';
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'tb-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    const ctx = canvas.getContext('2d');
+
+    const status = document.createElement('output');
+    status.className = 'tb-visually-hidden';
+    status.setAttribute('aria-live', 'polite');
+    status.textContent = 'Press Space or click to start.';
+
+    const themeToggle = document.createElement('div');
+    themeToggle.className = 'tb-theme-toggle';
+    themeToggle.setAttribute('role', 'group');
+    themeToggle.setAttribute('aria-label', 'Theme');
+    themeToggle.hidden = true;
+    for (const {name, label} of TOGGLE_THEMES) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.theme = name;
+        button.textContent = label;
+        themeToggle.append(button);
+    }
+    themeToggle.addEventListener('click', handleThemeClick);
+
+    const socialLinks = document.createElement('nav');
+    socialLinks.className = 'tb-social';
+    socialLinks.setAttribute('aria-label', 'Links');
+    socialLinks.hidden = true;
+    for (const {label, href, path} of SOCIAL_LINKS) {
+        const link = document.createElement('a');
+        link.href = href;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.setAttribute('aria-label', label);
+        link.title = label;
+        link.innerHTML = `<svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="${path}"/></svg>`;
+        socialLinks.append(link);
+    }
+    socialLinks.addEventListener('click', (event) => {
+        if (event.detail > 0) event.target.closest('a')?.blur();
+    });
+
+    const savedTheme = readText(settings.themeKey);
+    const browserTheme = window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'day' : settings.theme;
+    let themeName = options.theme ?? (Object.hasOwn(THEMES, savedTheme ?? '') ? savedTheme : browserTheme);
+
+    stage.append(background, dim, canvas, themeToggle, socialLinks);
+    container.replaceChildren(stage, status);
+
+    container.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    const resizeObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(fitStage) : null;
+    if (resizeObserver) resizeObserver.observe(container);
+    else window.addEventListener('resize', fitStage);
+    fitStage();
+    applyTheme(themeName);
+
+    loadAssets().then(() => {
+        if (state === State.DESTROYED) return;
+        isLoaded = true;
+        showStartScreen();
+        lastFrameTime = performance.now();
+        frameId = requestAnimationFrame(gameLoop);
+    });
+
+    return Object.freeze({
+        start: startGame,
+        restart: showStartScreen,
+        destroy,
+        getState: () => state,
+        getScore: () => score,
+        getBestScore: () => bestScore,
+        getRuns: () => runs,
+        getElapsed: () => elapsed,
+        getDifficulty: () => settings.difficulty,
+        getTheme: () => themeName,
+        setTheme: (name) => {
+            if (!Object.hasOwn(THEMES, name) || name === themeName) return;
+            applyTheme(name);
+            writeText(settings.themeKey, name);
+        }
+    });
+
+    function loadAssets() {
+        Object.assign(images, Sprites.all());
+        const fontLoad = document.fonts?.load(`56px ${FONT}`).catch(() => null);
+        return Promise.all([fontLoad]);
+    }
+
+    function fitStage() {
+        const windowWidth = container.clientWidth || BASE_WIDTH;
+        const windowHeight = container.clientHeight || BASE_HEIGHT;
+        const isWider = windowWidth / windowHeight > BASE_WIDTH / BASE_HEIGHT;
+        const snap = (value) => Math.round(value / RENDER_SCALE) * RENDER_SCALE;
+
+        screenWidth = isWider ? snap(BASE_HEIGHT * windowWidth / windowHeight) : BASE_WIDTH;
+        screenHeight = isWider ? BASE_HEIGHT : snap(BASE_WIDTH * windowHeight / windowWidth);
+        gameWidth = screenWidth / RENDER_SCALE;
+        gameHeight = screenHeight / RENDER_SCALE;
+
+        stage.style.width = `${screenWidth}px`;
+        stage.style.height = `${screenHeight}px`;
+        if (canvas.width !== screenWidth) canvas.width = screenWidth;
+        if (canvas.height !== screenHeight) canvas.height = screenHeight;
+        if (background.width !== gameWidth || background.height !== gameHeight) {
+            background.width = gameWidth;
+            background.height = gameHeight;
+            paintBackground();
+        }
+        const scale = Math.max(windowWidth / screenWidth, windowHeight / screenHeight);
+        stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
+
+        if (state === State.READY) generatePipes();
+        if (hasLanded) carY = getRestY();
+    }
+
+    function paintBackground() {
+        if (!themeName) return;
+        bgContext.drawImage(Sprites.background(themeName, gameWidth, gameHeight), 0, 0);
+    }
+
+    function getStartX() { return (gameWidth - CAR.width) / 2; }
+    function getStartY() { return gameHeight / 2 - 10; }
+    function getRestY() { return gameHeight - 13; }
+    function getMenuOffset() { return {x: (screenWidth - BASE_WIDTH) / 2, y: (screenHeight - BASE_HEIGHT) / 2}; }
+
+    function showStartScreen() {
+        if (state === State.DESTROYED) return;
+        state = State.READY;
+        container.dataset.gameState = state;
+        score = 0;
+        elapsed = 0;
+        velocityY = 0;
+        carAngle = 0;
+        carX = getStartX();
+        carY = getStartY();
+        smokes = [];
+        isNewBest = false;
+        hasLanded = false;
+        generatePipes();
+        status.textContent = 'Press Space or click to start.';
+        themeToggle.hidden = false;
+        socialLinks.hidden = false;
+    }
+
+    function applyTheme(name) {
+        const theme = THEMES[name];
+        themeName = name;
+        paintBackground();
+        dim.style.background = theme.dimColor;
+        dim.style.opacity = String(theme.dim);
+        for (const button of themeToggle.children) {
+            button.setAttribute('aria-pressed', String(button.dataset.theme === name));
+        }
+    }
+
+    function handleThemeClick(event) {
+        const button = event.target.closest('button');
+        if (!button) return;
+        applyTheme(button.dataset.theme);
+        writeText(settings.themeKey, themeName);
+        settings.onThemeChange?.(themeName);
+        if (event.detail > 0) button.blur();
+    }
+
+    function startGame() {
+        if (state !== State.READY || !isLoaded) return;
+        themeToggle.hidden = true;
+        socialLinks.hidden = true;
+        state = State.PLAYING;
+        container.dataset.gameState = state;
+        runs = readBestScore(settings.runsKey) + 1;
+        writeBestScore(settings.runsKey, runs);
+        status.textContent = '';
+        settings.onRunStart?.();
+        boost();
+    }
+
+    function boost() {
+        velocityY = settings.jumpVelocity;
+        smokes.push({age: 0});
+    }
+
+    function crash() {
+        state = State.GAME_OVER;
+        container.dataset.gameState = state;
+        velocityY = Math.max(0, velocityY);
+        hasLanded = false;
+        isNewBest = isNewBestScore(score, bestScore, settings.debug);
+        if (isNewBest) {
+            bestScore = score;
+            writeBestScore(settings.storageKey, bestScore);
+        }
+    }
+
+    function land() {
+        carY = getRestY();
+        velocityY = 0;
+        hasLanded = true;
+        gameOverShownAt = performance.now();
+        status.textContent = `Game over. Score ${score}, best ${bestScore}. Press Space to play again.`;
+        settings.onRunEnd?.({score, bestScore, isNewBest, difficulty: settings.difficulty});
+    }
+
+    function canRestart() {
+        return state === State.GAME_OVER && hasLanded && performance.now() - gameOverShownAt >= INPUT_DELAY_MS;
+    }
+
+    function generatePipes() {
+        pipes = [];
+        const count = Math.ceil(gameWidth / settings.step) + 2;
+        for (let index = 0; index < count; index += 1) {
+            const pipe = {x: gameWidth + FIN_OVERHANG + settings.step * index, gapTop: 0, gapSize: settings.innerColumn};
+            randomizePipe(pipe, pipes[index - 1]);
+            pipes.push(pipe);
+        }
+    }
+
+    function randomizePipe(pipe, previousPipe) {
+        const minimum = MIN_PILLAR_LENGTH;
+        const maximum = gameHeight - MIN_PILLAR_LENGTH - settings.innerColumn;
+        pipe.gapTop = constrainGapTop(minimum + Math.random() * (maximum - minimum), minimum, maximum, previousPipe?.gapTop, settings.maxGapShift);
+        pipe.scored = false;
+        pipe.collided = false;
+    }
+
+    function recyclePipes() {
+        let farthest = pipes.reduce((best, pipe) => (pipe.x > best.x ? pipe : best));
+        for (const pipe of pipes) {
+            if (pipe.x + PIPE_WIDTH + FIN_OVERHANG >= 0) continue;
+            pipe.x = farthest.x + settings.step;
+            randomizePipe(pipe, farthest);
+            farthest = pipe;
+        }
+    }
+
+    function gameLoop(timestamp) {
+        if (state === State.DESTROYED) return;
+        const deltaSeconds = Math.min((timestamp - lastFrameTime) / 1000, 0.032);
+        lastFrameTime = timestamp;
+        clock += deltaSeconds;
+        update(deltaSeconds);
+        render();
+        frameId = requestAnimationFrame(gameLoop);
+    }
+
+    function update(deltaSeconds) {
+        smokes.forEach((smoke) => { smoke.age += deltaSeconds; });
+        smokes = smokes.filter((smoke) => smoke.age < SMOKE.seconds);
+        carAngle += (getTargetAngle() - carAngle) * Math.min(1, deltaSeconds * 6);
+
+        if (state === State.READY) {
+            carX = getStartX();
+            carY = getStartY() + Math.sin(clock * 3) * 2;
+            return;
+        }
+
+        if (state === State.GAME_OVER) {
+            if (hasLanded) return;
+            const motion = advanceVertical(carY, velocityY, settings.gravity, deltaSeconds);
+            carY = motion.position;
+            velocityY = motion.velocity;
+            if (carY >= getRestY()) land();
+            return;
+        }
+
+        elapsed += deltaSeconds;
+        carX += (CAR.x - carX) * Math.min(1, deltaSeconds * 6);
+        const motion = advanceVertical(carY, velocityY, settings.gravity, deltaSeconds);
+        carY = motion.position;
+        velocityY = motion.velocity;
+
+        for (const pipe of pipes) pipe.x = advanceHorizontal(pipe.x, settings.speed, deltaSeconds);
+        recyclePipes();
+
+        const hitbox = getBirdHitbox({x: carX, y: carY, width: CAR.width, height: CAR.height, inset: settings.hitboxInset});
+
+        if (hasBoundaryCollision(hitbox, gameHeight)) {
+            crash();
+            if (carY >= getRestY()) land();
+            return;
+        }
+
+        const collision = findPipeCollision(hitbox, pipes, PIPE_WIDTH);
+        if (collision && !settings.debug) {
+            crash();
+            return;
+        }
+        if (collision) collision.pipe.collided = true;
+
+        for (const pipe of pipes) {
+            if (pipe.scored || pipe.x + PIPE_WIDTH >= carX) continue;
+            pipe.scored = true;
+            if (!pipe.collided) score += 1;
+        }
+    }
+
+    function render() {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.imageSmoothingEnabled = false;
+
+        if (state !== State.READY) drawPipes();
+        drawCar();
+
+        const menu = getMenuOffset();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        if (state === State.READY) {
+            ctx.translate(menu.x, menu.y);
+            drawStartScreen();
+        } else if (state === State.GAME_OVER && hasLanded) {
+            drawGameOverScreen();
+        } else {
+            drawHud();
+        }
+    }
+
+    function drawPipes() {
+        ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
+        for (const pipe of pipes) {
+            if (pipe.x > gameWidth + FIN_OVERHANG) continue;
+            const x = Math.round(pipe.x * RENDER_SCALE) / RENDER_SCALE;
+            drawPillar(x, pipe.gapTop + pipe.gapSize);
+            ctx.save();
+            ctx.translate(0, gameHeight);
+            ctx.scale(1, -1);
+            drawPillar(x, gameHeight - pipe.gapTop);
+            ctx.restore();
+
+            if (settings.debug) {
+                ctx.strokeStyle = pipe.collided ? COLOR.red : '#4fd8ff';
+                ctx.lineWidth = 1 / RENDER_SCALE;
+                ctx.strokeRect(x, 0, PIPE_WIDTH, pipe.gapTop);
+                ctx.strokeRect(x, pipe.gapTop + pipe.gapSize, PIPE_WIDTH, gameHeight);
+            }
+        }
+    }
+
+    function drawPillar(x, top) {
+        const {rocket_nose: nose, rocket_body: body, rocket_engine: engine} = images;
+        const engineTop = gameHeight - engine.height;
+        for (let y = top + nose.height; y < engineTop; y += body.height) ctx.drawImage(body, x, y);
+        ctx.drawImage(engine, x - FIN_OVERHANG, engineTop);
+        ctx.drawImage(nose, x - FIN_OVERHANG, top);
+    }
+
+    function drawCar() {
+        const centerX = CAR.width / 2;
+        const centerY = CAR.spriteHeight / 2;
+        ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
+        ctx.translate(carX + centerX, carY + centerY);
+        ctx.rotate(carAngle * Math.PI / 180);
+        ctx.translate(-centerX, -centerY);
+
+        for (const smoke of smokes) {
+            const frame = Math.floor(smoke.age / SMOKE.seconds * SMOKE.frames);
+            for (const wheel of WHEELS) {
+                const wheelFrame = frame + wheel.frameOffset;
+                if (wheelFrame < SMOKE.frames) drawSmokeFrame(wheel, wheelFrame);
+            }
+        }
+
+        if (state === State.READY) {
+            const frame = Math.floor(clock / SMOKE.seconds * SMOKE.frames);
+            for (const wheel of WHEELS) drawSmokeFrame(wheel, (frame + wheel.frameOffset) % SMOKE.splashFrames);
+        }
+
+        ctx.drawImage(state === State.GAME_OVER ? images.car_crashed : images.car_idle, 0, 0);
+        if (state !== State.GAME_OVER) ctx.drawImage(images.light_beam, 41, 5);
+
+        if (settings.debug) {
+            const inset = settings.hitboxInset;
+            ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
+            ctx.strokeStyle = '#4fd8ff';
+            ctx.lineWidth = 1 / RENDER_SCALE;
+            ctx.strokeRect(carX + inset, carY + inset, CAR.width - inset * 2, CAR.height - inset * 2);
+        }
+    }
+
+    function drawSmokeFrame(wheel, frame) {
+        ctx.drawImage(images.smoke_v3_strip, frame * SMOKE.width, 0, SMOKE.width, SMOKE.height, wheel.x - SMOKE.width / 2, 10, SMOKE.width, SMOKE.height);
+    }
+
+    function getTargetAngle() {
+        if (state === State.READY) return 0;
+        if (hasLanded) return 4;
+        if (velocityY < 0) return -12;
+        return -12 + 42 * Math.min(1, velocityY / 500);
+    }
+
+    function drawStartScreen() {
+        drawText('CYBER', BASE_WIDTH / 2, 150, 290, COLOR.title, {align: 'center', spacing: 16, shadow: 9});
+        setFont(290, 16);
+        const titleRight = BASE_WIDTH / 2 + (ctx.measureText('CYBER').width - 16) / 2;
+        ctx.save();
+        ctx.translate(titleRight + 70, 318);
+        ctx.rotate(-6 * Math.PI / 180);
+        const birdFill = ctx.createLinearGradient(0, 0, 0, 140);
+        birdFill.addColorStop(0, '#8af3ff');
+        birdFill.addColorStop(.45, '#2fc8ff');
+        birdFill.addColorStop(1, '#2d6bff');
+        drawText('BIRD', 0, 0, 150, birdFill, {align: 'right', spacing: 8, shadow: 6});
+        ctx.restore();
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(images.hint_arrow, 946, 600, 27, 24);
+        const size = 56;
+        const {ascent, descent} = getFontMetrics(size);
+        setFont(size, 3);
+        const keyHeight = ascent + descent + 8;
+        const parts = [{text: 'CLICK', key: true}, {text: 'OR', key: false}, {text: 'SPACE', key: true}]
+            .map((part) => ({...part, width: ctx.measureText(part.text).width + (part.key ? 56 : 0)}));
+        const totalWidth = parts.reduce((sum, part) => sum + part.width, 0) + 28 * (parts.length - 1);
+        let x = BASE_WIDTH / 2 - totalWidth / 2;
+        const baseline = 656 + 4 + ascent;
+
+        for (const part of parts) {
+            if (part.key) {
+                fillRect(x, 656, part.width, keyHeight, COLOR.title);
+                fillRect(x + 4, 660, part.width - 8, keyHeight - 8, COLOR.key);
+                fillText(part.text, x + 28, baseline, COLOR.title);
+            } else {
+                fillText(part.text, x + 4, baseline + 4, '#000');
+                fillText(part.text, x, baseline, COLOR.title);
+            }
+            x += part.width + 28;
+        }
+    }
+
+    function drawHud() {
+        const bandAlphas = [0.15, 0.35, 0.55, 0.7, 0.8];
+        bandAlphas.forEach((alpha, index) => {
+            ctx.globalAlpha = alpha;
+            fillRect(0, screenHeight - 300 + index * 60, screenWidth, 60, '#000');
+        });
+        ctx.globalAlpha = 1;
+        const extraY = screenHeight - BASE_HEIGHT;
+        const extraX = screenWidth - BASE_WIDTH;
+        drawClock(72, 918 + extraY, 'left');
+        drawText(`CYBER BIRD · RUN ${String(runs).padStart(2, '0')}`, 160, 1010 + extraY, 34, COLOR.label, {spacing: 3});
+        drawTimeline({left: 650 + extraX / 2, top: 913 + extraY, width: 640, start: 20, step: 15, isFinal: false});
+
+        const altitude = Math.max(0, Math.round(gameHeight - (carY + CAR.height)));
+        const hudGauge = {scale: 3, label: [40, 30], value: [66, 76], unit: [132, 26]};
+        drawGauge(1440 + extraX, 856 + extraY, hudGauge, (score % 10) / 10, COLOR.text, 'SCORE', score, 'PTS');
+        drawGauge(1440 + 192 + 40 + extraX, 856 + extraY, hudGauge, altitude / gameHeight, COLOR.text, 'ALTITUDE', altitude, 'M');
+    }
+
+    function drawGameOverScreen() {
+        ctx.globalAlpha = 0.4;
+        fillRect(0, 0, screenWidth, screenHeight, '#000');
+        ctx.globalAlpha = 1;
+        const menu = getMenuOffset();
+        ctx.translate(menu.x, menu.y);
+
+        drawText('GAME OVER', BASE_WIDTH / 2, 96, 200, COLOR.title, {align: 'center', spacing: 12, shadow: 8});
+
+        const charge = getCharge(score);
+        const overGauge = {scale: 4, label: [54, 38], value: [88, 100], unit: [176, 32]};
+        drawGauge(512, 316, overGauge, charge / 100, COLOR.red, 'CHARGE', charge, '%');
+        drawGauge(512 + 320, 316, overGauge, score / 40, COLOR.text, 'SCORE', score, 'PTS');
+        drawGauge(512 + 640, 316, overGauge, bestScore / 40, COLOR.text, 'BEST', bestScore, 'PTS');
+        if (isNewBest) drawText('NEW BEST', 512 + 640 + 128, 560, 34, COLOR.redLight, {align: 'center', spacing: 3});
+
+        drawTimeline({left: 440, top: 584, width: 1040, start: 60, step: 23, isFinal: true});
+        drawClock(BASE_WIDTH / 2, 722, 'center');
+        drawPlayButton();
+    }
+
+    function drawPlayButton() {
+        const {x, y, width, height} = PLAY_BUTTON;
+        fillRect(x + 6, y + 6, width, height, '#000');
+        fillRect(x, y, width, height, COLOR.title);
+        fillRect(x + 6, y + 6, width - 12, height - 12, COLOR.key);
+        const tx = x + 40, ty = y + 28;
+        for (let i = 0; i < 10; i++) fillRect(tx + i * 4, ty + i * 2, 4, 40 - i * 4, COLOR.red);
+        drawText('PLAY', x + 148, y + 16, 64, COLOR.title, {align: 'center', spacing: 4});
+    }
+
+    function drawClock(x, top, align) {
+        const time = formatClock(elapsed);
+        const baseline = getBaseline(top, 120, 0.8);
+        setFont(64, 0);
+        const prefixWidth = ctx.measureText('T+').width;
+        setFont(120, 4);
+        const timeWidth = ctx.measureText(time).width;
+        const left = align === 'center' ? x - (prefixWidth + 14 + timeWidth) / 2 : x;
+        setFont(64, 0);
+        fillText('T+', left, baseline, COLOR.secondary);
+        setFont(120, 4);
+        fillText(time, left + prefixWidth + 14, baseline, COLOR.text);
+    }
+
+    function drawTimeline({left, top, width, start, step, isFinal}) {
+        const scoreX = (value) => left + start + Math.min(40, value) * step;
+        const currentX = scoreX(score);
+
+        fillRect(left, top + 48, width, 3, COLOR.track);
+        fillRect(left, top + 48, currentX - left, 3, COLOR.text);
+
+        for (const node of TIMELINE_NODES) {
+            const x = scoreX(node.score);
+            const isReached = score >= node.score;
+            fillRect(x - 9, top + 41, 18, 18, isReached ? COLOR.text : COLOR.track);
+            fillRect(x - 6, top + 44, 12, 12, COLOR.panel);
+            if (isReached) fillRect(x - 3, top + 47, 6, 6, COLOR.text);
+        }
+
+        if (isFinal) fillRect(currentX - 9, top + 32, 18, 35, COLOR.red);
+        else fillRect(currentX - 3, top + 36, 6, 27, COLOR.red);
+
+        TIMELINE_NODES.forEach((node, index) => {
+            const x = scoreX(node.score);
+            const isAbove = index % 2 === 0 || (isFinal && Math.abs(x - currentX) < 140);
+            const color = score >= node.score ? COLOR.label : COLOR.secondary;
+            drawText(node.label, x, top + (isAbove ? 0 : 76), 34, color, {align: 'center', spacing: 2});
+        });
+
+        if (isFinal) drawText(`CRASH · ${score}`, currentX, top + 76, 34, COLOR.redLight, {align: 'center', spacing: 2});
+    }
+
+    function drawGauge(x, y, layout, fraction, fill, label, value, unit) {
+        const {scale} = layout;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(getGaugeImage(fraction, fill), x, y, 64 * scale, 56 * scale);
+        const centerX = x + 32 * scale;
+        drawText(label, centerX, y + layout.label[0], layout.label[1], COLOR.label, {align: 'center', spacing: 2});
+        drawText(String(value), centerX, y + layout.value[0], layout.value[1], COLOR.text, {align: 'center', spacing: 2});
+        drawText(unit, centerX, y + layout.unit[0], layout.unit[1], COLOR.secondary, {align: 'center', spacing: 2});
+    }
+
+    function createGaugeGeometry() {
+        const pixels = [];
+        for (let y = 0; y < 56; y += 1) {
+            for (let x = 0; x < 64; x += 1) {
+                const dx = x + 0.5 - 32;
+                const dy = y + 0.5 - 32;
+                const distance = Math.hypot(dx, dy);
+                const angle = (Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360;
+                const sweep = ((angle - 135 + 360) % 360) / 270;
+                let kind = null;
+                if (distance < 26) kind = 'disc';
+                else if (distance >= 31 && distance < 32.5) kind = 'halo';
+                else if (distance >= 27 && distance < 30 && sweep <= 1) kind = sweep <= 0.025 ? 'tick' : 'ring';
+                else if (distance >= 23 && distance < 27 && sweep <= 0.025) kind = 'tick';
+                pixels.push({kind, sweep});
+            }
+        }
+        return pixels;
+    }
+
+    function getGaugeImage(fraction, fill) {
+        const clamped = Math.min(1, Math.max(0, fraction));
+        const key = `${fill}:${clamped.toFixed(3)}`;
+        if (gaugeCache.has(key)) return gaugeCache.get(key);
+
+        const gauge = document.createElement('canvas');
+        gauge.width = 64;
+        gauge.height = 56;
+        const gaugeContext = gauge.getContext('2d');
+        const data = gaugeContext.createImageData(64, 56);
+        const colors = {
+            disc: [0, 0, 0, 128], halo: [0, 0, 0, 115],
+            tick: [...hexToRgb(COLOR.text), 255], fill: [...hexToRgb(fill), 255], empty: [...hexToRgb(COLOR.inactive), 255]
+        };
+        gaugeGeometry.forEach(({kind, sweep}, index) => {
+            if (!kind) return;
+            const color = kind === 'ring' ? (sweep <= clamped ? colors.fill : colors.empty) : colors[kind];
+            data.data.set(color, index * 4);
+        });
+        gaugeContext.putImageData(data, 0, 0);
+        gaugeCache.set(key, gauge);
+        return gauge;
+    }
+
+    function hexToRgb(hex) {
+        const value = Number.parseInt(hex.slice(1), 16);
+        return [value >> 16, (value >> 8) & 255, value & 255];
+    }
+
+    function drawText(text, x, top, size, color, {align = 'left', spacing = 0, shadow = 0, lineHeight = 1} = {}) {
+        const baseline = getBaseline(top, size, lineHeight);
+        setFont(size, spacing, align);
+        if (shadow) fillText(text, x + shadow, baseline + shadow, '#000');
+        fillText(text, x, baseline, color);
+        ctx.textAlign = 'left';
+    }
+
+    function getBaseline(top, size, lineHeight) {
+        const {ascent, descent} = getFontMetrics(size);
+        return top + (size * lineHeight - (ascent + descent)) / 2 + ascent;
+    }
+
+    function getFontMetrics(size) {
+        setFont(size, 0);
+        const metrics = ctx.measureText('M');
+        return {ascent: metrics.fontBoundingBoxAscent ?? size * 0.8, descent: metrics.fontBoundingBoxDescent ?? size * 0.2};
+    }
+
+    function setFont(size, spacing, align = 'left') {
+        ctx.font = `${size}px ${FONT}`;
+        ctx.letterSpacing = `${spacing}px`;
+        ctx.textAlign = align;
+        ctx.textBaseline = 'alphabetic';
+    }
+
+    function fillText(text, x, y, color) { ctx.fillStyle = color; ctx.fillText(text, x, y); }
+    function fillRect(x, y, width, height, color) { ctx.fillStyle = color; ctx.fillRect(x, y, width, height); }
+
+    function handlePointerDown(event) {
+        if (event.button !== 0 || event.target.closest?.('.tb-theme-toggle, .tb-social')) return;
+        event.preventDefault();
+        container.focus({preventScroll: true});
+
+        if (state === State.READY) startGame();
+        else if (state === State.PLAYING) boost();
+        else if (canRestart() && isOnPlayButton(event)) showStartScreen();
+    }
+
+    function handleKeyDown(event) {
+        const gameKeys = ['ArrowUp', 'KeyW', 'Space'];
+        if (!gameKeys.includes(event.code)) return;
+        const target = event.target;
+        if (target?.closest?.('.tb-theme-toggle, .tb-social')) return;
+        if (!container.contains(target) && target?.closest?.('button, a, input, select, textarea, [contenteditable="true"]')) return;
+        if (typeof settings.isKeyActive === 'function' && !settings.isKeyActive()) return;
+        event.preventDefault();
+        if (event.repeat) return;
+
+        if (state === State.READY) startGame();
+        else if (state === State.PLAYING) boost();
+        else if (canRestart()) showStartScreen();
+    }
+
+    function isOnPlayButton(event) {
+        const rect = canvas.getBoundingClientRect();
+        const menu = getMenuOffset();
+        const x = (event.clientX - rect.left) * screenWidth / rect.width - menu.x;
+        const y = (event.clientY - rect.top) * screenHeight / rect.height - menu.y;
+        return x >= PLAY_BUTTON.x && x <= PLAY_BUTTON.x + PLAY_BUTTON.width && y >= PLAY_BUTTON.y && y <= PLAY_BUTTON.y + PLAY_BUTTON.height;
+    }
+
+    function destroy() {
+        if (state === State.DESTROYED) return;
+        state = State.DESTROYED;
+        container.dataset.gameState = state;
+        cancelAnimationFrame(frameId);
+        resizeObserver?.disconnect();
+        if (!resizeObserver) window.removeEventListener('resize', fitStage);
+        container.removeEventListener('pointerdown', handlePointerDown);
+        document.removeEventListener('keydown', handleKeyDown);
+        container.classList.remove('flappy-game');
+        container.removeAttribute('role');
+        container.removeAttribute('aria-label');
+        container.replaceChildren();
+    }
+}
+
+const CyberBird = FlappyBird;
+
+/* =========================================================================
+   PAGE
+   ========================================================================= */
+(() => {
+    const STORE = {
+        theme: 'cyberbird-theme',
+        runs: 'cyberbird-runs',
+        diff: 'cyberbird-difficulty',
+        best: (d) => d === 'normal' ? 'cyberbird-best-score' : `cyberbird-best-score-${d}`
+    };
+    const DIFFS = ['easy', 'normal', 'hard'];
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const root = document.documentElement;
+    const $ = (s, el = document) => el.querySelector(s);
+    const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+
+    let theme = readText(STORE.theme);
+    if (!Object.hasOwn(THEMES, theme ?? '')) theme = matchMedia('(prefers-color-scheme: light)').matches ? 'day' : 'night';
+    let difficulty = readText(STORE.diff);
+    if (!Object.hasOwn(DIFFICULTY_PRESETS, difficulty ?? '')) difficulty = 'normal';
+    let game = null;
+    let gameVisible = false;
+
+    /* icons */
+    for (const el of $$('[data-icon]')) {
+        const link = SOCIAL_LINKS.find((l) => l.id === el.dataset.icon);
+        el.innerHTML = `<svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="${link.path}"/></svg>`;
+    }
+
+    /* sprite canvases */
+    const S = Sprites.all();
+    for (const c of $$('canvas[data-sprite="car"]')) c.getContext('2d').drawImage(S.car_idle, 0, 0);
+    for (const c of $$('canvas[data-sky]')) c.getContext('2d').drawImage(Sprites.background(c.dataset.sky, 160, 90), 0, 0);
+
+    /* theme */
+    function setTheme(name, fromGame = false) {
+        theme = name;
+        root.dataset.theme = name;
+        writeText(STORE.theme, name);
+        for (const b of $$('[data-set-theme]')) b.setAttribute('aria-pressed', String(b.dataset.setTheme === name));
+        if (!fromGame) game?.setTheme(name);
+        sky.tint(name);
+    }
+    for (const b of $$('[data-set-theme]')) b.addEventListener('click', () => setTheme(b.dataset.setTheme));
+
+    /* game */
+    function mountGame() {
+        game?.destroy();
+        game = FlappyBird('game', {
+            difficulty,
+            theme,
+            storageKey: STORE.best(difficulty),
+            runsKey: STORE.runs,
+            themeKey: STORE.theme,
+            isKeyActive: () => gameVisible || Boolean(document.fullscreenElement),
+            onThemeChange: (name) => setTheme(name, true),
+            onRunStart: refreshStats,
+            onRunEnd: refreshStats
+        });
+        for (const b of $$('[data-diff]')) b.setAttribute('aria-pressed', String(b.dataset.diff === difficulty));
+        $('#tm-mode').textContent = difficulty;
+        renderModes();
+        refreshStats();
+    }
+    function setDifficulty(d) {
+        if (d === difficulty) return;
+        difficulty = d;
+        writeText(STORE.diff, d);
+        mountGame();
+    }
+    for (const b of $$('[data-diff]')) b.addEventListener('click', () => setDifficulty(b.dataset.diff));
+
+    function launch() {
+        $('#play').scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'center'});
+        setTimeout(() => $('#game').focus({preventScroll: true}), reduceMotion ? 0 : 450);
+    }
+    document.addEventListener('click', (e) => {
+        const fly = e.target.closest('[data-fly]');
+        if (fly) { setDifficulty(fly.dataset.fly); launch(); return; }
+        if (e.target.closest('[data-launch]')) launch();
+    });
+
+    new IntersectionObserver(([entry]) => { gameVisible = entry.intersectionRatio >= 0.5; }, {threshold: [0, .5, 1]}).observe($('#screen'));
+
+    const fsBtn = $('#fullscreen');
+    fsBtn.addEventListener('click', () => {
+        if (document.fullscreenElement) document.exitFullscreen?.();
+        else $('#screen').requestFullscreen?.().then(() => $('#game').focus({preventScroll: true})).catch(() => {});
+    });
+    document.addEventListener('fullscreenchange', () => { fsBtn.textContent = document.fullscreenElement ? 'Exit' : 'Fullscreen'; });
+    if (!document.fullscreenEnabled) fsBtn.hidden = true;
+
+    /* telemetry */
+    const STATUS = {ready: 'STANDBY', playing: 'IN FLIGHT', 'game-over': 'TOUCHDOWN'};
+    const tm = {score: $('#tm-score'), best: $('#tm-best'), charge: $('#tm-charge'), status: $('#tm-status'), clock: $('#clock')};
+    const setText = (el, v) => { if (el.textContent !== v) el.textContent = v; };
+    setInterval(() => {
+        if (!game) return;
+        const s = game.getScore();
+        setText(tm.score, String(s));
+        setText(tm.best, String(game.getBestScore()));
+        setText(tm.charge, `${getCharge(s)}%`);
+        setText(tm.status, STATUS[game.getState()] ?? '—');
+        setText(tm.clock, `T+${formatClock(game.getElapsed())}`);
+    }, 100);
+
+    /* stats */
+    function bests() { return Object.fromEntries(DIFFS.map((d) => [d, readBestScore(STORE.best(d))])); }
+    function refreshStats() {
+        const b = bests();
+        for (const d of DIFFS) $(`#log-${d}`).textContent = b[d];
+        $('#log-runs').textContent = readBestScore(STORE.runs);
+        const peak = Math.max(...DIFFS.map((d) => getCharge(b[d])));
+        $('#log-charge').textContent = `${peak}%`;
+        $('#gauge').style.setProperty('--v', String(peak / 100));
+        $('#gauge-val').textContent = peak;
+        const top = Math.max(...Object.values(b));
+        for (const row of $$('#ladder [data-at]')) row.classList.toggle('on', top >= Number(row.dataset.at));
+        for (const d of DIFFS) { const el = $(`[data-mode-best="${d}"]`); if (el) el.textContent = b[d]; }
+    }
+    $('#reset-log').addEventListener('click', () => {
+        if (!confirm('Clear best scores and run count stored on this device?')) return;
+        for (const d of DIFFS) removeKey(STORE.best(d));
+        removeKey(STORE.runs);
+        mountGame();
+    });
+
+    /* modes */
+    function renderModes() {
+        const max = {step: 200, innerColumn: 96, maxGapShift: 72};
+        const meter = (label, value, key) => {
+            const on = Math.round(value / max[key] * 12);
+            return `<div><div class="meter-row"><span>${label}</span><b>${value}px</b></div><div class="cells">${Array.from({length: 12}, (_, i) => `<i class="${i < on ? 'on' : ''}"></i>`).join('')}</div></div>`;
+        };
+        const copy = {easy: 'Roomy gaps, lazy drift. Learn the jets.', normal: 'The original tuning. Honest and tight.', hard: 'Packed stacks, wild drift. Earn it.'};
+        $('#mode-cards').innerHTML = DIFFS.map((d) => {
+            const p = DIFFICULTY_PRESETS[d];
+            const current = d === difficulty;
+            return `<article class="card mode${current ? ' current' : ''}">
+                <div class="mode-top"><div class="name">${d.toUpperCase()}</div><span class="badge">${current ? 'Selected' : 'Preset'}</span></div>
+                <p>${copy[d]}</p>
+                <div class="meters">${meter('Rocket spacing', p.step, 'step')}${meter('Gap height', p.innerColumn, 'innerColumn')}${meter('Gap drift', p.maxGapShift, 'maxGapShift')}</div>
+                <div class="mode-foot"><small>Your best<b data-mode-best="${d}">0</b></small><button class="btn ${current ? 'btn-primary' : 'btn-ghost'}" type="button" data-fly="${d}">Fly ${d}</button></div>
+            </article>`;
+        }).join('');
+        bindSpotlight();
+    }
+
+    /* card spotlight */
+    function bindSpotlight() {
+        for (const card of $$('.card')) {
+            if (card.dataset.spot) continue;
+            card.dataset.spot = '1';
+            card.addEventListener('pointermove', (e) => {
+                const r = card.getBoundingClientRect();
+                card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+                card.style.setProperty('--my', `${e.clientY - r.top}px`);
+            });
+        }
+    }
+
+    /* reveal */
+    const revealer = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); revealer.unobserve(e.target); }
+    }, {threshold: .12, rootMargin: '0px 0px -40px 0px'});
+    $$('.reveal').forEach((el) => revealer.observe(el));
+
+    /* mini scenes */
+    const miniCar = $('#mini-car'), miniRocket = $('#mini-rocket');
+    const mc = miniCar.getContext('2d'), mr = miniRocket.getContext('2d');
+    const minis = new Set();
+    const miniObs = new IntersectionObserver((entries) => {
+        for (const e of entries) e.isIntersecting ? minis.add(e.target) : minis.delete(e.target);
+    });
+    miniObs.observe(miniCar); miniObs.observe(miniRocket);
+
+    function drawStack(g, x, gapTop, gapBottom, h) {
+        const {rocket_nose: n, rocket_body: b, rocket_engine: e} = S;
+        const pillar = (top) => {
+            const et = h - e.height;
+            for (let y = top + n.height; y < et; y += b.height) g.drawImage(b, x, y);
+            g.drawImage(e, x - 7, et);
+            g.drawImage(n, x - 7, top);
+        };
+        pillar(gapBottom);
+        g.save(); g.translate(0, h); g.scale(1, -1); pillar(h - gapTop); g.restore();
+    }
+    function drawSmoke(g, cx, cy, frame) {
+        for (const w of [{x: 9, o: 0}, {x: 33, o: 2}]) {
+            const f = (frame + w.o) % 4;
+            g.drawImage(S.smoke_v3_strip, f * 12, 0, 12, 34, cx + w.x - 6, cy + 10, 12, 34);
+        }
+    }
+    function miniFrame(t) {
+        if (minis.has(miniCar)) {
+            mc.imageSmoothingEnabled = false;
+            mc.clearRect(0, 0, 120, 68);
+            for (let i = 0; i < 7; i++) {
+                const span = 140;
+                const x = ((i * 41 - t * 90) % span + span) % span - 10;
+                mc.fillStyle = 'rgba(238,243,255,.22)';
+                mc.fillRect(Math.round(x), 6 + i * 7, 6 + (i % 3) * 3, 1);
+            }
+            const cy = Math.round(20 + Math.sin(t * 3) * 2);
+            drawSmoke(mc, 39, cy, Math.floor(t / .5 * 14));
+            mc.drawImage(S.car_idle, 39, cy);
+            mc.drawImage(S.light_beam, 80, cy + 5);
+        }
+        if (minis.has(miniRocket)) {
+            mr.imageSmoothingEnabled = false;
+            mr.clearRect(0, 0, 96, 210);
+            drawStack(mr, 58, 88, 128, 210);
+            const cy = Math.round(98 + Math.sin(t * 2.4) * 3);
+            const cx = Math.round(-30 + ((t * 26) % 60));
+            drawSmoke(mr, cx, cy, Math.floor(t / .5 * 14));
+            mr.drawImage(S.car_idle, cx, cy);
+            mr.drawImage(S.light_beam, cx + 41, cy + 5);
+        }
+    }
+    function miniLoop(now) { miniFrame(now / 1000); requestAnimationFrame(miniLoop); }
+    if (reduceMotion) { minis.add(miniCar); minis.add(miniRocket); miniFrame(0); minis.clear(); }
+    else requestAnimationFrame(miniLoop);
+
+    /* starfield */
+    const sky = (() => {
+        const c = $('#sky'), g = c.getContext('2d');
+        let w = 0, h = 0, dpr = 1, stars = [], tintColor = [200, 212, 255];
+        const TINTS = {night: [200, 212, 255], dawn: [255, 205, 225], day: [210, 230, 255]};
+        function resize() {
+            dpr = Math.min(2, devicePixelRatio || 1);
+            w = innerWidth; h = innerHeight;
+            c.width = w * dpr; c.height = h * dpr;
+            const count = Math.round(w * h / 5200);
+            stars = Array.from({length: count}, () => ({x: Math.random() * w, y: Math.random() * h, z: Math.random(), p: Math.random() * 6.28}));
+        }
+        function draw(t) {
+            g.setTransform(dpr, 0, 0, dpr, 0, 0);
+            g.clearRect(0, 0, w, h);
+            const sy = scrollY;
+            for (const s of stars) {
+                const size = s.z > .9 ? 2 : 1;
+                let x = (s.x - t * 6 * (.2 + s.z)) % w; if (x < 0) x += w;
+                let y = (s.y - sy * (.05 + s.z * .15)) % h; if (y < 0) y += h;
+                const a = (.25 + s.z * .6) * (.65 + .35 * Math.sin(t * (1 + s.z * 2) + s.p));
+                g.fillStyle = `rgba(${tintColor[0]},${tintColor[1]},${tintColor[2]},${a.toFixed(3)})`;
+                g.fillRect(Math.round(x), Math.round(y), size, size);
+            }
+        }
+        function loop(now) { if (!document.hidden) draw(now / 1000); requestAnimationFrame(loop); }
+        addEventListener('resize', () => { resize(); if (reduceMotion) draw(0); });
+        resize();
+        if (reduceMotion) { draw(0); addEventListener('scroll', () => draw(0), {passive: true}); }
+        else requestAnimationFrame(loop);
+        return {tint(name) { tintColor = TINTS[name]; if (reduceMotion) draw(0); }};
+    })();
+
+    setTheme(theme);
+    mountGame();
+    bindSpotlight();
+})();
+</script>
+</body>
+</html>

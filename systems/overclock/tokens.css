@@ -1,0 +1,97 @@
+/* InstaLanding design system · Overclock · overclock@1.0.0
+   Extracted from https://instalanding.ai/demos/overclock-deploy.html
+   Fonts (Google Fonts): Bangers (lettering), Anton (numerals), Barlow Condensed 400/600/700 + italic 600 (body), JetBrains Mono 400/700 */
+:root {
+  /* Color · core */
+  --oc-ink: #111111;
+  --oc-paper: #F8F8F5;
+  --oc-white: #FFFFFF;
+  --oc-grey: #E2E2DF;
+  --oc-mid: #BDBDB8;
+  --oc-desk: #ECECE7;
+  --oc-dot: #D8D8D3;
+
+  /* Color · terminal & night */
+  --oc-term-text: #EAEAE4;
+  --oc-term-dim: #8A8A85;
+  --oc-night-text: #CFCFCA;
+  --oc-night-shadow: #3D3D3D;
+  --oc-night-rule: #2C2C2C;
+  --oc-night-line: #444444;
+  --oc-night-btn: #555555;
+
+  /* Color · screentone */
+  --oc-tone-light: #EEEEEE;
+  --oc-tone-mid: #DDDDDD;
+  --oc-tone-mark: #CCCCCC;
+
+  /* Type · families */
+  --oc-font-display: "Bangers", "Comic Sans MS", sans-serif;
+  --oc-font-numeral: "Anton", Impact, sans-serif;
+  --oc-font-body: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --oc-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --oc-font-sfx: sans-serif;
+
+  /* Type · scale */
+  --oc-display-xl: 84px;
+  --oc-display-lg: 82px;
+  --oc-display-md: 48px;
+  --oc-display-sm: 30px;
+  --oc-numeral-xl: 64px;
+  --oc-numeral-lg: 56px;
+  --oc-numeral-md: 42px;
+  --oc-button: 20px;
+  --oc-body-lg: 19px;
+  --oc-body: 17px;
+  --oc-code: 13px;
+  --oc-label: 12px;
+  --oc-micro: 11px;
+
+  /* Shape · radii */
+  --oc-radius-panel: 0px;
+  --oc-radius-round: 50%;
+
+  /* Shape · borders */
+  --oc-border-rule: 2px;
+  --oc-border-ink: 3px;
+  --oc-border-frame: 4px;
+  --oc-border-heavy: 6px;
+
+  /* Depth · hard ink shadows */
+  --oc-shadow-btn: 4px 4px 0 var(--oc-mid);
+  --oc-shadow-btn-hover: 6px 6px 0 var(--oc-mid);
+  --oc-shadow-btn-press: 1px 1px 0 var(--oc-mid);
+  --oc-shadow-ink: 4px 4px 0 var(--oc-ink);
+  --oc-shadow-ink-hover: 6px 6px 0 var(--oc-ink);
+  --oc-shadow-frame: 10px 10px 0 var(--oc-ink);
+  --oc-shadow-panel: 10px 10px 0 var(--oc-white), 10px 10px 0 4px var(--oc-ink);
+  --oc-shadow-night: 7px 7px 0 var(--oc-night-shadow);
+
+  /* Motion · easing */
+  --oc-ease-pop: cubic-bezier(.16, 1, .3, 1);
+  --oc-ease-needle: cubic-bezier(.4, 0, .2, 1);
+
+  /* Motion · durations */
+  --oc-dur-press: .12s;
+  --oc-dur-open: .35s;
+  --oc-dur-rise: .9s;
+  --oc-dur-cursor: 1s;
+  --oc-dur-floor: 1.5s;
+  --oc-dur-sunrise: 2.8s;
+  --oc-dur-chip: 4s;
+
+  /* Space · layout */
+  --oc-page-max: 1120px;
+  --oc-gutter: 14px;
+  --oc-gap: 12px;
+  --oc-panel-pad: 18px;
+  --oc-section-gap: 26px;
+
+  /* Pattern · screentone */
+  --oc-tone-dot: 1.2px;
+  --oc-tone-pitch: 7px;
+  --oc-tone-page-pitch: 9px;
+  --oc-hatch-pitch: 6px;
+  --oc-speed-ray: 1.2deg;
+  --oc-speed-gap: 7deg;
+}
