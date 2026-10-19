@@ -18,7 +18,12 @@ page's own components scoped so they can't clash with yours, and the conventions
 together. See [Design systems](#design-systems).
 <!-- SYSTEMS-INTRO -->
 
-Browse them live at **[instalanding.ai](https://instalanding.ai)** and **[instalanding.ai/systems](https://instalanding.ai/systems)**.
+And now **motion**: studies of one movement each — a carousel, an accordion, an endless loop — as a
+single HTML file, with the choreography written out (what moves, when, on which ease), the inputs
+that drive it, and the one-shot prompt that builds it. See [Motion](#motion).
+<!-- MOTION-INTRO -->
+
+Browse them live at **[instalanding.ai/pages](https://instalanding.ai/pages)**, **[instalanding.ai/systems](https://instalanding.ai/systems)** and **[instalanding.ai/motion](https://instalanding.ai/motion)**.
 
 ## New drops
 
@@ -125,6 +130,20 @@ link the system's CSS to use it, or explore it live with a token playground at
 </table>
 <!-- SYSTEMS:END -->
 
+## Motion
+
+<!-- MOTION:START -->
+Each study is one movement in one HTML file. Open `index.html` to run it, read its README for the
+choreography, or explore it live in the lab — slow motion, stepping and live knobs — at
+[instalanding.ai/motion](https://instalanding.ai/motion).
+
+<table>
+<tr><td width="260"><a href="motion/coverflow-carousel"><img src="motion/coverflow-carousel/preview.jpg" width="240" alt="Coverflow Carousel"></a></td><td><b><a href="motion/coverflow-carousel">Coverflow Carousel</a></b> · <sub>carousel</sub><br>An endless 3D cover flow driven by the page&#x27;s own scroll: swing, lift, reflect, snap<br><sub>GSAP 3.7.0 · ScrollTrigger · Draggable · 6 tracks · <a href="https://instalanding.ai/motion/coverflow-carousel">Open the lab</a> · <a href="motion/coverflow-carousel/PROMPT.md">Prompt</a></sub></td></tr>
+<tr><td width="260"><a href="motion/elastic-portrait-accordion"><img src="motion/elastic-portrait-accordion/preview.jpg" width="240" alt="Elastic Portrait Accordion"></a></td><td><b><a href="motion/elastic-portrait-accordion">Elastic Portrait Accordion</a></b> · <sub>accordion</sub><br>An editorial portrait row that springs open on a click: one card stretches wide, zooms in and names its sitter, the rest squeeze thin<br><sub>GSAP 3.12.5 · 5 tracks · <a href="https://instalanding.ai/motion/elastic-portrait-accordion">Open the lab</a> · <a href="motion/elastic-portrait-accordion/PROMPT.md">Prompt</a></sub></td></tr>
+<tr><td width="260"><a href="motion/neon-room-loop"><img src="motion/neon-room-loop/preview.jpg" width="240" alt="Neon Room Loop"></a></td><td><b><a href="motion/neon-room-loop">Neon Room Loop</a></b> · <sub>infinite loop</sub><br>Three columns of cards drift forever in opposite directions, and every scroll kicks them faster<br><sub>GSAP 3.12.5 · ScrollTrigger · 4 tracks · <a href="https://instalanding.ai/motion/neon-room-loop">Open the lab</a> · <a href="motion/neon-room-loop/PROMPT.md">Prompt</a></sub></td></tr>
+</table>
+<!-- MOTION:END -->
+
 ## Repo layout
 
 ```
@@ -139,6 +158,11 @@ systems/<slug>/
   <slug>.css    tokens + component CSS, scoped under the system's root class
   README.md     how to use it, its components, conventions and source page
   preview.jpg   1200x600 preview
+motion/<slug>/
+  index.html    the study: one movement, one file, opens from disk
+  PROMPT.md     the one-shot prompt that builds it
+  README.md     its choreography, inputs, how it works, pages it pairs with
+  preview.jpg   1200x600 poster
 index.json      every page's metadata, for agents and scripts
 AGENTS.md       how an agent should use this repo
 ```

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elastic Portrait Accordion · InstaLanding Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body {
+    height: 100vh;
+    display: flex;
+    margin: 0;
+    background: linear-gradient(135deg, #295fd5, #9d8ce0);
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .mark {
+    position: absolute;
+    top: 3.2vh;
+    left: 3vw;
+    color: rgba(255,255,255,.85);
+    font-size: 11px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+  }
+  .mark em {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    letter-spacing: .02em;
+    text-transform: none;
+    margin-right: .6em;
+  }
+  .group {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 7vh 2vw 9vh;
+  }
+  .item {
+    position: relative;
+    width: 15vw;
+    height: 75vh;
+    margin: 1vw;
+    border-radius: 3vw;
+    display: inline-block;
+    cursor: pointer;
+    overflow: hidden;
+    vertical-align: middle;
+    box-shadow: 0 3vh 6vh -2vh rgba(18, 10, 70, .55), 0 1vh 2vh rgba(18, 10, 70, .2);
+    isolation: isolate;
+  }
+  .item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.22), inset 0 1px 0 rgba(255,255,255,.35);
+    pointer-events: none;
+    z-index: 3;
+  }
+  .item::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 38%;
+    background: linear-gradient(to top, rgba(8,6,20,.62), rgba(8,6,20,0));
+    z-index: 1;
+    pointer-events: none;
+  }
+  .item svg {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    /* at least the card's width, so a wide open card never shows its edges (the art is cropped, slice) */
+    margin-left: calc(max(75vh, 100%) / -2);
+    width: max(75vh, 100%);
+    height: 75vh;
+    pointer-events: none;
+    transform-origin: 50% 45%;
+  }
+  .cap {
+    position: absolute;
+    left: 2.4vw;
+    bottom: 3.4vh;
+    z-index: 2;
+    color: #fff;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .cap .no {
+    display: block;
+    font-size: 10px;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    opacity: .75;
+    margin-bottom: .6vh;
+  }
+  .cap .nm {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(26px, 5vh, 52px);
+    line-height: 1;
+  }
+  .cap .rule {
+    display: block;
+    width: 36px;
+    height: 1px;
+    background: rgba(255,255,255,.6);
+    margin-top: 1.4vh;
+  }
+
+  .orb { animation: drift 11s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .orb.o1 { animation-duration: 14s; animation-direction: reverse; }
+  .orb.o2 { animation-duration: 17s; }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(6px, -8px) scale(1.08); }
+  }
+  .blink { animation: blink 6s infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes blink {
+    0%, 93%, 100% { transform: scaleY(1); }
+    95.5% { transform: scaleY(.08); }
+  }
+  .sway { animation: sway 5s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0%; }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+  .breathe { animation: breathe 7s ease-in-out infinite; transform-box: view-box; transform-origin: 50% 100%; }
+  @keyframes breathe {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-.6px); }
+  }
+  .tw { animation: tw 3.5s ease-in-out infinite; }
+  .tw:nth-child(2n) { animation-delay: -1.2s; }
+  .tw:nth-child(3n) { animation-delay: -2.4s; animation-duration: 4.6s; }
+  @keyframes tw { 0%, 100% { opacity: .9; } 50% { opacity: .2; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .orb, .blink, .sway, .breathe, .tw { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Shared filters -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="blur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="12"/></filter>
+    <filter id="blur3" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6"/></filter>
+    <filter id="blur1" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation=".8"/></filter>
+    <filter id="grain" filterUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="mark"><em>The Portrait Edit</em>Vol. I</div>
+
+<div class="group">
+  <div class="item" data-i="0"><div class="cap"><span class="no">N° 01 — Portrait</span><span class="nm">Ember</span><span class="rule"></span></div></div>
+  <div class="item" data-i="1"><div class="cap"><span class="no">N° 02 — Portrait</span><span class="nm">Lagoon</span><span class="rule"></span></div></div>
+  <div class="item" data-i="2"><div class="cap"><span class="no">N° 03 — Portrait</span><span class="nm">Velvet</span><span class="rule"></span></div></div>
+  <div class="item" data-i="3"><div class="cap"><span class="no">N° 04 — Portrait</span><span class="nm">Aurum</span><span class="rule"></span></div></div>
+  <div class="item" data-i="4"><div class="cap"><span class="no">N° 05 — Portrait</span><span class="nm">Nocturne</span><span class="rule"></span></div></div>
+</div>
+
+<script>
+/* ---------- Portrait renderer ---------- */
+const FACE = 'M74 86 Q73 58 100 56 Q127 58 126 86 Q126 110 113 122 Q100 132 87 122 Q74 110 74 86Z'
+
+let seed = 11
+const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280
+
+function eyes(c, i) {
+  if (c.closed) {
+    const lashes = [[84,92.4,83.1,94.3],[87,93.2,86.5,95.3],[90,93.4,90.1,95.5],[93,92.8,93.7,94.7]]
+    const side = (m) => lashes.map(([a,b,x,y]) =>
+      `<line x1="${m?200-a:a}" y1="${b}" x2="${m?200-x:x}" y2="${y}" stroke="#24151a" stroke-width=".55" stroke-linecap="round"/>`).join('')
+    return `
+      <ellipse cx="89" cy="88.5" rx="8" ry="3.4" fill="${c.lid}" opacity=".45" filter="url(#blur3)"/>
+      <ellipse cx="111" cy="88.5" rx="8" ry="3.4" fill="${c.lid}" opacity=".45" filter="url(#blur3)"/>
+      <path d="M82 90.6 Q89 95 96 90.6" stroke="#24151a" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+      <path d="M104 90.6 Q111 95 118 90.6" stroke="#24151a" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+      ${side(false)}${side(true)}
+      <path d="M83 87 Q89 84.6 95 87" stroke="${c.skin[2]}" stroke-width=".6" fill="none" opacity=".6"/>
+      <path d="M105 87 Q111 84.6 117 87" stroke="${c.skin[2]}" stroke-width=".6" fill="none" opacity=".6"/>`
+  }
+  const one = (cx, L, R, clip, flip) => `
+    <path d="M${L} 91 Q${cx} 85 ${R} 91 Q${cx} 94.5 ${L} 91Z" fill="#f4ece6"/>
+    <g clip-path="url(#${i}${clip})">
+      <circle cx="${cx}" cy="90" r="3.2" fill="url(#${i}iris)"/>
+      <circle cx="${cx}" cy="90" r="3.2" fill="none" stroke="#120a06" stroke-width=".4" opacity=".7"/>
+      <circle cx="${cx}" cy="90" r="1.45" fill="#0d0705"/>
+      <circle cx="${cx + 1.1}" cy="88.9" r=".75" fill="#fff"/>
+      <circle cx="${cx - 1}" cy="91" r=".3" fill="#fff" opacity=".7"/>
+      <path d="M${L} 91 Q${cx} 85 ${R} 91" stroke="${c.skin[2]}" stroke-width="2.6" fill="none" opacity=".45"/>
+    </g>
+    <path d="M${L - .5} ${flip ? 90.5 : 91} Q${cx} 84.5 ${R + .5} ${flip ? 91 : 90.5}" stroke="#160d0b" stroke-width="1.15" fill="none" stroke-linecap="round"/>
+    <path d="M${flip ? R + .5 : L - .5} 91 L${flip ? R + 2.6 : L - 2.6} 89.2" stroke="#160d0b" stroke-width=".9" stroke-linecap="round"/>
+    <path d="M${L + 1} 86.4 Q${cx} 82.4 ${R - 1} 86.4" stroke="${c.skin[2]}" stroke-width=".6" fill="none" opacity=".55"/>`
+  return `
+    <ellipse cx="89" cy="88" rx="8" ry="3.4" fill="${c.lid}" opacity=".35" filter="url(#blur3)"/>
+    <ellipse cx="111" cy="88" rx="8" ry="3.4" fill="${c.lid}" opacity=".35" filter="url(#blur3)"/>
+    <g class="blink">${one(89, 82, 96, 'cl', false)}${one(111, 104, 118, 'cr', true)}</g>`
+}
+
+function portrait(c, i) {
+  return `
+<svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="${i}bg" x1="0" y1="0" x2=".35" y2="1">
+    <stop offset="0" stop-color="${c.bg[0]}"/><stop offset=".55" stop-color="${c.bg[1]}"/><stop offset="1" stop-color="${c.bg[2]}"/>
+  </linearGradient>
+  <radialGradient id="${i}skin" cx=".38" cy=".34" r=".78">
+    <stop offset="0" stop-color="${c.skin[0]}"/><stop offset=".62" stop-color="${c.skin[1]}"/><stop offset="1" stop-color="${c.skin[2]}"/>
+  </radialGradient>
+  <linearGradient id="${i}shade" x1="0" y1="0" x2="1" y2="0">
+    <stop offset=".5" stop-color="${c.skin[2]}" stop-opacity="0"/><stop offset="1" stop-color="${c.skin[2]}" stop-opacity=".8"/>
+  </linearGradient>
+  <linearGradient id="${i}neck" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="${c.skin[2]}"/><stop offset=".55" stop-color="${c.skin[1]}"/>
+  </linearGradient>
+  <linearGradient id="${i}cloth" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="${c.garment[0]}"/><stop offset="1" stop-color="${c.garment[1]}"/>
+  </linearGradient>
+  <linearGradient id="${i}lip" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="${c.lip[0]}"/><stop offset="1" stop-color="${c.lip[1]}"/>
+  </linearGradient>
+  <radialGradient id="${i}iris" cx=".45" cy=".4" r=".6">
+    <stop offset="0" stop-color="${c.iris[1]}"/><stop offset="1" stop-color="${c.iris[0]}"/>
+  </radialGradient>
+  <linearGradient id="${i}rim" x1="1" y1="0" x2="0" y2="0">
+    <stop offset="0" stop-color="${c.rim}" stop-opacity="1"/><stop offset=".32" stop-color="${c.rim}" stop-opacity="0"/>
+  </linearGradient>
+  <radialGradient id="${i}vig" cx=".5" cy=".45" r=".75">
+    <stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/>
+  </radialGradient>
+  <clipPath id="${i}cl"><path d="M82 91 Q89 85 96 91 Q89 94.5 82 91Z"/></clipPath>
+  <clipPath id="${i}cr"><path d="M104 91 Q111 85 118 91 Q111 94.5 104 91Z"/></clipPath>
+  ${c.defs ? c.defs(i) : ''}
+</defs>
+
+<rect width="200" height="200" fill="url(#${i}bg)"/>
+${c.orbs.map((o, k) => `<circle class="orb o${k}" cx="${o[0]}" cy="${o[1]}" r="${o[2]}" fill="${o[3]}" opacity="${o[4]}" filter="url(#blur)"/>`).join('')}
+${c.backdrop ? c.backdrop(i) : ''}
+
+<g class="breathe">
+  ${c.back(i)}
+  <path d="M26 200 Q30 160 76 150 Q100 160 124 150 Q170 160 174 200Z" fill="url(#${i}cloth)"/>
+  ${c.cloth ? c.cloth(i) : ''}
+  <path d="M87 110 L86 146 Q100 160 114 146 L113 110Z" fill="url(#${i}neck)"/>
+  ${c.collar ? c.collar(i) : ''}
+  <ellipse cx="100" cy="125" rx="15" ry="7" fill="${c.skin[2]}" opacity=".75" filter="url(#blur3)"/>
+  <ellipse cx="73.5" cy="93" rx="4" ry="7" fill="${c.skin[1]}"/>
+  <ellipse cx="126.5" cy="93" rx="4" ry="7" fill="${c.skin[2]}"/>
+
+  <path d="${FACE}" fill="url(#${i}skin)"/>
+  <path d="${FACE}" fill="url(#${i}shade)"/>
+  <path d="${FACE}" fill="none" stroke="url(#${i}rim)" stroke-width="1.8" filter="url(#blur1)"/>
+  <ellipse cx="93" cy="71" rx="11" ry="5" fill="${c.skin[0]}" opacity=".55" filter="url(#blur3)"/>
+  <ellipse cx="85" cy="106" rx="7" ry="4.5" fill="${c.blush}" opacity=".38" filter="url(#blur3)"/>
+  <ellipse cx="115" cy="106" rx="7" ry="4.5" fill="${c.blush}" opacity=".3" filter="url(#blur3)"/>
+
+  ${c.noBrows ? '' : `
+  <path d="M81 82 Q88 76 96 79 Q96 80.5 95 80.7 Q88 78.7 81 82Z" fill="${c.brow}" opacity=".92"/>
+  <path d="M119 82 Q112 76 104 79 Q104 80.5 105 80.7 Q112 78.7 119 82Z" fill="${c.brow}" opacity=".92"/>`}
+
+  ${eyes(c, i)}
+
+  <path d="M99 92 L98.8 103" stroke="${c.skin[0]}" stroke-width="1.5" opacity=".6" filter="url(#blur1)"/>
+  <path d="M101.5 90 Q102.5 100 104.6 105" stroke="${c.skin[2]}" stroke-width="1.3" fill="none" opacity=".5" filter="url(#blur1)"/>
+  <path d="M95.5 106.4 Q97.6 108.7 100 107.6 Q102.4 108.7 104.5 106.4" stroke="${c.skin[2]}" stroke-width=".9" fill="none" opacity=".75" stroke-linecap="round"/>
+  <ellipse cx="99.4" cy="104.6" rx="1.6" ry="1.1" fill="#fff" opacity=".3" filter="url(#blur1)"/>
+
+  <ellipse cx="100" cy="122" rx="5" ry="1.6" fill="${c.skin[2]}" opacity=".4" filter="url(#blur1)"/>
+  <path d="M92 114.5 Q96 110.8 100 112.6 Q104 110.8 108 114.5 Q100 115.6 92 114.5Z" fill="url(#${i}lip)"/>
+  <path d="M92.5 114.6 Q100 121.5 107.5 114.6 Q100 116 92.5 114.6Z" fill="url(#${i}lip)"/>
+  <path d="M92 114.5 Q100 116 108 114.5" stroke="${c.lip[1]}" stroke-width=".6" fill="none" stroke-linecap="round"/>
+  <ellipse cx="101.6" cy="117.3" rx="2.4" ry=".8" fill="#fff" opacity=".4" filter="url(#blur1)"/>
+  <ellipse cx="97.5" cy="112.8" rx="1.4" ry=".4" fill="#fff" opacity=".3"/>
+
+  ${c.front(i)}
+  ${c.extra ? c.extra(i) : ''}
+</g>
+
+<rect width="200" height="200" fill="url(#${i}vig)"/>
+<rect width="200" height="200" filter="url(#grain)" opacity=".22" style="mix-blend-mode:overlay"/>
+</svg>`
+}
+
+/* ---------- The five sitters ---------- */
+const sitters = [
+  { /* Ember — long dark waves, sunset studio */
+    bg: ['#ffd8a8', '#ef7b5f', '#7a2448'], rim: '#ffe6bf',
+    orbs: [[162, 34, 38, '#fff1c4', .95], [22, 162, 50, '#ff6f7d', .55], [150, 172, 30, '#b23a6a', .55]],
+    skin: ['#fadac3', '#e7ab8b', '#b5725a'], blush: '#ff7f74', lid: '#a8505a',
+    lip: ['#d4586c', '#8a2640'], iris: ['#3b2414', '#9a6a3a'], brow: '#2b1a1f',
+    garment: ['#f7f0e6', '#cbbca6'],
+    defs: i => `<linearGradient id="${i}hair" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#4f2c33"/><stop offset="1" stop-color="#140a0e"/></linearGradient>`,
+    back: i => `<path d="M70 84 Q64 44 100 40 Q136 44 130 84 L132 142 L68 142Z" fill="url(#${i}hair)"/>`,
+    cloth: i => `
+      <path d="M78 151 Q100 165 122 151" stroke="#ddd0bc" stroke-width="3.2" fill="none"/>
+      <path d="M48 200 Q52 176 66 162 M152 200 Q148 176 134 162" stroke="#bfae96" stroke-width=".8" fill="none" opacity=".6"/>`,
+    front: i => `
+      <path d="M73 90 Q67 52 98 46 Q131 44 129 84 Q122 62 106 58 Q95 67 83 71 Q76 78 73 90Z" fill="url(#${i}hair)"/>
+      <path d="M75 74 Q66 98 70 124 Q73 150 62 178 Q57 192 64 200 L86 200 Q79 180 85 156 Q90 132 82 110 Q77 94 79.5 78Z" fill="url(#${i}hair)"/>
+      <path d="M125 70 Q135 96 131 124 Q128 150 139 176 Q144 192 136 200 L114 200 Q121 180 116 156 Q110 132 118 110 Q123 94 120.5 76Z" fill="url(#${i}hair)"/>
+      <g stroke="#8a5560" stroke-width=".5" fill="none" opacity=".55" stroke-linecap="round">
+        <path d="M78 80 Q71 108 75 134 Q77 158 68 186"/><path d="M81 92 Q76 116 80 140 Q82 162 76 194"/>
+        <path d="M122 80 Q130 106 126 132 Q124 158 132 186"/><path d="M119 92 Q124 118 120 142 Q118 164 124 194"/>
+        <path d="M84 63 Q100 52 120 60"/><path d="M80 70 Q96 58 112 59"/>
+      </g>
+      <path d="M84 60 Q99 50 118 56" stroke="#d9a39a" stroke-width="3" fill="none" opacity=".35" filter="url(#blur1)"/>
+      <path d="M128 98 Q132 120 129 138" stroke="#ffcf9e" stroke-width="2" fill="none" opacity=".45" filter="url(#blur1)"/>`,
+    extra: i => `
+      <path d="M86 152 Q100 168 114 152" stroke="#e8bd6a" stroke-width=".6" fill="none"/>
+      <circle cx="100" cy="160.6" r="1.7" fill="#f3cf82"/><circle cx="99.5" cy="160.1" r=".5" fill="#fff" opacity=".8"/>`
+  },
+  { /* Lagoon — curls, deep teal */
+    bg: ['#a8f3e4', '#2a8f93', '#0b3442'], rim: '#c2fff4',
+    orbs: [[30, 30, 34, '#e3fff8', .7], [170, 150, 44, '#0f5866', .7], [160, 40, 22, '#7ff0dc', .5]],
+    skin: ['#b47a56', '#7f4c33', '#4a2919'], blush: '#c2584a', lid: '#4a2240',
+    lip: ['#9a4a44', '#5a2220'], iris: ['#24130a', '#7a4c28'], brow: '#140c08',
+    garment: ['#f4c862', '#b07c22'],
+    defs: i => `<radialGradient id="${i}hair" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#3e2c22"/><stop offset="1" stop-color="#0f0907"/></radialGradient>`,
+    back: i => {
+      seed = 23
+      let s = `<ellipse cx="100" cy="80" rx="42" ry="38" fill="url(#${i}hair)"/>`
+      const curls = []
+      for (let k = 0; k <= 24; k++) {
+        const a = (160 + k * (220 / 24)) * Math.PI / 180
+        const R = 40 + rnd() * 4
+        curls.push([100 + Math.cos(a) * R, 84 + Math.sin(a) * R, 12 + rnd() * 5])
+      }
+      curls.push([66, 112, 13], [134, 112, 13], [64, 126, 11], [136, 126, 11])
+      curls.forEach(([x, y, r]) => {
+        s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="url(#${i}hair)"/>`
+        s += `<path d="M${(x - r * .5).toFixed(1)} ${y.toFixed(1)} Q${x.toFixed(1)} ${(y - r * .7).toFixed(1)} ${(x + r * .5).toFixed(1)} ${y.toFixed(1)}" stroke="#6a4a38" stroke-width=".7" fill="none" opacity=".55"/>`
+      })
+      return s
+    },
+    cloth: i => `
+      <path d="M60 200 Q66 178 86 168 M140 200 Q134 178 114 168" stroke="#a87418" stroke-width="1" fill="none" opacity=".55"/>
+      <path d="M40 186 Q60 166 80 160" stroke="#fff3c8" stroke-width="2.4" fill="none" opacity=".35" filter="url(#blur1)"/>`,
+    front: i => {
+      seed = 5
+      let s = ''
+      for (let k = 0; k < 7; k++) {
+        const x = 80 + k * 6.6, y = 58 + Math.abs(3 - k) * 1.6 + rnd() * 2, r = 6.5 + rnd() * 2
+        s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="url(#${i}hair)"/>`
+        s += `<path d="M${(x - r * .5).toFixed(1)} ${(y + 1).toFixed(1)} Q${x.toFixed(1)} ${(y - r * .6).toFixed(1)} ${(x + r * .5).toFixed(1)} ${(y + 1).toFixed(1)}" stroke="#7a5640" stroke-width=".6" fill="none" opacity=".6"/>`
+      }
+      return s + `<path d="M138 70 Q146 90 142 110" stroke="#9ffff0" stroke-width="2.4" fill="none" opacity=".35" filter="url(#blur1)"/>`
+    },
+    extra: i => `
+      <circle cx="73" cy="107" r="5.2" fill="none" stroke="#f2c95a" stroke-width="1.1"/>
+      <circle cx="127" cy="107" r="5.2" fill="none" stroke="#c99a35" stroke-width="1.1"/>
+      <path d="M69.5 104 Q71 102.4 73 102.2" stroke="#fff4c4" stroke-width=".5" fill="none"/>`
+  },
+  { /* Velvet — burgundy bob, eyes closed */
+    bg: ['#ecdcff', '#8a63d2', '#2a1258'], rim: '#f4e0ff', closed: true, noBrows: true,
+    orbs: [[160, 50, 40, '#ffd8f6', .6], [30, 120, 36, '#6a3ac0', .7], [100, 10, 30, '#fff', .35]],
+    skin: ['#f6dccc', '#dea98e', '#a46c58'], blush: '#ff8aa4', lid: '#8a4a8a',
+    lip: ['#b8304f', '#6a1530'], iris: ['#000', '#000'], brow: '#5a1e30',
+    garment: ['#2e2e3e', '#0c0c14'],
+    defs: i => `<linearGradient id="${i}hair" x1="0" y1="0" x2=".2" y2="1"><stop offset="0" stop-color="#8a2e48"/><stop offset="1" stop-color="#3a0c1c"/></linearGradient>`,
+    back: i => `<path d="M66 96 Q60 46 100 44 Q140 46 134 96 Q136 120 130 132 L70 132 Q64 120 66 96Z" fill="url(#${i}hair)"/>`,
+    cloth: i => `
+      <path d="M86 150 L100 182 L114 150 Q100 158 86 150Z" fill="#f2eef4"/>
+      <path d="M76 150 Q82 152 87 151 L100 184 L94 200 L80 200 Q78 172 70 158Z" fill="#1a1a26"/>
+      <path d="M124 150 Q118 152 113 151 L100 184 L106 200 L120 200 Q122 172 130 158Z" fill="#14141e"/>
+      <path d="M86 153 L99 182" stroke="#4a4a60" stroke-width=".6" opacity=".8"/>
+      <path d="M44 180 Q56 164 72 158" stroke="#5a5a7a" stroke-width="2" fill="none" opacity=".45" filter="url(#blur1)"/>`,
+    front: i => `
+      <path d="M68 128 Q62 100 66 74 Q70 50 100 48 Q130 50 134 74 Q138 100 132 128 Q126 132 120 130 Q124 104 124 82 L124 76 L76 76 L76 82 Q76 104 80 130 Q74 132 68 128Z" fill="url(#${i}hair)"/>
+      <path d="M75 80 Q75 59 100 57 Q125 59 125 80 Q100 74.5 75 80Z" fill="url(#${i}hair)"/>
+      <g stroke="#b04a68" stroke-width=".5" fill="none" opacity=".5">
+        <path d="M71 80 Q68 104 72 128"/><path d="M75 84 Q73 108 77 130"/>
+        <path d="M129 80 Q132 104 128 128"/><path d="M125 84 Q127 108 123 130"/>
+        <path d="M86 60 L84 77"/><path d="M94 58 L93 76"/><path d="M106 58 L107 76"/><path d="M114 60 L116 77"/>
+      </g>
+      <path d="M78 66 Q100 52 122 66" stroke="#e08aa4" stroke-width="4" fill="none" opacity=".35" filter="url(#blur1)"/>
+      <path d="M132 86 Q136 106 131 124" stroke="#f4d0ff" stroke-width="2" fill="none" opacity=".5" filter="url(#blur1)"/>`
+  },
+  { /* Aurum — copper bun, gold frames */
+    bg: ['#fff3c8', '#f0ae4c', '#9a4a1c'], rim: '#fff3cc',
+    orbs: [[40, 40, 40, '#fffbe6', .85], [170, 120, 34, '#ffcf6a', .6], [150, 190, 30, '#7a2e10', .6]],
+    skin: ['#fde6d4', '#f0c3a4', '#c38a69'], blush: '#ff9a84', lid: '#b07a50',
+    lip: ['#cc6158', '#8f3434'], iris: ['#2f4a20', '#86ad5e'], brow: '#7a3a18',
+    garment: ['#2f7a62', '#123c30'],
+    defs: i => `<linearGradient id="${i}hair" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#d27838"/><stop offset="1" stop-color="#6e2c10"/></linearGradient>`,
+    back: i => `
+      <path d="M72 86 Q68 50 100 48 Q132 50 128 86 L128 100 L72 100Z" fill="url(#${i}hair)"/>
+      <circle cx="100" cy="34" r="16" fill="url(#${i}hair)"/>
+      <g stroke="#f0a060" stroke-width=".6" fill="none" opacity=".55">
+        <path d="M88 30 Q100 18 112 30 Q106 44 96 40 Q90 34 100 28 Q106 30 104 36"/>
+      </g>
+      <path d="M90 24 Q100 18 110 24" stroke="#ffd2a0" stroke-width="2.4" fill="none" opacity=".45" filter="url(#blur1)"/>`,
+    cloth: i => {
+      let s = ''
+      for (let k = 0; k < 9; k++) s += `<path d="M${52 + k * 12} 200 Q${54 + k * 11.5} 182 ${62 + k * 9.5} 168" stroke="#0e3328" stroke-width=".8" fill="none" opacity=".5"/>`
+      return s
+    },
+    collar: i => {
+      let s = `<path d="M84 138 Q100 148 116 138 L118 156 Q100 167 82 156Z" fill="url(#${i}cloth)"/>`
+      for (let k = 0; k < 8; k++) s += `<line x1="${85 + k * 4.3}" y1="${141 + Math.abs(3.5 - k) * -0.6 + 3}" x2="${84 + k * 4.6}" y2="${158 + (3.5 - Math.abs(3.5 - k)) * 1.6}" stroke="#0e3328" stroke-width=".6" opacity=".55"/>`
+      return s + `<path d="M84 138 Q100 148 116 138" stroke="#4fa585" stroke-width=".8" fill="none"/>`
+    },
+    front: i => `
+      <path d="M73 88 Q70 54 100 52 Q130 54 127 88 Q122 68 110 64 Q100 62 90 64 Q78 68 73 88Z" fill="url(#${i}hair)"/>
+      <g stroke="#f0a060" stroke-width=".5" fill="none" opacity=".55">
+        <path d="M76 80 Q82 64 98 60"/><path d="M124 80 Q118 64 102 60"/><path d="M80 74 Q90 62 100 61"/>
+      </g>
+      <path d="M75 82 Q70 100 76 116" stroke="#b05a24" stroke-width=".7" fill="none" class="sway"/>`,
+    extra: i => `
+      <g fill="rgba(255,255,255,.08)" stroke="#c9963a" stroke-width="1.25">
+        <circle cx="89" cy="90" r="8.6"/><circle cx="111" cy="90" r="8.6"/>
+      </g>
+      <path d="M97.6 88.6 Q100 86.6 102.4 88.6" stroke="#c9963a" stroke-width="1.1" fill="none"/>
+      <path d="M80.4 89 L74 87.5 M119.6 89 L126 87.5" stroke="#b08030" stroke-width="1"/>
+      <path d="M84 85 L87.5 82.5 M106 85 L109.5 82.5" stroke="#fff" stroke-width=".8" opacity=".55" stroke-linecap="round"/>
+      <path d="M93 96 L95.5 94.5" stroke="#fff" stroke-width=".5" opacity=".4" stroke-linecap="round"/>`
+  },
+  { /* Nocturne — pixie crop, moonlit */
+    bg: ['#070b22', '#18286a', '#3d5fd0'], rim: '#c6d8ff',
+    orbs: [[158, 36, 28, '#e8efff', .55], [30, 170, 46, '#5a3ac8', .55], [170, 170, 30, '#ff4f7a', .35]],
+    skin: ['#a47254', '#714631', '#3e2215'], blush: '#b54a5a', lid: '#2a2a6a',
+    lip: ['#8a3038', '#4a141a'], iris: ['#1a0e08', '#6a4024'], brow: '#100a08',
+    garment: ['#ff7086', '#8e1028'],
+    backdrop: i => {
+      seed = 41
+      let s = '<g fill="#fff">'
+      for (let k = 0; k < 26; k++) s += `<circle class="tw" cx="${(rnd() * 200).toFixed(1)}" cy="${(rnd() * 110).toFixed(1)}" r="${(.3 + rnd() * .6).toFixed(2)}"/>`
+      return s + `</g>
+        <circle cx="158" cy="36" r="11" fill="#fff6dc"/>
+        <circle cx="153" cy="33" r="2.2" fill="#e9dcbc" opacity=".6"/><circle cx="161" cy="40" r="1.5" fill="#e9dcbc" opacity=".6"/>`
+    },
+    defs: i => `
+      <linearGradient id="${i}hair" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#2a201c"/><stop offset="1" stop-color="#070404"/></linearGradient>
+      <radialGradient id="${i}pearl" cx=".35" cy=".3" r=".7"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#e8e2f0"/><stop offset="1" stop-color="#a49cb8"/></radialGradient>`,
+    back: i => `<path d="M72 90 Q66 52 100 50 Q134 52 128 90 L124 104 L76 104Z" fill="url(#${i}hair)"/>`,
+    cloth: i => `
+      <path d="M78 151 Q100 176 122 151" stroke="#c82844" stroke-width="2" fill="none"/>
+      <path d="M84 156 Q100 186 116 156" stroke="#6e0a1e" stroke-width="1.2" fill="none" opacity=".7"/>
+      <path d="M40 190 Q58 166 78 160" stroke="#ffd0d8" stroke-width="3" fill="none" opacity=".45" filter="url(#blur1)"/>
+      <path d="M150 196 Q140 176 126 166" stroke="#ffb0c0" stroke-width="1.6" fill="none" opacity=".35" filter="url(#blur1)"/>`,
+    front: i => `
+      <path d="M72 88 Q68 56 98 50 Q128 48 129 82 Q126 70 118 66 Q112 72 102 68 Q92 74 84 72 Q78 78 74 90Z" fill="url(#${i}hair)"/>
+      <g stroke="#5a4a44" stroke-width=".6" fill="none" opacity=".7" stroke-linecap="round">
+        <path d="M80 70 Q88 60 98 56"/><path d="M90 68 Q98 58 110 56"/><path d="M104 66 Q114 58 122 62"/><path d="M76 78 Q78 66 86 60"/>
+      </g>
+      <path d="M86 56 Q104 48 120 56" stroke="#9ab0ff" stroke-width="2.4" fill="none" opacity=".4" filter="url(#blur1)"/>
+      <path d="M128 84 Q131 102 126 118" stroke="#c6d8ff" stroke-width="2" fill="none" opacity=".55" filter="url(#blur1)"/>`,
+    extra: i => `
+      <g class="sway"><line x1="73.5" y1="99" x2="73.5" y2="105" stroke="#e8d8a8" stroke-width=".4"/><circle cx="73.5" cy="107.6" r="2.7" fill="url(#${i}pearl)"/></g>
+      <g class="sway"><line x1="126.5" y1="99" x2="126.5" y2="105" stroke="#e8d8a8" stroke-width=".4"/><circle cx="126.5" cy="107.6" r="2.7" fill="url(#${i}pearl)"/></g>`
+  }
+]
+
+const items = document.querySelectorAll('.item')
+items.forEach((item, n) => item.insertAdjacentHTML('afterbegin', portrait(sitters[n], 'p' + n)))
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  const caps = document.querySelectorAll('.cap')
+  const arts = document.querySelectorAll('.item svg')
+  gsap.set(caps, { y: 12 })
+  // The two springs, as numbers the lab can turn (elastic period: lower is springier)
+  const CFG = { openPeriod: 0.3, restPeriod: 0.6 }
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.globalTimeline.timeScale(20)
+
+  const expand = (item, i) => {
+    items.forEach((it, ind) => {
+      if (i === ind) return
+      it.clicked = false
+    })
+    gsap.to(items, {
+      width: item.clicked ? '15vw' : '8vw',
+      duration: 2,
+      ease: `elastic(1, ${CFG.restPeriod})`,
+      // a new click takes over every card, even mid-spring (otherwise a card can stay open)
+      overwrite: true
+    })
+
+    item.clicked = !item.clicked
+    gsap.to(item, {
+      width: item.clicked ? '42vw' : '15vw',
+      duration: 2.5,
+      ease: `elastic(1, ${CFG.openPeriod})`,
+      overwrite: true
+    })
+
+    gsap.to(caps, { opacity: 0, y: 12, duration: .35, ease: 'power2.in', overwrite: true })
+    gsap.to(arts, { scale: 1, duration: 1.6, ease: 'power3.out', overwrite: true })
+    if (item.clicked) {
+      gsap.to(caps[i], { opacity: 1, y: 0, duration: 1, delay: .55, ease: 'power3.out', overwrite: true })
+      gsap.to(arts[i], { scale: 1.06, duration: 2.4, ease: 'power3.out', overwrite: true })
+    }
+  }
+
+  items.forEach((item, i) => {
+    item.clicked = false
+    item.addEventListener('click', () => expand(item, i))
+  })
+</script>
+
+<script>
+  /* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The page works on its own; when it
+     is framed, the lab drives it with postMessage and it reports which
+     portrait is open.
+       ?autoplay=2600   open the next portrait every 2.6s (previews)
+       { source: 'il-motion', type: 'speed', value: 0.25 }
+       { ..., type: 'step', value: 1 | -1 }        open the next / previous
+       { ..., type: 'openPeriod', value: 0.3 }     the opening card's spring
+       { ..., type: 'restPeriod', value: 0.6 }     the other cards' spring
+       { ..., type: 'autoplay', value: true | false }
+  ------------------------------------------------------------------ */
+  ;(() => {
+    const NAMES = ['EMBER', 'LAGOON', 'VELVET', 'AURUM', 'NOCTURNE']
+    const list = [...items]
+    const openIndex = () => list.findIndex((it) => it.clicked)
+    const step = (dir) => {
+      const i = openIndex()
+      const next = i < 0 ? (dir > 0 ? 0 : list.length - 1) : (i + dir + list.length) % list.length
+      expand(list[next], next)
+    }
+    let timer = 0
+    const autoplay = (on, ms = 2600) => {
+      clearInterval(timer)
+      if (on) timer = setInterval(() => { if (!document.hidden) step(1) }, ms)
+    }
+    const qs = new URLSearchParams(location.search)
+    if (qs.has('autoplay')) autoplay(true, Number(qs.get('autoplay')) || 2600)
+    addEventListener('message', (e) => {
+      const d = e.data
+      if (!d || d.source !== 'il-motion') return
+      if (d.type === 'speed') gsap.globalTimeline.timeScale(Math.max(0.05, Number(d.value) || 1))
+      if (d.type === 'step') step(d.value > 0 ? 1 : -1)
+      if (d.type === 'openPeriod') CFG.openPeriod = Number(d.value) || 0.3
+      if (d.type === 'restPeriod') CFG.restPeriod = Number(d.value) || 0.6
+      if (d.type === 'autoplay') autoplay(Boolean(d.value))
+    })
+    if (parent === window) return
+    let last = ''
+    const report = () => {
+      const i = openIndex()
+      const text = i < 0 ? 'ALL CLOSED · CLICK A PORTRAIT' : `OPEN ${String(i + 1).padStart(2, '0')}/${list.length} · ${NAMES[i]}`
+      if (text !== last) {
+        last = text
+        parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*')
+      }
+      requestAnimationFrame(report)
+    }
+    requestAnimationFrame(report)
+  })()
+</script>
+</body>
+</html>

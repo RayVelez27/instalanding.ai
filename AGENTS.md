@@ -45,3 +45,10 @@ read its README.md (conventions), link or copy `<slug>.css` (tokens + components
 root class), take component markup from `specimen.html` (`<section data-component>` blocks), and use
 the tokens for every colour, font, radius, shadow and timing. Keep the project's logic as it is.
 Live, with a copyable agent instruction: https://instalanding.ai/systems
+
+## Motion
+
+`motion/<slug>/` holds motion studies: one movement in one HTML file. To add one to a project, read
+its README.md (the choreography: what moves, from when to when, on which ease, and the inputs),
+build from `PROMPT.md` in the project's own stack, or lift the motion from `index.html`.
+Live, with slow motion and live knobs: https://instalanding.ai/motion

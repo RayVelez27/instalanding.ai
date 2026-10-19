@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Room Loop · InstaLanding Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  /* Design DNA — palette lifted from the isometric neon room */
+  :root {
+    --bg-1: #171424;      /* hsl(250, 28%, 11%) */
+    --bg-2: #07060f;
+    --white-1: #FBFAFE;
+    --white-2: #9E99C1;
+    --white-3: #383358;
+    --white-4: #282347;
+    --black-1: #1f2158;
+    --neon-1: #5189fa;    /* hsl(220, 95%, 65%) */
+    --neon-2: #287dd2;    /* hsl(210, 68%, 49%) */
+    --cuadro-1: #D51E24;
+  }
+
+  * { box-sizing: border-box; }
+  /* The page really scrolls (that is what kicks the loop); the bar is just hidden */
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
+
+  body {
+    margin: 0;
+    font-family: Termina, "Unbounded", sans-serif;
+    color: var(--white-1);
+    background: radial-gradient(circle at 50% 40%, #1d1935, var(--bg-2) 75%) fixed;
+    overflow-x: hidden;
+  }
+
+  section {
+    padding: 10vw;
+    min-height: 500vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: visible;
+  }
+
+
+
+  .gallery {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: visible;
+  }
+  @media (max-width: 768px) { .gallery { width: 160%; } }
+
+  .col {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+    align-self: flex-start;
+  }
+  .col:nth-child(2) { align-self: flex-end; }
+
+  /* ---------- Premium card ---------- */
+  .image {
+    width: 100%;
+    padding: 1rem;
+    filter: saturate(.2) brightness(.78);
+    transition: filter .6s ease;
+  }
+  .image:hover {
+    z-index: 99999 !important;
+    filter: saturate(1) brightness(1.05);
+  }
+
+  .frame {
+    position: relative;
+    margin: 0;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #0a0912;
+    border: 1px solid rgba(158, 153, 193, .16);
+    box-shadow:
+      inset 0 1px 0 rgba(251, 250, 254, .08),
+      0 2.8px 2.2px rgba(0,0,0,.08), 0 12.5px 10px rgba(0,0,0,.14),
+      0 41.8px 33.4px rgba(0,0,0,.22), 0 100px 80px rgba(0,0,0,.35);
+    transition: border-color .6s ease, box-shadow .6s ease;
+  }
+  .image:hover .frame {
+    border-color: rgba(81, 137, 250, .55);
+    box-shadow:
+      inset 0 1px 0 rgba(251, 250, 254, .14),
+      0 0 0 1px rgba(81, 137, 250, .2),
+      0 30px 80px -20px rgba(40, 125, 210, .6),
+      0 0 50px rgba(81, 137, 250, .22);
+  }
+  /* status LED */
+  .frame::after {
+    content: '';
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--neon-1);
+    box-shadow: 0 0 10px 2px var(--neon-1);
+    opacity: .85;
+  }
+
+  .art {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 1.4s cubic-bezier(.2, .7, .2, 1);
+  }
+  .image:hover .art { transform: scale(1.06); }
+
+  figcaption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 2.2rem 1.2rem 1.1rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: .75rem;
+    background: linear-gradient(to top, rgba(7, 6, 15, .9), rgba(7, 6, 15, 0));
+    pointer-events: none;
+  }
+  .idx {
+    display: block;
+    font-size: .6rem;
+    letter-spacing: .22em;
+    color: var(--neon-1);
+  }
+  .ttl {
+    display: block;
+    margin-top: .35rem;
+    font-size: clamp(.75rem, 1.1vw, 1rem);
+    font-weight: 600;
+    color: var(--white-1);
+  }
+  .meta {
+    font-size: .55rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--white-2);
+    border: 1px solid rgba(158, 153, 193, .3);
+    padding: .4em .8em;
+    border-radius: 99px;
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+  }
+
+  /* screen flicker, from the original pantalla / luz-tv keyframes */
+  @keyframes flick { from { opacity: .78; } }
+  .flick, .scr { animation: flick .25s infinite alternate; }
+  @media (prefers-reduced-motion: reduce) { .flick, .scr { animation: none; } }
+</style>
+</head>
+<body>
+
+<!-- Shared gradients for every card -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gBg" cx=".5" cy=".38" r=".8">
+      <stop offset="0" stop-color="#241f45"/><stop offset="1" stop-color="#08070f"/>
+    </radialGradient>
+    <radialGradient id="gVig" cx=".5" cy=".5" r=".75">
+      <stop offset=".55" stop-color="#05040f" stop-opacity="0"/><stop offset="1" stop-color="#05040f" stop-opacity=".65"/>
+    </radialGradient>
+    <linearGradient id="gFloor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12112c"/><stop offset=".6" stop-color="#262247"/><stop offset="1" stop-color="#3d3868"/>
+    </linearGradient>
+    <linearGradient id="gWallB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0c0b26"/><stop offset="1" stop-color="#1f2158"/>
+    </linearGradient>
+    <linearGradient id="gWallS" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#09091f"/><stop offset="1" stop-color="#191a4c"/>
+    </linearGradient>
+    <linearGradient id="gWallTop" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9E99C1"/><stop offset="1" stop-color="#FBFAFE"/>
+    </linearGradient>
+    <linearGradient id="gNeon" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#287dd2"/><stop offset=".5" stop-color="#9ab8ff"/><stop offset="1" stop-color="#287dd2"/>
+    </linearGradient>
+    <linearGradient id="gScreen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c3d5ff"/><stop offset=".5" stop-color="#5189fa"/><stop offset="1" stop-color="#287dd2"/>
+    </linearGradient>
+    <linearGradient id="gDoor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0F1110"/><stop offset="1" stop-color="#14163a"/>
+    </linearGradient>
+    <linearGradient id="gTable" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1c1e4c"/><stop offset="1" stop-color="#0b0c26"/>
+    </linearGradient>
+    <linearGradient id="gSofa" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2a2d78"/><stop offset="1" stop-color="#14163a"/>
+    </linearGradient>
+    <radialGradient id="gGlowBlue">
+      <stop offset="0" stop-color="#7aa2ff" stop-opacity=".95"/><stop offset=".45" stop-color="#5189fa" stop-opacity=".35"/><stop offset="1" stop-color="#287dd2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gGlowRed">
+      <stop offset="0" stop-color="#ff3b41" stop-opacity=".9"/><stop offset="1" stop-color="#D51E24" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gGlowShadow">
+      <stop offset="0" stop-color="#03030f" stop-opacity=".95"/><stop offset="1" stop-color="#03030f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<section>
+</section>
+
+<div class="gallery">
+  <div class="col"></div>
+  <div class="col"></div>
+  <div class="col"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* =========================================================
+   1. Isometric neon room — built from cubes, like the
+      original cube() mixin, rendered to SVG
+   ========================================================= */
+const C = {
+  w1: '#FBFAFE', w2: '#9E99C1', w3: '#383358', w4: '#282347',
+  k1: '#1f2158', k2: '#14163a', k3: '#0e0f30',
+  n1: '#5189fa', n2: '#287dd2', red: '#D51E24', ink: '#0F1110'
+};
+const NEON_EDGE = 'stroke="#5189fa" stroke-opacity=".6" stroke-width="1"';
+
+// Planes on the walls
+const onBack = (x0, z0, x1, z1, y) => [[x0, y, z0], [x1, y, z0], [x1, y, z1], [x0, y, z1]];
+const onSide = (y0, z0, y1, z1, x) => [[x, y0, z0], [x, y1, z0], [x, y1, z1], [x, y0, z1]];
+
+const speaker = (y) => [
+  { box: [0.5, y, 0, 0.7, 0.7, 2.8], t: 'url(#gWallTop)', l: C.k2, r: { f: C.k3, e: NEON_EDGE } },
+  { q: onSide(y + 0.15, 1.55, y + 0.55, 2.1, 1.21), f: '#05061a', e: 'stroke="#287dd2" stroke-width="1"' },
+  { q: onSide(y + 0.1, 0.45, y + 0.6, 1.25, 1.21), f: '#05061a', e: 'stroke="#287dd2" stroke-width="1"' },
+  { q: onSide(y + 0.62, 0.2, y + 0.66, 2.6, 1.21), f: 'url(#gNeon)', o: .8 }
+];
+
+const ROOM = [
+  // floor + rug + light pools
+  { box: [0, 0, -0.4, 10, 10, 0.4], t: 'url(#gFloor)', l: C.w4, r: C.w3 },
+  { q: [[1.6, 2.6, 0.01], [6.9, 2.6, 0.01], [6.9, 8.2, 0.01], [1.6, 8.2, 0.01]], f: '#1b1940', e: 'stroke="rgba(158,153,193,.25)" stroke-width="1"' },
+  { glow: [2.4, 1.8, 0], r: 2.6, flat: 1, g: 'gGlowBlue', o: .35 },
+  { glow: [1.9, 5.3, 0], r: 3, flat: 1, g: 'gGlowBlue', o: .3, cls: 'flick' },
+
+  // walls
+  { box: [0, 0, 0, 10, 0.5, 7], t: 'url(#gWallTop)', l: 'url(#gWallB)', r: C.w3 },
+  { box: [0, 0.5, 0, 0.5, 9.5, 7], t: 'url(#gWallTop)', r: 'url(#gWallS)', l: C.w2 },
+
+  // neon trims (baseboard + crown)
+  { q: onBack(0.5, 0, 10, 0.16, 0.51), f: 'url(#gNeon)' },
+  { q: onSide(0.5, 0, 10, 0.16, 0.51), f: 'url(#gNeon)' },
+  { q: onBack(0.5, 6.7, 10, 6.78, 0.51), f: 'url(#gNeon)', o: .55 },
+  { q: onSide(0.5, 6.7, 10, 6.78, 0.51), f: 'url(#gNeon)', o: .55 },
+
+  // door (puerta) with neon frame
+  { glow: [2.4, 0.5, 2.6], r: 2.4, g: 'gGlowBlue', o: .5 },
+  { box: [1.2, 0.5, 0, 2.4, 0.06, 5.2], t: C.k3, r: C.k3, l: { f: 'url(#gDoor)', e: 'stroke="#5189fa" stroke-width="6" stroke-opacity=".25"' } },
+  { q: onBack(1.2, 0, 3.6, 5.2, 0.565), f: 'none', e: 'stroke="#8fb0ff" stroke-width="1.6"' },
+  { q: onBack(2.95, 2.5, 3.35, 2.62, 0.57), f: C.w2 },
+
+  // paintings (cuadros)
+  { glow: [5.9, 0.5, 4.3], r: 1.7, g: 'gGlowRed', o: .3 },
+  { box: [5, 0.5, 3, 1.8, 0.08, 2.6], l: C.red, t: '#ff5a5f', r: '#8e1216' },
+  { q: onBack(5.25, 3.25, 6.55, 5.35, 0.585), f: C.ink },
+  { q: onBack(5.55, 3.55, 5.8, 5.05, 0.59), f: C.red },
+  { q: onBack(6.0, 4.3, 6.35, 4.65, 0.59), f: C.w1 },
+  { box: [7.6, 0.5, 3, 1.8, 0.08, 2.6], l: C.ink, t: '#2a2c3a', r: '#050606' },
+  { q: onBack(7.8, 3.2, 9.2, 5.4, 0.585), f: '#181a2c' },
+  { q: [[7.8, 0.59, 3.2], [9.2, 0.59, 3.2], [9.2, 0.59, 5.4]], f: 'url(#gNeon)', o: .85 },
+  { q: onBack(8.1, 4.6, 8.5, 5.0, 0.59), f: C.red },
+
+  // bookshelf (librero) + books (libros)
+  { glow: [7.2, 0.5, 2.5], r: 2.5, g: 'gGlowBlue', o: .45 },
+  { box: [5, 0.5, 2.2, 4.4, 0.6, 0.12], t: 'url(#gWallTop)', l: C.w2, r: C.w3 },
+  { box: [5.3, 0.55, 2.32, 0.22, 0.42, 0.75], t: C.w1, l: C.w2, r: C.w3 },
+  { box: [5.56, 0.55, 2.32, 0.2, 0.42, 0.9], t: C.w1, l: 'url(#gScreen)', r: C.n2 },
+  { box: [5.8, 0.55, 2.32, 0.26, 0.42, 0.65], t: C.w2, l: C.w3, r: C.w4 },
+  { box: [6.1, 0.55, 2.32, 0.18, 0.42, 0.82], t: '#ff5a5f', l: C.red, r: '#8e1216' },
+  { box: [6.32, 0.55, 2.32, 0.24, 0.42, 0.7], t: C.w1, l: C.w2, r: C.w3 },
+  { box: [7.4, 0.55, 2.32, 1.0, 0.42, 0.14], t: C.w1, l: C.w2, r: C.w3 },
+  { box: [7.5, 0.58, 2.46, 0.85, 0.38, 0.12], t: '#c3d5ff', l: C.n1, r: C.n2 },
+  { box: [8.6, 0.55, 2.32, 0.22, 0.42, 0.85], t: C.w1, l: 'url(#gScreen)', r: C.n2 },
+
+  // media wall: speakers, console, TV, shelf + boxes (cajas)
+  ...speaker(2.2),
+  { box: [0.5, 3, 0, 1.0, 4.6, 0.9], t: { f: C.w3, e: NEON_EDGE }, l: C.k2, r: 'url(#gTable)' },
+  { q: onSide(3.3, 0.35, 7.3, 0.47, 1.51), f: C.n2, o: .7 },
+  { glow: [0.5, 5.3, 3.3], r: 3.2, g: 'gGlowBlue', o: .65, cls: 'flick' },
+  { box: [0.5, 3.4, 2.2, 0.15, 3.8, 2.2], t: C.k3, l: C.k3, r: { f: 'url(#gScreen)', e: 'stroke="#0b0c26" stroke-width="3"' }, cls: 'scr' },
+  { q: onSide(3.8, 3.6, 5.6, 3.75, 0.66), f: C.w1, o: .55 },
+  { q: onSide(3.8, 3.3, 4.9, 3.4, 0.66), f: C.w1, o: .35 },
+  { q: onSide(6.0, 2.55, 6.9, 3.15, 0.66), f: C.k1, o: .4 },
+  { box: [0.5, 3.6, 5.0, 0.8, 3.4, 0.12], t: 'url(#gWallTop)', l: C.w2, r: C.w3 },
+  { box: [0.6, 4.0, 5.12, 0.6, 0.6, 0.5], t: { f: C.w1, e: NEON_EDGE }, l: C.w2, r: C.w3 },
+  { box: [0.6, 5.2, 5.12, 0.6, 0.7, 0.35], t: C.w1, l: C.w3, r: C.n2 },
+  { box: [0.6, 6.4, 5.12, 0.6, 0.5, 0.6], t: { f: C.w1, e: NEON_EDGE }, l: C.w2, r: C.w3 },
+  ...speaker(8.0),
+
+  // coffee table (mesa) + tablet
+  { glow: [4.7, 5.5, 0], r: 2.4, flat: 1, g: 'gGlowShadow', o: .9 },
+  { box: [3.6, 4.2, 0, 0.12, 0.12, 1.0], t: C.k1, l: C.k2, r: C.k3 },
+  { box: [5.7, 4.2, 0, 0.12, 0.12, 1.0], t: C.k1, l: C.k2, r: C.k3 },
+  { box: [3.6, 6.7, 0, 0.12, 0.12, 1.0], t: C.k1, l: C.k2, r: C.k3 },
+  { box: [5.7, 6.7, 0, 0.12, 0.12, 1.0], t: C.k1, l: C.k2, r: C.k3 },
+  { box: [3.4, 4.0, 1.0, 2.6, 3.0, 0.18], t: { f: 'url(#gTable)', e: NEON_EDGE }, l: C.k2, r: C.k3 },
+  { glow: [4.65, 5.65, 1.24], r: 1.1, flat: 1, g: 'gGlowBlue', o: .7, cls: 'flick' },
+  { box: [4.2, 5.0, 1.18, 0.9, 1.3, 0.06], t: { f: 'url(#gScreen)', e: 'stroke="#0b0c26" stroke-width="1.5"' }, l: C.w2, r: C.w3, cls: 'scr' },
+
+  // sofa (sillón)
+  { glow: [8.4, 5.3, 0], r: 3.4, flat: 1, g: 'gGlowShadow', o: .9 },
+  { box: [7.2, 2.2, 0, 2.4, 0.4, 1.5], t: { f: 'url(#gSofa)', e: NEON_EDGE }, l: C.k2, r: C.k3 },
+  { box: [7.2, 2.6, 0, 1.8, 5.4, 0.95], t: { f: 'url(#gSofa)', e: NEON_EDGE }, l: C.k2, r: C.k3 },
+  { q: [[7.3, 4.4, .951], [8.95, 4.4, .951], [8.95, 4.47, .951], [7.3, 4.47, .951]], f: '#0b0c26' },
+  { q: [[7.3, 6.2, .951], [8.95, 6.2, .951], [8.95, 6.27, .951], [7.3, 6.27, .951]], f: '#0b0c26' },
+  { box: [9.0, 2.6, 0, 0.6, 5.4, 2.4], t: { f: 'url(#gSofa)', e: NEON_EDGE }, l: C.k2, r: C.k3 },
+  { box: [7.2, 8.0, 0, 2.4, 0.4, 1.5], t: { f: 'url(#gSofa)', e: NEON_EDGE }, l: C.k2, r: C.k3 }
+];
+
+function renderRoom(items, cam, label) {
+  const { W, H, s, f: [fx, fy, fz], wire } = cam;
+  const ox = W / 2 - (fx - fy) * 0.866 * s;
+  const oy = H / 2 - ((fx + fy) * 0.5 - fz) * s;
+  const P = (x, y, z) => [ox + (x - y) * 0.866 * s, oy + ((x + y) * 0.5 - z) * s];
+  const pts = (a) => a.map((p) => P(...p).map((n) => n.toFixed(1)).join(',')).join(' ');
+
+  const poly = (arr, spec, extra = '') => {
+    if (!spec) return '';
+    let fill = typeof spec === 'string' ? spec : spec.f;
+    let e = typeof spec === 'string' ? '' : (spec.e || '');
+    if (wire) {
+      fill = 'rgba(81,137,250,.05)';
+      e = 'stroke="#5189fa" stroke-opacity=".7" stroke-width="1"';
+    } else if (!/stroke=/.test(e)) {
+      e += ' stroke="rgba(251,250,254,.06)" stroke-width=".6"';
+    }
+    return `<polygon points="${pts(arr)}" fill="${fill}" ${e} ${extra} stroke-linejoin="round"/>`;
+  };
+
+  let out = '';
+
+  if (wire) {
+    for (let i = 0; i <= 10; i++) {
+      const a = P(i, 0, 0), b = P(i, 10, 0), c = P(0, i, 0), d = P(10, i, 0);
+      out += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(81,137,250,.2)"/>`;
+      out += `<line x1="${c[0]}" y1="${c[1]}" x2="${d[0]}" y2="${d[1]}" stroke="rgba(81,137,250,.2)"/>`;
+    }
+  }
+
+  for (const it of items) {
+    const cls = it.cls ? `class="${it.cls}"` : '';
+    const op = it.o != null ? `opacity="${it.o}"` : '';
+    if (it.box) {
+      const [x, y, z, w, d, h] = it.box;
+      const X = x + w, Y = y + d, Z = z + h;
+      out += `<g ${cls} ${op}>` +
+        poly([[x, Y, z], [X, Y, z], [X, Y, Z], [x, Y, Z]], it.l) +
+        poly([[X, y, z], [X, Y, z], [X, Y, Z], [X, y, Z]], it.r) +
+        poly([[x, y, Z], [X, y, Z], [X, Y, Z], [x, Y, Z]], it.t) +
+        '</g>';
+    } else if (it.q) {
+      out += poly(it.q, { f: it.f, e: it.e }, `${cls} ${op}`);
+    } else if (it.glow && !wire) {
+      const [cx, cy] = P(...it.glow);
+      const rx = it.r * s, ry = it.flat ? rx * 0.5 : rx * 0.85;
+      out += `<ellipse ${cls} cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="url(#${it.g})" opacity="${it.o}"/>`;
+    }
+  }
+
+  return `<svg class="art" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="${W}" height="${H}" fill="${wire ? '#070818' : 'url(#gBg)'}"/>
+    ${out}
+    <rect width="${W}" height="${H}" fill="url(#gVig)"/>
+  </svg>`;
+}
+
+/* =========================================================
+   2. Nine camera views of the same room
+   ========================================================= */
+const CARDS = [
+  { t: 'The Room',     m: 'Overview', cam: { W: 600, H: 540, s: 26, f: [5, 5, 3.2] } },
+  { t: 'Neon Door',    m: 'Entry',    cam: { W: 600, H: 760, s: 60, f: [2.4, 0.5, 2.8] } },
+  { t: 'Gallery Wall', m: 'Art',      cam: { W: 600, H: 540, s: 52, f: [7.2, 0.6, 3.9] } },
+  { t: 'Screen Time',  m: 'Media',    cam: { W: 600, H: 760, s: 50, f: [0.6, 5.3, 3.0] } },
+  { t: 'Lounge',       m: 'Seating',  cam: { W: 600, H: 540, s: 44, f: [8.2, 5.3, 1.2] } },
+  { t: 'Afterglow',    m: 'Detail',   cam: { W: 600, H: 600, s: 70, f: [4.7, 5.5, 1.2] } },
+  { t: 'Library',      m: 'Shelf',    cam: { W: 600, H: 540, s: 80, f: [7.2, 0.8, 2.6] } },
+  { t: 'Low End',      m: 'Audio',    cam: { W: 600, H: 760, s: 58, f: [0.9, 8.2, 1.6] } },
+  { t: 'Blueprint',    m: 'Plan',     cam: { W: 600, H: 600, s: 24, f: [5, 5, 3.2], wire: true } }
+];
+
+const colEls = document.querySelectorAll('.col');
+CARDS.forEach((c, i) => {
+  const el = document.createElement('div');
+  el.className = 'image';
+  el.innerHTML = `
+    <figure class="frame">
+      ${renderRoom(ROOM, c.cam, c.t)}
+      <figcaption>
+        <div>
+          <span class="idx">${String(i + 1).padStart(2, '0')} / ${String(CARDS.length).padStart(2, '0')}</span>
+          <span class="ttl">${c.t}</span>
+        </div>
+        <span class="meta">${c.m}</span>
+      </figcaption>
+    </figure>`;
+  colEls[Math.floor(i / 3)].appendChild(el);
+});
+
+/* =========================================================
+   3. Infinite loop + scroll acceleration (GSAP)
+   ========================================================= */
+gsap.registerPlugin(ScrollTrigger);
+
+const additionalY = { val: 0 };
+// How hard a scroll kicks the columns: velocity is divided by these (lower is a harder kick)
+const KICK = { down: 2000, up: 3000 };
+let additionalYAnim;
+let offset = 0;
+const cols = gsap.utils.toArray('.col');
+
+cols.forEach((col, i) => {
+  Array.from(col.children).forEach((image) => {
+    col.appendChild(image.cloneNode(true));
+  });
+
+  const items = Array.from(col.children);
+  const columnHeight = col.clientHeight;
+  const direction = i % 2 !== 0 ? '+=' : '-=';
+
+  items.forEach((item) => {
+    gsap.to(item, {
+      y: direction + Number(columnHeight / 2),
+      duration: 20,
+      repeat: -1,
+      ease: 'none',
+      modifiers: {
+        y: gsap.utils.unitize((y) => {
+          offset += additionalY.val;
+          if (direction === '+=') {
+            y = (parseFloat(y) - offset) % (columnHeight * 0.5);
+          } else {
+            y = (parseFloat(y) + offset) % -Number(columnHeight * 0.5);
+          }
+          return y;
+        })
+      }
+    });
+  });
+});
+
+ScrollTrigger.create({
+  trigger: 'section',
+  start: 'top 50%',
+  end: 'bottom 50%',
+  onUpdate(self) {
+    const velocity = self.getVelocity();
+    if (velocity === 0) return;
+    if (additionalYAnim) additionalYAnim.kill();
+    additionalY.val = velocity > 0 ? -velocity / KICK.down : -velocity / KICK.up;
+    additionalYAnim = gsap.to(additionalY, { val: 0 });
+  }
+});
+</script>
+
+<script>
+  /* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The page works on its own; when it
+     is framed, the lab drives it with postMessage and it reports the
+     scroll boost riding on the loop.
+       { source: 'il-motion', type: 'speed', value: 0.25 }   the whole loop
+       { ..., type: 'step', value: 1 | -1 }    a scroll kick down / up
+       { ..., type: 'kick', value: 2000 }      velocity divisor (lower kicks harder)
+       { ..., type: 'autoplay', value: true }  a kick every few seconds
+  ------------------------------------------------------------------ */
+  ;(() => {
+    const kick = (dir) => {
+      if (additionalYAnim) additionalYAnim.kill();
+      additionalY.val = dir > 0 ? -2400 / KICK.down : 2400 / KICK.up;
+      additionalYAnim = gsap.to(additionalY, { val: 0 });
+    };
+    let timer = 0;
+    const autoplay = (on, ms = 3200) => {
+      clearInterval(timer);
+      if (on) timer = setInterval(() => { if (!document.hidden) kick(1); }, ms);
+    };
+    const qs = new URLSearchParams(location.search);
+    if (qs.has('autoplay')) autoplay(true, Number(qs.get('autoplay')) || 3200);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.globalTimeline.timeScale(0.15);
+    addEventListener('message', (e) => {
+      const d = e.data;
+      if (!d || d.source !== 'il-motion') return;
+      if (d.type === 'speed') gsap.globalTimeline.timeScale(Math.max(0.05, Number(d.value) || 1));
+      if (d.type === 'step') kick(d.value > 0 ? 1 : -1);
+      if (d.type === 'kick') { KICK.down = Number(d.value) || 2000; KICK.up = KICK.down * 1.5; }
+      if (d.type === 'autoplay') autoplay(Boolean(d.value));
+    });
+    if (parent === window) return;
+    let last = '';
+    const report = () => {
+      const v = additionalY.val;
+      const text = Math.abs(v) < 0.01 ? 'CRUISING · SCROLL TO KICK IT' : `BOOST ${v < 0 ? 'DOWN' : 'UP'} ${Math.abs(v).toFixed(2)}`;
+      if (text !== last) {
+        last = text;
+        parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*');
+      }
+      setTimeout(() => requestAnimationFrame(report), 90);
+    };
+    requestAnimationFrame(report);
+  })();
+</script>
+</body>
+</html>
