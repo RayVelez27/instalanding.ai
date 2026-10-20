@@ -4,7 +4,9 @@
 
 Bead-blasted aluminium plates on a laminated copper edge, turned copper screws, recessed wells, engraved mono legends, amber and green lamps, analogue gauges and rocker switches that tip on a spring. Extracted from the Machine Front Panel landing page.
 
-![Kiln design system](preview.jpg)
+![Kiln design system](poster.jpg)
+
+The full board, every component at once: [preview.jpg](preview.jpg)
 
 **Explore it live:** [instalanding.ai/systems/kiln](https://instalanding.ai/systems/kiln) — every component rendered, a token playground and COPY FOR AGENT.
 

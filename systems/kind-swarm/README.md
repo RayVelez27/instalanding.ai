@@ -4,7 +4,9 @@
 
 Flame and lime bands of concentric op-art rings, Stardos Stencil set huge, 3px ink outlines with hard offset shadows that press flat on click, cream cards and glossy animoji characters whose eyes follow the pointer. Extracted from the Social Work Agent Swarm landing page.
 
-![Kind Swarm design system](preview.jpg)
+![Kind Swarm design system](poster.jpg)
+
+The full board, every component at once: [preview.jpg](preview.jpg)
 
 **Explore it live:** [instalanding.ai/systems/kind-swarm](https://instalanding.ai/systems/kind-swarm) — every component rendered, a token playground and COPY FOR AGENT.
 

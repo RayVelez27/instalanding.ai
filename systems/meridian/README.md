@@ -4,7 +4,9 @@
 
 Warm clay surfaces with soft neumorphic depth, frosted-glass navigation, a dot-matrix LED metro board and ticker, Bricolage Grotesque headlines lit by one glowing Fraunces italic word, and a Personal / Business switch that re-themes the whole system. Extracted from the LED Metro Tech Storefront landing page.
 
-![Meridian design system](preview.jpg)
+![Meridian design system](poster.jpg)
+
+The full board, every component at once: [preview.jpg](preview.jpg)
 
 **Explore it live:** [instalanding.ai/systems/meridian](https://instalanding.ai/systems/meridian) — every component rendered, a token playground and COPY FOR AGENT.
 

@@ -4,7 +4,9 @@
 
 Warm Flexoki paper and ink, Source Serif set calm and large, JetBrains Mono labels, sheets and taped cards with creased paper texture, pencil notes in the margin, and a real highlighter whose colour is the meaning: rough-edged marks drawn behind the text by an SVG displacement filter. Extracted from the Highlighter Markup landing page.
 
-![Footnote design system](preview.jpg)
+![Footnote design system](poster.jpg)
+
+The full board, every component at once: [preview.jpg](preview.jpg)
 
 **Explore it live:** [instalanding.ai/systems/footnote](https://instalanding.ai/systems/footnote) — every component rendered, a token playground and COPY FOR AGENT.
 

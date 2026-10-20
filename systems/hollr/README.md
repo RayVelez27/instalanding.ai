@@ -4,7 +4,9 @@
 
 A dark retro desktop: night-indigo pages, pale messenger windows with glossy two-tone titlebars inside slowly turning conic rings, bevelled classic buttons beside a purple → magenta brand button with a gold edge, buddy lists, help chats and agent checklists. Oswald display, Neuton copy, Verdana and Tahoma for the UI. Extracted from the Retro Messenger Agent Page.
 
-![Hollr design system](preview.jpg)
+![Hollr design system](poster.jpg)
+
+The full board, every component at once: [preview.jpg](preview.jpg)
 
 **Explore it live:** [instalanding.ai/systems/hollr](https://instalanding.ai/systems/hollr) — every component rendered, a token playground and COPY FOR AGENT.
 

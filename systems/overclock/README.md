@@ -4,7 +4,9 @@
 
 Pure ink on paper: hand-drawn panel outlines from an SVG wobble filter, halftone screentone and speed hatching, Bangers lettering stroked and tilted over Anton numerals and Barlow Condensed body, hard offset shadows, speech bubbles, and an animated sliced retro sun over a seeded city skyline. Extracted from the Manga Panel Dev Tool landing page.
 
-![Overclock design system](preview.jpg)
+![Overclock design system](poster.jpg)
+
+The full board, every component at once: [preview.jpg](preview.jpg)
 
 **Explore it live:** [instalanding.ai/systems/overclock](https://instalanding.ai/systems/overclock) — every component rendered, a token playground and COPY FOR AGENT.
 
