@@ -1,0 +1,1182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hello World Water · InstaLanding Motion</title>
+<style>
+* { box-sizing: border-box; }
+
+:root {
+  --pool-w: min(900px, 90vw, 123vh);
+  --pool-h: calc(var(--pool-w) * 0.65);
+  --ink: #163d43;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #eef0ec;
+}
+
+body {
+  display: grid;
+  place-items: center;
+}
+
+#water {
+  display: block;
+  width: var(--pool-w);
+  height: auto;
+  aspect-ratio: 20 / 13;
+  box-shadow: 0 18px 50px #163d4326;
+  touch-action: none;
+  cursor: crosshair;
+  outline: none;
+}
+
+#water:focus-visible {
+  outline: 2px solid #d4fffa;
+  outline-offset: -2px;
+}
+
+#error {
+  position: fixed;
+  inset: auto 20px 20px;
+  margin: 0;
+  padding: 16px 20px;
+  color: var(--ink);
+  background: #f1fffa;
+  border-radius: 8px;
+  font: 14px/1.5 system-ui, sans-serif;
+  z-index: 20;
+}
+
+#error[hidden] { display: none; }
+</style>
+</head>
+<body>
+<canvas id="water" tabindex="0" aria-label="Pool water that rises into the words HELLO and WORLD, in a loop"></canvas>
+<p id="error" role="alert" hidden></p>
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+
+/* ------------------------------------------------------------------ */
+/* Shaders                                                             */
+/* ------------------------------------------------------------------ */
+
+const waveCommon = /* glsl */`
+uniform sampler2D heightMap;
+uniform float time;
+uniform float chop;
+uniform float calm;
+uniform vec3 sunDir;
+const vec2 poolSize = vec2(8.0,5.2);
+const vec2 texel = vec2(1.0/256.0);
+float ambient(vec2 p) {
+  // A broad directional spectrum avoids two dominant crossing wave trains.
+  p+=0.12*vec2(sin(p.y*.81+p.x*.47-time*.23),sin(p.x*.67-p.y*.92+time*.16));
+  float shelter=(0.69+0.22*sin(p.x*.61+p.y*.37+0.5)*sin(p.y*.71-p.x*.23))*(1.0-0.72*calm);
+  return shelter*(0.010*sin(dot(p,vec2(3.7,2.1))-time*1.82)
+       + 0.007*sin(dot(p,vec2(-5.3,6.1))-time*2.47+0.7)
+       + 0.0042*sin(dot(p,vec2(10.1,2.3))-time*3.14+1.3)
+       + 0.0048*sin(dot(p,vec2(-7.2,5.9))-time*2.91+2.4)
+       + 0.0035*sin(dot(p,vec2(3.6,14.2))-time*3.86+3.8)
+       + 0.0034*sin(dot(p,vec2(14.4,11.7))-time*4.23+1.8)
+       + 0.0042*sin(dot(p,vec2(-13.2,8.4))-time*3.95+0.4)
+       + 0.0028*sin(dot(p,vec2(21.8,9.2))-time*4.80+4.1)
+       + 0.0016*sin(dot(p,vec2(19.7,-24.1))-time*5.52+2.6)
+       + 0.0010*sin(dot(p,vec2(-29.4,-12.7))-time*5.64+0.9)
+       // Rain roughens the whole surface with a fine, fast chop.
+       + chop*(0.0024*sin(dot(p,vec2(41.0,-23.0))-time*9.1)
+             + 0.0019*sin(dot(p,vec2(-31.0,37.0))-time*8.3+1.1)
+             + 0.0014*sin(dot(p,vec2(17.0,46.0))-time*10.4+2.7)));
+}
+float heightAt(vec2 uv) {
+  vec2 p=(uv-0.5)*poolSize;
+  return texture2D(heightMap,clamp(uv,texel*0.5,1.0-texel*0.5)).r+ambient(p);
+}
+vec3 normalAt(vec2 uv) {
+  float dx=(heightAt(uv+vec2(texel.x,0.0))-heightAt(uv-vec2(texel.x,0.0)))/(2.0*poolSize.x*texel.x);
+  float dz=(heightAt(uv+vec2(0.0,texel.y))-heightAt(uv-vec2(0.0,texel.y)))/(2.0*poolSize.y*texel.y);
+  return normalize(vec3(-dx,1.0,-dz));
+}
+`;
+
+const waterVertex = /* glsl */`
+${waveCommon}
+varying vec3 vWorld;
+varying vec2 vUv;
+void main(){
+ vUv=uv;
+ vec3 p=vec3(position.x,heightAt(vec2(uv.x,1.0-uv.y)),-position.y);
+ vWorld=p;
+ gl_Position=projectionMatrix*viewMatrix*vec4(p,1.0);
+}
+`;
+
+const waterFragment = /* glsl */`
+${waveCommon}
+#define LEAVES 10
+uniform sampler2D environmentMap;
+uniform sampler2D causticsMap;
+uniform float hasEnvironment;
+uniform vec4 leafShadows[LEAVES];
+uniform vec3 ballShadow;
+uniform float overcast;
+varying vec3 vWorld;
+varying vec2 vUv;
+#define sun sunDir
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+vec3 environment(vec3 d) {
+ vec2 uv=vec2(atan(d.z,d.x)*0.15915494+0.5,asin(clamp(d.y,-1.0,1.0))*0.31830989+0.5);
+ vec3 sky=mix(vec3(0.5,0.64,0.71),vec3(0.28,0.48,0.75),max(d.y,0.0));
+ vec3 env=mix(sky,texture2D(environmentMap,uv).rgb*0.75,hasEnvironment);
+ return mix(env,vec3(0.52,0.58,0.6),overcast*0.55);
+}
+vec3 tiles(vec2 p, float wall){
+ vec2 q=p/0.115;
+ vec2 cell=floor(q);
+ float r=hash(cell);
+ vec2 f=fract(q);
+ vec2 w=fwidth(q)*1.1;
+ vec2 edge=smoothstep(vec2(0.017)-w,vec2(0.017)+w,min(f,1.0-f));
+ float joint=1.0-edge.x*edge.y;
+ vec3 tile=mix(vec3(0.26,0.50,0.47),vec3(0.38,0.61,0.57),r);
+ tile*=1.0+0.018*sin(p.x*412.0)*sin(p.y*373.0);
+ tile=mix(tile,vec3(0.22,0.39,0.36),joint*0.48);
+ return tile;
+}
+float floaterShadow(vec2 surface, float depth){
+ float occl=1.0;
+ float soft=0.22+depth*0.45;
+ for(int i=0;i<LEAVES;i++){
+  vec4 L=leafShadows[i];
+  vec2 q=surface-L.xy;
+  vec2 cs=vec2(cos(L.z),sin(L.z));
+  vec2 lq=vec2(dot(q,cs),dot(q,vec2(-cs.y,cs.x)))/vec2(L.w,L.w*0.42);
+  float e=dot(lq,lq);
+  occl*=mix(0.4,1.0,smoothstep(1.0-soft,1.0+soft,e));
+ }
+ vec2 bq=(surface-ballShadow.xy)/max(ballShadow.z,0.0001);
+ occl*=mix(0.45,1.0,smoothstep(0.55,1.0+soft*2.0,dot(bq,bq)));
+ return occl;
+}
+vec3 basin(vec3 origin,vec3 ray){
+ float tf=(-1.35-origin.y)/ray.y;
+ vec2 side=(sign(ray.xz)*vec2(4.0,2.6)-origin.xz)/ray.xz;
+ float t=min(tf,min(side.x,side.y));
+ vec3 p=origin+ray*t;
+ vec3 n=vec3(0.0,1.0,0.0);
+ vec2 tileUv=p.xz;
+ float wall=0.0;
+ if(side.x<tf && side.x<side.y){n=vec3(-sign(ray.x),0.0,0.0);tileUv=p.zy;wall=1.0;}
+ else if(side.y<tf){n=vec3(0.0,0.0,-sign(ray.z));tileUv=p.xy;wall=1.0;}
+ vec3 base=tiles(tileUv,wall);
+ float depth=-p.y;
+ vec2 surface=p.xz+sun.xz/sun.y*depth;
+ float shadow=smoothstep(-0.09,0.08,4.0-abs(surface.x))*smoothstep(-0.09,0.08,2.6-abs(surface.y));
+ shadow*=floaterShadow(surface,depth);
+ vec2 cuv=p.xz/poolSize+0.5;
+ float caustic=texture2D(causticsMap,clamp(cuv,0.001,0.999)).r;
+ if(wall>0.5){
+  vec2 c=tileUv*7.0;
+  float f=sin(c.x+sin(c.y*1.7+time*.61))+sin(c.y+sin(c.x*1.31-time*.49));
+  caustic=0.6+0.75*pow(max(0.0,1.0-abs(f)),7.0);
+ }
+ caustic=mix(caustic,0.85,overcast*0.6);
+ float ao=0.79+0.21*smoothstep(0.0,0.3,min(4.0-abs(p.x),2.6-abs(p.z)));
+ float diffuse=max(dot(n,sun),0.0);
+ vec3 col=base*(0.29+shadow*(0.38+caustic*0.57)*diffuse*(1.0-overcast*0.35))*ao;
+ if(wall>0.5){col*=1.0-0.12*exp(-depth*38.0);}
+ vec3 absorption=exp(-vec3(0.34,0.075,0.032)*t);
+ col=col*absorption+vec3(0.025,0.25,0.24)*(1.0-absorption)*0.25;
+ return col;
+}
+void main(){
+ vec2 uv=vec2(vUv.x,1.0-vUv.y);
+ vec3 normal=normalAt(uv);
+ vec3 eye=normalize(cameraPosition-vWorld);
+ vec3 refracted=refract(-eye,normal,1.0/1.333);
+ vec3 transmitted=basin(vWorld,refracted);
+ vec3 reflected=reflect(-eye,normal);
+ vec3 reflection=environment(reflected);
+ float fresnel=0.02037+0.97963*pow(1.0-max(dot(normal,eye),0.0),5.0);
+ vec3 color=mix(transmitted,reflection,fresnel);
+ // Raised water (the letters) reads a touch brighter and greener, and its steep
+ // flanks catch a pale sheen, so the word stays legible from straight above.
+ float simH=texture2D(heightMap,uv).r;
+ float sx=(texture2D(heightMap,uv+vec2(texel.x,0.0)).r-texture2D(heightMap,uv-vec2(texel.x,0.0)).r)/(2.0*poolSize.x*texel.x);
+ float sz=(texture2D(heightMap,uv+vec2(0.0,texel.y)).r-texture2D(heightMap,uv-vec2(0.0,texel.y)).r)/(2.0*poolSize.y*texel.y);
+ float lift=smoothstep(0.008,0.045,simH);
+ color=mix(color,color*1.38+vec3(0.07,0.16,0.14),lift*0.9);
+ // A bright rim on steep flanks, strongest where the flank faces the sun.
+ float flank=smoothstep(0.07,0.42,length(vec2(sx,sz)));
+ float facing=max(dot(normalize(vec3(-sx,0.35,-sz)),sun),0.0);
+ color+=vec3(0.86,1.0,0.97)*flank*(0.12+0.55*facing*facing);
+ vec3 halfway=normalize(eye+sun);
+ float highlight=pow(max(dot(normal,halfway),0.0),950.0);
+ color+=vec3(1.0,0.94,0.79)*highlight*3.2*(1.0-overcast*0.7);
+ gl_FragColor=vec4(color,1.0);
+ #include <tonemapping_fragment>
+ #include <colorspace_fragment>
+}
+`;
+
+const causticsVertex = /* glsl */`
+${waveCommon}
+varying vec3 oldPos;
+varying vec3 newPos;
+void main(){
+ vec2 coord=vec2(uv.x,1.0-uv.y);
+ vec3 p=vec3(position.x,heightAt(coord),-position.y);
+ vec3 light=-normalize(sunDir);
+ vec3 ray=refract(light,normalAt(coord),1.0/1.333);
+ vec3 flatRay=refract(light,vec3(0.0,1.0,0.0),1.0/1.333);
+ oldPos=p+flatRay*((-1.35-p.y)/flatRay.y);
+ newPos=p+ray*((-1.35-p.y)/ray.y);
+ gl_Position=vec4(newPos.x/4.0,newPos.z/2.6,0.0,1.0);
+}
+`;
+
+const causticsFragment = /* glsl */`
+varying vec3 oldPos;
+varying vec3 newPos;
+void main(){
+ float oldArea=length(cross(dFdx(oldPos),dFdy(oldPos)));
+ float newArea=length(cross(dFdx(newPos),dFdy(newPos)));
+ float intensity=clamp(oldArea/max(newArea,0.0000001),0.0,8.0)*0.66;
+ gl_FragColor=vec4(vec3(intensity),1.0);
+}
+`;
+
+const simulationFragment = /* glsl */`
+uniform sampler2D state;
+uniform vec4 impulses[16];
+uniform int impulseCount;
+uniform float delta;
+uniform sampler2D letters;   // r: letter shape, g: wide influence around it
+uniform float form;          // 0 = free water, 1 = fully formed word
+uniform float letterHeight;
+varying vec2 vUv;
+void main(){
+ vec2 dx=vec2(1.0/256.0,0.0),dy=dx.yx;
+ vec2 s=texture2D(state,vUv).rg;
+ float lapX=texture2D(state,vUv+dx).r+texture2D(state,vUv-dx).r-2.0*s.r;
+ float lapZ=texture2D(state,vUv+dy).r+texture2D(state,vUv-dy).r-2.0*s.r;
+ s.g+=(lapX*1024.0+lapZ*2423.67)*1.21*delta;
+ s.g*=exp(-0.64*delta);
+ // A spring toward the word's height field. When form drops to zero the spring
+ // lets go and the raised letters collapse into travelling ripples.
+ vec2 m=texture2D(letters,vUv).rg;
+ float pull=form*(0.18+0.82*m.g);
+ s.g+=(m.r*letterHeight*form-s.r)*95.0*pull*delta;
+ s.g*=exp(-4.0*pull*delta);
+ s.r+=s.g*delta;
+ for(int i=0;i<16;i++){
+  if(i>=impulseCount)break;
+  vec2 d=(vUv-impulses[i].xy)*vec2(8.0,5.2);
+  float q=dot(d,d)/(impulses[i].z*impulses[i].z);
+  s.r+=impulses[i].w*(1.0-q)*exp(-q);
+ }
+ gl_FragColor=vec4(clamp(s.r,-0.3,0.3),s.g,0.0,1.0);
+}
+`;
+
+/* ------------------------------------------------------------------ */
+/* Wave simulation                                                     */
+/* ------------------------------------------------------------------ */
+
+// A fixed-step 2D wave equation, with a no-flux boundary at the pool walls.
+class WaterSimulation {
+  constructor(renderer, letterTexture) {
+    this.renderer = renderer;
+    const options = {type: THREE.HalfFloatType, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: false, stencilBuffer: false};
+    this.a = new THREE.WebGLRenderTarget(256, 256, options);
+    this.b = this.a.clone();
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.Camera();
+    this.pending = [];
+    this.accumulator = 0;
+    this.steps = 0;
+    this.uniforms = {state: {value: this.a.texture}, delta: {value: 1 / 120}, impulseCount: {value: 0}, impulses: {value: Array.from({length: 16}, () => new THREE.Vector4())},
+      letters: {value: letterTexture}, form: {value: 0}, letterHeight: {value: 0.065}};
+    this.material = new THREE.ShaderMaterial({uniforms: this.uniforms, vertexShader: 'varying vec2 vUv; void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}', fragmentShader: simulationFragment, depthTest: false, depthWrite: false});
+    this.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.material));
+    this.reset();
+  }
+  get texture() { return this.a.texture; }
+  disturb(x, z, radius, strength) {
+    if (Math.abs(x) > 3.97 || Math.abs(z) > 2.57) return;
+    if (this.pending.length < 256) this.pending.push(new THREE.Vector4(x / 8 + .5, z / 5.2 + .5, radius, strength));
+  }
+  reset() {
+    const old = this.renderer.getRenderTarget();
+    const oldColor = this.renderer.getClearColor(new THREE.Color());
+    this.renderer.setClearColor(0, 0);
+    for (const t of [this.a, this.b]) { this.renderer.setRenderTarget(t); this.renderer.clear(); }
+    this.renderer.setRenderTarget(old); this.renderer.setClearColor(oldColor, 1);
+    this.pending.length = 0; this.accumulator = 0;
+  }
+  update(dt) {
+    this.accumulator += Math.min(dt, 1 / 20);
+    while (this.accumulator >= 1 / 120) {
+      this.uniforms.state.value = this.a.texture;
+      const count = Math.min(this.pending.length, 16);
+      this.uniforms.impulseCount.value = count;
+      for (let i = 0; i < count; i++) this.uniforms.impulses.value[i].copy(this.pending.shift());
+      this.renderer.setRenderTarget(this.b);
+      this.renderer.render(this.scene, this.camera);
+      [this.a, this.b] = [this.b, this.a];
+      this.accumulator -= 1 / 120; this.steps++;
+    }
+    this.renderer.setRenderTarget(null);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Renderer, camera, environment                                       */
+/* ------------------------------------------------------------------ */
+
+const canvas = document.querySelector('#water');
+const errorElement = document.querySelector('#error');
+function showError(message) {
+  errorElement.textContent = message;
+  errorElement.hidden = false;
+}
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({canvas, antialias: true, powerPreference: 'high-performance'});
+  if (!renderer.extensions.has('EXT_color_buffer_float')) throw new Error('Floating-point rendering is unavailable.');
+} catch (error) {
+  showError('This effect needs WebGL 2 and floating-point rendering. Enable hardware acceleration or try another browser.');
+  throw error;
+}
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.7));
+renderer.setClearColor('#227c88');
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.02;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, 1, 0.05, 50);
+camera.up.set(0, 0, -1);
+
+function resize() {
+  const width = canvas.clientWidth, height = canvas.clientHeight;
+  camera.aspect = width / height;
+  const tangent = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const distance = Math.min(2.6 / tangent, 4 / (camera.aspect * tangent)) * 0.98;
+  camera.position.set(0, distance, 0);
+  camera.lookAt(0, 0, 0);
+  camera.updateProjectionMatrix();
+  camera.updateMatrixWorld();
+  renderer.setSize(width, height, false);
+}
+resize();
+addEventListener('resize', resize);
+
+const hemi = new THREE.HemisphereLight('#d9eef9', '#346c6c', 1.2);
+scene.add(hemi);
+const sunLight = new THREE.DirectionalLight('#fff6df', 2.5);
+scene.add(sunLight);
+
+// The reflection sky is generated in memory; the moving sun glint is drawn in the shader.
+function makeSkyTexture() {
+  const width = 512, height = 256;
+  const data = new Float32Array(width * height * 4);
+  for (let y = 0; y < height; y++) {
+    const elevation = ((y + 0.5) / height - 0.5) * Math.PI;
+    const dy = Math.sin(elevation), horizontal = Math.cos(elevation);
+    for (let x = 0; x < width; x++) {
+      const azimuth = ((x + 0.5) / width - 0.5) * Math.PI * 2;
+      const dx = Math.cos(azimuth) * horizontal, dz = Math.sin(azimuth) * horizontal;
+      const up = Math.max(dy, 0);
+      let r = 0.64 - up * 0.35, g = 0.78 - up * 0.28, b = 0.86 - up * 0.10;
+      const noise = Math.sin(dx * 11 + dz * 7) * 0.4 + Math.sin(dx * 19 - dz * 13 + 2) * 0.25 + Math.sin(dx * 31 + dz * 23 + 1) * 0.12;
+      const cloud = THREE.MathUtils.smoothstep(noise, 0.1, 0.65) * THREE.MathUtils.smoothstep(dy, 0.04, 0.25) * 0.7;
+      r += (1 - r) * cloud; g += (1.03 - g) * cloud; b += (1.05 - b) * cloud;
+      if (dy < 0) { r = 0.18; g = 0.25; b = 0.23; }
+      const offset = (y * width + x) * 4;
+      data[offset] = r; data[offset + 1] = g; data[offset + 2] = b; data[offset + 3] = 1;
+    }
+  }
+  const texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat, THREE.FloatType);
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.minFilter = texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
+  return texture;
+}
+const skyTexture = makeSkyTexture();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromEquirectangular(skyTexture).texture;
+scene.environmentIntensity = 0.5;
+pmrem.dispose();
+
+/* ------------------------------------------------------------------ */
+/* Water surface + caustics                                            */
+/* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/* Word masks: text drawn on an offscreen canvas, blurred into a      */
+/* smooth height target that matches the 256 × 256 simulation grid.   */
+/* ------------------------------------------------------------------ */
+
+const MASK = 256;
+function boxBlur(src, radius, passes) {
+  let a = Float32Array.from(src), b = new Float32Array(src.length);
+  const span = radius * 2 + 1;
+  for (let p = 0; p < passes; p++) {
+    for (let y = 0; y < MASK; y++) {
+      for (let x = 0; x < MASK; x++) {
+        let sum = 0;
+        for (let k = -radius; k <= radius; k++) sum += a[y * MASK + Math.min(MASK - 1, Math.max(0, x + k))];
+        b[y * MASK + x] = sum / span;
+      }
+    }
+    for (let y = 0; y < MASK; y++) {
+      for (let x = 0; x < MASK; x++) {
+        let sum = 0;
+        for (let k = -radius; k <= radius; k++) sum += b[Math.min(MASK - 1, Math.max(0, y + k)) * MASK + x];
+        a[y * MASK + x] = sum / span;
+      }
+    }
+  }
+  return a;
+}
+
+function makeWordMask(word) {
+  const canvas2d = document.createElement('canvas');
+  canvas2d.width = canvas2d.height = MASK;
+  const ctx = canvas2d.getContext('2d', {willReadFrequently: true});
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, MASK, MASK);
+  // One grid cell is 8/256 m wide but 5.2/256 m deep, so stretch the text
+  // vertically in pixels to keep the letters square on the water.
+  ctx.save();
+  ctx.translate(MASK / 2, MASK / 2);
+  ctx.scale(1, 8 / 5.2);
+  const family = '"Arial Black", "Helvetica Neue", Arial, sans-serif';
+  ctx.font = `900 100px ${family}`;
+  const size = Math.min(80, 204 / ctx.measureText(word).width * 100);
+  ctx.font = `900 ${size}px ${family}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#fff';
+  ctx.fillText(word, 0, size * 0.04);
+  ctx.restore();
+
+  const pixels = ctx.getImageData(0, 0, MASK, MASK).data;
+  const base = new Float32Array(MASK * MASK);
+  for (let i = 0; i < base.length; i++) base[i] = pixels[i * 4] / 255;
+  const sharp = boxBlur(base, 1, 2);
+  const wideRaw = boxBlur(base, 9, 3);
+  let peak = 0;
+  for (const v of wideRaw) peak = Math.max(peak, v);
+  const wide = wideRaw.map(v => Math.min(1, v / peak * 1.6));
+
+  const data = new Uint8Array(MASK * MASK * 4);
+  const points = [];
+  for (let i = 0; i < base.length; i++) {
+    data[i * 4] = Math.round(Math.min(1, sharp[i]) * 255);
+    data[i * 4 + 1] = Math.round(wide[i] * 255);
+    data[i * 4 + 3] = 255;
+    if (base[i] > 0.8) {
+      const px = i % MASK, py = Math.floor(i / MASK);
+      points.push([(px + 0.5) / MASK * 8 - 4, (py + 0.5) / MASK * 5.2 - 2.6]);
+    }
+  }
+  const texture = new THREE.DataTexture(data, MASK, MASK, THREE.RGBAFormat);
+  texture.minFilter = texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
+  return {word, texture, sharp, wide, points};
+}
+
+function sampleMask(field, x, z) {
+  const px = Math.min(MASK - 1, Math.max(0, Math.floor((x + 4) / 8 * MASK)));
+  const py = Math.min(MASK - 1, Math.max(0, Math.floor((z + 2.6) / 5.2 * MASK)));
+  return field[py * MASK + px];
+}
+
+const words = ['HELLO', 'WORLD'].map(makeWordMask);
+
+const LEAF_COUNT = 10;
+const sim = new WaterSimulation(renderer, words[0].texture);
+const uniforms = {
+  heightMap: {value: sim.texture},
+  time: {value: 0},
+  chop: {value: 0},
+  calm: {value: 0},
+  overcast: {value: 0},
+  sunDir: {value: new THREE.Vector3(-0.423, 0.845, 0.327)},
+  environmentMap: {value: skyTexture},
+  hasEnvironment: {value: 1},
+  causticsMap: {value: null},
+  leafShadows: {value: Array.from({length: LEAF_COUNT}, () => new THREE.Vector4(100, 100, 0, 0.01))},
+  ballShadow: {value: new THREE.Vector3(100, 100, 0.01)}
+};
+const geometry = new THREE.PlaneGeometry(8, 5.2, 256, 256);
+const water = new THREE.Mesh(geometry, new THREE.ShaderMaterial({uniforms, vertexShader: waterVertex, fragmentShader: waterFragment}));
+water.frustumCulled = false;
+scene.add(water);
+
+const causticsTarget = new THREE.WebGLRenderTarget(1024, 1024, {
+  type: THREE.HalfFloatType, depthBuffer: false,
+  minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter, generateMipmaps: true
+});
+uniforms.causticsMap.value = causticsTarget.texture;
+const causticsScene = new THREE.Scene();
+const caustics = new THREE.Mesh(geometry, new THREE.ShaderMaterial({
+  uniforms, vertexShader: causticsVertex, fragmentShader: causticsFragment,
+  depthWrite: false, depthTest: false, side: THREE.DoubleSide,
+  blending: THREE.AdditiveBlending, transparent: true
+}));
+caustics.frustumCulled = false;
+causticsScene.add(caustics);
+
+// CPU copy of the ambient wave field, so floating things bob in sync with the shader.
+const terms = [
+  [3.7, 2.1, 0.010, 1.82, 0], [-5.3, 6.1, 0.007, 2.47, 0.7], [10.1, 2.3, 0.0042, 3.14, 1.3],
+  [-7.2, 5.9, 0.0048, 2.91, 2.4], [3.6, 14.2, 0.0035, 3.86, 3.8], [14.4, 11.7, 0.0034, 4.23, 1.8],
+  [-13.2, 8.4, 0.0042, 3.95, 0.4], [21.8, 9.2, 0.0028, 4.80, 4.1], [19.7, -24.1, 0.0016, 5.52, 2.6],
+  [-29.4, -12.7, 0.0010, 5.64, 0.9]
+];
+function ambientJS(x, z, t) {
+  const px = x + 0.12 * Math.sin(z * .81 + x * .47 - t * .23);
+  const pz = z + 0.12 * Math.sin(x * .67 - z * .92 + t * .16);
+  const shelter = 0.69 + 0.22 * Math.sin(px * .61 + pz * .37 + 0.5) * Math.sin(pz * .71 - px * .23);
+  let h = 0;
+  for (const [kx, kz, a, w, ph] of terms) h += a * Math.sin(px * kx + pz * kz - t * w + ph);
+  return shelter * h * (1 - 0.72 * form);
+}
+
+/* ------------------------------------------------------------------ */
+/* Splashes                                                            */
+/* ------------------------------------------------------------------ */
+
+const drops = [], crowns = [];
+const maxDrops = 900;
+const dummy = new THREE.Object3D();
+const droplets = new THREE.InstancedMesh(
+  new THREE.SphereGeometry(1, 10, 8),
+  new THREE.MeshPhysicalMaterial({
+    color: '#ddfffb', metalness: 0.05, roughness: 0.03,
+    transmission: 0.68, thickness: 0.06, ior: 1.333,
+    transparent: true, opacity: 0.97, envMapIntensity: 2.2
+  }), maxDrops
+);
+droplets.count = 0;
+droplets.frustumCulled = false;
+droplets.renderOrder = 2;
+scene.add(droplets);
+const crownMaterial = new THREE.MeshPhysicalMaterial({
+  color: '#92c4bd', roughness: 0.035, metalness: 0.15,
+  transparent: true, opacity: 0.46, side: THREE.DoubleSide, envMapIntensity: 1.5
+});
+let splashCount = 0, impactCount = 0;
+
+function splash(x, z, power = 1, vx = 0, vz = 0) {
+  const moving = Math.hypot(vx, vz) > 0.5;
+  const count = Math.floor((moving ? 13 : 22) + power * (moving ? 16 : 24));
+  for (let i = 0; i < count && drops.length < maxDrops; i++) {
+    const a = Math.random() * Math.PI * 2, r = Math.random() * 0.1;
+    drops.push({
+      x: x + Math.cos(a) * r, y: 0.015 + Math.random() * 0.02, z: z + Math.sin(a) * r,
+      vx: Math.cos(a) * (0.25 + Math.random() * 0.85) * power + vx * 0.055,
+      vz: Math.sin(a) * (0.25 + Math.random() * 0.85) * power + vz * 0.055,
+      vy: (0.85 + Math.random() * 2.7) * Math.sqrt(power),
+      r: i < 5 ? 0.022 + Math.random() * 0.013 : 0.004 + Math.random() ** 3 * 0.023
+    });
+  }
+  const crownGeometry = new THREE.BufferGeometry();
+  crownGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(65 * 2 * 3), 3));
+  const indices = [];
+  for (let i = 0; i < 64; i++) { const a = i * 2; indices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+  crownGeometry.setIndex(indices);
+  const mesh = new THREE.Mesh(crownGeometry, crownMaterial.clone());
+  mesh.position.set(x, 0, z);
+  mesh.frustumCulled = false;
+  mesh.renderOrder = 2;
+  scene.add(mesh);
+  crowns.push({mesh, age: 0, power, phase: Math.random() * 6, moving, direction: Math.atan2(vz, vx)});
+  splashCount++;
+}
+
+function removeCrown(crown) {
+  scene.remove(crown.mesh);
+  crown.mesh.geometry.dispose();
+  crown.mesh.material.dispose();
+}
+
+function updateSplashes(dt) {
+  let count = 0;
+  for (let i = drops.length - 1; i >= 0; i--) {
+    const d = drops[i];
+    d.vy -= 9.81 * dt;
+    d.x += d.vx * dt; d.y += d.vy * dt; d.z += d.vz * dt;
+    if (d.y <= 0 || Math.abs(d.x) > 4 || Math.abs(d.z) > 2.6) {
+      if (d.y <= 0 && Math.abs(d.x) < 4 && Math.abs(d.z) < 2.6) {
+        sim.disturb(d.x, d.z, 0.055, d.r * 0.2);
+        impactCount++;
+      }
+      drops.splice(i, 1);
+      continue;
+    }
+    dummy.position.set(d.x, d.y, d.z);
+    dummy.rotation.set(0, 0, 0);
+    dummy.scale.set(d.r, d.r * (1 + Math.min(Math.abs(d.vy) * 0.17, 0.8)), d.r);
+    dummy.updateMatrix();
+    droplets.setMatrixAt(count++, dummy.matrix);
+  }
+  droplets.count = count;
+  droplets.instanceMatrix.needsUpdate = true;
+  for (let i = crowns.length - 1; i >= 0; i--) {
+    const c = crowns[i];
+    c.age += dt;
+    const life = 0.39 + 0.12 * Math.max(0, c.power - 1.5);
+    if (c.age > life) { removeCrown(c); crowns.splice(i, 1); continue; }
+    const positions = c.mesh.geometry.attributes.position, progress = c.age / life;
+    const radius = 0.06 + c.age * 0.6 * c.power;
+    const height = Math.sin(progress * Math.PI) * 0.24 * c.power;
+    for (let j = 0; j <= 64; j++) {
+      const a = c.moving ? c.direction + (j / 64 - 0.5) * 2.7 : j / 64 * Math.PI * 2;
+      const lobes = 0.7 + 0.32 * Math.sin(a * 7 + c.phase) + 0.22 * Math.sin(a * 11 + 1.7) + 0.12 * Math.sin(a * 17);
+      const r = radius * (1 + 0.12 * Math.sin(a * 5 + c.phase));
+      const taper = c.moving ? Math.sin(j / 64 * Math.PI) : 1;
+      positions.setXYZ(j * 2, Math.cos(a) * r, 0.004, Math.sin(a) * r);
+      positions.setXYZ(j * 2 + 1, Math.cos(a) * r * (1.07 + 0.12 * progress), height * lobes * taper + 0.004, Math.sin(a) * r * (1.07 + 0.12 * progress));
+    }
+    positions.needsUpdate = true;
+    c.mesh.geometry.computeVertexNormals();
+    c.mesh.material.opacity = 0.46 * (1 - progress);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Floating leaves (drift, bob, spin, cast shadows on the floor)       */
+/* ------------------------------------------------------------------ */
+
+const leafShape = new THREE.Shape();
+leafShape.moveTo(-1, 0);
+leafShape.bezierCurveTo(-0.55, 0.52, 0.45, 0.56, 1, 0);
+leafShape.bezierCurveTo(0.45, -0.56, -0.55, -0.52, -1, 0);
+const leafGeometry = new THREE.ShapeGeometry(leafShape, 14);
+leafGeometry.rotateX(-Math.PI / 2);
+const ribGeometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-1.25, 0.002, 0), new THREE.Vector3(0.92, 0.002, 0)]);
+const leafColors = ['#c8742c', '#d9a23b', '#a8442a', '#7d8f3a', '#e0b04a', '#b85a2a'];
+const leaves = [];
+const UP = new THREE.Vector3(0, 1, 0), tmpN = new THREE.Vector3(), qTilt = new THREE.Quaternion(), qYaw = new THREE.Quaternion();
+
+for (let i = 0; i < LEAF_COUNT; i++) {
+  const color = new THREE.Color(leafColors[i % leafColors.length]);
+  const mesh = new THREE.Mesh(leafGeometry, new THREE.MeshStandardMaterial({
+    color, roughness: 0.62, metalness: 0, side: THREE.DoubleSide, depthTest: false
+  }));
+  const rib = new THREE.Line(ribGeometry, new THREE.LineBasicMaterial({color: color.clone().multiplyScalar(0.55), depthTest: false}));
+  rib.renderOrder = 1;
+  mesh.add(rib);
+  mesh.renderOrder = 1;
+  const size = 0.13 + Math.random() * 0.08;
+  mesh.scale.setScalar(size);
+  scene.add(mesh);
+  const floating = i < 6;
+  mesh.visible = floating;
+  leaves.push({
+    mesh, size, seed: Math.random() * 10,
+    x: (Math.random() - 0.5) * 6.4, z: (Math.random() - 0.5) * 4, y: 0,
+    vx: 0, vz: 0, a: Math.random() * Math.PI * 2, w: (Math.random() - 0.5) * 0.4,
+    state: floating ? 'float' : 'waiting'
+  });
+}
+let nextLeafFall = 6;
+
+const jets = [{x: -3.92, z: -1.25, dir: 1}, {x: 3.92, z: 1.35, dir: -1}];
+
+function currentAt(x, z, t) {
+  let cx = 0.05 * Math.sin(z * 0.6 + t * 0.1) + 0.03 * Math.sin(t * 0.07);
+  let cz = 0.05 * Math.cos(x * 0.5 - t * 0.13);
+  for (const j of jets) {
+    const down = (x - j.x) * j.dir, dz = z - j.z;
+    if (down > 0) {
+      const f = Math.exp(-down * 0.75) * Math.exp(-dz * dz * 4);
+      cx += j.dir * 0.32 * f;
+      cz += dz * -0.05 * f;
+    }
+  }
+  return [cx, cz];
+}
+
+function pushLeaves(x, z, radius, force) {
+  for (const l of leaves) {
+    if (l.state !== 'float') continue;
+    const dx = l.x - x, dz = l.z - z, d = Math.hypot(dx, dz);
+    if (d > radius || d < 1e-4) continue;
+    const f = force * (1 - d / radius);
+    l.vx += dx / d * f; l.vz += dz / d * f;
+    l.w += (Math.random() - 0.5) * f * 6;
+  }
+}
+
+function stirLeaves(x, z, radius, vx, vz, amount) {
+  for (const l of leaves) {
+    if (l.state !== 'float') continue;
+    const d = Math.hypot(l.x - x, l.z - z);
+    if (d > radius) continue;
+    const f = amount * (1 - d / radius);
+    l.vx += (vx - l.vx) * f; l.vz += (vz - l.vz) * f;
+    l.w += ((l.x - x) * vz - (l.z - z) * vx) * f * 3;
+  }
+}
+
+function updateLeaves(dt, t) {
+  // New leaves drift down from above every so often.
+  nextLeafFall -= dt;
+  if (nextLeafFall <= 0) {
+    const waiting = leaves.find(l => l.state === 'waiting');
+    if (waiting) {
+      waiting.state = 'falling';
+      waiting.x = (Math.random() - 0.5) * 6; waiting.z = (Math.random() - 0.5) * 3.6;
+      waiting.y = 2.6; waiting.vx = waiting.vz = 0;
+      waiting.mesh.visible = true;
+    }
+    nextLeafFall = 7 + Math.random() * 6;
+  }
+
+  for (let i = 0; i < leaves.length; i++) {
+    const l = leaves[i], u = uniforms.leafShadows.value[i];
+    if (l.state === 'waiting') { u.set(100, 100, 0, 0.01); continue; }
+
+    if (l.state === 'falling') {
+      l.y -= 0.42 * dt;
+      l.x += Math.sin(t * 2.6 + l.seed) * 0.55 * dt;
+      l.z += Math.cos(t * 1.7 + l.seed) * 0.25 * dt;
+      l.a += Math.sin(t * 1.9 + l.seed) * 2.2 * dt;
+      const surface = ambientJS(l.x, l.z, t);
+      l.mesh.position.set(l.x, l.y, l.z);
+      l.mesh.rotation.set(Math.sin(t * 3.1 + l.seed) * 0.6, -l.a, Math.cos(t * 2.7 + l.seed) * 0.5);
+      // Soft, wide shadow that sharpens as the leaf approaches the water.
+      const h = Math.max(l.y, 0);
+      u.set(l.x, l.z, l.a, l.size * (1 + h * 0.6));
+      if (l.y <= surface + 0.012) {
+        l.state = 'float';
+        sim.disturb(l.x, l.z, 0.1, -0.014);
+        pushLeaves(l.x, l.z, 0.6, 0.12);
+      }
+      continue;
+    }
+
+    const [cx, cz] = currentAt(l.x, l.z, t);
+    const k = Math.min(1, dt * 0.8);
+    l.vx += (cx - l.vx) * k; l.vz += (cz - l.vz) * k;
+    // Rising letters shoulder leaves aside, downhill off the strokes.
+    if (form > 0.02) {
+      const field = words[wordIndex].wide, step = 0.08;
+      const mgx = (sampleMask(field, l.x + step, l.z) - sampleMask(field, l.x - step, l.z)) / (2 * step);
+      const mgz = (sampleMask(field, l.x, l.z + step) - sampleMask(field, l.x, l.z - step)) / (2 * step);
+      l.vx -= mgx * form * 0.55 * dt; l.vz -= mgz * form * 0.55 * dt;
+    }
+    const sp = Math.hypot(l.vx, l.vz);
+    if (sp > 1.6) { l.vx *= 1.6 / sp; l.vz *= 1.6 / sp; }
+    l.x += l.vx * dt; l.z += l.vz * dt;
+
+    const mx = 3.95 - l.size * 0.8, mz = 2.55 - l.size * 0.8;
+    if (Math.abs(l.x) > mx) { l.x = Math.sign(l.x) * mx; l.vx *= -0.35; l.w += (Math.random() - 0.5) * 1.5; }
+    if (Math.abs(l.z) > mz) { l.z = Math.sign(l.z) * mz; l.vz *= -0.35; l.w += (Math.random() - 0.5) * 1.5; }
+
+    for (let j = i + 1; j < leaves.length; j++) {
+      const o = leaves[j];
+      if (o.state !== 'float') continue;
+      const dx = o.x - l.x, dz = o.z - l.z, d = Math.hypot(dx, dz), min = (l.size + o.size) * 0.85;
+      if (d < min && d > 1e-4) {
+        const push = (min - d) * 0.5, nx = dx / d, nz = dz / d;
+        l.x -= nx * push; l.z -= nz * push; o.x += nx * push; o.z += nz * push;
+        l.w -= 0.3 * push * 20; o.w += 0.3 * push * 20;
+      }
+    }
+
+    l.w += Math.sin(t * 0.7 + l.seed) * 0.12 * dt;
+    l.w *= Math.exp(-1.4 * dt);
+    l.a += l.w * dt;
+
+    const e = 0.03;
+    const h = ambientJS(l.x, l.z, t);
+    const gx = (ambientJS(l.x + e, l.z, t) - ambientJS(l.x - e, l.z, t)) / (2 * e);
+    const gz = (ambientJS(l.x, l.z + e, t) - ambientJS(l.x, l.z - e, t)) / (2 * e);
+    tmpN.set(-gx * 3, 1, -gz * 3).normalize();
+    qTilt.setFromUnitVectors(UP, tmpN);
+    qYaw.setFromAxisAngle(UP, -l.a);
+    l.mesh.quaternion.copy(qTilt).multiply(qYaw);
+    const ride = form * sampleMask(words[wordIndex].sharp, l.x, l.z) * sim.uniforms.letterHeight.value;
+    l.mesh.position.set(l.x, h + ride + 0.012, l.z);
+    u.set(l.x, l.z, l.a, l.size);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Word timeline: HELLO rises, holds, collapses; WORLD rises ... loop  */
+/* ------------------------------------------------------------------ */
+
+const T_FORM = 2.8, T_HOLD = 3.8, T_RELEASE = 1.6, T_REST = 1.0;
+const WORD_TIME = T_FORM + T_HOLD + T_RELEASE + T_REST;
+let wordIndex = 0, wordClock = T_FORM, form = 1, released = false, riseAccumulator = 0, frozen = false;
+const ease = x => x * x * x * (x * (x * 6 - 15) + 10);
+
+function releaseWord() {
+  // The spring lets go: splashes burst along the strokes and leaves scatter.
+  const pts = words[wordIndex].points;
+  for (let i = 0; i < 11 && pts.length; i++) {
+    const [x, z] = pts[Math.floor(Math.random() * pts.length)];
+    splash(x, z, 0.45 + Math.random() * 0.3);
+    pushLeaves(x, z, 0.9, 0.35);
+  }
+}
+
+function nextWord() {
+  if (wordClock < T_FORM + T_HOLD) wordClock = T_FORM + T_HOLD;
+  else wordClock = WORD_TIME;
+}
+
+function updateWords(dt) {
+  wordClock += dt;
+  if (frozen && wordClock > T_FORM + 1) wordClock = T_FORM + 1;
+  if (wordClock >= WORD_TIME) {
+    wordClock -= WORD_TIME;
+    wordIndex = (wordIndex + 1) % words.length;
+    sim.uniforms.letters.value = words[wordIndex].texture;
+    released = false;
+  }
+  const c = wordClock;
+  let target = 0, phase;
+  if (c < 0) { phase = 'stilling'; }
+  else if (c < T_FORM) { target = ease(c / T_FORM); phase = 'rising'; }
+  else if (c < T_FORM + T_HOLD) { target = 1; phase = 'holding'; }
+  else if (c < T_FORM + T_HOLD + T_RELEASE) { phase = 'letting go'; }
+  else { phase = 'stilling'; }
+  wordPhase = phase;
+  // Rise gently, let go fast so the letters fall as one collapse.
+  form += (target - form) * Math.min(1, dt * (target < form ? 9 : 4));
+  sim.uniforms.form.value = form;
+  uniforms.calm.value = form;
+
+  if (c >= T_FORM + T_HOLD && !released) { released = true; releaseWord(); }
+
+  // While rising, fine spray lifts off the strokes being drawn up.
+  if (c >= 0 && c < T_FORM) {
+    riseAccumulator += dt * 30 * Math.sin(Math.PI * c / T_FORM);
+    const pts = words[wordIndex].points;
+    while (riseAccumulator >= 1 && drops.length < maxDrops && pts.length) {
+      riseAccumulator -= 1;
+      const [x, z] = pts[Math.floor(Math.random() * pts.length)];
+      drops.push({x, y: 0.02, z, vx: (Math.random() - 0.5) * 0.3, vz: (Math.random() - 0.5) * 0.3,
+        vy: 0.7 + Math.random() * 1.1, r: 0.003 + Math.random() * 0.006});
+    }
+  }
+
+}
+
+/* ------------------------------------------------------------------ */
+/* Pool return jets                                                    */
+/* ------------------------------------------------------------------ */
+
+function updateJets(t) {
+  jets.forEach((j, i) => {
+    const pulse = 0.6 + 0.4 * Math.sin(t * 2.3 + i * 2.1) + 0.15 * Math.sin(t * 7.1 + i);
+    sim.disturb(j.x + j.dir * 0.12, j.z + Math.sin(t * 5 + i) * 0.03, 0.11, 0.0022 * pulse);
+    sim.disturb(j.x + j.dir * 0.38, j.z, 0.16, 0.0009 * pulse);
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/* Rain                                                                */
+/* ------------------------------------------------------------------ */
+
+const rain = [];
+const maxRain = 700;
+const rainMesh = new THREE.InstancedMesh(
+  new THREE.SphereGeometry(1, 6, 4),
+  new THREE.MeshBasicMaterial({color: '#f2fffd', transparent: true, opacity: 0.55, depthWrite: false}),
+  maxRain
+);
+rainMesh.count = 0;
+rainMesh.frustumCulled = false;
+rainMesh.renderOrder = 3;
+scene.add(rainMesh);
+let rainAmount = 0, rainTarget = 0, rainAccumulator = 0;
+
+function updateRain(dt) {
+  rainAmount += (rainTarget - rainAmount) * Math.min(1, dt * 0.45);
+  uniforms.chop.value = rainAmount;
+  uniforms.overcast.value = rainAmount * 0.8;
+  sunLight.intensity = 2.5 * (1 - rainAmount * 0.45);
+
+  const wind = 0.7 + 0.5 * Math.sin(uniforms.time.value * 0.3);
+  rainAccumulator += rainAmount * 170 * dt;
+  while (rainAccumulator >= 1 && rain.length < maxRain) {
+    rainAccumulator -= 1;
+    rain.push({
+      x: (Math.random() - 0.5) * 9.2 - wind * 0.3, z: (Math.random() - 0.5) * 6,
+      y: 1.8 + Math.random() * 1.8, vx: wind, vy: -6.5 - Math.random() * 1.8
+    });
+  }
+  if (rain.length >= maxRain) rainAccumulator = 0;
+
+  let count = 0;
+  for (let i = rain.length - 1; i >= 0; i--) {
+    const d = rain[i];
+    d.x += d.vx * dt; d.y += d.vy * dt;
+    if (d.y <= 0) {
+      if (Math.abs(d.x) < 4 && Math.abs(d.z) < 2.6) {
+        sim.disturb(d.x, d.z, 0.035, -0.003 - Math.random() * 0.005);
+        if (Math.random() < 0.18 && drops.length < maxDrops) {
+          drops.push({x: d.x, y: 0.01, z: d.z, vx: (Math.random() - 0.5) * 0.4, vz: (Math.random() - 0.5) * 0.4,
+            vy: 0.6 + Math.random() * 0.7, r: 0.003 + Math.random() * 0.004});
+        }
+      }
+      rain.splice(i, 1);
+      continue;
+    }
+    dummy.position.set(d.x, d.y, d.z);
+    dummy.rotation.set(0, 0, Math.atan2(-d.vx, d.vy));
+    dummy.scale.set(0.006, 0.075, 0.006);
+    dummy.updateMatrix();
+    rainMesh.setMatrixAt(count++, dummy.matrix);
+  }
+  rainMesh.count = count;
+  rainMesh.instanceMatrix.needsUpdate = true;
+}
+
+/* ------------------------------------------------------------------ */
+/* Moving sun                                                          */
+/* ------------------------------------------------------------------ */
+
+function updateSun(t) {
+  const az = 2.48 + t * 0.075;
+  const elevation = 0.845 + 0.05 * Math.sin(t * 0.05);
+  const horizontal = 0.535 + 0.08 * Math.sin(t * 0.11);
+  uniforms.sunDir.value.set(Math.cos(az) * horizontal, elevation, Math.sin(az) * horizontal).normalize();
+  sunLight.position.copy(uniforms.sunDir.value).multiplyScalar(10);
+}
+
+/* ------------------------------------------------------------------ */
+/* Interaction                                                         */
+/* ------------------------------------------------------------------ */
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const waterPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+let lastPoint = null, lastPointerTime = 0, lastSplash = 0, lastImpulse = 0;
+let lastClick = {time: 0, x: 0, z: 0};
+
+function pointOnWater(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  pointer.set((clientX - rect.left) / rect.width * 2 - 1, 1 - (clientY - rect.top) / rect.height * 2);
+  raycaster.setFromCamera(pointer, camera);
+  const point = new THREE.Vector3();
+  if (!raycaster.ray.intersectPlane(waterPlane, point) || Math.abs(point.x) > 3.95 || Math.abs(point.z) > 2.55) return null;
+  return point;
+}
+
+function dropPebbleAt(x, z) {
+  sim.disturb(x, z, 0.32, -0.22);
+  splash(x, z, 1.35);
+  pushLeaves(x, z, 1.1, 0.55);
+}
+
+function cannonball(x, z) {
+  sim.disturb(x, z, 0.58, -0.3);
+  splash(x, z, 2.4);
+  pushLeaves(x, z, 2.6, 1.5);
+  // The cavity collapses and throws up a central jet a moment later.
+  setTimeout(() => {
+    sim.disturb(x, z, 0.24, 0.14);
+    splash(x, z, 1.15);
+  }, 210);
+  setTimeout(() => sim.disturb(x, z, 0.4, -0.06), 420);
+}
+
+canvas.addEventListener('pointermove', event => {
+  if (!event.isPrimary) return;
+  const point = pointOnWater(event.clientX, event.clientY), now = performance.now();
+  if (!point) { lastPoint = null; return; }
+  if (lastPoint) {
+    const seconds = Math.max((now - lastPointerTime) / 1000, 0.008);
+    const distance = point.distanceTo(lastPoint), speed = distance / seconds;
+    const vx = (point.x - lastPoint.x) / seconds, vz = (point.z - lastPoint.z) / seconds;
+    if (distance > 0.014 && now - lastImpulse > 12) {
+      const segments = Math.min(8, Math.max(1, Math.ceil(distance / 0.065)));
+      for (let i = 1; i <= segments; i++) {
+        const at = lastPoint.clone().lerp(point, i / segments);
+        sim.disturb(at.x, at.z, 0.13 + Math.min(speed, 5) * 0.007,
+          Math.min(0.02, 0.006 + speed * 0.0013) * Math.min(1.5, distance / segments / 0.055));
+      }
+      stirLeaves(point.x, point.z, 0.32 + Math.min(speed, 5) * 0.03, Math.max(-2, Math.min(2, vx * 0.6)), Math.max(-2, Math.min(2, vz * 0.6)), 0.35);
+      lastImpulse = now;
+    }
+    if (speed > 3.3 && distance > 0.045 && distance < 2.3 && now - lastSplash > 95) {
+      splash(point.x, point.z, Math.min(1.65, 0.5 + speed * 0.085), vx, vz);
+      lastSplash = now;
+    }
+  }
+  lastPoint = point;
+  lastPointerTime = now;
+});
+
+canvas.addEventListener('pointerdown', event => {
+  if (!event.isPrimary || event.button !== 0) return;
+  const now = performance.now();
+  const point = pointOnWater(event.clientX, event.clientY);
+  if (point) {
+    const quick = now - lastClick.time < 340 && Math.hypot(point.x - lastClick.x, point.z - lastClick.z) < 0.5;
+    if (quick) { cannonball(point.x, point.z); lastClick.time = 0; }
+    else { dropPebbleAt(point.x, point.z); lastClick = {time: now, x: point.x, z: point.z}; }
+  }
+  canvas.focus({preventScroll: true});
+});
+for (const event of ['pointerleave', 'pointercancel']) {
+  canvas.addEventListener(event, () => { lastPoint = null; });
+}
+
+function reset() {
+  sim.reset(); drops.length = 0; droplets.count = 0; rain.length = 0; rainMesh.count = 0;
+  crowns.forEach(removeCrown); crowns.length = 0; lastPoint = null;
+}
+
+addEventListener('keydown', event => {
+  if (event.target !== document.body && event.target !== canvas) return;
+  const key = event.key.toLowerCase();
+  if (key === 'r') reset();
+  if (key === 'w') rainTarget = rainTarget > 0.5 ? 0 : 1;
+  if (key === 'n') nextWord();
+  if (event.code === 'Space') {
+    event.preventDefault();
+    dropPebbleAt((Math.random() - 0.5) * 3, (Math.random() - 0.5) * 2);
+  }
+});
+
+canvas.addEventListener('webglcontextlost', event => {
+  event.preventDefault();
+  showError('The graphics context was interrupted. Reload the page to restart the water.');
+});
+canvas.addEventListener('webglcontextrestored', () => location.reload());
+
+/* ------------------------------------------------------------------ */
+/* Loop                                                                */
+/* ------------------------------------------------------------------ */
+
+let SPEED = 1, showLeaves = true, wordPhase = 'rising';
+let previous = performance.now(), elapsed = 0, fps = 60, frames = 0, fpsTime = 0;
+function animate(now) {
+  requestAnimationFrame(animate);
+  const dt = Math.min((now - previous) / 1000, 0.05) * SPEED;
+  previous = now;
+  if (document.hidden || renderer.getContext().isContextLost()) return;
+  elapsed += dt; frames++; fpsTime += dt;
+  if (fpsTime >= 1) { fps = frames / fpsTime; frames = 0; fpsTime = 0; }
+
+  uniforms.time.value = elapsed;
+  updateSun(elapsed);
+  updateJets(elapsed);
+  updateRain(dt);
+  updateWords(dt);
+  if (showLeaves) updateLeaves(dt, elapsed);
+  else leaves.forEach((l, i) => { l.mesh.visible = false; uniforms.leafShadows.value[i].set(100, 100, 0, 0.01); });
+  sim.update(dt);
+  uniforms.heightMap.value = sim.texture;
+  updateSplashes(dt);
+
+  renderer.setClearColor(0, 0);
+  renderer.setRenderTarget(causticsTarget);
+  renderer.clear();
+  renderer.render(causticsScene, camera);
+  renderer.setRenderTarget(null);
+  renderer.setClearColor('#227c88', 1);
+  renderer.render(scene, camera);
+}
+// Pre-run the simulation so HELLO is already standing on the very first frame.
+sim.uniforms.form.value = 1;
+uniforms.calm.value = 1;
+for (let i = 0; i < 40; i++) sim.update(1 / 20);
+uniforms.heightMap.value = sim.texture;
+requestAnimationFrame(animate);
+
+/* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The pool works on its own; when it
+     is framed, the lab drives it with postMessage and it reports the word.
+       { source: 'il-motion', type: 'speed', value: 0.25 }   the whole simulation (it runs on dt)
+       { ..., type: 'step', value: 1 | -1 }    the next word / a pebble
+       { ..., type: 'rain', value: 0..1 }      how hard it rains
+       { ..., type: 'hold', value: true }      keep the word standing
+       { ..., type: 'leaves', value: true }    the floating leaves
+       { ..., type: 'autoplay', value: true }  a pebble every few seconds
+  ------------------------------------------------------------------ */
+{
+  let auto = 0;
+  const pebble = () => dropPebbleAt((Math.random() - 0.5) * 6, (Math.random() - 0.5) * 3.8);
+  const autoplay = (on, ms = 2600) => {
+    clearInterval(auto);
+    if (on) auto = setInterval(() => { if (!document.hidden) pebble(); }, ms);
+  };
+  const qs = new URLSearchParams(location.search);
+  if (qs.has('autoplay')) autoplay(true, Number(qs.get('autoplay')) || 2600);
+  addEventListener('message', (e) => {
+    const d = e.data;
+    if (!d || d.source !== 'il-motion') return;
+    if (d.type === 'speed') SPEED = Math.max(0.05, Number(d.value) || 1);
+    if (d.type === 'step') { if (d.value > 0) nextWord(); else pebble(); }
+    if (d.type === 'rain') rainTarget = Math.max(0, Math.min(1, Number(d.value) || 0));
+    if (d.type === 'hold') frozen = Boolean(d.value);
+    if (d.type === 'leaves') {
+      showLeaves = Boolean(d.value);
+      if (showLeaves) leaves.forEach((l) => { if (l.state !== 'waiting') l.mesh.visible = true; });
+    }
+    if (d.type === 'autoplay') autoplay(Boolean(d.value));
+  });
+  if (parent !== window) {
+    let last = '';
+    const report = () => {
+      const text = `${words[wordIndex].word} · ${wordPhase.toUpperCase()}${rainAmount > 0.15 ? ' · RAIN' : ''}`;
+      if (text !== last) {
+        last = text;
+        parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*');
+      }
+      setTimeout(() => requestAnimationFrame(report), 120);
+    };
+    requestAnimationFrame(report);
+  }
+}
+
+// Optional diagnostics for testing; adds no visible interface.
+window.pool = {
+  reset, cannonball, dropPebbleAt, nextWord,
+  rain(on = true) { rainTarget = on ? 1 : 0; },
+  freeze(on = true) { frozen = on; },
+  get word() { return {word: words[wordIndex].word, clock: wordClock, form}; },
+  get stats() {
+    return {fps: Math.round(fps), drops: drops.length, rain: rain.length, splashCount, impactCount, steps: sim.steps,
+      leaves: leaves.filter(l => l.state !== 'waiting').length};
+  },
+  project(x, z) {
+    const point = new THREE.Vector3(x, 0, z).project(camera);
+    const rect = canvas.getBoundingClientRect();
+    return {x: rect.left + (point.x + 1) * rect.width / 2, y: rect.top + (1 - point.y) * rect.height / 2};
+  },
+  sample() {
+    const values = new Uint16Array(256 * 256 * 4);
+    renderer.readRenderTargetPixels(sim.a, 0, 0, 256, 256, values);
+    let peak = 0, sum = 0, finite = true;
+    for (let i = 0; i < values.length; i += 4) {
+      const h = THREE.DataUtils.fromHalfFloat(values[i]);
+      finite &&= Number.isFinite(h);
+      peak = Math.max(peak, Math.abs(h)); sum += h * h;
+    }
+    return {peak, rms: Math.sqrt(sum / 65536), finite};
+  }
+};
+</script>
+</body>
+</html>
