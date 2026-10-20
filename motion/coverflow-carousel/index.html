@@ -521,10 +521,14 @@
   ;(() => {
     const qs = new URLSearchParams(location.search)
     const TITLES = ['DUSKLINE', 'TRANSIT', 'SIGNAL', 'TIDES', 'PRISM', 'NOCTURNE', 'FORM/FUNCTION', 'AFTERGLOW', 'GRIDLOCK', 'HIGH NOON']
-    let timer = 0
+    let timer = 0, kick = 0
+    // The first step comes almost at once, so a short hover preview already moves
     const autoplay = (on, ms = 2200) => {
-      clearInterval(timer)
-      if (on) timer = setInterval(() => { if (!document.hidden) PREV() }, ms)
+      clearInterval(timer); clearTimeout(kick)
+      if (on) {
+        kick = setTimeout(() => PREV(), 350)
+        timer = setInterval(() => { if (!document.hidden) PREV() }, ms)
+      }
     }
     if (qs.has('autoplay')) {
       document.body.classList.add('is-reel')

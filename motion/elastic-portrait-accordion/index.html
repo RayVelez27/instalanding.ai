@@ -534,10 +534,14 @@ items.forEach((item, n) => item.insertAdjacentHTML('afterbegin', portrait(sitter
       const next = i < 0 ? (dir > 0 ? 0 : list.length - 1) : (i + dir + list.length) % list.length
       expand(list[next], next)
     }
-    let timer = 0
+    let timer = 0, kick = 0
+    // The first portrait opens almost at once, so a short hover preview already moves
     const autoplay = (on, ms = 2600) => {
-      clearInterval(timer)
-      if (on) timer = setInterval(() => { if (!document.hidden) step(1) }, ms)
+      clearInterval(timer); clearTimeout(kick)
+      if (on) {
+        kick = setTimeout(() => step(1), 350)
+        timer = setInterval(() => { if (!document.hidden) step(1) }, ms)
+      }
     }
     const qs = new URLSearchParams(location.search)
     if (qs.has('autoplay')) autoplay(true, Number(qs.get('autoplay')) || 2600)

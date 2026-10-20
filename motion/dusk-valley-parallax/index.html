@@ -551,7 +551,7 @@ window.onbeforeunload = () => window.scrollTo(0, 0);
        { ..., type: 'step', value: 1 | -1 }    glide to the next / previous scene
        { ..., type: 'depth', value: 100 }      scene 1's parallax spread (px per layer unit)
        { ..., type: 'cues', value: true }      the bobbing scroll arrows
-       { ..., type: 'autoplay', value: true }  glide down scene by scene, then back to the top
+       { ..., type: 'autoplay', value: true }  glide down the whole scroll continuously, then back to the top
   ------------------------------------------------------------------ */
 ;(() => {
     const STOPS = [0, 0.3, 0.62, 1];
@@ -564,10 +564,32 @@ window.onbeforeunload = () => window.scrollTo(0, 0);
         const next = dir > 0 ? STOPS.find((x) => x > p + 0.01) : [...STOPS].reverse().find((x) => x < p - 0.01);
         glide(next ?? (dir > 0 ? 0 : 1));
     };
-    let timer = 0;
+    // Autoplay is a continuous glide down the whole scroll (about 4 × ms for the
+    // trip), a short hold at the bottom, then back to the top: the parallax is
+    // always moving, which stepping scene to scene never showed in a preview.
+    let glideRaf = 0;
     const autoplay = (on, ms = 3600) => {
-        clearInterval(timer);
-        if (on) timer = setInterval(() => { if (!document.hidden) step(1); }, ms);
+        cancelAnimationFrame(glideRaf);
+        if (!on) return;
+        let pos = scrollY, lastT = 0, hold = 0;
+        const tick = (t) => {
+            const dt = lastT ? Math.min(t - lastT, 50) : 16;
+            lastT = t;
+            if (!document.hidden) {
+                if (Math.abs(scrollY - pos) > 3) pos = scrollY; // someone scrolled by hand
+                if (hold > 0) {
+                    hold -= dt;
+                    if (hold <= 0) { pos = 0; scrollTo(0, 0); }
+                } else if (pos >= maxScroll() - 1) {
+                    hold = 900;
+                } else {
+                    pos = Math.min(maxScroll(), pos + (maxScroll() / (ms * 4)) * dt);
+                    scrollTo(0, pos);
+                }
+            }
+            glideRaf = requestAnimationFrame(tick);
+        };
+        glideRaf = requestAnimationFrame(tick);
     };
     let depth = speed;
     const qs = new URLSearchParams(location.search);

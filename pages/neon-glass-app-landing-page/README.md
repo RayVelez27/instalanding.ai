@@ -14,6 +14,7 @@ Frosted panels lit by a comet that races their border, and a chat bar that opens
 | Style | dark, glassmorphism, neon, blue, lowercase, react-bundle |
 | Sections | nav → hero → product → features → how-it-works → stats → developers → pricing → faq → cta → footer |
 | Libraries | none — plain HTML, CSS and JS |
+| Fonts | system fonts only |
 | Uses | inlined-react-bundle, inlined-images, reduced-motion |
 | Size | 376 KB · brief ~1,349 tokens |
 

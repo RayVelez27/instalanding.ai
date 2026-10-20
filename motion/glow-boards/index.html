@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glow Boards · InstaLanding Motion</title>
+<style>
+  :root { --bg: #000; }
+  html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; touch-action: none; cursor: default; }
+</style>
+</head>
+<body>
+<canvas id="stage" role="img" aria-label="A stack of glowing boards; each one lifts when hovered and settles back when the pointer leaves"></canvas>
+<script>
+/* Scene data decoded from boards.riv: hierarchy, paints, animations, state machine.
+   Rendered with plain Canvas 2D below — no Rive runtime involved. */
+const SCENE = {"artboard":{"width":565.0,"height":565.0,"originX":0.08,"originY":0.08},"comps":[{"t":"Artboard","p":null},{"t":"Shape","p":0,"x":24.0,"y":184.0,"r":0.289,"sx":1.3032,"sy":1.7003,"o":1},{"t":"PointsPath","p":1,"x":0,"y":0,"closed":0},{"t":"StraightVertex","p":2,"x":-14.1762,"y":27.8068},{"t":"StraightVertex","p":2,"x":241.9977,"y":-163.3802},{"t":"StraightVertex","p":2,"x":367.4001,"y":-66.2335},{"t":"StraightVertex","p":2,"x":111.9894,"y":136.0808},{"t":"LinearGradient","p":213,"sx":70.7564,"sy":94.0403,"ex":371.5349,"ey":-192.2805,"op":1},{"t":"GradientStop","p":7,"c":[255,0,70,0.8275],"pos":0.1714},{"t":"GradientStop","p":7,"c":[0,247,255,0.7176],"pos":0.433},{"t":"GradientStop","p":7,"c":[0,247,255,1.0],"pos":1.0},{"t":"LinearGradient","p":214,"sx":70.7564,"sy":94.0403,"ex":371.5349,"ey":-192.2805,"op":0.41},{"t":"GradientStop","p":11,"c":[255,0,70,0.8275],"pos":0},{"t":"GradientStop","p":11,"c":[0,247,255,0.7176],"pos":0.5333},{"t":"GradientStop","p":11,"c":[0,247,255,1.0],"pos":1.0},{"t":"GradientStop","p":11,"c":[8,0,255,0.8157],"pos":0.3429},{"t":"Node","p":0,"x":153.5,"y":313.5,"r":-0.3661,"sx":1.5889,"sy":1.2714,"o":1},{"t":"Node","p":16,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":17,"x":-36.5,"y":-0.6741,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":18,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":215,"c":[55,55,55,1.0]},{"t":"Feather","p":215,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":216,"c":[83,82,82,1.0]},{"t":"SolidColor","p":217,"c":[203,196,196,1.0]},{"t":"Feather","p":217,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":218,"s":20.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":218,"c":[235,235,235,0.4]},{"t":"Feather","p":219,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":219,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":152.0,"y":314.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":29,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":30,"x":0.0377,"y":-2.2774,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":31,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":220,"c":[55,55,55,1.0]},{"t":"Feather","p":220,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":221,"c":[83,82,82,1.0]},{"t":"SolidColor","p":222,"c":[203,196,196,1.0]},{"t":"Feather","p":222,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":223,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":223,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":179.5,"y":295.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":40,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":41,"x":-27.912,"y":0.4862,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":42,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":224,"c":[55,55,55,1.0]},{"t":"Feather","p":224,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":225,"c":[83,82,82,1.0]},{"t":"SolidColor","p":226,"c":[203,196,196,1.0]},{"t":"Feather","p":226,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":227,"s":20.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":227,"c":[235,235,235,0.4]},{"t":"Feather","p":228,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":228,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":179.5,"y":295.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":53,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":54,"x":6.4258,"y":-1.6455,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":55,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":229,"c":[55,55,55,1.0]},{"t":"Feather","p":229,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":230,"c":[83,82,82,1.0]},{"t":"SolidColor","p":231,"c":[203,196,196,1.0]},{"t":"Feather","p":231,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":232,"s":20.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":232,"c":[235,235,235,0.4]},{"t":"Feather","p":233,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":233,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":212.5,"y":276.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":66,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":67,"x":-29.5842,"y":-1.3311,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":68,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":234,"c":[55,55,55,1.0]},{"t":"Feather","p":234,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":235,"c":[83,82,82,1.0]},{"t":"SolidColor","p":236,"c":[203,196,196,1.0]},{"t":"Feather","p":236,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":237,"s":20.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":237,"c":[235,235,235,0.4]},{"t":"Feather","p":238,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":238,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":212.5,"y":276.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":79,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":80,"x":4.7535,"y":-3.4628,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":81,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":239,"c":[55,55,55,1.0]},{"t":"Feather","p":239,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":240,"c":[83,82,82,1.0]},{"t":"SolidColor","p":241,"c":[203,196,196,1.0]},{"t":"Feather","p":241,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":242,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":242,"c":[255,255,255,0.2471]},{"t":"Node","p":0,"x":239.0,"y":258.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":90,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":91,"x":-32.1474,"y":-0.5,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":92,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":243,"c":[55,55,55,1.0]},{"t":"Feather","p":243,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":244,"c":[83,82,82,1.0]},{"t":"SolidColor","p":245,"c":[203,196,196,1.0]},{"t":"Feather","p":245,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":246,"s":20.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":246,"c":[235,235,235,0.4]},{"t":"Feather","p":247,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":247,"c":[235,235,235,0.2471]},{"t":"LayoutComponentStyle","p":0},{"t":"Node","p":0,"x":240.0,"y":257.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":104,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":105,"x":-8.0545,"y":-0.8033,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":106,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":248,"c":[55,55,55,1.0]},{"t":"Feather","p":248,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":249,"c":[83,82,82,1.0]},{"t":"SolidColor","p":250,"c":[203,196,196,1.0]},{"t":"Feather","p":250,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":251,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":251,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":268.7541,"y":237.5192,"r":-0.3661,"sx":1.5889,"sy":1.2714,"o":1},{"t":"Node","p":115,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":116,"x":-36.668,"y":2.2605,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":117,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":252,"c":[55,55,55,1.0]},{"t":"Feather","p":252,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":253,"c":[83,82,82,1.0]},{"t":"SolidColor","p":254,"c":[203,196,196,1.0]},{"t":"Feather","p":254,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":255,"s":20.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":255,"c":[235,235,235,0.4]},{"t":"Feather","p":256,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":256,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":267.5,"y":238.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":128,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":129,"x":-0.7202,"y":0.5534,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":130,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":257,"c":[55,55,55,1.0]},{"t":"Feather","p":257,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":258,"c":[83,82,82,1.0]},{"t":"SolidColor","p":259,"c":[203,196,196,1.0]},{"t":"Feather","p":259,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":260,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":260,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":295.0,"y":219.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":139,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":140,"x":-28.6699,"y":3.317,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":141,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":261,"c":[55,55,55,1.0]},{"t":"Feather","p":261,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":262,"c":[83,82,82,1.0]},{"t":"SolidColor","p":263,"c":[203,196,196,1.0]},{"t":"Feather","p":263,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":264,"s":20.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":264,"c":[235,235,235,0.4]},{"t":"Feather","p":265,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":265,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":295.0,"y":219.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":152,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":153,"x":5.6679,"y":1.1854,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":154,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":266,"c":[55,55,55,1.0]},{"t":"Feather","p":266,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":267,"c":[83,82,82,1.0]},{"t":"SolidColor","p":268,"c":[203,196,196,1.0]},{"t":"Feather","p":268,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":269,"s":8.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":269,"c":[235,235,235,0.3569]},{"t":"Node","p":0,"x":328.0,"y":200.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":163,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":164,"x":-30.3422,"y":1.4997,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":165,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":270,"c":[55,55,55,1.0]},{"t":"Feather","p":270,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":271,"c":[83,82,82,1.0]},{"t":"SolidColor","p":272,"c":[203,196,196,1.0]},{"t":"Feather","p":272,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":273,"s":20.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":273,"c":[235,235,235,0.4]},{"t":"Feather","p":274,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":274,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":328.0,"y":200.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":176,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":177,"x":3.9956,"y":-0.6319,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":178,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":275,"c":[55,55,55,1.0]},{"t":"Feather","p":275,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":276,"c":[83,82,82,1.0]},{"t":"SolidColor","p":277,"c":[203,196,196,1.0]},{"t":"Feather","p":277,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":278,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":278,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":355.5,"y":181.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":187,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":188,"x":-23.9541,"y":2.1317,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":189,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":279,"c":[55,55,55,1.0]},{"t":"Feather","p":279,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":280,"c":[83,82,82,1.0]},{"t":"SolidColor","p":281,"c":[203,196,196,1.0]},{"t":"Feather","p":281,"s":0.0,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":282,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":282,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":355.5,"y":181.0,"r":-0.3661,"sx":1.5429,"sy":1.2714,"o":1},{"t":"Node","p":198,"x":0.2699,"y":-5.9906,"r":-0.1201,"sx":0.3569,"sy":1.0087,"o":1},{"t":"Shape","p":199,"x":10.3837,"y":0,"r":-1.0183,"sx":0.8649,"sy":0.9309,"o":1},{"t":"Rectangle","p":200,"w":80.0,"h":80.0,"ox":0.5,"oy":0.5,"x":0,"y":0,"cr":0},{"t":"SolidColor","p":283,"c":[55,55,55,1.0]},{"t":"Feather","p":283,"s":30.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":284,"c":[83,82,82,1.0]},{"t":"SolidColor","p":285,"c":[203,196,196,1.0]},{"t":"Feather","p":285,"s":0.5,"ox":-1.0,"oy":1.0,"inner":1,"space":0},{"t":"Feather","p":286,"s":40.0,"ox":0,"oy":0,"inner":0,"space":0},{"t":"SolidColor","p":286,"c":[235,235,235,0.2471]},{"t":"Node","p":0,"x":-110.5,"y":191.5,"r":0,"sx":-0.28,"sy":1,"o":1},{"t":"Node","p":209,"x":0,"y":0,"r":0,"sx":-3.0,"sy":-0.2,"o":1},{"t":"SolidColor","p":212,"c":[0,0,0,1.0]},{"t":"Fill","p":0,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":1,"vis":1,"blend":15,"rule":0},{"t":"Fill","p":1,"vis":1,"blend":15,"rule":0},{"t":"Fill","p":18,"vis":0,"blend":3,"rule":2},{"t":"Fill","p":18,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":18,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":18,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":18,"vis":0,"blend":3,"rule":2},{"t":"Fill","p":31,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":31,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":31,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":31,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":42,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":42,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":42,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":42,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":42,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":55,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":55,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":55,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":55,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":55,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":68,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":68,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":68,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":68,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":68,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":81,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":81,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":81,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":81,"vis":0,"blend":3,"rule":2},{"t":"Fill","p":92,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":92,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":92,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":92,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":92,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":106,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":106,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":106,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":106,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":117,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":117,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":117,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":117,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":117,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":130,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":130,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":130,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":130,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":141,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":141,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":141,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":141,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":141,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":154,"vis":0,"blend":3,"rule":2},{"t":"Fill","p":154,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":154,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":154,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":165,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":165,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":165,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":165,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":165,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":178,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":178,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":178,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":178,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":189,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":189,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":189,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":189,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":200,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":200,"vis":1,"blend":3,"rule":0},{"t":"Fill","p":200,"vis":1,"blend":3,"rule":2},{"t":"Fill","p":200,"vis":1,"blend":3,"rule":2},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.3543,1.0352]},{"t":"CubicEaseInterpolator","p":null,"b":[0.6787,0.0061,0.58,1]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.3921,0.9563]},{"t":"CubicEaseInterpolator","p":null,"b":[0.7354,0.0174,0.58,1]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.3354,0.9488]},{"t":"CubicEaseInterpolator","p":null,"b":[0.7606,0.0211,0.515,0.9789]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.2472,1.0089]},{"t":"CubicEaseInterpolator","p":null,"b":[0.7039,0.0249,0.58,1]},{"t":"CubicEaseInterpolator","p":null,"b":[0.5307,0.0136,0.389,0.9826]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.2441,0.9563]},{"t":"CubicEaseInterpolator","p":null,"b":[0.5402,-0.0277,0.4803,0.8399]},{"t":"CubicEaseInterpolator","p":null,"b":[0.7795,0.0174,0.5055,0.9939]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.3039,1.0164]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.3858,0.9977]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.389,0.9751]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.3071,0.9977]},{"t":"CubicEaseInterpolator","p":null,"b":[0.5433,-0.0089,0.474,0.9826]},{"t":"CubicEaseInterpolator","p":null,"b":[0.537,0.0286,0.4677,0.9638]},{"t":"CubicEaseInterpolator","p":null,"b":[0.3858,0.0136,0.4583,0.9977]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.58,1]},{"t":"CubicEaseInterpolator","p":null,"b":[0.2189,0.0023,0.2094,1.0202]},{"t":"CubicEaseInterpolator","p":null,"b":[0.4236,0.0136,0.6,0.9864]},{"t":"CubicEaseInterpolator","p":null,"b":[0.3197,-0.0089,0.3732,0.9751]},{"t":"CubicEaseInterpolator","p":null,"b":[0.3008,0.0061,0.6661,0.8474]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.3638,0.9864]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.4268,0.9939]},{"t":"CubicEaseInterpolator","p":null,"b":[0.42,0,0.4772,0.9789]},{"t":"CubicEaseInterpolator","p":null,"b":[0.4646,0.0061,0.2346,0.9826]},{"t":"CubicEaseInterpolator","p":null,"b":[0.6787,-0.0127,0.1433,1.0089]}],"anims":[{"name":"Plank 17 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":16,"props":[{"key":14,"kf":[[0,263.0,2,287],[30,313.5,2,287]]}]}]},{"name":"Plank 17 Hover ","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":16,"props":[{"key":14,"kf":[[0,313.5,2,287],[31,263.0,2,287]]}]}]},{"name":"Plank 16 Uhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":29,"props":[{"key":14,"kf":[[0,233.0,2,288],[30,314.0,2,288]]}]}]},{"name":"Plank 16 Hover ","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":29,"props":[{"key":14,"kf":[[0,314.0,2,289],[32,233.0,2,289]]}]}]},{"name":"Plank 15 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":40,"props":[{"key":14,"kf":[[0,233.0,2,290],[30,295.0,2,290]]}]}]},{"name":"Plank 15 hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":40,"props":[{"key":14,"kf":[[0,295.0,2,291],[31,233.0,2,291]]}]}]},{"name":"Plank 14 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":53,"props":[{"key":14,"kf":[[0,233.0,2,292],[31,295.0,2,292]]}]}]},{"name":"Plank 14 hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":53,"props":[{"key":14,"kf":[[0,295.0,2,293],[32,233.0,2,293]]}]}]},{"name":"Plank 13 unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":66,"props":[{"key":14,"kf":[[0,233.0,2,294],[31,276.0,2,294]]}]}]},{"name":"Plank 13 hover ","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":66,"props":[{"key":14,"kf":[[0,276.0,2,295],[31,233.0,2,295]]}]}]},{"name":"Plank 12 Unhover ","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":79,"props":[{"key":14,"kf":[[0,233.0,2,296],[30,276.0,2,297]]}]}]},{"name":"Plank 12 Hover ","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":79,"props":[{"key":14,"kf":[[0,276.0,2,296],[31,233.0,2,296]]}]}]},{"name":"Plak 11 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":90,"props":[{"key":14,"kf":[[0,209.0,2,298],[30,258.0,2,298]]}]}]},{"name":"Plank 11 hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":90,"props":[{"key":14,"kf":[[0,258.0,2,299],[31,209.0,2,299]]}]}]},{"name":"Plank 10 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":104,"props":[{"key":14,"kf":[[0,209.0,2,300],[31,257.0,2,300]]}]}]},{"name":"Plank 10 Hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":104,"props":[{"key":14,"kf":[[0,257.0,1,-1],[32,209.0,2,301]]}]}]},{"name":"Plank 9 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":104,"props":[{"key":14,"kf":[[0,209.0,2,302],[30,257.0,2,302]]}]}]},{"name":"Plank 9 hover ","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":104,"props":[{"key":14,"kf":[[0,257.0,2,301],[30,209.0,2,301]]}]}]},{"name":"Plank 8 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":115,"props":[{"key":14,"kf":[[0,199.0,2,303],[28,237.5192,2,303]]}]}]},{"name":"Plank Hover 8","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":115,"props":[{"key":14,"kf":[[0,237.5192,2,304],[31,199.0,2,304]]}]}]},{"name":"plank 7 unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":128,"props":[{"key":14,"kf":[[0,199.0,2,305],[24,238.0,2,306]]}]}]},{"name":"Plank Hover 7","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":128,"props":[{"key":14,"kf":[[0,238.0,2,305],[22,199.0,2,305]]}]}]},{"name":"Plank 6 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":139,"props":[{"key":14,"kf":[[0,174.0,2,307],[31,219.0,2,307]]}]}]},{"name":"Plank 6 Hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":139,"props":[{"key":13,"kf":[[38,301.5,1,-1]]},{"key":14,"kf":[[0,219.0,2,308],[38,191.5,2,308]]}]}]},{"name":"Plank 5 unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":152,"props":[{"key":14,"kf":[[0,174.0,2,309],[31,219.0,2,309]]}]}]},{"name":"Plank 5 Hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":152,"props":[{"key":14,"kf":[[0,219.0,2,310],[38,174.0,2,310]]}]}]},{"name":"Plank 4 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":163,"props":[{"key":14,"kf":[[0,174.0,2,306],[31,200.0,2,311]]}]}]},{"name":"Plank 4 hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":163,"props":[{"key":14,"kf":[[0,200.0,2,306],[31,174.0,2,306]]}]}]},{"name":"Plank 3 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":176,"props":[{"key":14,"kf":[[0,174.0,2,306],[31,200.0,2,311]]}]}]},{"name":"Plank 3 Hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":176,"props":[{"key":14,"kf":[[0,200.0,2,306],[31,174.0,2,306]]}]}]},{"name":"Plank 2 hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":187,"props":[{"key":14,"kf":[[0,181.0,2,312],[30,152.0,2,312]]}]}]},{"name":"Plank 2 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":187,"props":[{"key":14,"kf":[[0,152.0,2,313],[31,181.0,2,313]]}]}]},{"name":"Plank 1 Unhover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":198,"props":[{"key":14,"kf":[[0,152.0,2,314],[31,181.0,2,315]]}]}]},{"name":"Plank 1 hover","fps":60,"dur":60,"loop":0,"speed":1,"keys":[{"obj":198,"props":[{"key":14,"kf":[[0,181.0,2,312],[30,152.0,2,312]]}]}]}],"sm":{"inputs":[{"name":"Hover 17","v":0},{"name":"Hover 16","v":0},{"name":"Hover 15","v":0},{"name":"Hover 14","v":0},{"name":"Hover 13","v":0},{"name":"Hover 12","v":0},{"name":"Hover 11","v":0},{"name":"Hover 10","v":0},{"name":"Hover 9","v":0},{"name":"Hover 8","v":0},{"name":"Hover 7","v":0},{"name":"Hover 6 ","v":0},{"name":"Hover 5","v":0},{"name":"Hover 4","v":0},{"name":"Hover 3","v":0},{"name":"Hover 2","v":0},{"name":"Hover","v":0}],"layers":[{"name":"Layer 1","states":[{"t":"AnyState","anim":null,"tr":[]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnimationState","anim":32,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[16,0]]}]},{"t":"AnimationState","anim":33,"tr":[{"to":2,"dur":0,"flags":0,"conds":[[16,1]]}]},{"t":"EntryState","anim":null,"tr":[{"to":2,"dur":0,"flags":0,"conds":[]}]}]},{"name":"Layer 2","states":[{"t":"AnimationState","anim":31,"tr":[{"to":4,"dur":0,"flags":0,"conds":[[15,0]]}]},{"t":"EntryState","anim":null,"tr":[{"to":0,"dur":0,"flags":0,"conds":[]}]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnyState","anim":null,"tr":[]},{"t":"AnimationState","anim":30,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[15,1]]}]}]},{"name":"Layer 3","states":[{"t":"AnimationState","anim":29,"tr":[{"to":2,"dur":0,"flags":0,"conds":[[14,1]]}]},{"t":"EntryState","anim":null,"tr":[{"to":2,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":28,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[14,0]]}]},{"t":"AnyState","anim":null,"tr":[]},{"t":"ExitState","anim":null,"tr":[]}]},{"name":"Layer 4","states":[{"t":"AnimationState","anim":26,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[13,0]]}]},{"t":"AnyState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":0,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":27,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[13,1]]}]},{"t":"ExitState","anim":null,"tr":[]}]},{"name":"Layer 5","states":[{"t":"ExitState","anim":null,"tr":[]},{"t":"AnimationState","anim":24,"tr":[{"to":4,"dur":0,"flags":0,"conds":[[12,0]]}]},{"t":"AnyState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":1,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":25,"tr":[{"to":1,"dur":0,"flags":0,"conds":[[12,1]]}]}]},{"name":"Layer 6","states":[{"t":"AnimationState","anim":22,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[11,0]]}]},{"t":"AnyState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":0,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":23,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[11,1]]}]},{"t":"ExitState","anim":null,"tr":[]}]},{"name":"Layer 7","states":[{"t":"AnyState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":4,"dur":0,"flags":0,"conds":[]}]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnimationState","anim":21,"tr":[{"to":4,"dur":0,"flags":0,"conds":[[10,1]]}]},{"t":"AnimationState","anim":20,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[10,0]]}]}]},{"name":"Layer 8","states":[{"t":"ExitState","anim":null,"tr":[]},{"t":"AnimationState","anim":18,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[9,0]]}]},{"t":"EntryState","anim":null,"tr":[{"to":1,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":19,"tr":[{"to":1,"dur":0,"flags":0,"conds":[[9,1]]}]},{"t":"AnyState","anim":null,"tr":[]}]},{"name":"Layer 9","states":[{"t":"AnyState","anim":null,"tr":[]},{"t":"ExitState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":3,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":16,"tr":[{"to":4,"dur":0,"flags":0,"conds":[[8,0]]}]},{"t":"AnimationState","anim":17,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[8,1]]}]}]},{"name":"Layer 10","states":[{"t":"AnimationState","anim":14,"tr":[{"to":1,"dur":0,"flags":0,"conds":[[7,0]]}]},{"t":"AnimationState","anim":15,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[7,1]]}]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnyState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":0,"dur":0,"flags":0,"conds":[]}]}]},{"name":"Layer 11","states":[{"t":"AnimationState","anim":12,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[6,0]]}]},{"t":"EntryState","anim":null,"tr":[{"to":0,"dur":0,"flags":0,"conds":[]}]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnimationState","anim":13,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[6,1]]}]},{"t":"AnyState","anim":null,"tr":[]}]},{"name":"Layer 12","states":[{"t":"AnimationState","anim":10,"tr":[{"to":4,"dur":0,"flags":0,"conds":[[5,0]]}]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnyState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":0,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":11,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[5,1]]}]}]},{"name":"Layer 13","states":[{"t":"AnimationState","anim":8,"tr":[{"to":2,"dur":0,"flags":0,"conds":[[4,0]]}]},{"t":"EntryState","anim":null,"tr":[{"to":0,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":9,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[4,1]]}]},{"t":"AnyState","anim":null,"tr":[]},{"t":"ExitState","anim":null,"tr":[]}]},{"name":"Layer 14","states":[{"t":"AnimationState","anim":6,"tr":[{"to":2,"dur":0,"flags":0,"conds":[[3,0]]}]},{"t":"EntryState","anim":null,"tr":[{"to":0,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":7,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[3,1]]}]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnyState","anim":null,"tr":[]}]},{"name":"Layer 15","states":[{"t":"AnimationState","anim":5,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[1,1]]}]},{"t":"EntryState","anim":null,"tr":[{"to":3,"dur":0,"flags":0,"conds":[]}]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnimationState","anim":4,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[2,0]]}]},{"t":"AnyState","anim":null,"tr":[]}]},{"name":"Layer 16","states":[{"t":"AnyState","anim":null,"tr":[]},{"t":"ExitState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":4,"dur":0,"flags":0,"conds":[]}]},{"t":"AnimationState","anim":3,"tr":[{"to":4,"dur":0,"flags":0,"conds":[[1,1]]}]},{"t":"AnimationState","anim":2,"tr":[{"to":3,"dur":0,"flags":0,"conds":[[1,0]]}]}]},{"name":"Layer 17","states":[{"t":"AnimationState","anim":1,"tr":[{"to":2,"dur":0,"flags":0,"conds":[[0,1]]}]},{"t":"ExitState","anim":null,"tr":[]},{"t":"AnimationState","anim":0,"tr":[{"to":0,"dur":0,"flags":0,"conds":[[0,0]]}]},{"t":"AnyState","anim":null,"tr":[]},{"t":"EntryState","anim":null,"tr":[{"to":2,"dur":0,"flags":0,"conds":[]}]}]}],"listeners":[{"name":"Unhover 17","target":16,"type":1,"acts":[[0,0]]},{"name":"Hover 17","target":16,"type":0,"acts":[[0,1]]},{"name":"Unhover 16","target":29,"type":1,"acts":[[1,0]]},{"name":"Hover 16","target":29,"type":0,"acts":[[1,1]]},{"name":"Unhover 15","target":40,"type":1,"acts":[[2,0]]},{"name":"Hover 15","target":40,"type":0,"acts":[[2,1]]},{"name":"Unhover 14","target":53,"type":1,"acts":[[3,0]]},{"name":"Hover 14","target":53,"type":0,"acts":[[3,1]]},{"name":"Unhover 13","target":66,"type":1,"acts":[[4,0]]},{"name":"Hover 13","target":66,"type":0,"acts":[[4,1]]},{"name":"Unhover 12","target":79,"type":1,"acts":[[5,0]]},{"name":"Hover 12","target":79,"type":0,"acts":[[5,1]]},{"name":"Unhover 11","target":90,"type":1,"acts":[[6,0]]},{"name":"Hover 11","target":90,"type":0,"acts":[[6,1]]},{"name":"Unhover 10","target":104,"type":1,"acts":[[7,0]]},{"name":"hover 10","target":104,"type":0,"acts":[[7,1]]},{"name":"Unhover 9","target":104,"type":1,"acts":[[8,0]]},{"name":"Hover 9","target":104,"type":0,"acts":[[8,1]]},{"name":"Unhover 8","target":115,"type":1,"acts":[[9,0]]},{"name":"Hover 8","target":115,"type":0,"acts":[[9,1]]},{"name":"Unhover 7","target":128,"type":1,"acts":[[10,0]]},{"name":"Hover 7","target":128,"type":0,"acts":[[10,1]]},{"name":"Unhover 6","target":139,"type":1,"acts":[[11,0]]},{"name":"Hover 6","target":139,"type":0,"acts":[[11,1]]},{"name":"Unhover 5","target":152,"type":1,"acts":[[12,0]]},{"name":"Hover 5","target":152,"type":0,"acts":[[12,1]]},{"name":"Unhover 3","target":163,"type":1,"acts":[[13,0]]},{"name":"Hover 4","target":163,"type":0,"acts":[[13,1]]},{"name":"Unhover 3","target":176,"type":1,"acts":[[14,0]]},{"name":"Hover 3","target":176,"type":0,"acts":[[14,1]]},{"name":"Unhover 2","target":187,"type":1,"acts":[[15,0]]},{"name":"Hover 2","target":187,"type":0,"acts":[[15,1]]},{"name":"Unhover","target":198,"type":1,"acts":[[16,0]]},{"name":"Hover","target":198,"type":0,"acts":[[16,1]]}]}};
+
+(() => {
+  "use strict";
+  const canvas = document.getElementById("stage");
+  const ctx = canvas.getContext("2d");
+  const AB = SCENE.artboard;
+  const comps = SCENE.comps;
+
+  /* ---------- hierarchy ---------- */
+  comps.forEach((c, i) => { c.i = i; c.kids = []; });
+  comps.forEach(c => { if (c.p != null && comps[c.p]) comps[c.p].kids.push(c); });
+
+  const isXform = c => c.t === "Node" || c.t === "Shape";
+  const shapes = comps.filter(c => c.t === "Shape").map(s => {
+    const path = s.kids.find(k => k.t === "Rectangle" || k.t === "PointsPath");
+    const fills = s.kids.filter(k => k.t === "Fill").map(f => {
+      const paint = f.kids.find(k => k.t === "SolidColor" || k.t === "LinearGradient");
+      const feather = f.kids.find(k => k.t === "Feather");
+      let stops = null;
+      if (paint && paint.t === "LinearGradient") {
+        stops = paint.kids.filter(k => k.t === "GradientStop").slice().sort((a, b) => a.pos - b.pos);
+      }
+      return { f, paint, feather, stops };
+    });
+    let verts = null, rect = null;
+    if (path && path.t === "Rectangle") {
+      rect = { x: path.x - path.w * path.ox, y: path.y - path.h * path.oy, w: path.w, h: path.h };
+    } else if (path) {
+      verts = path.kids.filter(k => k.t === "StraightVertex").map(v => [v.x + path.x, v.y + path.y]);
+    }
+    return { s, rect, verts, fills };
+  });
+  const fillsOf = c => c.kids.filter(k => k.t === "Fill");
+
+  /* ---------- matrices: [a,b,c,d,e,f] ---------- */
+  const mul = (A, B) => [
+    A[0]*B[0] + A[2]*B[1], A[1]*B[0] + A[3]*B[1],
+    A[0]*B[2] + A[2]*B[3], A[1]*B[2] + A[3]*B[3],
+    A[0]*B[4] + A[2]*B[5] + A[4], A[1]*B[4] + A[3]*B[5] + A[5]
+  ];
+  const inv = M => {
+    const det = M[0]*M[3] - M[1]*M[2];
+    if (!det) return [1,0,0,1,0,0];
+    const id = 1/det;
+    return [M[3]*id, -M[1]*id, -M[2]*id, M[0]*id,
+      (M[2]*M[5] - M[3]*M[4])*id, (M[1]*M[4] - M[0]*M[5])*id];
+  };
+  const apply = (M, x, y) => [M[0]*x + M[2]*y + M[4], M[1]*x + M[3]*y + M[5]];
+  const localM = c => {
+    const cs = Math.cos(c.r), sn = Math.sin(c.r);
+    return [cs*c.sx, sn*c.sx, -sn*c.sy, cs*c.sy, c.x, c.y];
+  };
+  const ROOT = [1, 0, 0, 1, AB.width * AB.originX, AB.height * AB.originY];
+  function computeWorld() {
+    for (const c of comps) {
+      if (c.t === "Artboard") { c.W = ROOT; continue; }
+      if (!isXform(c)) continue;
+      const pw = (c.p != null && comps[c.p] && comps[c.p].W) || ROOT;
+      c.W = mul(pw, localM(c));
+    }
+  }
+
+  /* ---------- colors ---------- */
+  const rgba = (c, k = 1) => `rgba(${c[0]},${c[1]},${c[2]},${+(c[3]*k).toFixed(4)})`;
+  const BLEND = { 3: "source-over", 14: "screen", 15: "overlay", 16: "darken", 17: "lighten",
+    18: "color-dodge", 19: "color-burn", 20: "hard-light", 21: "soft-light", 22: "difference",
+    23: "exclusion", 24: "multiply", 25: "hue", 26: "saturation", 27: "color", 28: "luminosity" };
+
+  /* ---------- feather: Gaussian-blurred rect, sigma = strength/2, in the shape's local space ---------- */
+  function erf(x) {
+    const s = Math.sign(x); x = Math.abs(x);
+    const t = 1 / (1 + 0.3275911 * x);
+    const y = 1 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - 0.284496736)*t + 0.254829592)*t*Math.exp(-x*x);
+    return s * y;
+  }
+  const spriteCache = new Map();
+  function featherSprite(rect, strength, color) {
+    const key = [rect.w, rect.h, strength, color.join()].join("|");
+    if (spriteCache.has(key)) return spriteCache.get(key);
+    const sigma = Math.max(strength / 2, 0.01), pad = sigma * 3;
+    const K = 3; // sprite px per local unit
+    const W = Math.ceil((rect.w + 2*pad) * K), H = Math.ceil((rect.h + 2*pad) * K);
+    const r2 = Math.SQRT2 * sigma;
+    const prof = (n, len) => {
+      const a = new Float32Array(n);
+      for (let i = 0; i < n; i++) {
+        const u = (i + 0.5) / K - pad;
+        a[i] = 0.5 * (erf(u / r2) - erf((u - len) / r2));
+      }
+      return a;
+    };
+    const fx = prof(W, rect.w), fy = prof(H, rect.h);
+    const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+    const g = cv.getContext("2d"), img = g.createImageData(W, H), d = img.data;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const o = (y*W + x) * 4;
+      d[o] = color[0]; d[o+1] = color[1]; d[o+2] = color[2];
+      d[o+3] = Math.round(255 * color[3] * fx[x] * fy[y]);
+    }
+    g.putImageData(img, 0, 0);
+    const sp = { cv, pad };
+    spriteCache.set(key, sp);
+    return sp;
+  }
+
+  /* ---------- drawing ---------- */
+  let view = [1,0,0,1,0,0], dpr = 1, fitScale = 1, fitX = 0, fitY = 0;
+  function tracePath(sh) {
+    ctx.beginPath();
+    if (sh.rect) ctx.rect(sh.rect.x, sh.rect.y, sh.rect.w, sh.rect.h);
+    else if (sh.verts && sh.verts.length) {
+      ctx.moveTo(sh.verts[0][0], sh.verts[0][1]);
+      for (let i = 1; i < sh.verts.length; i++) ctx.lineTo(sh.verts[i][0], sh.verts[i][1]);
+      ctx.closePath();
+    }
+  }
+  const setT = M => ctx.setTransform(M[0], M[1], M[2], M[3], M[4], M[5]);
+
+  function drawShape(sh) {
+    const W = sh.s.W, VW = mul(view, W);
+    for (const { f, paint, feather, stops } of sh.fills) {
+      if (!f.vis || !paint) continue;
+      ctx.globalCompositeOperation = BLEND[f.blend] || "source-over";
+      const color = paint.t === "SolidColor" ? paint.c : null;
+      if (feather && feather.inner) {
+        // Inner feather: shape clipped, minus a copy offset by (ox,oy) in artboard space.
+        if (!sh.rect || !color) continue;
+        const L = inv(W);
+        const ox = L[0]*feather.ox + L[2]*feather.oy, oy = L[1]*feather.ox + L[3]*feather.oy;
+        const r = sh.rect, p = feather.s * 1.5 + 4;
+        ctx.save();
+        setT(VW);
+        tracePath(sh); ctx.clip();
+        ctx.beginPath();
+        ctx.rect(r.x - p, r.y - p, r.w + 2*p, r.h + 2*p);
+        ctx.rect(r.x + ox, r.y + oy, r.w, r.h);
+        ctx.fillStyle = rgba(color);
+        ctx.fill("evenodd");
+        ctx.restore();
+      } else if (feather && feather.s > 0 && sh.rect && color) {
+        const sp = featherSprite(sh.rect, feather.s, color);
+        let M = VW;
+        if (feather.ox || feather.oy) {
+          M = feather.space === 0
+            ? mul(mul(view, [1,0,0,1,feather.ox,feather.oy]), W)
+            : mul(VW, [1,0,0,1,feather.ox,feather.oy]);
+        }
+        setT(M);
+        const r = sh.rect;
+        ctx.drawImage(sp.cv, r.x - sp.pad, r.y - sp.pad, r.w + 2*sp.pad, r.h + 2*sp.pad);
+      } else {
+        setT(VW);
+        if (color) ctx.fillStyle = rgba(color);
+        else {
+          const g = ctx.createLinearGradient(paint.sx, paint.sy, paint.ex, paint.ey);
+          for (const st of stops) g.addColorStop(Math.min(1, Math.max(0, st.pos)), rgba(st.c, paint.op));
+          ctx.fillStyle = g;
+        }
+        tracePath(sh);
+        ctx.fill(f.rule === 1 ? "evenodd" : "nonzero");
+      }
+    }
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  function render() {
+    computeWorld();
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // artboard background
+    const abFill = fillsOf(comps[0]).find(f => f.vis);
+    const abPaint = abFill && abFill.kids.find(k => k.t === "SolidColor");
+    if (abPaint) {
+      setT(view); ctx.fillStyle = rgba(abPaint.c);
+      ctx.fillRect(0, 0, AB.width, AB.height);
+    }
+    // first in hierarchy renders on top
+    for (let i = shapes.length - 1; i >= 0; i--) drawShape(shapes[i]);
+  }
+
+  /* ---------- animation ---------- */
+  function cubicEase(b, p) {
+    const [x1, y1, x2, y2] = b;
+    const bx = t => 3*(1-t)*(1-t)*t*x1 + 3*(1-t)*t*t*x2 + t*t*t;
+    const by = t => 3*(1-t)*(1-t)*t*y1 + 3*(1-t)*t*t*y2 + t*t*t;
+    let lo = 0, hi = 1, t = p;
+    for (let i = 0; i < 24; i++) {
+      const x = bx(t);
+      if (Math.abs(x - p) < 1e-6) break;
+      if (x < p) lo = t; else hi = t;
+      t = (lo + hi) / 2;
+    }
+    return by(t);
+  }
+  function sampleProp(kf, frame) {
+    if (frame <= kf[0][0]) return kf[0][1];
+    const last = kf[kf.length - 1];
+    if (frame >= last[0]) return last[1];
+    for (let i = 0; i < kf.length - 1; i++) {
+      const a = kf[i], b = kf[i+1];
+      if (frame >= a[0] && frame < b[0]) {
+        const p = (frame - a[0]) / (b[0] - a[0]);
+        if (a[2] === 0) return a[1];                       // hold
+        let e = p;
+        if (a[2] === 2) {                                   // cubic
+          const ip = comps[a[3]];
+          e = cubicEase(ip && ip.b ? ip.b : [0.42, 0, 0.58, 1], p);
+        }
+        return a[1] + (b[1] - a[1]) * e;
+      }
+    }
+    return last[1];
+  }
+  const PROP = { 13: "x", 14: "y", 15: "r", 16: "sx", 17: "sy" };
+  function applyAnim(anim, seconds) {
+    let frame = seconds * anim.fps;
+    if (anim.loop === 0) frame = Math.min(frame, anim.dur);
+    else frame = frame % anim.dur;
+    for (const k of anim.keys) {
+      const c = comps[k.obj]; if (!c) continue;
+      for (const p of k.props) if (PROP[p.key]) c[PROP[p.key]] = sampleProp(p.kf, frame);
+    }
+  }
+
+  /* ---------- state machine ---------- */
+  const SM = SCENE.sm;
+  const inputs = SM.inputs.map(i => !!i.v);
+  const layers = SM.layers.map(L => {
+    const entry = L.states.findIndex(s => s.t === "EntryState");
+    const any = L.states.findIndex(s => s.t === "AnyState");
+    return { L, cur: entry, any, time: 0 };
+  });
+  const condOk = tr => tr.conds.every(([id, op]) => op === 0 ? inputs[id] : !inputs[id]);
+  function advance(dt) {
+    for (const ly of layers) {
+      for (let guard = 0; guard < 8; guard++) {
+        const anyTr = ly.any >= 0 ? ly.L.states[ly.any].tr : [];
+        const cands = anyTr.concat(ly.L.states[ly.cur].tr);
+        const tr = cands.find(t => t.to !== ly.cur && condOk(t));
+        if (!tr) break;
+        ly.cur = tr.to; ly.time = 0;
+        if (ly.L.states[ly.cur].t === "AnimationState") break;
+      }
+      const st = ly.L.states[ly.cur];
+      if (st.t === "AnimationState") {
+        const anim = SCENE.anims[st.anim];
+        ly.time += dt * (anim.speed || 1);
+        applyAnim(anim, ly.time);
+      }
+    }
+  }
+
+  /* ---------- pointer listeners (hover enter / exit) ---------- */
+  const targets = new Map();
+  for (const ls of SM.listeners) {
+    if (!targets.has(ls.target)) {
+      const hitShapes = [];
+      const walk = c => { if (c.t === "Shape") hitShapes.push(shapes.find(s => s.s === c)); c.kids.forEach(walk); };
+      walk(comps[ls.target]);
+      targets.set(ls.target, { hitShapes: hitShapes.filter(Boolean), over: false, listeners: [] });
+    }
+    targets.get(ls.target).listeners.push(ls);
+  }
+  function hitShape(sh, x, y) {
+    if (!sh.s.W) return false;
+    const [lx, ly] = apply(inv(sh.s.W), x, y);
+    if (sh.rect) {
+      const r = sh.rect;
+      return lx >= r.x && lx <= r.x + r.w && ly >= r.y && ly <= r.y + r.h;
+    }
+    return false;
+  }
+  function fire(tg, type) {
+    for (const ls of tg.listeners) if (ls.type === type) {
+      for (const [id, v] of ls.acts) inputs[id] = v === 2 ? !inputs[id] : !!v;
+    }
+  }
+  function pointerAt(ax, ay) {
+    for (const tg of targets.values()) {
+      const hit = ax != null && tg.hitShapes.some(sh => hitShape(sh, ax, ay));
+      if (hit !== tg.over) { tg.over = hit; fire(tg, hit ? 0 : 1); }
+    }
+  }
+  const toArtboard = e => {
+    const r = canvas.getBoundingClientRect();
+    return [(e.clientX - r.left - fitX) / fitScale, (e.clientY - r.top - fitY) / fitScale];
+  };
+  canvas.addEventListener("pointermove", e => pointerAt(...toArtboard(e)));
+  canvas.addEventListener("pointerdown", e => pointerAt(...toArtboard(e)));
+  canvas.addEventListener("pointerleave", () => pointerAt(null, null));
+  canvas.addEventListener("pointercancel", () => pointerAt(null, null));
+
+  /* ---------- layout: contain + center, like Rive's default fit ---------- */
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const cw = canvas.clientWidth, ch = canvas.clientHeight;
+    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
+    // Frame the board stack (incl. hover-lift headroom and glow) instead of the whole artboard.
+    const box = { x: 100, y: 108, w: 372, h: 336 };
+    fitScale = Math.min(cw / box.w, ch / box.h);
+    fitX = (cw - box.w * fitScale) / 2 - box.x * fitScale;
+    fitY = (ch - box.h * fitScale) / 2 - box.y * fitScale;
+    view = [fitScale*dpr, 0, 0, fitScale*dpr, fitX*dpr, fitY*dpr];
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  let last = null, SPEED = 1;
+  function frame(now) {
+    const dt = (last == null ? 0 : Math.min((now - last) / 1000, 0.1)) * SPEED;
+    last = now;
+    advance(dt);
+    render();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ------------------------------------------------------------------
+       Lab hooks (InstaLanding Motion). The stack works on its own; when it
+       is framed, the lab drives it with postMessage and it reports which
+       board is up.
+         { source: 'il-motion', type: 'speed', value: 0.25 }   every lift and settle (they run on dt)
+         { ..., type: 'step', value: 1 | -1 }    lift the next / previous board
+         { ..., type: 'gap', value: 140 }        ms between boards in the wave
+         { ..., type: 'glow', value: true }      the gradient glow under the stack
+         { ..., type: 'autoplay', value: true }  a wave runs through the stack, back to front
+    ------------------------------------------------------------------ */
+  const order = [...targets.values()];              // back of the stack first, as the listeners list them
+  let up = -1, gap = 140, auto = 0, waveTimers = [];
+  const lift = (i) => {
+    order.forEach((tg, k) => { const on = k === i; if (tg.over !== on) { tg.over = on; fire(tg, on ? 0 : 1); } });
+    up = i;
+  };
+  const step = (dir) => lift(((up < 0 ? (dir > 0 ? -1 : 0) : up) + dir + order.length) % order.length);
+  const wave = () => {
+    waveTimers.forEach(clearTimeout); waveTimers = [];
+    order.forEach((_, k) => waveTimers.push(setTimeout(() => lift(k), (k * gap) / Math.max(SPEED, 0.05))));
+    waveTimers.push(setTimeout(() => lift(-1), (order.length * gap + 500) / Math.max(SPEED, 0.05)));
+  };
+  const autoplay = (on, ms = 3800) => {
+    clearInterval(auto); waveTimers.forEach(clearTimeout);
+    if (on) { wave(); auto = setInterval(() => { if (!document.hidden) wave(); }, ms); }
+  };
+  const qs = new URLSearchParams(location.search);
+  if (qs.has('autoplay')) autoplay(true, Number(qs.get('autoplay')) || 3800);
+  addEventListener('message', (e) => {
+    const d = e.data;
+    if (!d || d.source !== 'il-motion') return;
+    if (d.type === 'speed') SPEED = Math.max(0.05, Number(d.value) || 1);
+    if (d.type === 'step') { clearInterval(auto); step(d.value > 0 ? 1 : -1); }
+    if (d.type === 'gap') gap = Math.max(30, Number(d.value) || 140);
+    if (d.type === 'glow') fillsOf(comps[1]).forEach((f) => (f.vis = d.value ? 1 : 0));
+    if (d.type === 'autoplay') autoplay(Boolean(d.value));
+  });
+  // a pointer on the canvas takes over from the wave and the steps
+  canvas.addEventListener('pointerenter', () => { clearInterval(auto); waveTimers.forEach(clearTimeout); up = -1; });
+  if (parent !== window) {
+    let lastText = '';
+    const report = () => {
+      const k = order.findIndex((tg) => tg.over);
+      const text = k < 0 ? 'HOVER A BOARD' : `BOARD ${String(k + 1).padStart(2, '0')} / ${order.length} LIFTED`;
+      if (text !== lastText) { lastText = text; parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*'); }
+      setTimeout(() => requestAnimationFrame(report), 90);
+    };
+    requestAnimationFrame(report);
+  }
+})();
+</script>
+</body>
+</html>

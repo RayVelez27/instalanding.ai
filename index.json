@@ -2,8 +2,193 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 41,
+  "count": 44,
   "pages": [
+    {
+      "slug": "corelane-build-cluster-page",
+      "title": "Corelane Build Cluster Page",
+      "description": "An isometric dev-tool landing page: laptops and a core server on a glowing circuit field, plus a 96-machine fleet board you can put to sleep and run a build across",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 20, 2026",
+      "bestFor": [
+        "developer tools and build infrastructure",
+        "on-prem and edge compute products",
+        "B2B SaaS with per-seat pricing",
+        "AI compute and GPU-sharing products"
+      ],
+      "style": [
+        "dark",
+        "isometric",
+        "illustrated",
+        "interactive",
+        "neon",
+        "svg-animation"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "product",
+        "fleet",
+        "how",
+        "pricing",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Oswald",
+          "Instrument Sans"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/corelane-build-cluster-page/index.html",
+        "prompt": "pages/corelane-build-cluster-page/PROMPT.md",
+        "preview": "pages/corelane-build-cluster-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/corelane-cluster.html",
+      "page": "https://instalanding.ai/prompt/corelane-build-cluster-page"
+    },
+    {
+      "slug": "halden-clinical-equipment-page",
+      "title": "Halden Clinical Equipment Page",
+      "description": "A clinical equipment service in ink and paper: a dot-matrix wordmark that splits apart, a pinned 12-check inspection board, a rate card and a scroll-driven pre-owned shelf",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 19, 2026",
+      "bestFor": [
+        "medical device and equipment services",
+        "repair and maintenance businesses",
+        "B2B service with a rate card",
+        "healthcare operations"
+      ],
+      "style": [
+        "dark",
+        "editorial",
+        "monospace",
+        "gsap",
+        "scroll-driven",
+        "dot-matrix"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "diagnosis",
+        "prices",
+        "bench",
+        "parts",
+        "refurb",
+        "fleet",
+        "mailin",
+        "reviews",
+        "faq",
+        "visit",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.27",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Geist",
+          "Geist Mono",
+          "Instrument Serif"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "8B · Reflow template",
+          "href": "https://8b.com/templates/reflow/",
+          "note": "The MIT repair-shop template this page adapts, its layout system and its scroll scenes"
+        }
+      ],
+      "files": {
+        "html": "pages/halden-clinical-equipment-page/index.html",
+        "prompt": "pages/halden-clinical-equipment-page/PROMPT.md",
+        "preview": "pages/halden-clinical-equipment-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/halden-clinical.html",
+      "page": "https://instalanding.ai/prompt/halden-clinical-equipment-page"
+    },
+    {
+      "slug": "calibre-grading-bench-page",
+      "title": "Calibre Grading Bench Page",
+      "description": "A glass grading bench on a planet horizon: it reads an AI answer claim by claim, highlights each one in its verdict colour and swings a needle to the score",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 19, 2026",
+      "bestFor": [
+        "AI evaluation and observability tools",
+        "LLM quality and grounding products",
+        "developer tools with a release gate",
+        "AI safety and compliance software"
+      ],
+      "style": [
+        "dark",
+        "glass",
+        "glow",
+        "highlighter",
+        "planet horizon",
+        "bred"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "verdicts",
+        "how-it-works",
+        "stats",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Archivo",
+          "JetBrains Mono",
+          "Source Serif 4"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/calibre-grading-bench-page/index.html",
+        "prompt": "pages/calibre-grading-bench-page/PROMPT.md",
+        "preview": "pages/calibre-grading-bench-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/calibre-bench.html",
+      "page": "https://instalanding.ai/prompt/calibre-grading-bench-page"
+    },
     {
       "slug": "cyber-bird-arcade-game-page",
       "title": "Cyber Bird Arcade Game Page",
