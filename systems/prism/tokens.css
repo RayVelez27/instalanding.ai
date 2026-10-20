@@ -1,0 +1,102 @@
+/* InstaLanding design system · Prism · prism@1.0.0
+   Extracted from https://instalanding.ai/demos/prism-evals-editorial.html
+   Fonts (Google Fonts): Asul 400/700, Cabin 400-700 (and italic), Covered By Your Grace, IBM Plex Mono 400/500 */
+:root {
+  /* Color · core */
+  --pz-paper: #FFFFFF;
+  --pz-ink: #000000;
+  --pz-accent: #FF4081;
+  --pz-white: #FFFFFF;
+  --pz-b5: #F1F1F1;
+  --pz-b10: #E5E5E5;
+  --pz-b60: #6B6B6B;
+  --pz-white-5: rgba(255, 255, 255, 0.05);
+
+  /* Color · generative */
+  --pz-g1: #561CCD;
+  --pz-g2: #A169E9;
+  --pz-g3: #361BEC;
+  --pz-g4: #100091;
+  --pz-g5: #FC7F0C;
+  --pz-g6: #FF4081;
+
+  /* Color · product screen */
+  --pz-panel: #0D0A24;
+  --pz-panel-hover: #1B1640;
+  --pz-panel-fg: #ECE9F7;
+  --pz-panel-dim: #8B86A8;
+  --pz-panel-rule: rgba(255, 255, 255, 0.08);
+  --pz-ok: #7FD8A6;
+  --pz-ok-deep: #1D7F52;
+  --pz-night: #08061A;
+  --pz-snip: #0F0C26;
+  --pz-track-light: #EEEDF3;
+  --pz-cta-line: #D6D2E6;
+
+  /* Color · quiet text */
+  --pz-logo: #9B98A6;
+  --pz-tab: #AAA7B5;
+  --pz-feat-dim: #A9A9A9;
+
+  /* Type · families */
+  --pz-font-display: "Asul", Georgia, serif;
+  --pz-font-sans: "Cabin", system-ui, sans-serif;
+  --pz-font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --pz-font-hand: "Covered By Your Grace", cursive;
+
+  /* Type · scale */
+  --pz-display-hero: clamp(110px, 22vw, 340px);
+  --pz-display-lg: clamp(40px, 6.6vw, 96px);
+  --pz-display-md: clamp(36px, 5vw, 64px);
+  --pz-title: 24px;
+  --pz-body-lg: 18px;
+  --pz-body: 16px;
+  --pz-label: 14px;
+  --pz-mono: 13px;
+  --pz-label-sm: 12px;
+  --pz-mono-sm: 11px;
+
+  /* Shape · radii */
+  --pz-radius-pill: 999px;
+  --pz-radius-panel: 6px;
+  --pz-radius-btn-sm: 5px;
+  --pz-radius-sm: 4px;
+
+  /* Shape · borders */
+  --pz-border: 1px;
+  --pz-rim: 2px;
+  --pz-border-card: 3px;
+  --pz-mat: 16px;
+  --pz-mat-wide: 22px;
+
+  /* Depth · mats and grain */
+  --pz-shadow-rim: 0 0 0 2px rgba(255, 255, 255, 0.92), 0 10px 24px -12px rgba(13, 10, 36, 0.6);
+  --pz-shadow-mat: 0 34px 60px -34px rgba(16, 0, 145, 0.55);
+  --pz-shadow-panel: 0 50px 90px -40px rgba(16, 0, 145, 0.55);
+  --pz-shadow-snip: 0 24px 50px -24px rgba(0, 0, 0, 0.9);
+  --pz-grain-opacity: 0.22;
+
+  /* Motion · easing */
+  --pz-ease: ease;
+  --pz-ease-goo: ease-in-out;
+  --pz-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Motion · durations */
+  --pz-dur-fast: 0.2s;
+  --pz-dur-goo: 0.22s;
+  --pz-dur: 0.25s;
+  --pz-dur-turn: 0.3s;
+  --pz-dur-tilt: 0.35s;
+  --pz-dur-lift: 0.5s;
+  --pz-dur-caret: 1s;
+  --pz-dur-morph: 1.6s;
+  --pz-dur-quote: 8s;
+  --pz-dur-ticker-big: 50s;
+  --pz-dur-ticker: 60s;
+
+  /* Space · layout */
+  --pz-page-max: 1968px;
+  --pz-pad: 24px;
+  --pz-gap: 24px;
+  --pz-section-y: clamp(96px, 10vw, 160px);
+}

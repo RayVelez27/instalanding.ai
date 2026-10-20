@@ -1,0 +1,99 @@
+/* InstaLanding design system · Arcline · arcline@1.0.0
+   Extracted from https://instalanding.ai/demos/arcline-neon-glass.html
+   Fonts: none required. The stack leads with Poppins and falls back to the platform face. */
+:root {
+  color-scheme: dark;
+
+  /* Color · ramp */
+  --ac-gray50: #F4F7FB;
+  --ac-gray100: #E2EAF3;
+  --ac-gray150: #CED9E8;
+  --ac-gray200: #B5C3D9;
+  --ac-gray300: #9FAEC6;
+  --ac-gray400: #7C8EAB;
+  --ac-gray500: #5C6C8A;
+  --ac-gray600: #313D54;
+  --ac-gray650: #273045;
+  --ac-gray700: #1D2435;
+  --ac-gray750: #141A29;
+  --ac-gray800: #0D111C;
+  --ac-gray900: #05070D;
+  --ac-white: #FFFFFF;
+  --ac-black: #000000;
+
+  /* Color · accent */
+  --ac-blue: #2472F9;
+  --ac-blue-hi: #52A8FF;
+  --ac-blue-lo: #0F40B3;
+  --ac-blue-tint: hsla(214, 100%, 60%, 0.12);
+  --ac-blue-line: hsla(214, 100%, 62%, 0.28);
+
+  /* Color · glass */
+  --ac-glass: hsla(214, 100%, 75%, 0.045);
+  --ac-glass-border: hsl(var(--ac-hue2) 30% 24% / 0.7);
+  --ac-shadow: hsla(0, 0%, 0%, 0.4);
+  --ac-backdrop: hsla(226, 50%, 2%, 0.85);
+
+  /* Color · light hues */
+  --ac-hue1: 224;
+  --ac-hue2: 196;
+  --ac-hue: 193;
+  --ac-sat: 15%;
+
+  /* Type · families */
+  --ac-font: Poppins, "Avenir Next", Avenir, Montserrat, "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ac-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Type · scale */
+  --ac-text-base: clamp(0.75rem, 0.7rem + 0.25vw, 1rem);
+  --ac-display: 5em;
+  --ac-display-sm: 3.75em;
+  --ac-title-xl: 2.75em;
+  --ac-stat: 2.5em;
+  --ac-title-lg: 2.25em;
+  --ac-title: 2em;
+  --ac-text-lg: 1.25em;
+  --ac-text-md: 1.125em;
+  --ac-text-sm: 0.875em;
+  --ac-text-xs: 0.75em;
+
+  /* Shape · radii */
+  --ac-radius-widget: 4em;
+  --ac-radius-xl: 3em;
+  --ac-radius-lg: 2em;
+  --ac-radius-md: 1.5em;
+  --ac-radius-sm: 1.25em;
+  --ac-radius-xs: 0.75em;
+  --ac-radius-chip: 0.875rem;
+
+  /* Shape · borders */
+  --ac-border: 1px;
+  --ac-border-sweep: 1.5px;
+  --ac-border-bloom: 6px;
+
+  /* Depth · glass and light */
+  --ac-glass-blur: blur(14px) saturate(1.2);
+  --ac-glow-r: 22px;
+  --ac-shadow-panel: 0 0 0 1px hsl(var(--ac-hue1), 80%, 75%, 0.04) inset, hsl(var(--ac-hue2), 60%, 2%) 0 10px 16px -8px, hsl(var(--ac-hue2), 60%, 4%) 0 20px 36px -14px;
+
+  /* Motion · easing */
+  --ac-ease-out-sine: cubic-bezier(0.33, 1, 0.68, 1);
+  --ac-ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+  --ac-ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+  --ac-neon-ease: cubic-bezier(0.5, 1, 0.89, 1);
+  --ac-ease-sweep: cubic-bezier(0.55, 0.1, 0.35, 1);
+
+  /* Motion · durations */
+  --ac-trans-dur: 0.3s;
+  --ac-dur-reveal: 0.8s;
+  --ac-corner-lead: 0.65s;
+  --ac-dur-sheen: 1.6s;
+  --ac-sweep-dur: 1.7s;
+
+  /* Space · layout */
+  --ac-page-max: 72em;
+  --ac-content-max: 56.5em;
+  --ac-widgets-max: 48em;
+  --ac-section-y: 7.5em;
+  --ac-gap: 1.5em;
+}

@@ -2,8 +2,202 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 44,
+  "count": 47,
   "pages": [
+    {
+      "slug": "siliq-ai-hardware-lab-page",
+      "title": "Siliq AI Hardware Lab Page",
+      "description": "A sticker-bright bento for a small-batch AI hardware lab and school: SVG chips and GPUs, a hero board that breaks apart into a honey flood and a gallery that folds into a grid",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 20, 2026",
+      "bestFor": [
+        "AI hardware and devices",
+        "maker shops and electronics stores",
+        "workshops, classes and schools",
+        "playful product brands"
+      ],
+      "style": [
+        "light",
+        "bento",
+        "playful",
+        "illustrated",
+        "gsap",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "story",
+        "products",
+        "school",
+        "process",
+        "gallery",
+        "team",
+        "reviews",
+        "pricing",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Climate Crisis",
+          "Google Sans",
+          "Playpen Sans"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/siliq-ai-hardware-lab-page/index.html",
+        "prompt": "pages/siliq-ai-hardware-lab-page/PROMPT.md",
+        "preview": "pages/siliq-ai-hardware-lab-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/siliq-lab.html",
+      "page": "https://instalanding.ai/prompt/siliq-ai-hardware-lab-page"
+    },
+    {
+      "slug": "thorn-music-controller-page",
+      "title": "Thorn Music Controller Page",
+      "description": "A desktop music controller built in CSS 3D from layered DOM: every dial, fader, joystick and tape key works, with clicks you can hear and three finishes",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 20, 2026",
+      "bestFor": [
+        "consumer hardware and audio products",
+        "product pre-orders and reservations",
+        "industrial design studios",
+        "interactive product showcases"
+      ],
+      "style": [
+        "light",
+        "3d",
+        "skeuomorphic",
+        "interactive",
+        "product",
+        "no libraries"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "controls",
+        "display",
+        "finish",
+        "specs",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [],
+        "features": [
+          "inline-svg",
+          "inlined-fonts",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/thorn-music-controller-page/index.html",
+        "prompt": "pages/thorn-music-controller-page/PROMPT.md",
+        "preview": "pages/thorn-music-controller-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/thorn-controller.html",
+      "page": "https://instalanding.ai/prompt/thorn-music-controller-page"
+    },
+    {
+      "slug": "corvel-hard-tech-capital-page",
+      "title": "Corvel Hard-Tech Capital Page",
+      "description": "A risograph-print investment firm for fabs, satellites and fusion: halftone art drawn in code, a sunburst arch that blows apart on scroll and a two-plate misregistered print",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 20, 2026",
+      "bestFor": [
+        "venture and investment firms",
+        "hard-tech, deep-tech and climate funds",
+        "industrial and infrastructure finance",
+        "editorial brand sites"
+      ],
+      "style": [
+        "light",
+        "risograph",
+        "halftone",
+        "editorial",
+        "gsap",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "services",
+        "story",
+        "portfolio",
+        "stats",
+        "process",
+        "team",
+        "reviews",
+        "gallery",
+        "pricing",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Inter Tight",
+          "JetBrains Mono",
+          "Newsreader"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/corvel-hard-tech-capital-page/index.html",
+        "prompt": "pages/corvel-hard-tech-capital-page/PROMPT.md",
+        "preview": "pages/corvel-hard-tech-capital-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/corvel-capital.html",
+      "page": "https://instalanding.ai/prompt/corvel-hard-tech-capital-page"
+    },
     {
       "slug": "corelane-build-cluster-page",
       "title": "Corelane Build Cluster Page",
