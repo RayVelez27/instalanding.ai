@@ -1,0 +1,30 @@
+Build a landing page for Mirador, a fictional observability platform ("See every signal": traces, metrics and logs in one calm view, so the team finds the cause before customers find the bug), as one HTML file. GSAP 3.13 with ScrollTrigger and SplitText, and Lenis 1.3.4, all from jsdelivr. Google Fonts: Geist 300-700 (display and text), Geist Mono 400-500, Instrument Serif italic (one emphasised word per heading). No images: every chart, trace, map, portrait and icon is HTML, CSS, inline SVG or WebGL.
+
+DESIGN SYSTEM
+A night console in a rounded frame. Tokens: night #0a0912, ink #14122a, paper #f6f5fb and six signal colours (violet #8f80ff, indigo #3b30b8, sky #7cc4ff, amber #f5a54a, mint #4fe3b0, rose #ff6b8a). Role tokens (--bg, --plate, --text, --muted, --line, --mist, --card, --glass, --accent) are redefined under html.light for a paper theme with an indigo accent. The page sits inside a 14px frame with a 40px radius; "plates" in the page colour are cut out of the edges of full-bleed art, and each plate's outside corners are inverted fillets (small radial-gradient pieces painted in --plate) so the plate and the frame read as one surface. Glass cards blur only on large hover screens. Discs (a violet-to-indigo circle with the arch mark) sit in a circular bite masked out of a glass card. Buttons are pills with a round accent dot holding an arrow; on hover the accent floods from the dot as a growing circle and the arrow turns 45deg. Art backgrounds are layered radial "auroras" with a faint star field. Mock windows are dark mono panels with three dots, a title and a live/resolved badge.
+
+SECTIONS
+1. nav: fixed and click-through except its controls. A white "Product" pill at the left and "Pricing" at the right; in the middle a tab hanging from the top of the frame with filleted shoulders, holding three dropdown filters (Environment, Region, Time range) whose choice updates the hero card and re-rolls its sparkline and figures. A left rail of round icons (Home, Features, Tour, Book a demo, an avatar, changelog bell, call, and a moon/sun theme pair) that scroll-spies the sections, set into the frame while at the top and floating as a pill after; under 1024px it becomes a bottom dock. The header hides on scroll down and returns on scroll up.
+2. hero (pinned): full-bleed night with a WebGL2 ribbon field: three twisting ribbons drawn as thousands of instanced glowing dots with bloom, depth of field, drifting dust, hover focus and a click pulse that runs along the nearest ribbon (skipped without WebGL2). "See every / signal." huge in the middle, a lede, a "Trusted by teams who ship daily" plate cut out of the bottom left (4,200+ teams, three avatars), and a glass checkout-api card at the bottom right (status, a p99 sparkline, three specs, watch/pin/share toggles) with the disc in its bite. Scrolling opens the frame to full bleed and the plates slide away.
+3. intro: a big statement that lights word by word, with three inline pill pictures (a heartbeat, a trace, a timeline) that unclip from their centre; a note with a button and three stats whose rules draw in.
+4. features: three sticky cards that stack, each a full aurora with a mock window (a trace waterfall of ten spans, a p99/p50 latency chart against an SLO line with a deploy tooltip, an incident timeline), a glass spec list and a filleted plate with the feature name, a line and a price; the card underneath scales down and dims.
+5. integrations: four pill rows (Infrastructure, Data stores, Languages, Delivery) with a count and a gradient picture of glyph tiles that unclips from its round end on scroll.
+6. gallery: a 12-column bento of dark tiles that drift at different speeds: an animated service map with a pulsing failing node, a live log tail with a cursor, SLO budget bars, a latency heatmap and a query, each with a filleted caption.
+7. process (pinned): a radar sweep behind the title and a glass card that steps through four stages (Install one agent, Everything is discovered, Set the goals that matter, Page the right person) while a ring on the disc fills and the card travels across.
+8. pricing: a Monthly/Annual segmented switch with a sliding thumb; three plans (Starter $0, Team $29 or $24 as the accent card, Enterprise Custom) whose prices roll when switched.
+9. team: four arch-topped portraits drawn in CSS (initials in serif italic over coloured glows and dashed rings), unclipping upward, each with a mail button.
+10. reviews: an aurora stage with a 4.9 score and a looping track of glass quote cards that pauses on hover and focus.
+11. faq: a sticky side and five exclusive details whose plus turns into an x.
+12. security: an aurora that closes in from full bleed, a shield with a mint check, a plate dropping from the top, and two glass facts.
+13. contact: a demo form (name, work email, company, team-size chips, a message) and a side panel where a terminal installs the agent, revealed by a circle wipe, with a contact card and the disc.
+14. footer: a violet and amber panel with a changelog signup, three link columns, MIRADOR huge in a fading gradient sized from its character count, and a status line.
+
+THINGS THAT BREAK
+- The fillets must be painted in exactly --plate; when the theme changes they change with it, or square notches appear.
+- Put html.motion on in <head> only when motion is allowed, and take it off if GSAP has not arrived in 2.5s; scope every hidden-until-animated state under .motion.
+- The WebGL field must stop rendering off screen and when the tab is hidden, cap its render size, and fall back to the aurora when WebGL2 is missing.
+- Build scroll scenes lazily as sections approach, after fonts load, and let one failing scene fail alone.
+- The review track clones its cards for the loop; mark the clones aria-hidden and take their links out of the tab order.
+
+THE FLOOR
+One h1, one main, a labelled rail nav, listbox filters with aria-expanded and aria-selected, aria-pressed on the theme, billing and card toggles, live form status, aria-hidden on every mock window and canvas. With motion reduced the page is complete and static. No horizontal scroll at 390px.

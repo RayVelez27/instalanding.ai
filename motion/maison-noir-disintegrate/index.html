@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maison Noir Disintegrate · InstaLanding Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --bg: #07070a;
+        --gold: #d9b876;
+        --ink: #f3ece0;
+        --muted: rgba(243, 236, 224, 0.42);
+    }
+
+    html, body { background: var(--bg); overflow: hidden; height: 100%; }
+
+    /* ?autoplay (the library's live card): stay see-through until the card is built,
+       so the poster underneath shows instead of a black PREPARING screen, then fade in */
+    html.reel, html.reel body { background: transparent; }
+    html.reel .veil, html.reel .hint { display: none; }
+    html.reel body { opacity: 0; transition: opacity 500ms ease; }
+    html.reel body.ready { opacity: 1; background: var(--bg); }
+
+    body {
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        touch-action: none;
+        font-family: "Inter", system-ui, sans-serif;
+        color: var(--ink);
+        overflow-x: hidden;
+    }
+
+    .ambient {
+        position: fixed;
+        inset: 0;
+        background:
+            radial-gradient(55% 45% at 50% 50%, rgba(217, 184, 118, 0.09), transparent 70%),
+            radial-gradient(120% 80% at 50% 120%, rgba(60, 40, 15, 0.35), transparent 60%);
+        pointer-events: none;
+    }
+
+    /* soft contact shadow under the card (not captured) */
+    .card-shadow {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: min(560px, 86vw, 123vh);
+        aspect-ratio: 3 / 2;
+        transform: translate(-50%, -46%);
+        border-radius: 30px;
+        box-shadow: 0 50px 90px rgba(0, 0, 0, 0.75), 0 20px 40px rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+    }
+
+    .stage { position: fixed; inset: 0; pointer-events: none; }
+
+    .capture-canvas {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        /* contained in both directions, so a short frame (a library tile) shows the whole card */
+        width: min(600px, 92vw, 132vh);
+        height: auto;
+    }
+
+    /* ───────────── The card (captured by html2canvas) ───────────── */
+    #capture {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 400px;
+        border-radius: 26px;
+        overflow: hidden;
+        background: #0e0e11;
+    }
+
+    #capture img { display: block; }
+
+    .layer { position: absolute; left: 0; top: 0; width: 600px; height: 400px; }
+
+    .glare {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(112deg,
+            rgba(255, 255, 255, 0) 28%,
+            rgba(246, 227, 180, 0.05) 42%,
+            rgba(255, 250, 235, 0.13) 49%,
+            rgba(246, 227, 180, 0.04) 55%,
+            rgba(255, 255, 255, 0) 68%);
+    }
+
+    .bevel {
+        position: absolute;
+        inset: 0;
+        border-radius: 26px;
+        border: 1px solid rgba(232, 205, 150, 0.38);
+    }
+    .bevel-inner {
+        position: absolute;
+        inset: 1px;
+        border-radius: 25px;
+        border: 1px solid rgba(0, 0, 0, 0.55);
+    }
+    .edge-hi {
+        position: absolute;
+        left: 40px;
+        right: 40px;
+        top: 1px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 244, 215, 0.55), transparent);
+    }
+
+    .content { position: absolute; inset: 0; }
+
+    .abs { position: absolute; }
+
+    .brand { left: 40px; top: 36px; display: flex; align-items: center; gap: 14px; }
+    .brand-sub {
+        margin-top: 5px;
+        margin-left: 1px;
+        font-size: 7.5px;
+        font-weight: 500;
+        letter-spacing: 4px;
+        color: rgba(217, 184, 118, 0.85);
+    }
+
+    .edition { right: 40px; top: 36px; text-align: right; }
+    .label {
+        font-size: 7px;
+        font-weight: 500;
+        letter-spacing: 2.6px;
+        color: var(--muted);
+    }
+    .edition .label { margin-bottom: 2px; }
+    .edition img { margin-left: auto; }
+
+    .chiprow { left: 46px; top: 132px; display: flex; align-items: center; gap: 18px; }
+
+    .holo { right: 46px; top: 128px; }
+
+    .number { left: 40px; top: 208px; }
+    .mini {
+        left: 44px;
+        top: 247px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(220, 214, 204, 0.6);
+    }
+
+    .meta { left: 44px; bottom: 38px; display: flex; gap: 34px; align-items: flex-end; }
+    .meta .label { margin-bottom: 3px; }
+    .thru { display: flex; align-items: center; gap: 6px; }
+    .thru .small {
+        font-size: 5.5px;
+        line-height: 1.15;
+        letter-spacing: 1px;
+        color: var(--muted);
+    }
+
+    .tier { right: 40px; bottom: 30px; display: flex; align-items: center; gap: 10px; }
+
+    /* ───────────── UI ───────────── */
+    .veil {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        background: var(--bg);
+        display: grid;
+        place-items: center;
+        font-size: 10px;
+        letter-spacing: 6px;
+        color: rgba(217, 184, 118, 0.6);
+        transition: opacity 900ms ease, visibility 900ms;
+    }
+    body.ready .veil { opacity: 0; visibility: hidden; }
+
+    .hint {
+        position: fixed;
+        left: 50%;
+        bottom: 34px;
+        transform: translateX(-50%);
+        font-size: 10px;
+        letter-spacing: 5px;
+        color: rgba(243, 236, 224, 0.45);
+        text-align: center;
+        pointer-events: none;
+    }
+    .hint .bar {
+        width: 1px;
+        height: 36px;
+        margin: 12px auto 0;
+        background: linear-gradient(var(--gold), transparent);
+        animation: drip 2s ease-in-out infinite;
+        transform-origin: top;
+    }
+    @keyframes drip {
+        0% { transform: scaleY(0); opacity: 1; }
+        60% { transform: scaleY(1); opacity: 1; }
+        100% { transform: scaleY(1); opacity: 0; }
+    }
+
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+    @media (prefers-reduced-motion: reduce) {
+        .hint .bar { animation: none; }
+        .veil { transition: none; }
+    }
+</style>
+<script>if (/[?&]autoplay=/.test(location.search)) document.documentElement.classList.add("reel");</script>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<div class="card-shadow" aria-hidden="true"></div>
+
+<div id="capture">
+    <img id="bg" class="layer" alt="">
+    <div class="glare"></div>
+    <div class="bevel"></div>
+    <div class="bevel-inner"></div>
+    <div class="edge-hi"></div>
+
+    <div class="content">
+        <div class="abs brand">
+            <img id="mark" alt="">
+            <div>
+                <img id="brandName" alt="Maison Noir">
+                <div class="brand-sub">PRIVATE RESERVE · EST. MMXXVI</div>
+            </div>
+        </div>
+
+        <div class="abs edition">
+            <div class="label">EDITION</div>
+            <img id="editionVal" alt="No. 0001 / 1000">
+        </div>
+
+        <div class="abs chiprow">
+            <img id="chip" alt="">
+            <img id="wave" alt="">
+        </div>
+
+        <img id="holo" class="abs holo" alt="">
+
+        <img id="num" class="abs number" alt="4729 1180 5562 0918">
+        <div class="abs mini">4729</div>
+
+        <div class="abs meta">
+            <div>
+                <div class="label">MEMBER</div>
+                <img id="member" alt="A. Valentine">
+            </div>
+            <div>
+                <div class="label">SINCE</div>
+                <img id="since" alt="2026">
+            </div>
+            <div>
+                <div class="label">&nbsp;</div>
+                <div class="thru">
+                    <div class="small">VALID<br>THRU</div>
+                    <img id="thru" alt="10/31">
+                </div>
+            </div>
+        </div>
+
+        <div class="abs tier">
+            <img id="tierName" alt="Obsidian">
+            <img id="seal" alt="">
+        </div>
+    </div>
+</div>
+
+<div class="stage" role="img" aria-label="The Maison Noir card breaking into drifting fragments, left edge first"></div>
+<div class="hint" aria-hidden="true">SCROLL OR DRAG<div class="bar"></div></div>
+<div class="veil" aria-hidden="true">PREPARING</div>
+
+<h1 class="sr">Maison Noir: a black metal card that turns to dust as you scroll</h1>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════════
+   1. Procedural card assets (drawn on canvas, embedded as images)
+   ════════════════════════════════════════════════════════════ */
+const S = 3; // asset supersampling
+
+const GOLD = [[0, "#fff4d1"], [0.28, "#ecc985"], [0.48, "#b88d47"], [0.6, "#86622a"], [0.8, "#e4c283"], [1, "#9c773a"]];
+const SILVER = [[0, "#ffffff"], [0.32, "#dcd7ce"], [0.5, "#9e988f"], [0.6, "#77726b"], [0.8, "#d8d3ca"], [1, "#8c8780"]];
+
+function makeCanvas(w, h, s = S) {
+    const c = document.createElement("canvas");
+    c.width = Math.round(w * s);
+    c.height = Math.round(h * s);
+    const x = c.getContext("2d");
+    x.scale(s, s);
+    return { c, x };
+}
+
+function rr(x, px, py, w, h, r) {
+    x.beginPath();
+    x.moveTo(px + r, py);
+    x.arcTo(px + w, py, px + w, py + h, r);
+    x.arcTo(px + w, py + h, px, py + h, r);
+    x.arcTo(px, py + h, px, py, r);
+    x.arcTo(px, py, px + w, py, r);
+    x.closePath();
+}
+
+function grad(x, x0, y0, x1, y1, stops) {
+    const g = x.createLinearGradient(x0, y0, x1, y1);
+    stops.forEach(([o, c]) => g.addColorStop(o, c));
+    return g;
+}
+
+function brush(x, w, h, s, max) {
+    x.save();
+    x.setTransform(1, 0, 0, 1, 0, 0);
+    for (let y = 0; y < h * s; y++) {
+        x.fillStyle = `rgba(${Math.random() < 0.5 ? "255,255,255" : "0,0,0"},${Math.random() * max})`;
+        x.fillRect(0, y, w * s, 1);
+    }
+    x.restore();
+}
+
+function grain(x, amount) {
+    const { width, height } = x.canvas;
+    const d = x.getImageData(0, 0, width, height);
+    for (let i = 0; i < d.data.length; i += 4) {
+        if (!d.data[i + 3]) continue;
+        const n = (Math.random() - 0.5) * amount;
+        d.data[i] += n; d.data[i + 1] += n; d.data[i + 2] += n;
+    }
+    x.putImageData(d, 0, 0);
+}
+
+/* Foil / embossed text with manual letter-spacing */
+function textAsset(text, { family, weight = 400, style = "normal", size, spacing = 0, palette, emboss = true }) {
+    const font = `${style} ${weight} ${size * S}px "${family}"`;
+    const probe = document.createElement("canvas").getContext("2d");
+    probe.font = font;
+    const chars = [...text];
+    const widths = chars.map((ch) => probe.measureText(ch).width);
+    const sp = spacing * S;
+    const tw = widths.reduce((a, b) => a + b, 0) + sp * (chars.length - 1);
+    const pad = 4 * S;
+    const c = document.createElement("canvas");
+    c.width = Math.ceil(tw + pad * 2);
+    c.height = Math.ceil(size * S * 1.35 + pad * 2);
+    const x = c.getContext("2d");
+    x.font = font;
+    x.textBaseline = "middle";
+    const cy = c.height / 2;
+    const draw = (dx, dy) => {
+        let cx = pad + dx;
+        chars.forEach((ch, i) => { x.fillText(ch, cx, cy + dy); cx += widths[i] + sp; });
+    };
+
+    if (emboss) {
+        x.save();
+        x.shadowColor = "rgba(0,0,0,0.9)";
+        x.shadowBlur = 1.8 * S;
+        x.shadowOffsetX = 0.5 * S;
+        x.shadowOffsetY = 1.3 * S;
+        x.fillStyle = "rgba(0,0,0,0.9)";
+        draw(0, 0);
+        x.restore();
+        x.fillStyle = "rgba(255,250,235,0.4)";
+        draw(0, -0.55 * S);
+    }
+    x.fillStyle = grad(x, 0, cy - size * S * 0.55, 0, cy + size * S * 0.55, palette);
+    draw(0, 0);
+
+    // brushed metal + diagonal sheen confined to the glyphs
+    x.globalCompositeOperation = "source-atop";
+    for (let y = 0; y < c.height; y++) {
+        x.fillStyle = `rgba(${Math.random() < 0.5 ? "255,255,255" : "0,0,0"},${Math.random() * 0.14})`;
+        x.fillRect(0, y, c.width, 1);
+    }
+    x.fillStyle = grad(x, 0, 0, c.width, c.height * 2, [[0, "rgba(255,255,255,0)"], [0.42, "rgba(255,255,255,0.22)"], [0.5, "rgba(255,255,255,0)"]]);
+    x.fillRect(0, 0, c.width, c.height);
+
+    return { url: c.toDataURL(), w: c.width / S, h: c.height / S, pad: 4 };
+}
+
+/* Card body: engraving, brushed grain, microprint, vignette */
+function drawBackground() {
+    const W = 600, H = 400, s = 2;
+    const { c, x } = makeCanvas(W, H, s);
+    rr(x, 0, 0, W, H, 26);
+    x.clip();
+
+    x.fillStyle = grad(x, 0, 0, W, H, [[0, "#1c1b21"], [0.45, "#0d0d10"], [1, "#16141a"]]);
+    x.fillRect(0, 0, W, H);
+
+    // warm bloom top-left
+    let rg = x.createRadialGradient(120, 40, 0, 120, 40, 360);
+    rg.addColorStop(0, "rgba(217,184,118,0.10)");
+    rg.addColorStop(1, "rgba(217,184,118,0)");
+    x.fillStyle = rg;
+    x.fillRect(0, 0, W, H);
+
+    brush(x, W, H, s, 0.035);
+
+    // watermark monogram
+    x.save();
+    x.font = 'italic 600 300px "Cormorant Garamond"';
+    x.textBaseline = "middle";
+    x.fillStyle = "rgba(217,184,118,0.028)";
+    x.fillText("N", 300, 215);
+    x.restore();
+
+    // guilloché rosettes
+    const rosette = (cx, cy, R, amp, freq, copies, alpha, lw) => {
+        x.lineWidth = lw;
+        for (let k = 0; k < copies; k++) {
+            x.strokeStyle = `rgba(222,190,125,${alpha})`;
+            x.beginPath();
+            for (let i = 0; i <= 900; i++) {
+                const t = (i / 900) * Math.PI * 2;
+                const r = R + amp * Math.sin(freq * t + k * 0.42) + amp * 0.35 * Math.cos((freq / 2) * t - k * 0.2);
+                const px = cx + r * Math.cos(t), py = cy + r * Math.sin(t);
+                i ? x.lineTo(px, py) : x.moveTo(px, py);
+            }
+            x.stroke();
+        }
+    };
+    rosette(548, 205, 64, 9, 14, 18, 0.06, 0.45);
+    rosette(548, 205, 128, 13, 22, 22, 0.05, 0.4);
+    rosette(548, 205, 196, 11, 34, 16, 0.035, 0.35);
+
+    // flowing engraved bands along the bottom
+    for (let j = 0; j < 26; j++) {
+        x.strokeStyle = `rgba(222,190,125,${0.018 + (j % 3) * 0.008})`;
+        x.lineWidth = 0.4;
+        x.beginPath();
+        for (let px = 0; px <= W; px += 2) {
+            const py = 292 + j * 3.4 + 9 * Math.sin(px / 41 + j * 0.22) + 3 * Math.sin(px / 13 - j * 0.5);
+            px ? x.lineTo(px, py) : x.moveTo(px, py);
+        }
+        x.stroke();
+    }
+
+    // microprint security lines
+    x.save();
+    x.font = '500 3.1px "Inter"';
+    x.fillStyle = "rgba(217,184,118,0.32)";
+    const micro = "MAISON NOIR ◆ PRIVATE RESERVE ◆ OBSIDIAN ◆ ".repeat(14);
+    x.fillText(micro, 26, 20);
+    x.fillText(micro, 14, 386);
+    x.fillStyle = "rgba(217,184,118,0.18)";
+    x.fillText(micro, 40, 196);
+    x.restore();
+
+    // vignette
+    rg = x.createRadialGradient(W / 2, H / 2, 140, W / 2, H / 2, 420);
+    rg.addColorStop(0, "rgba(0,0,0,0)");
+    rg.addColorStop(1, "rgba(0,0,0,0.55)");
+    x.fillStyle = rg;
+    x.fillRect(0, 0, W, H);
+
+    grain(x, 10);
+    return c.toDataURL("image/png");
+}
+
+/* Faceted gold diamond mark */
+function drawMark() {
+    const w = 34, h = 34;
+    const { c, x } = makeCanvas(w, h, 4);
+    const cx = 17, cy = 17, r = 11;
+    const tri = (a, b, fill) => { x.beginPath(); x.moveTo(cx, cy); x.lineTo(...a); x.lineTo(...b); x.closePath(); x.fillStyle = fill; x.fill(); };
+    const T = [cx, cy - r], R = [cx + r, cy], B = [cx, cy + r], L = [cx - r, cy];
+    tri(L, T, "#fbeac0");
+    tri(T, R, "#d8b56f");
+    tri(R, B, "#7d5c26");
+    tri(B, L, "#a8823f");
+    x.globalCompositeOperation = "source-atop";
+    brush(x, w, h, 4, 0.12);
+    x.globalCompositeOperation = "source-over";
+    x.strokeStyle = "rgba(230,200,140,0.75)";
+    x.lineWidth = 0.6;
+    x.beginPath();
+    x.moveTo(cx, cy - r - 5); x.lineTo(cx + r + 5, cy); x.lineTo(cx, cy + r + 5); x.lineTo(cx - r - 5, cy); x.closePath();
+    x.stroke();
+    return { url: c.toDataURL(), w, h };
+}
+
+/* EMV contact chip */
+function drawChip() {
+    const w = 54, h = 42, s = 5;
+    const { c, x } = makeCanvas(w, h, s);
+    rr(x, 0.5, 0.5, w - 1, h - 1, 7);
+    x.save();
+    x.clip();
+    x.fillStyle = grad(x, 0, 0, w, h, [[0, "#fbe7b5"], [0.3, "#e0bd78"], [0.55, "#b38b48"], [0.75, "#d7b26c"], [1, "#8b672e"]]);
+    x.fillRect(0, 0, w, h);
+    brush(x, w, h, s, 0.1);
+
+    const groove = (path) => {
+        x.lineWidth = 0.8;
+        x.strokeStyle = "rgba(70,45,12,0.6)";
+        path(0); x.stroke();
+        x.lineWidth = 0.5;
+        x.strokeStyle = "rgba(255,240,200,0.45)";
+        path(0.6); x.stroke();
+    };
+    const px0 = w * 0.36, px1 = w * 0.64, py0 = h * 0.27, py1 = h * 0.73;
+    groove((o) => { rr(x, px0 + o, py0 + o, px1 - px0, py1 - py0, 3); });
+    groove((o) => {
+        x.beginPath();
+        [h * 0.36, h * 0.64].forEach((yy) => {
+            x.moveTo(0, yy + o); x.lineTo(px0 + o, yy + o);
+            x.moveTo(px1 + o, yy + o); x.lineTo(w, yy + o);
+        });
+        x.moveTo(w / 2 + o, 0); x.lineTo(w / 2 + o, py0 + o);
+        x.moveTo(w / 2 + o, py1 + o); x.lineTo(w / 2 + o, h);
+        x.moveTo(px0 + o, py0 + o); x.lineTo(px0 * 0.55 + o, 0);
+        x.moveTo(px1 + o, py0 + o); x.lineTo(w - px0 * 0.55 + o, 0);
+        x.moveTo(px0 + o, py1 + o); x.lineTo(px0 * 0.55 + o, h);
+        x.moveTo(px1 + o, py1 + o); x.lineTo(w - px0 * 0.55 + o, h);
+    });
+
+    x.fillStyle = grad(x, 0, 0, w, h, [[0, "rgba(255,255,255,0)"], [0.38, "rgba(255,255,255,0.35)"], [0.5, "rgba(255,255,255,0)"]]);
+    x.fillRect(0, 0, w, h);
+    x.restore();
+
+    rr(x, 0.5, 0.5, w - 1, h - 1, 7);
+    x.lineWidth = 0.8;
+    x.strokeStyle = "rgba(60,40,10,0.7)";
+    x.stroke();
+    rr(x, 1.4, 1.4, w - 2.8, h - 2.8, 6);
+    x.lineWidth = 0.5;
+    x.strokeStyle = "rgba(255,240,205,0.5)";
+    x.stroke();
+    return { url: c.toDataURL(), w, h };
+}
+
+/* Embossed contactless symbol */
+function drawWave() {
+    const w = 26, h = 34;
+    const { c, x } = makeCanvas(w, h, 4);
+    const arcs = (dx, dy, style) => {
+        x.strokeStyle = style;
+        x.lineWidth = 2;
+        x.lineCap = "round";
+        [4, 9, 14, 19].forEach((r) => {
+            x.beginPath();
+            x.arc(2 + dx, h / 2 + dy, r, -0.78, 0.78);
+            x.stroke();
+        });
+    };
+    arcs(0.4, 1.1, "rgba(0,0,0,0.85)");
+    arcs(0, -0.5, "rgba(255,255,255,0.35)");
+    arcs(0, 0, grad(x, 0, 0, 0, h, SILVER));
+    return { url: c.toDataURL(), w, h };
+}
+
+/* Iridescent security hologram */
+function drawHolo() {
+    const w = 78, h = 50;
+    const { c, x } = makeCanvas(w, h, 4);
+    rr(x, 0.5, 0.5, w - 1, h - 1, 6);
+    x.save();
+    x.clip();
+
+    let g;
+    if (x.createConicGradient) g = x.createConicGradient(0.8, w * 0.38, h * 0.62);
+    else g = x.createLinearGradient(0, 0, w, h);
+    [195, 265, 320, 25, 55, 110, 170, 195].forEach((hu, i, a) => g.addColorStop(i / (a.length - 1), `hsl(${hu} 65% 70%)`));
+    x.fillStyle = g;
+    x.fillRect(0, 0, w, h);
+    x.fillStyle = "rgba(205,205,215,0.38)";
+    x.fillRect(0, 0, w, h);
+
+    for (let i = -h; i < w; i += 0.6) {
+        x.strokeStyle = `hsla(${(i * 11 + 720) % 360},95%,78%,0.32)`;
+        x.lineWidth = 0.3;
+        x.beginPath();
+        x.moveTo(i, h); x.lineTo(i + h, 0);
+        x.stroke();
+    }
+    for (let r = 3; r < 60; r += 2.4) {
+        x.strokeStyle = "rgba(255,255,255,0.16)";
+        x.lineWidth = 0.3;
+        x.beginPath();
+        x.arc(w * 0.66, h * 0.42, r, 0, Math.PI * 2);
+        x.stroke();
+    }
+
+    // emblem
+    const cx = w / 2, cy = h / 2 - 2;
+    x.strokeStyle = "rgba(255,255,255,0.85)";
+    x.lineWidth = 0.7;
+    x.beginPath(); x.moveTo(cx, cy - 13); x.lineTo(cx + 13, cy); x.lineTo(cx, cy + 13); x.lineTo(cx - 13, cy); x.closePath(); x.stroke();
+    x.fillStyle = "rgba(255,255,255,0.32)";
+    x.beginPath(); x.moveTo(cx, cy - 7); x.lineTo(cx + 7, cy); x.lineTo(cx, cy + 7); x.lineTo(cx - 7, cy); x.closePath(); x.fill();
+    x.font = 'italic 600 9px "Cormorant Garamond"';
+    x.textAlign = "center";
+    x.textBaseline = "middle";
+    x.fillStyle = "rgba(40,30,55,0.6)";
+    x.fillText("MN", cx, cy + 0.5);
+    x.font = '500 3.4px "Inter"';
+    x.fillStyle = "rgba(255,255,255,0.75)";
+    x.fillText("A U T H E N T I C", cx, h - 6);
+
+    x.fillStyle = grad(x, 0, 0, 0, h, [[0, "rgba(255,255,255,0.45)"], [0.45, "rgba(255,255,255,0)"]]);
+    x.fillRect(0, 0, w, h);
+    x.restore();
+
+    rr(x, 0.5, 0.5, w - 1, h - 1, 6);
+    x.lineWidth = 0.7;
+    x.strokeStyle = "rgba(235,235,245,0.7)";
+    x.stroke();
+    return { url: c.toDataURL(), w, h };
+}
+
+/* Gold foil seal with circular microtext */
+function drawSeal() {
+    const w = 60, h = 60;
+    const { c, x } = makeCanvas(w, h, 4);
+    const cx = 30, cy = 30;
+
+    x.save();
+    x.shadowColor = "rgba(0,0,0,0.8)";
+    x.shadowBlur = 4;
+    x.shadowOffsetY = 1.5;
+    x.beginPath();
+    for (let i = 0; i <= 720; i++) {
+        const t = (i / 720) * Math.PI * 2;
+        const r = 26 + 1.1 * Math.cos(44 * t);
+        const px = cx + r * Math.cos(t), py = cy + r * Math.sin(t);
+        i ? x.lineTo(px, py) : x.moveTo(px, py);
+    }
+    x.closePath();
+    const rg = x.createRadialGradient(cx - 9, cy - 10, 1, cx, cy, 30);
+    rg.addColorStop(0, "#fff3cc");
+    rg.addColorStop(0.4, "#dfba72");
+    rg.addColorStop(0.8, "#8f6831");
+    rg.addColorStop(1, "#5c421d");
+    x.fillStyle = rg;
+    x.fill();
+    x.restore();
+
+    x.save();
+    x.beginPath(); x.arc(cx, cy, 26, 0, Math.PI * 2); x.clip();
+    brush(x, w, h, 4, 0.1);
+    for (let k = 0; k < 12; k++) {
+        x.strokeStyle = "rgba(80,55,20,0.22)";
+        x.lineWidth = 0.25;
+        x.beginPath();
+        for (let i = 0; i <= 400; i++) {
+            const t = (i / 400) * Math.PI * 2;
+            const r = 14 + 2.2 * Math.sin(12 * t + k * 0.5);
+            const px = cx + r * Math.cos(t), py = cy + r * Math.sin(t);
+            i ? x.lineTo(px, py) : x.moveTo(px, py);
+        }
+        x.stroke();
+    }
+    x.restore();
+
+    [[20.2, "rgba(70,48,18,0.55)"], [21, "rgba(255,240,205,0.45)"]].forEach(([r, col]) => {
+        x.strokeStyle = col; x.lineWidth = 0.5;
+        x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
+    });
+
+    // circular microtext
+    const ring = "MAISON NOIR ◆ OBSIDIAN ◆ PRIVATE RESERVE ◆ ";
+    x.font = '600 3.1px "Inter"';
+    x.fillStyle = "rgba(60,40,14,0.8)";
+    x.textAlign = "center";
+    x.textBaseline = "middle";
+    [...ring].forEach((ch, i, arr) => {
+        const a = (i / arr.length) * Math.PI * 2 - Math.PI / 2;
+        x.save();
+        x.translate(cx + 23.4 * Math.cos(a), cy + 23.4 * Math.sin(a));
+        x.rotate(a + Math.PI / 2);
+        x.fillText(ch, 0, 0);
+        x.restore();
+    });
+
+    // debossed monogram
+    x.font = 'italic 600 15px "Cormorant Garamond"';
+    x.fillStyle = "rgba(255,240,200,0.6)";
+    x.fillText("MN", cx, cy + 1.6);
+    x.fillStyle = "rgba(70,46,16,0.88)";
+    x.fillText("MN", cx, cy + 0.8);
+
+    x.fillStyle = grad(x, 0, 0, w, h, [[0, "rgba(255,255,255,0)"], [0.4, "rgba(255,255,255,0.22)"], [0.5, "rgba(255,255,255,0)"]]);
+    x.globalCompositeOperation = "source-atop";
+    x.fillRect(0, 0, w, h);
+    return { url: c.toDataURL(), w, h };
+}
+
+function place(id, asset) {
+    const img = document.getElementById(id);
+    img.src = asset.url;
+    img.style.width = asset.w + "px";
+    img.style.height = asset.h + "px";
+    if (asset.pad) img.style.margin = `-${asset.pad}px`;
+    return img;
+}
+
+async function buildCard() {
+    await Promise.all([
+        document.fonts.load('600 30px "Cormorant Garamond"'),
+        document.fonts.load('italic 600 20px "Cormorant Garamond"'),
+        document.fonts.load('italic 500 20px "Cormorant Garamond"'),
+        document.fonts.load('500 12px "Inter"'),
+        document.fonts.load('600 12px "Inter"'),
+        document.fonts.load('500 26px "JetBrains Mono"')
+    ]).catch(() => {});
+    await document.fonts.ready;
+
+    const bg = document.getElementById("bg");
+    bg.src = drawBackground();
+
+    place("mark", drawMark());
+    place("brandName", textAsset("MAISON NOIR", { family: "Cormorant Garamond", weight: 600, size: 27, spacing: 5.5, palette: GOLD }));
+    place("editionVal", textAsset("Nº 0001 / 1000", { family: "Cormorant Garamond", weight: 500, style: "italic", size: 19, spacing: 0.5, palette: GOLD }));
+    place("chip", drawChip());
+    place("wave", drawWave());
+    place("holo", drawHolo());
+    place("num", textAsset("4729  1180  5562  0918", { family: "JetBrains Mono", weight: 500, size: 25, spacing: 1.2, palette: SILVER }));
+    place("member", textAsset("A. VALENTINE", { family: "Inter", weight: 500, size: 12, spacing: 2.2, palette: SILVER }));
+    place("since", textAsset("2026", { family: "Inter", weight: 500, size: 12, spacing: 2.2, palette: SILVER }));
+    place("thru", textAsset("10/31", { family: "Inter", weight: 500, size: 12, spacing: 2.2, palette: SILVER }));
+    place("tierName", textAsset("OBSIDIAN", { family: "Cormorant Garamond", weight: 600, size: 15, spacing: 4.5, palette: GOLD }));
+    place("seal", drawSeal());
+
+    const imgs = [...document.querySelectorAll("#capture img")];
+    await Promise.all(imgs.map((i) => (i.decode ? i.decode().catch(() => {}) : Promise.resolve())));
+}
+
+/* ════════════════════════════════════════════════════════════
+   2. Disintegration
+   the disintegration effect is taken from --> https://www.youtube.com/watch?v=5DGZhWDl6XM
+   ════════════════════════════════════════════════════════════ */
+const COUNT = 75;
+const REPEAT_COUNT = 3;
+const SCALE = Math.min(window.devicePixelRatio || 1, 1.5);
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const capture = document.querySelector("#capture");
+const stage = document.querySelector(".stage");
+const hint = document.querySelector(".hint");
+const shadow = document.querySelector(".card-shadow");
+const fragments = [];
+const tune = { drift: 40, spin: 30 };
+let flights = [];
+
+/* The whole effect has one progress, 0 (whole card) → 1 (dust). Nothing scrolls:
+   `goal` is where the clock, the wheel, a drag or a step wants it, and `view` eases
+   after it (the lag a scrub: 1 ScrollTrigger used to give), redrawing every frame. */
+const goal = { p: 0 };
+const view = { p: 0 };
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+/* One paused timeline per fragment: it drifts along its own angle, turns and fades,
+   starting later the further right its pixels sit (the delay spreads 0 → 2 of 3 units). */
+function buildFlight() {
+    flights.forEach((tl) => tl.kill());
+    flights = fragments.map(({ el, i, angle, turn }) => {
+        gsap.set(el, { clearProps: "transform,opacity" });
+        const tl = gsap.timeline({ paused: true });
+        tl.to(el, {
+            duration: 1,
+            rotate: tune.spin * turn,
+            translateX: tune.drift * Math.sin(angle),
+            translateY: tune.drift * Math.cos(angle),
+            opacity: 0,
+            delay: (i / fragments.length) * 2
+        });
+        return tl;
+    });
+}
+
+function render() {
+    const p = view.p;
+    flights.forEach((tl) => tl.progress(p));
+    hint.style.opacity = String(1 - clamp01(p / 0.13));
+    const k = clamp01(p / 0.4);
+    shadow.style.opacity = String(1 - k);
+    shadow.style.transform = `translate(-50%, -46%) scale(${1 - 0.15 * k})`;
+}
+
+const follow = gsap.quickTo(view, "p", { duration: 0.9, ease: "power3.out", onUpdate: render });
+const setGoal = (v) => { goal.p = clamp01(v); follow(goal.p); };
+
+/* The loop: dissolve, hold as dust, reassemble, hold whole, forever. It starts from
+   wherever the card is, so taking over by hand and letting go never jumps. */
+let loop = null;
+let dissolveSeconds = 4;
+function startLoop() {
+    if (loop) loop.kill();
+    const D = dissolveSeconds;
+    const tl = gsap.timeline({ onComplete: startLoop });
+    if (goal.p < 0.999) tl.to(goal, { p: 1, duration: D * (1 - goal.p), ease: "power1.inOut", onUpdate: () => follow(goal.p) });
+    tl.to({}, { duration: 1.1 })
+      .to(goal, { p: 0, duration: D * 0.75, ease: "power1.inOut", onUpdate: () => follow(goal.p) })
+      .to({}, { duration: 1.4 });
+    loop = tl;
+}
+function stopLoop() { if (loop) { loop.kill(); loop = null; } }
+
+/* Hands on: the wheel and a drag scrub the card and pause the loop; it resumes 3.5s
+   after the last touch (unless the lab has switched autoplay off). */
+let looping = !REDUCED;
+let resume = 0;
+function takeOver() {
+    stopLoop();
+    clearTimeout(resume);
+    if (looping) resume = setTimeout(startLoop, 3500);
+}
+addEventListener("wheel", (e) => {
+    if (!document.body.classList.contains("ready")) return;
+    takeOver();
+    setGoal(goal.p + e.deltaY / 1800);
+}, { passive: true });
+let dragY = null;
+addEventListener("pointerdown", (e) => { dragY = e.clientY + e.clientX; });
+addEventListener("pointermove", (e) => {
+    if (dragY === null || !document.body.classList.contains("ready")) return;
+    const v = e.clientY + e.clientX;
+    takeOver();
+    setGoal(goal.p + (dragY - v) / 700);
+    dragY = v;
+});
+addEventListener("pointerup", () => { dragY = null; });
+addEventListener("pointercancel", () => { dragY = null; });
+
+addEventListener("card-ready", () => { if (looping) startLoop(); });
+
+function createCanvases(captureEl) {
+    // pin to the top-left during capture so nothing is clipped on small screens
+    Object.assign(captureEl.style, { left: "0px", top: "0px", transform: "none" });
+
+    html2canvas(captureEl, {
+        backgroundColor: null,
+        scale: SCALE,
+        windowWidth: Math.max(window.innerWidth, 800),
+        windowHeight: Math.max(window.innerHeight, 600)
+    }).then((canvas) => {
+        const width = canvas.width;
+        const height = canvas.height;
+        const ctx = canvas.getContext("2d");
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const src = imageData.data;
+        const dataList = [];
+        captureEl.style.display = "none";
+
+        for (let i = 0; i < COUNT; i++) dataList.push(ctx.createImageData(width, height));
+
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                const index = (x + y * width) * 4;
+                for (let l = 0; l < REPEAT_COUNT; l++) {
+                    const dataIndex = Math.floor((COUNT * (Math.random() + (2 * x) / width)) / 3);
+                    const t = dataList[dataIndex].data;
+                    t[index] = src[index];
+                    t[index + 1] = src[index + 1];
+                    t[index + 2] = src[index + 2];
+                    t[index + 3] = src[index + 3];
+                }
+            }
+        }
+
+        dataList.forEach((data, i) => {
+            const clonedCanvas = canvas.cloneNode();
+            clonedCanvas.getContext("2d").putImageData(data, 0, 0);
+            clonedCanvas.className = "capture-canvas";
+            // html2canvas writes a fixed 600px size inline; drop it so the class can scale fragments to 92vw
+            clonedCanvas.style.width = "";
+            clonedCanvas.style.height = "";
+            stage.appendChild(clonedCanvas);
+            fragments.push({
+                el: clonedCanvas,
+                i,
+                angle: (Math.random() - 0.5) * 2 * Math.PI,
+                turn: Math.random() - 0.5
+            });
+        });
+        buildFlight();
+        render();
+
+        document.body.classList.add("ready");
+        dispatchEvent(new Event("card-ready"));
+    });
+}
+
+buildCard().then(() => requestAnimationFrame(() => createCanvases(capture)));
+</script>
+<script>
+/* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The page works on its own (it loops:
+     dissolve, hold, reassemble); when it is framed, the lab drives it with
+     postMessage and it reports how far the card has crumbled.
+       { source: 'il-motion', type: 'speed', value: 0.25 }   the loop, the easing and the cue
+       { ..., type: 'step', value: 1 | -1 }    glide to the next / previous stage
+       { ..., type: 'drift', value: 40 }       how far each fragment travels (px)
+       { ..., type: 'spin', value: 30 }        how far each fragment turns (deg, ± half)
+       { ..., type: 'cue', value: true }       the SCROLL OR DRAG cue under the card
+       { ..., type: 'autoplay', value: true }  loop without pausing for the pointer; false waits for a hand
+     ?autoplay=<ms> loops with a <ms> dissolve (the library's live cards use it).
+  ------------------------------------------------------------------ */
+;(() => {
+    const STOPS = [0, 0.3, 0.6, 1];
+    const NAMES = ["INTACT", "CRUMBLING", "SCATTERING", "DUST"];
+    const glideTo = (p) => {
+        takeOver();
+        gsap.to(goal, { p, duration: REDUCED ? 0.01 : 1.2, ease: "power2.inOut", overwrite: true, onUpdate: () => follow(goal.p) });
+    };
+    const step = (dir) => {
+        const p = goal.p;
+        const next = dir > 0 ? STOPS.find((x) => x > p + 0.01) : [...STOPS].reverse().find((x) => x < p - 0.01);
+        glideTo(next ?? (dir > 0 ? 0 : 1));
+    };
+    addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") step(1);
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft" || e.key === "PageUp") step(-1);
+    });
+    const qs = new URLSearchParams(location.search);
+    if (qs.has("autoplay")) {
+        dissolveSeconds = Math.max(1.5, (Number(qs.get("autoplay")) || 3400) / 1000);
+        looping = true;
+    }
+    addEventListener("message", (e) => {
+        const d = e.data;
+        if (!d || d.source !== 'il-motion') return;
+        if (d.type === 'speed') gsap.globalTimeline.timeScale(Math.max(0.05, Number(d.value) || 1));
+        if (d.type === 'step') step(d.value > 0 ? 1 : -1);
+        if (d.type === 'drift') {
+            const v = Number(d.value);
+            if (!Number.isNaN(v) && v !== tune.drift) { tune.drift = v; if (fragments.length) { buildFlight(); render(); } }
+        }
+        if (d.type === 'spin') {
+            const v = Number(d.value);
+            if (!Number.isNaN(v) && v !== tune.spin) { tune.spin = v; if (fragments.length) { buildFlight(); render(); } }
+        }
+        if (d.type === 'cue') hint.style.visibility = d.value ? "" : "hidden";
+        if (d.type === 'autoplay') {
+            // The lab sends false on load: the loop keeps running as the idle state.
+            // true keeps it running even while a hand is on it (no pause after input).
+            if (d.value) { looping = true; clearTimeout(resume); if (document.body.classList.contains("ready") && !loop) startLoop(); }
+        }
+    });
+    if (parent === window) return;
+    let last = "";
+    const report = () => {
+        const p = view.p;
+        let k = 0;
+        for (let i = 0; i < STOPS.length; i++) if (p >= STOPS[i] - 0.01) k = i;
+        const text = !document.body.classList.contains("ready") ? "PREPARING THE CARD"
+            : p < 0.005 ? "INTACT · SCROLL OR DRAG TO DISSOLVE" : `${NAMES[k]} · ${Math.round(p * 100)}%`;
+        if (text !== last) {
+            last = text;
+            parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, "*");
+        }
+        setTimeout(() => requestAnimationFrame(report), 90);
+    };
+    requestAnimationFrame(report);
+})();
+</script>
+</body>
+</html>

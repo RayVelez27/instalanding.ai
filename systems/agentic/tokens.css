@@ -1,0 +1,77 @@
+/* InstaLanding design system · Agentic · agentic@1.0.0
+   Extracted from https://instalanding.ai/demos/agentic-art-expo.html
+   Fonts (Google Fonts): Host Grotesk 400-700 (display and text), Instrument Serif italic (one word per heading),
+   JetBrains Mono 400-500 (labels) */
+:root {
+  /* Color · core */
+  --ag-bg: #EBE6DC;
+  --ag-surface: #F7F4EE;
+  --ag-ink: #0D0C0B;
+  --ag-panel: #0B0A09;
+  --ag-on-panel: #EFE9DF;
+  --ag-accent: #D7FF3F;
+  --ag-ember: #FF5A2E;
+
+  /* Color · derived */
+  --ag-muted: color-mix(in oklab, var(--ag-ink) 54%, var(--ag-bg));
+  --ag-line: color-mix(in oklab, var(--ag-ink) 13%, transparent);
+  --ag-shade: color-mix(in oklab, var(--ag-ink) 9%, var(--ag-bg));
+  --ag-panel-muted: color-mix(in oklab, var(--ag-on-panel) 56%, var(--ag-panel));
+  --ag-panel-line: color-mix(in oklab, var(--ag-on-panel) 15%, transparent);
+
+  /* Type · families */
+  --ag-font-display: "Host Grotesk", system-ui, sans-serif;
+  --ag-font-text: "Host Grotesk", system-ui, sans-serif;
+  --ag-font-serif: "Instrument Serif", Georgia, serif;
+  --ag-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Type · scale */
+  --ag-t-giant: clamp(62px, 11.2vw, 168px);
+  --ag-score: clamp(72px, 8vw, 120px);
+  --ag-price: clamp(44px, 4.6vw, 68px);
+  --ag-brand: clamp(40px, 4.6vw, 68px);
+  --ag-t-h2: clamp(32px, 4.2vw, 62px);
+  --ag-row: clamp(28px, 3.6vw, 54px);
+  --ag-statement: clamp(28px, 3.5vw, 52px);
+  --ag-figure: clamp(34px, 3.4vw, 50px);
+  --ag-card: clamp(24px, 2.3vw, 34px);
+  --ag-item: clamp(26px, 2.4vw, 34px);
+  --ag-lede: clamp(19px, 1.7vw, 24px);
+  --ag-intro: clamp(19px, 1.6vw, 23px);
+  --ag-text: 17px;
+  --ag-small: 15px;
+  --ag-caption: 13px;
+  --ag-label: 11.5px;
+
+  /* Shape · radii */
+  --ag-r-xl: 30px;
+  --ag-r-lg: 22px;
+  --ag-r-md: 16px;
+  --ag-r-sm: 10px;
+  --ag-r-pill: 999px;
+
+  /* Shape · borders */
+  --ag-hairline: 1px;
+
+  /* Depth · grain, glass and shadow */
+  --ag-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --ag-glass: blur(8px);
+  --ag-shadow-float: 0 40px 80px -40px color-mix(in oklab, var(--ag-ink) 35%, transparent);
+
+  /* Motion · easing */
+  --ag-ease: cubic-bezier(.7,0,.2,1);
+
+  /* Motion · durations */
+  --ag-dur-quick: .35s;
+  --ag-dur: .4s;
+  --ag-dur-text: .45s;
+  --ag-dur-line: .5s;
+  --ag-dur-open: .6s;
+  --ag-dur-paint: 1.2s;
+
+  /* Space · layout */
+  --ag-frame: 10px;
+  --ag-gutter: clamp(16px, 2.6vw, 40px);
+  --ag-space: clamp(96px, 11vw, 176px);
+  --ag-header: 64px;
+}

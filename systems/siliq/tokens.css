@@ -1,0 +1,68 @@
+/* InstaLanding design system · Siliq · siliq@1.0.0
+   Extracted from https://instalanding.ai/demos/siliq-lab.html
+   Fonts (Google Fonts): Climate Crisis (display), Google Sans 400-700 (text), Playpen Sans 600-800 (hand) */
+:root {
+  /* Color · core */
+  --sq-ground: #E4E8E3;
+  --sq-paper: #FFFFFF;
+  --sq-sky: #7CC4EA;
+  --sq-honey: #FFBF3C;
+  --sq-tangerine: #F47A3C;
+  --sq-leaf: #0A5C46;
+  --sq-ink: #0A1317;
+
+  /* Type · ink */
+  --sq-ink-soft: color-mix(in oklab, var(--sq-ink) 70%, var(--sq-paper));
+
+  /* Type · families */
+  --sq-font-display: "Climate Crisis", "Arial Black", sans-serif;
+  --sq-font-text: "Google Sans", "Segoe UI", system-ui, sans-serif;
+  --sq-font-hand: "Playpen Sans", "Comic Sans MS", cursive;
+
+  /* Type · scale */
+  --sq-display-xl: clamp(34px, 5.4vw, 84px);
+  --sq-statement: clamp(28px, 4.7vw, 72px);
+  --sq-display-md: clamp(30px, 4.4vw, 70px);
+  --sq-title: clamp(22px, 2.2vw, 32px);
+  --sq-lead: clamp(17px, 1.35vw, 21px);
+  --sq-body: clamp(15px, 1.12vw, 17px);
+  --sq-small: 14px;
+  --sq-label: 13px;
+  --sq-k: 1.1;
+
+  /* Shape · radii */
+  --sq-r-tile: clamp(22px, 2.5vw, 36px);
+  --sq-r-blob: 40%;
+  --sq-r-pill: 999px;
+  --sq-r-field: 18px;
+
+  /* Shape · borders */
+  --sq-border: 2px;
+
+  /* Depth · float */
+  --sq-shade: color-mix(in oklab, var(--sq-ink) 12%, transparent);
+  --sq-shadow-float: 0 8px 28px var(--sq-shade);
+  --sq-shadow-sheet: 0 20px 40px var(--sq-shade);
+
+  /* Motion · easing */
+  --sq-ease-pop: cubic-bezier(.3, 1.45, .5, 1);
+  --sq-ease-open: cubic-bezier(.3, .8, .3, 1);
+
+  /* Motion · durations */
+  --sq-dur-fast: .25s;
+  --sq-dur: .35s;
+  --sq-dur-open: .45s;
+  --sq-dur-pop: .6s;
+  --sq-dur-jelly: .65s;
+  --sq-dur-blink: 1.6s;
+  --sq-dur-spin: 2.4s;
+  --sq-dur-float: 3s;
+  --sq-dur-marquee: 48s;
+
+  /* Space · layout */
+  --sq-gap: clamp(8px, 1.1vw, 14px);
+  --sq-edge: clamp(12px, 1.9vw, 24px);
+  --sq-pad: clamp(16px, 2.4vw, 34px);
+  --sq-head-h: clamp(50px, 4.4vw, 58px);
+  --sq-sec-space: clamp(72px, 10vw, 150px);
+}

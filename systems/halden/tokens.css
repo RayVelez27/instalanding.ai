@@ -1,0 +1,69 @@
+/* InstaLanding design system · Halden · halden@1.0.0
+   Extracted from https://instalanding.ai/demos/halden-clinical.html
+   Fonts (Google Fonts): Geist 300-600 (text and display), Geist Mono 400-500 (labels), Instrument Serif italic (accents) */
+:root {
+  /* Color · core */
+  --hd-ink: #090C0E;
+  --hd-paper: #F3F5F6;
+  --hd-cobalt: #2B46FF;
+  --hd-monitor: #3FD99A;
+
+  /* Color · greys */
+  --hd-mist: #D3D9DC;
+  --hd-steel: #8A959B;
+  --hd-slate: #58626A;
+  --hd-graphite: #1A2329;
+  --hd-frost: #E2E7EA;
+  --hd-white: #FFFFFF;
+
+  /* Type · families */
+  --hd-font-sans: "Geist", "Helvetica Neue", Arial, sans-serif;
+  --hd-font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --hd-font-serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+
+  /* Type · scale */
+  --hd-display: clamp(56px, 10.4vw, 152px);
+  --hd-quote: clamp(28px, 4.1vw, 58px);
+  --hd-title: clamp(26px, 2.9vw, 40px);
+  --hd-price: 22px;
+  --hd-text: 17px;
+  --hd-body: 16.5px;
+  --hd-small: 12px;
+  --hd-caps: 11.5px;
+  --hd-spread: 11px;
+
+  /* Shape · radii */
+  --hd-r-pill: 999px;
+  --hd-r-sm: 6px;
+  --hd-r-md: 10px;
+  --hd-r-lg: 12px;
+  --hd-r-xl: 14px;
+
+  /* Shape · borders */
+  --hd-hairline: 1px;
+
+  /* Depth · grain, glow and shadow */
+  --hd-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --hd-glow: radial-gradient(120% 70% at 85% 0%, color-mix(in srgb, var(--hd-cobalt) 16%, transparent), transparent 60%);
+  --hd-shadow-form: 0 40px 80px -50px rgba(9, 12, 14, .35);
+
+  /* Motion · easing */
+  --hd-ease: cubic-bezier(.7, 0, .2, 1);
+  --hd-ease-out: cubic-bezier(.16, .8, .2, 1);
+  --hd-ease-pulse: cubic-bezier(.65, 0, .25, 1);
+
+  /* Motion · durations */
+  --hd-dur-fast: .3s;
+  --hd-dur-open: .35s;
+  --hd-dur: .45s;
+  --hd-dur-flow: .7s;
+  --hd-dur-live: 2.4s;
+  --hd-dur-pulse: 3.6s;
+  --hd-dur-ecg: 5.2s;
+
+  /* Space · layout */
+  --hd-gutter: clamp(16px, 1.8vw, 28px);
+  --hd-section: clamp(96px, 12vw, 184px);
+  --hd-block: clamp(64px, 9vw, 120px);
+  --hd-nav-h: 60px;
+}

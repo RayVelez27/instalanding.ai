@@ -1,0 +1,101 @@
+/* InstaLanding design system · Tessel · tessel@1.0.0
+   Extracted from https://instalanding.ai/demos/tessel-ai-infrastructure.html
+   Fonts (Google Fonts): Inter Tight 400-600 (everything); code uses the platform monospace stack */
+:root {
+  /* Color · core */
+  --ts-ink: #1F2348;
+  --ts-bg: #DCE2F2;
+  --ts-navy: #33376A;
+  --ts-peri: #8A98DA;
+  --ts-gold: #F0B856;
+  --ts-ok: #3FA57A;
+
+  /* Color · steps */
+  --ts-ink2: #454B7C;
+  --ts-muted: #6D75A6;
+  --ts-navy2: #262A58;
+  --ts-peri2: #B4BEE4;
+  --ts-gold2: #D99A33;
+  --ts-bg2: #C8D0EA;
+  --ts-white: #F7F8FD;
+  --ts-snow: #FFFFFF;
+  --ts-hint: #9AA0C4;
+  --ts-ink-muted: rgba(31,35,72,.42);
+  --ts-card: rgba(250,251,255,.74);
+  --ts-line: rgba(51,55,106,.12);
+
+  /* Color · gold button */
+  --ts-gold-hi: #F6C76E;
+  --ts-gold-lo: #E9A944;
+  --ts-gold-ink: #2A2440;
+
+  /* Color · code */
+  --ts-code-bg: #22264F;
+  --ts-code-ink: #C9D0F2;
+  --ts-code-key: #9FB0FF;
+  --ts-code-str: #F4C979;
+  --ts-code-dim: #6E77AE;
+  --ts-code-ok: #7FDCB0;
+
+  /* Color · night band */
+  --ts-night: #1E2247;
+  --ts-night-head: #F2F0ED;
+  --ts-night-text: #DDE2F7;
+  --ts-night-link: #C3C9EA;
+  --ts-night-quiet: #8790C2;
+
+  /* Type · families */
+  --ts-font-sans: "Inter Tight", "Neue Haas Grotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ts-font-code: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Type · scale */
+  --ts-closing: clamp(44px, 6.6vw, 104px);
+  --ts-display: clamp(48px, 5.8vw, 86px);
+  --ts-title: clamp(36px, 3.6vw, 54px);
+  --ts-figure: 34px;
+  --ts-stat: 24px;
+  --ts-brand: 19px;
+  --ts-lead: 16.5px;
+  --ts-field: 14.5px;
+  --ts-text: 14px;
+  --ts-small: 13.5px;
+  --ts-caption: 12.5px;
+  --ts-micro: 12px;
+  --ts-tiny: 11.5px;
+
+  /* Shape · radii */
+  --ts-r-pill: 999px;
+  --ts-r-panel: 18px;
+  --ts-r-card: 14px;
+  --ts-r-code: 12px;
+
+  /* Shape · borders */
+  --ts-hairline: 1px;
+  --ts-frost-edge: rgba(255,255,255,.95);
+
+  /* Depth · backdrop, glass and shadow */
+  --ts-sky: radial-gradient(1200px 700px at 75% 15%, rgba(255,255,255,.75), transparent 60%), radial-gradient(900px 600px at 10% 90%, rgba(176,188,232,.55), transparent 60%), linear-gradient(180deg, #E3E8F6 0%, #D3DAEF 55%, #C9D1EB 100%);
+  --ts-grid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='69.28'%3E%3Cpath d='M0 34.64 L60 0 L120 34.64 L60 69.28 Z' fill='none' stroke='%23ffffff' stroke-opacity='.55' stroke-width='1'/%3E%3C/svg%3E");
+  --ts-glass: blur(18px) saturate(140%);
+  --ts-shadow-panel: 0 30px 60px -30px rgba(51,55,106,.35), 0 2px 0 rgba(255,255,255,.6) inset;
+  --ts-shadow-float: 0 18px 40px -20px rgba(51,55,106,.45);
+  --ts-shadow-pill: 0 8px 30px -12px rgba(51,55,106,.25);
+  --ts-shadow-field: 0 20px 40px -24px rgba(51,55,106,.5);
+  --ts-shadow-dark: 0 10px 24px -10px rgba(31,35,72,.6), inset 0 1px 0 rgba(255,255,255,.15);
+  --ts-shadow-dark-hover: 0 16px 30px -12px rgba(31,35,72,.7), inset 0 1px 0 rgba(255,255,255,.15);
+  --ts-shadow-gold: 0 10px 24px -10px rgba(217,154,51,.8), inset 0 1px 0 rgba(255,255,255,.5);
+
+  /* Motion · easing */
+  --ts-ease: cubic-bezier(.22,1,.36,1);
+
+  /* Motion · durations */
+  --ts-dur: .3s;
+  --ts-dur-type: .5s;
+  --ts-dur-bar: 1.2s;
+  --ts-dur-live: 1.8s;
+
+  /* Space · layout */
+  --ts-gutter: clamp(20px, 4vw, 64px);
+  --ts-band-x: clamp(20px, 5vw, 72px);
+  --ts-tray: 460px;
+}

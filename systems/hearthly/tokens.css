@@ -1,0 +1,82 @@
+/* InstaLanding design system · Hearthly · hearthly@1.0.0
+   Extracted from https://instalanding.ai/demos/hearthly-home-care.html
+   Fonts (Google Fonts): Instrument Sans 400-700 (everything), Instrument Serif italic (one word per heading, signatures) */
+:root {
+  /* Color · core */
+  --hy-bg: #F6F2EA;
+  --hy-ink: #14130F;
+  --hy-dark: #0F1714;
+  --hy-marker: #F1DD9A;
+
+  /* Color · tones */
+  --hy-ember: #E8693C;
+  --hy-sage: #B9D3B0;
+  --hy-amber: #F2B544;
+  --hy-sky: #9CC6DC;
+  --hy-pine: #1F4D43;
+
+  /* Color · derived */
+  --hy-muted: color-mix(in oklab, var(--hy-ink) 60%, var(--hy-bg));
+  --hy-line: color-mix(in oklab, var(--hy-ink) 12%, var(--hy-bg));
+  --hy-soft: color-mix(in oklab, var(--hy-ink) 4.5%, var(--hy-bg));
+
+  /* Color · night and status */
+  --hy-night: #0B110F;
+  --hy-night-text: #EEE9DF;
+  --hy-live: #2FB67A;
+  --hy-ok: #3FCF8E;
+
+  /* Type · families */
+  --hy-font-sans: "Instrument Sans", system-ui, sans-serif;
+  --hy-font-serif: "Instrument Serif", Georgia, serif;
+  --hy-font-hand: "Instrument Serif", Georgia, serif;
+
+  /* Type · scale */
+  --hy-display: clamp(46px, 7.6vw, 124px);
+  --hy-numeral: clamp(64px, 7vw, 112px);
+  --hy-figure: clamp(56px, 6vw, 92px);
+  --hy-price: clamp(52px, 5vw, 80px);
+  --hy-title: clamp(38px, 5vw, 78px);
+  --hy-h2: clamp(34px, 4.3vw, 66px);
+  --hy-scene: clamp(30px, 4.2vw, 64px);
+  --hy-quote: clamp(28px, 3.6vw, 54px);
+  --hy-folder: clamp(24px, 2.5vw, 38px);
+  --hy-lead: clamp(15px, 1.15vw, 18px);
+  --hy-small: 15px;
+  --hy-caption: 14px;
+  --hy-micro: 13px;
+  --hy-label: 12px;
+
+  /* Shape · radii */
+  --hy-r: clamp(12px, 1.4vw, 20px);
+  --hy-r-panel: 28px;
+  --hy-r-card: 18px;
+  --hy-r-tab: 14px;
+  --hy-r-pill: 99px;
+
+  /* Shape · borders */
+  --hy-hairline: 1px;
+  --hy-stroke: 1.2px;
+
+  /* Depth · grain, glass and shadow */
+  --hy-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --hy-glass: blur(14px);
+  --hy-glass-chip: blur(10px);
+  --hy-shadow-card: 0 24px 50px -24px rgba(0,0,0,.45);
+  --hy-shadow-chip: 0 10px 30px -12px rgba(0,0,0,.35);
+
+  /* Motion · easing */
+  --hy-ease: cubic-bezier(.2,.75,.15,1);
+
+  /* Motion · durations */
+  --hy-dur-quick: .35s;
+  --hy-dur: .4s;
+  --hy-dur-fill: .45s;
+  --hy-dur-wash: .5s;
+
+  /* Space · layout */
+  --hy-pad: clamp(16px, 6.9vw, 110px);
+  --hy-maxw: 1320px;
+  --hy-gap: clamp(8px, 1.2vw, 18px);
+  --hy-sec: clamp(88px, 10vw, 150px);
+}

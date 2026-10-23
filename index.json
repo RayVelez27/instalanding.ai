@@ -2,8 +2,905 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 47,
+  "count": 61,
   "pages": [
+    {
+      "slug": "latent-ai-fashion-atelier-page",
+      "title": "Latent AI Fashion Atelier Page",
+      "description": "A dark, iridescent page for an AI fashion atelier: a wireframe cloth ripples toward the pointer under a giant \"Latent\" that scatters as the hero tilts away, six capsules slide past sideways, a \"Zero\" knockout zooms open onto a gradient, and every picture is generative SVG",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "AI-native consumer brands",
+        "fashion and apparel startups",
+        "generative design studios",
+        "made-to-measure and 3D-scanning products"
+      ],
+      "style": [
+        "dark",
+        "iridescent",
+        "generative-svg",
+        "canvas",
+        "scroll-driven",
+        "horizontal-scroll"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "ticker",
+        "story",
+        "rails",
+        "lab",
+        "again",
+        "make",
+        "drops",
+        "studio",
+        "voices",
+        "lookbook",
+        "faq",
+        "visit",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Unbounded",
+          "Geist",
+          "Geist Mono",
+          "Doto"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/latent-ai-fashion-atelier-page/index.html",
+        "prompt": "pages/latent-ai-fashion-atelier-page/PROMPT.md",
+        "preview": "pages/latent-ai-fashion-atelier-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/latent-ai-fashion-atelier.html",
+      "page": "https://instalanding.ai/prompt/latent-ai-fashion-atelier-page"
+    },
+    {
+      "slug": "rowline-agronomy-ai-page",
+      "title": "Rowline Agronomy AI Page",
+      "description": "A dark-green landing page for a farm AI: a live NDVI scan wipes across a field rendered pixel by pixel, the scanner's lens opens into a dawn landscape with a drone flying in, five agents slide past sideways, and every field, crop map and device is drawn in code",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "agtech and climate-tech startups",
+        "AI products with sensors or hardware",
+        "drone, mapping and geospatial companies",
+        "B2B tools sold to operators in the field"
+      ],
+      "style": [
+        "dark",
+        "procedural-art",
+        "canvas",
+        "scroll-driven",
+        "horizontal-scroll",
+        "green"
+      ],
+      "sections": [
+        "top",
+        "about",
+        "agents",
+        "crops",
+        "process",
+        "farms",
+        "impact",
+        "kit",
+        "reviews",
+        "pricing",
+        "pilot",
+        "faq",
+        "contact"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Bricolage Grotesque",
+          "Manrope",
+          "Martian Mono",
+          "Fraunces"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/rowline-agronomy-ai-page/index.html",
+        "prompt": "pages/rowline-agronomy-ai-page/PROMPT.md",
+        "preview": "pages/rowline-agronomy-ai-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/rowline-agronomy-ai.html",
+      "page": "https://instalanding.ai/prompt/rowline-agronomy-ai-page"
+    },
+    {
+      "slug": "corvane-capital-private-equity-page",
+      "title": "Corvane Capital Private Equity Page",
+      "description": "A quiet-money private equity page on a ruled four-column grid: a giant serif \"Compounding\" beside a window of live ridgelines that opens to full bleed as you scroll, a champagne principles field that fans six strokes into line, and a track record that flips between gross and net",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "private equity and venture firms",
+        "investment and wealth managers",
+        "family offices and holding companies",
+        "B2B firms that sell on trust"
+      ],
+      "style": [
+        "dark",
+        "editorial",
+        "serif",
+        "ruled-grid",
+        "scroll-driven",
+        "gold"
+      ],
+      "sections": [
+        "hero",
+        "about",
+        "strategy",
+        "principles",
+        "process",
+        "team",
+        "portfolio",
+        "offices",
+        "sectors",
+        "criteria",
+        "record",
+        "faq",
+        "insights",
+        "contact"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Instrument Serif",
+          "Inter Tight",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/corvane-capital-private-equity-page/index.html",
+        "prompt": "pages/corvane-capital-private-equity-page/PROMPT.md",
+        "preview": "pages/corvane-capital-private-equity-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/corvane-capital.html",
+      "page": "https://instalanding.ai/prompt/corvane-capital-private-equity-page"
+    },
+    {
+      "slug": "agentic-art-expo-page",
+      "title": "Agentic Art Expo Page",
+      "description": "An editorial event page for an expo where AI agents exhibit: a giant wordmark that flies into the header, a satin hero with live particle trails, a programme that floods dark from a full stop, and every picture painted in code",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "AI art and creative-tech events",
+        "exhibitions, fairs and festivals",
+        "galleries and cultural venues",
+        "conferences with ticket tiers"
+      ],
+      "style": [
+        "dark",
+        "editorial",
+        "generative-art",
+        "canvas",
+        "scroll-driven",
+        "grain"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "exhibits",
+        "about",
+        "programme",
+        "process",
+        "testimonials",
+        "stats",
+        "venue",
+        "pricing",
+        "team",
+        "press",
+        "faq",
+        "journal",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Host Grotesk",
+          "Instrument Serif",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/agentic-art-expo-page/index.html",
+        "prompt": "pages/agentic-art-expo-page/PROMPT.md",
+        "preview": "pages/agentic-art-expo-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/agentic-art-expo.html",
+      "page": "https://instalanding.ai/prompt/agentic-art-expo-page"
+    },
+    {
+      "slug": "geo-lab-planetary-geography-page",
+      "title": "GEO/LAB Planetary Geography Page",
+      "description": "A cyan-on-black instrument page for a geography lab: live contour lines drift across the hero while a reticle and HUD read elevation, slope and a terrain profile under your cursor, then eight elevation bands separate in 3D as you scroll",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "geospatial, mapping and earth-observation products",
+        "scientific instruments and labs",
+        "climate and hazard monitoring",
+        "data-heavy deep-tech launches"
+      ],
+      "style": [
+        "dark",
+        "fui",
+        "hud",
+        "canvas",
+        "generative",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "ticker",
+        "instruments",
+        "strata",
+        "orbital",
+        "metrics",
+        "protocol",
+        "pricing",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Instrument Serif",
+          "Inter Tight",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/geo-lab-planetary-geography-page/index.html",
+        "prompt": "pages/geo-lab-planetary-geography-page/PROMPT.md",
+        "preview": "pages/geo-lab-planetary-geography-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/geolab-planetary-geography.html",
+      "page": "https://instalanding.ai/prompt/geo-lab-planetary-geography-page"
+    },
+    {
+      "slug": "tessel-ai-infrastructure-page",
+      "title": "Tessel AI Infrastructure Page",
+      "description": "A pinned isometric journey for an AI infrastructure platform: a pixel-art engineer walks a glowing route past six code-drawn scenes, from blueprint table to rocket launch, as chapter cards and a rail follow the scroll",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "AI infrastructure and MLOps platforms",
+        "developer tools with a step-by-step story",
+        "cloud and compute products",
+        "scroll-driven product tours"
+      ],
+      "style": [
+        "light",
+        "isometric",
+        "pixel-art",
+        "svg",
+        "scroll-driven",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "story",
+        "cta"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Inter Tight"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/tessel-ai-infrastructure-page/index.html",
+        "prompt": "pages/tessel-ai-infrastructure-page/PROMPT.md",
+        "preview": "pages/tessel-ai-infrastructure-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/tessel-ai-infrastructure.html",
+      "page": "https://instalanding.ai/prompt/tessel-ai-infrastructure-page"
+    },
+    {
+      "slug": "hearthly-ai-home-care-page",
+      "title": "Hearthly AI Home Care Page",
+      "description": "A warm, illustrated page for an AI home assistant: a floating collage of glossy home-system cards that floods open into a night scene of the house, stacking service folders, arched system plates and a word-lit testimonial",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "smart home and proptech products",
+        "consumer AI assistants",
+        "home services marketplaces",
+        "warm, friendly SaaS launches"
+      ],
+      "style": [
+        "light",
+        "illustrated",
+        "svg",
+        "gsap",
+        "scroll-driven",
+        "editorial"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "intro",
+        "services",
+        "systems",
+        "gallery",
+        "process",
+        "stats",
+        "team",
+        "testimonials",
+        "pricing",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Instrument Sans",
+          "Instrument Serif"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/hearthly-ai-home-care-page/index.html",
+        "prompt": "pages/hearthly-ai-home-care-page/PROMPT.md",
+        "preview": "pages/hearthly-ai-home-care-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/hearthly-home-care.html",
+      "page": "https://instalanding.ai/prompt/hearthly-ai-home-care-page"
+    },
+    {
+      "slug": "nota-wearable-ai-page",
+      "title": "NOTA Wearable AI Page",
+      "description": "A quiet-luxury catalogue for a titanium AI wearable: a live device you can use in the hero (hold to ask, turn the crown, flip the mic switch), close-ups that are clones of it, a seven-segment privacy ledger and a technical drawing",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "hardware and wearable launches",
+        "AI devices and gadgets",
+        "premium product catalogues",
+        "privacy-first products"
+      ],
+      "style": [
+        "light",
+        "skeuomorphic",
+        "interactive",
+        "hardware",
+        "editorial",
+        "svg"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "stats",
+        "how-it-works",
+        "anatomy",
+        "privacy",
+        "modes",
+        "build",
+        "specs",
+        "order",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Archivo",
+          "Instrument Sans",
+          "JetBrains Mono",
+          "Noto Sans JP"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/nota-wearable-ai-page/index.html",
+        "prompt": "pages/nota-wearable-ai-page/PROMPT.md",
+        "preview": "pages/nota-wearable-ai-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/nota-wearable.html",
+      "page": "https://instalanding.ai/prompt/nota-wearable-ai-page"
+    },
+    {
+      "slug": "mirai-ai-companion-page",
+      "title": "Mirai AI Companion Page",
+      "description": "A purple, mint and charcoal page for an AI companion: an illustrated character peeks over giant type between clouds, follows your cursor with her eyes, blinks, perks up when you come close and frowns when you poke her",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 22, 2026",
+      "bestFor": [
+        "AI companion and assistant apps",
+        "consumer AI and wellbeing products",
+        "character-led brands and mascots",
+        "playful app launches"
+      ],
+      "style": [
+        "dark",
+        "illustrated",
+        "svg",
+        "character",
+        "playful",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "ticker",
+        "features",
+        "stats",
+        "how-it-works",
+        "demo",
+        "pricing",
+        "faq",
+        "waitlist",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Sora",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/mirai-ai-companion-page/index.html",
+        "prompt": "pages/mirai-ai-companion-page/PROMPT.md",
+        "preview": "pages/mirai-ai-companion-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/mirai-ai-companion.html",
+      "page": "https://instalanding.ai/prompt/mirai-ai-companion-page"
+    },
+    {
+      "slug": "orvyn-autonomous-car-page",
+      "title": "ORVYN Autonomous Car Page",
+      "description": "An AI-native grand tourer on a near-black page: a spectrum autonomy dial steps through five levels, unlocking pods as it goes, over a radar, live telemetry and a horizon of light",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 21, 2026",
+      "bestFor": [
+        "automotive and mobility launches",
+        "autonomy, robotics and hardware AI",
+        "deep-tech product reveals",
+        "premium pre-order and reservation pages"
+      ],
+      "style": [
+        "dark",
+        "svg",
+        "spectrum",
+        "dashboard",
+        "interactive",
+        "editorial"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "ticker",
+        "autonomy",
+        "systems",
+        "manifesto",
+        "specs",
+        "reserve",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Geist",
+          "Geist Mono",
+          "Instrument Serif"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/orvyn-autonomous-car-page/index.html",
+        "prompt": "pages/orvyn-autonomous-car-page/PROMPT.md",
+        "preview": "pages/orvyn-autonomous-car-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/orvyn-autonomous-gt.html",
+      "page": "https://instalanding.ai/prompt/orvyn-autonomous-car-page"
+    },
+    {
+      "slug": "myriad-agent-swarm-page",
+      "title": "Myriad Agent Swarm Page",
+      "description": "An agent-select screen for an AI swarm: pick one of five agents and a 640-point particle swarm reforms into its shape while the whole page recolours to match",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 21, 2026",
+      "bestFor": [
+        "multi-agent and AI platform launches",
+        "AI product or model line-ups",
+        "games and character-select screens",
+        "developer tools with a strong visual identity"
+      ],
+      "style": [
+        "dark",
+        "canvas",
+        "particles",
+        "game-ui",
+        "neon",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "status"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Unbounded",
+          "Space Grotesk",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/myriad-agent-swarm-page/index.html",
+        "prompt": "pages/myriad-agent-swarm-page/PROMPT.md",
+        "preview": "pages/myriad-agent-swarm-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/myriad-agent-swarm.html",
+      "page": "https://instalanding.ai/prompt/myriad-agent-swarm-page"
+    },
+    {
+      "slug": "mirador-observability-page",
+      "title": "Mirador Observability Page",
+      "description": "An observability platform in a framed night console: a WebGL ribbon of glowing fibers behind the hero, plates cut out of the frame with inverted corners, stacking feature cards with live trace mockups and a dark/light switch",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 21, 2026",
+      "bestFor": [
+        "observability and monitoring tools",
+        "developer platforms and infrastructure",
+        "B2B SaaS dashboards",
+        "data and analytics products"
+      ],
+      "style": [
+        "dark",
+        "webgl",
+        "gsap",
+        "glass",
+        "dashboard",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "intro",
+        "features",
+        "integrations",
+        "gallery",
+        "process",
+        "pricing",
+        "team",
+        "reviews",
+        "faq",
+        "security",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Geist",
+          "Geist Mono",
+          "Instrument Serif"
+        ],
+        "features": [
+          "webgl",
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/mirador-observability-page/index.html",
+        "prompt": "pages/mirador-observability-page/PROMPT.md",
+        "preview": "pages/mirador-observability-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/mirador-observability.html",
+      "page": "https://instalanding.ai/prompt/mirador-observability-page"
+    },
+    {
+      "slug": "side-quest-adoption-center-page",
+      "title": "Side Quest Adoption Center Page",
+      "description": "A butter-yellow adoption center for ideas you have no time for: a waving page mascot, six illustrated side quests to adopt with confetti, and a lifecycle from spark to archive",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 21, 2026",
+      "bestFor": [
+        "playful consumer apps",
+        "community and indie maker products",
+        "idea boards and marketplaces",
+        "launch pages with a sense of humour"
+      ],
+      "style": [
+        "light",
+        "playful",
+        "illustrated",
+        "svg",
+        "warm",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "stats",
+        "ideas",
+        "how-it-works",
+        "lifecycle",
+        "testimonials",
+        "pricing",
+        "faq",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Gloock",
+          "Schibsted Grotesk"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/side-quest-adoption-center-page/index.html",
+        "prompt": "pages/side-quest-adoption-center-page/PROMPT.md",
+        "preview": "pages/side-quest-adoption-center-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/side-quest-adoption.html",
+      "page": "https://instalanding.ai/prompt/side-quest-adoption-center-page"
+    },
+    {
+      "slug": "orrery-reasoning-engine-page",
+      "title": "Orrery Reasoning Engine Page",
+      "description": "An AI reasoning engine that shows its work: a hero window opens onto a canvas orrery, and every picture on the page is a live rendering drawn in code",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 20, 2026",
+      "bestFor": [
+        "AI models and reasoning products",
+        "research and analytics tools",
+        "enterprise AI platforms",
+        "deep-tech launches"
+      ],
+      "style": [
+        "dark",
+        "generative",
+        "canvas",
+        "gsap",
+        "scroll-driven",
+        "editorial"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "brief",
+        "capabilities",
+        "process",
+        "gallery",
+        "results",
+        "team",
+        "reviews",
+        "pricing",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Hubot Sans",
+          "Instrument Sans"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/orrery-reasoning-engine-page/index.html",
+        "prompt": "pages/orrery-reasoning-engine-page/PROMPT.md",
+        "preview": "pages/orrery-reasoning-engine-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/orrery-engine.html",
+      "page": "https://instalanding.ai/prompt/orrery-reasoning-engine-page"
+    },
     {
       "slug": "siliq-ai-hardware-lab-page",
       "title": "Siliq AI Hardware Lab Page",

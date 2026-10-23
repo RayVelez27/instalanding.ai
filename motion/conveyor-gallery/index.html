@@ -1,0 +1,1321 @@
+<!doctype html>
+<!--
+  INSTALANDING.AI MOTION · Conveyor Gallery
+  slug     conveyor-gallery
+  page     https://instalanding.ai/motion/conveyor-gallery
+  license  MIT. Every cover is painted in code for fictional brands; replace the projects and their links before shipping.
+
+  MAP
+  tokens    none to speak of: a black stage, a breathing gradient light (.glow), a bottom shade and a WebGL grain canvas
+            (.noise). The stage is laid out at 1080px tall and scaled to the window (layoutViewport).
+  sections  stage (the light, grain and shade), gallery (#app: the WebGL conveyor and its accessible link list)
+  scripts   one inline script, no libraries:
+            1) eight project covers painted with Canvas 2D at 1200 x 900 once the fonts load (paintMonarch ...
+               paintDevelopers), packed into one texture atlas;
+            2) the conveyor: a ribbon mesh following a stadium loop (two straights joined by two half circles),
+               drawn by one WebGL shader that tiles the atlas along it, lights it, and ray-casts soft shadows of the
+               ribbon onto itself; a picking pass reads back which cover is under the pointer;
+            3) motion: wheel, swipe and arrow keys add velocity that decays every frame and turn the camera from an
+               angled three-quarter view to face-on; pointer parallax; a shader grain at 12fps;
+            4) lab hooks at the bottom (speed, step, autoplay, friction, view, parallax, grain).
+  assets    none: covers, light and grain are drawn in code; fonts from Google Fonts
+
+  ADAPTING
+  - projects[] holds the titles and links; add a painter to paintProject() per title or drop in images instead
+    (createConveyor() accepts anything drawImage can draw).
+  - A link that is not http(s) only flashes the title; put the real case-study URL in projects[].url.
+  - Without WebGL the page falls back to a plain grid of the same covers as links.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conveyor Gallery · InstaLanding Motion</title>
+<meta name="description" content="A portfolio of eight code-painted covers riding a 3D conveyor belt in WebGL: scroll to run it and turn the camera face-on.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>if (/[?&]autoplay=/.test(location.search)) document.documentElement.classList.add("reel");</script>
+<style>
+:root { color-scheme: dark; background: #000; font-family: Inter, Arial, sans-serif; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+body { background: #000; color: #fff; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+a:hover { opacity: .65; }
+a:focus-visible { outline: 1px solid #fff; outline-offset: 5px; }
+
+.stage {
+  position: absolute;
+  width: var(--stage-width, 100vw);
+  height: 1080px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(var(--stage-scale, 1));
+  overflow: hidden;
+  background:
+    radial-gradient(120% 70% at 50% 0%, #0b0c10 0%, #000 60%),
+    #000;
+  isolation: isolate;
+}
+
+/* Soft volumetric light, drawn entirely with gradients. */
+.glow {
+  position: absolute; left: calc(50% - 542px); top: -454px; width: 1068px; height: 1548px;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 30% 26% at 50% 46%, rgb(255 255 255 / .20), transparent 72%),
+    radial-gradient(ellipse 46% 40% at 50% 48%, rgb(206 216 255 / .10), transparent 74%),
+    radial-gradient(ellipse 16% 54% at 50% 30%, rgb(255 255 255 / .07), transparent 70%),
+    radial-gradient(ellipse 60% 22% at 50% 70%, rgb(255 236 214 / .05), transparent 70%);
+  filter: blur(18px);
+  animation: breathe 10s ease-in-out infinite;
+}
+.glow::after {
+  content: ""; position: absolute; inset: 0;
+  background: conic-gradient(from 180deg at 50% 30%, transparent 0deg, rgb(255 255 255 / .05) 18deg, transparent 36deg, transparent 324deg, rgb(255 255 255 / .05) 342deg, transparent 360deg);
+  mask: radial-gradient(ellipse 50% 50% at 50% 40%, #000 20%, transparent 70%);
+  -webkit-mask: radial-gradient(ellipse 50% 50% at 50% 40%, #000 20%, transparent 70%);
+}
+@keyframes breathe { 0%, 100% { opacity: .85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.03); } }
+
+
+#app { position: fixed; inset: 0; z-index: 11; touch-action: none; }
+.conveyor { display: block; width: 100%; height: 100%; filter: drop-shadow(20px 32px 28px rgb(0 0 0 / .56)); }
+.project-links { position: absolute; inset: 0; pointer-events: none; }
+.project-link { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); pointer-events: auto; }
+.project-link:focus-visible { clip-path: none; width: auto; height: auto; left: 50%; bottom: 24px; transform: translateX(-50%); padding: 12px 18px; background: #141414; white-space: nowrap; }
+.project-link:focus-visible img { display: none; }
+#app.is-fallback { overflow-y: auto; touch-action: pan-y; padding: 100px 24px 60px; }
+.is-fallback .conveyor { display: none; }
+.is-fallback .project-links { position: static; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; }
+.is-fallback .project-link { position: static; width: auto; height: auto; clip-path: none; }
+.is-fallback .project-link:focus-visible { transform: none; white-space: normal; }
+.is-fallback .project-link img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; }
+.is-fallback .project-link span { display: block; padding-top: 10px; font-size: 14px; }
+
+
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+html.reel .status { display: none; }
+.status { position: fixed; bottom: 16px; left: 16px; z-index: 30; font-size: 14px; color: #fff; }
+
+/* Quiet entrance */
+.stage { animation: fade 1.6s ease both; }
+#app { animation: fade 1.8s .25s ease both; }
+@keyframes fade { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .glow, .stage, #app { animation: none; }
+}
+@media (max-width: 700px) {
+  .conveyor { filter: drop-shadow(8px 14px 12px rgb(0 0 0 / .5)); }
+}
+
+.bottom-shade { position: absolute; inset: 0; z-index: 9; pointer-events: none; background: linear-gradient(to bottom, transparent 40%, rgb(0 0 0 / .04) 55%, rgb(0 0 0 / .12) 68%, rgb(0 0 0 / .26) 80%, rgb(0 0 0 / .46) 91%, rgb(0 0 0 / .65) 100%); }
+.noise { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 9; pointer-events: none; opacity: .22; mix-blend-mode: soft-light; background-size: 128px 128px; }
+</style>
+</head>
+<body>
+<main class="stage" aria-label="Selected work" data-section="stage">
+  <h1 class="sr">Selected work: eight project covers on a 3D conveyor belt</h1>
+  <canvas class="noise" aria-hidden="true"></canvas>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="bottom-shade" aria-hidden="true"></div>
+</main>
+<div id="app" role="region" aria-label="Scroll, swipe or use arrow keys to explore our work" data-section="gallery" data-component="conveyor"></div>
+<p class="status" role="status" hidden></p>
+
+<script>
+"use strict";
+// Live tuning (the lab hooks set these): how much velocity survives a frame, a time scale, pointer parallax.
+var TUNE = { friction: .94, speed: 1, parallax: true };
+
+(() => {
+  const projects = [
+    { title: "Monarch", url: "#monarch" },
+    { title: "Spektral", url: "#spektral" },
+    { title: "Owari", url: "#owari" },
+    { title: "Trading Dashboard", url: "#trading-dashboard" },
+    { title: "Crypto Exchange", url: "#crypto-exchange" },
+    { title: "Chartroom", url: "#chartroom" },
+    { title: "Apex", url: "#apex" },
+    { title: "Developer Community", url: "#developer-community" },
+  ];
+  const app = document.getElementById("app");
+  const stage = document.querySelector(".stage");
+  const status = document.querySelector(".status");
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const canvas = document.createElement("canvas");
+  canvas.className = "conveyor";
+  canvas.setAttribute("aria-hidden", "true");
+  app.appendChild(canvas);
+
+  // The links also provide a usable gallery when the GPU is unavailable.
+  const links = document.createElement("div");
+  links.className = "project-links";
+  app.appendChild(links);
+  const thumbs = projects.map(project => {
+    const link = document.createElement("a");
+    link.className = "project-link";
+    link.href = project.url;
+    if (/^https?:/.test(project.url)) { link.target = "_blank"; link.rel = "noopener noreferrer"; }
+    link.setAttribute("aria-label", `Open ${project.title}`);
+    const image = new Image();
+    image.alt = project.title;
+    image.draggable = false;
+    link.append(image);
+    const label = document.createElement("span");
+    label.textContent = project.title;
+    link.append(label);
+    links.append(link);
+    return image;
+  });
+
+  const motion = {
+    offset: 0, velocity: 0, present: 0, targetPresent: 0,
+    pointerX: 0, pointerY: 0, parallaxX: 0, parallaxY: 0,
+  };
+  let conveyor = null;
+  let previousTime = 0;
+  let animationFrame = 0;
+  let touch = null;
+  let dragged = false;
+  let noise = createNoise(document.querySelector(".noise"));
+  const noiseCanvas = document.querySelector(".noise");
+  noiseCanvas.addEventListener("webglcontextlost", event => {
+    event.preventDefault();
+    noiseCanvas.style.backgroundImage = noiseTexture();
+  });
+  noiseCanvas.addEventListener("webglcontextrestored", () => {
+    noise = createNoise(noiseCanvas);
+    resize();
+  });
+
+  function message(text) {
+    status.textContent = text;
+    status.hidden = !text;
+  }
+
+  let flash = 0;
+  function openProject(slot) {
+    const project = projects[slot];
+    if (/^https?:/.test(project.url)) return window.open(project.url, "_blank", "noopener,noreferrer");
+    clearTimeout(flash);
+    message(`${project.title}: link it to its case study in projects[].url`);
+    flash = setTimeout(() => message(""), 2400);
+  }
+
+  function fallback(reason) {
+    conveyor = null;
+    app.classList.add("is-fallback");
+    message("3D rendering is unavailable. Explore the projects below.");
+    console.warn("Conveyor gallery:", reason);
+  }
+
+  function resize() {
+    noise.resize();
+    const { scale, width } = layoutViewport(innerWidth, innerHeight);
+    stage.style.setProperty("--stage-scale", scale);
+    stage.style.setProperty("--stage-width", `${width}px`);
+    conveyor?.resize(innerWidth, innerHeight);
+  }
+
+  function input(delta, touchInput = false) {
+    if (!conveyor) return;
+    const sensitivity = touchInput ? .00155 : .00019;
+    if (reducedMotion.matches) motion.offset = wrap(motion.offset + delta * sensitivity * TUNE.friction / (1 - TUNE.friction), projects.length);
+    else motion.velocity += delta * sensitivity;
+    motion.targetPresent = Math.max(0, Math.min(1, motion.targetPresent + delta * (touchInput ? .0024 : .00033)));
+    canvas.style.cursor = "";
+  }
+
+  function render(time) {
+    const frames = (previousTime ? Math.min((time - previousTime) / (1000 / 60), 3) : 1) * TUNE.speed;
+    previousTime = time;
+    advanceMotion(motion, frames, projects.length, reducedMotion.matches);
+    noise.draw(reducedMotion.matches ? 0 : time);
+    conveyor?.draw(motion);
+    animationFrame = requestAnimationFrame(render);
+  }
+
+  window.addEventListener("wheel", event => {
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1;
+    input(event.deltaY * unit);
+  }, { passive: true });
+  app.addEventListener("pointerdown", event => {
+    dragged = false;
+    if (!conveyor || event.pointerType === "mouse" || event.target.closest("a")) return;
+    touch = { id: event.pointerId, y: event.clientY, startX: event.clientX, startY: event.clientY };
+    app.setPointerCapture(event.pointerId);
+  });
+  app.addEventListener("pointermove", event => {
+    if (touch?.id === event.pointerId) {
+      input(touch.y - event.clientY, true);
+      touch.y = event.clientY;
+      dragged ||= Math.hypot(touch.startX - event.clientX, touch.startY - event.clientY) > 6;
+    } else if (event.pointerType === "mouse") {
+      motion.pointerX = TUNE.parallax ? event.clientX / innerWidth * 2 - 1 : 0;
+      motion.pointerY = TUNE.parallax ? event.clientY / innerHeight * 2 - 1 : 0;
+      if (conveyor && Math.abs(motion.velocity) < .001) {
+        const slot = conveyor.pick(event.clientX, event.clientY, motion);
+        canvas.style.cursor = slot >= 0 ? "pointer" : "";
+      }
+    }
+  });
+  app.addEventListener("pointerup", () => { touch = null; });
+  app.addEventListener("pointercancel", () => { touch = null; dragged = true; });
+  app.addEventListener("lostpointercapture", () => { touch = null; });
+  app.addEventListener("click", event => {
+    if (!conveyor || event.target.closest("a") || dragged) return;
+    const slot = conveyor.pick(event.clientX, event.clientY, motion);
+    if (slot >= 0) openProject(slot);
+  });
+  app.addEventListener("pointerleave", () => {
+    motion.pointerX = motion.pointerY = 0;
+    canvas.style.cursor = "";
+  });
+  // One step's impulse decays to exactly one cover of travel: v * f / (1 - f) = 1.
+  function nudge(direction, present = motion.targetPresent + direction * .12) {
+    if (!conveyor) return;
+    if (reducedMotion.matches) motion.offset = wrap(Math.round(motion.offset) + direction, projects.length);
+    else motion.velocity += direction * (1 - TUNE.friction) / TUNE.friction;
+    motion.targetPresent = Math.max(0, Math.min(1, present));
+  }
+  window.addEventListener("keydown", event => {
+    if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key)) return;
+    event.preventDefault();
+    nudge(event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1);
+  });
+  document.addEventListener("visibilitychange", () => {
+    cancelAnimationFrame(animationFrame);
+    previousTime = 0;
+    if (!document.hidden) animationFrame = requestAnimationFrame(render);
+  });
+  canvas.addEventListener("webglcontextlost", event => {
+    event.preventDefault();
+    fallback("WebGL context lost.");
+  });
+  canvas.addEventListener("webglcontextrestored", initialize);
+  window.addEventListener("resize", resize);
+
+  // Every project cover is painted in code once the typefaces are ready.
+  const loaded = fontsReady().then(() => projects.map((project, index) => {
+    try {
+      const art = paintProject(project, index);
+      thumbs[index].src = art.toDataURL("image/jpeg", .88);
+      return art;
+    } catch (error) {
+      console.warn(`Could not paint ${project.title}:`, error);
+      return null;
+    }
+  }));
+
+  async function initialize() {
+    const textures = await loaded;
+    try {
+      conveyor = createConveyor(canvas, textures, projects);
+      app.classList.remove("is-fallback");
+      const missing = textures.filter(image => !image).length;
+      message(missing ? `${missing} project image(s) could not render. Their links remain available.` : "");
+      resize();
+    } catch (error) { fallback(error.message); }
+  }
+  /* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The page works on its own (it moves
+     when you scroll, swipe or press the arrows); when it is framed, the lab
+     drives it with postMessage and it reports the cover in front.
+       ?autoplay=2000   advance one cover every 2s and swing the camera (previews)
+       { source: 'il-motion', type: 'speed', value: 0.25 }   slow motion
+       { ..., type: 'step', value: 1 | -1 }       next / previous cover
+       { ..., type: 'friction', value: 94 }       % of velocity kept per frame (the glide)
+       { ..., type: 'view', value: 0..100 }       camera: angled (0) to face-on (100)
+       { ..., type: 'parallax', value: true }     pointer parallax
+       { ..., type: 'grain', value: true }        the film grain layer
+       { ..., type: 'autoplay', value: true | false }
+  ------------------------------------------------------------------ */
+  {
+    let timer = 0, kick = 0, beat = 0;
+    // Every two covers the camera swings between face-on and angled.
+    const tick = () => { if (!document.hidden) nudge(1, beat++ % 4 < 2 ? 1 : 0); };
+    const autoplay = (on, ms = 2400) => {
+      clearInterval(timer); clearTimeout(kick);
+      if (on && !reducedMotion.matches) {
+        kick = setTimeout(tick, 350);
+        timer = setInterval(tick, Math.max(600, ms));
+      }
+    };
+    const qs = new URLSearchParams(location.search);
+    if (qs.has("autoplay")) loaded.then(() => autoplay(true, Number(qs.get("autoplay")) || 2400));
+    addEventListener("message", (e) => {
+      const d = e.data;
+      if (!d || d.source !== 'il-motion') return;
+      if (d.type === 'speed') TUNE.speed = Math.max(0.05, Number(d.value) || 1);
+      if (d.type === 'step') nudge(d.value > 0 ? 1 : -1);
+      if (d.type === 'friction') TUNE.friction = Math.min(.985, Math.max(.8, (Number(d.value) || 94) / 100));
+      if (d.type === 'view') motion.targetPresent = Math.max(0, Math.min(1, (Number(d.value) || 0) / 100));
+      if (d.type === 'parallax') { TUNE.parallax = Boolean(d.value); if (!TUNE.parallax) motion.pointerX = motion.pointerY = 0; }
+      if (d.type === 'grain') noiseCanvas.style.visibility = d.value ? "" : "hidden";
+      if (d.type === 'autoplay') autoplay(Boolean(d.value));
+    });
+    if (parent !== window) {
+      let last = "";
+      // The cover centred on the front straight: its middle sits 2.9 / 18.009 of the way round the loop.
+      const FRONT = projects.length * 2.9 / (11.6 + Math.PI * 2.04);
+      const report = () => {
+        const n = projects.length;
+        const i = Math.floor(wrap(FRONT + motion.offset, n));
+        const view = motion.present < .04 ? "ANGLED" : motion.present > .96 ? "FACE-ON" : "TURNING";
+        const text = !conveyor ? (app.classList.contains("is-fallback") ? "NO WEBGL · PLAIN GRID" : "PAINTING THE COVERS")
+          : `FRONT ${String(i + 1).padStart(2, "0")}/${n} · ${projects[i].title.toUpperCase()} · ${view}`;
+        if (text !== last) {
+          last = text;
+          parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, "*");
+        }
+        setTimeout(() => requestAnimationFrame(report), 90);
+      };
+      requestAnimationFrame(report);
+    }
+  }
+
+  resize();
+  animationFrame = requestAnimationFrame(render);
+  initialize();
+})();
+
+/* ---------- utilities ---------- */
+
+function wrap(value, period) {
+  return ((value % period) + period) % period;
+}
+
+async function fontsReady() {
+  if (!document.fonts) return;
+  const faces = ["400 20px Inter", "500 20px Inter", "600 20px Inter", "700 20px Inter", "800 20px Inter", "900 20px Inter",
+    "400 20px 'Instrument Serif'", "italic 400 20px 'Instrument Serif'", "400 20px 'JetBrains Mono'", "700 20px 'JetBrains Mono'"];
+  await Promise.race([
+    Promise.all(faces.map(face => document.fonts.load(face))).catch(() => {}),
+    new Promise(resolve => setTimeout(resolve, 2500)),
+  ]);
+}
+
+let noiseURL = "";
+function noiseTexture() {
+  if (noiseURL) return noiseURL;
+  const c = document.createElement("canvas");
+  c.width = c.height = 128;
+  const g = c.getContext("2d");
+  const data = g.createImageData(128, 128);
+  for (let i = 0; i < data.data.length; i += 4) {
+    const v = (Math.random() + Math.random() + Math.random() + Math.random()) * 63.75;
+    data.data[i] = data.data[i + 1] = data.data[i + 2] = v;
+    data.data[i + 3] = 255;
+  }
+  g.putImageData(data, 0, 0);
+  return noiseURL = `url("${c.toDataURL()}")`;
+}
+
+/* ---------- procedural project covers ---------- */
+
+const SANS = "Inter, Arial, sans-serif";
+const SERIF = "'Instrument Serif', Georgia, serif";
+const MONO = "'JetBrains Mono', ui-monospace, Menlo, monospace";
+const MINCHO = "'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif";
+
+function font(weight, size, family = SANS) { return `${weight} ${size}px ${family}`; }
+function seeded(seed) { let s = seed % 2147483647 || 1; return () => (s = s * 16807 % 2147483647) / 2147483647; }
+
+function text(g, value, x, y, f, color, { align = "left", spacing = 0 } = {}) {
+  g.font = f; g.fillStyle = color; g.textAlign = align; g.textBaseline = "alphabetic";
+  const spaced = "letterSpacing" in g;
+  if (spaced) g.letterSpacing = `${spacing}px`;
+  g.fillText(value, x, y);
+  if (spaced) g.letterSpacing = "0px";
+}
+function measure(g, value, f) { g.font = f; return g.measureText(value).width; }
+function box(g, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+}
+function fillBox(g, x, y, w, h, r, fill) { box(g, x, y, w, h, r); g.fillStyle = fill; g.fill(); }
+function strokeBox(g, x, y, w, h, r, stroke, width = 1) { box(g, x, y, w, h, r); g.strokeStyle = stroke; g.lineWidth = width; g.stroke(); }
+function linear(g, x0, y0, x1, y1, stops) { const gr = g.createLinearGradient(x0, y0, x1, y1); stops.forEach(([o, c]) => gr.addColorStop(o, c)); return gr; }
+function radial(g, x, y, r0, r1, stops) { const gr = g.createRadialGradient(x, y, r0, x, y, r1); stops.forEach(([o, c]) => gr.addColorStop(o, c)); return gr; }
+function glow(g, x, y, r, color) { g.fillStyle = radial(g, x, y, 0, r, [[0, color], [1, "rgba(0,0,0,0)"]]); g.fillRect(x - r, y - r, r * 2, r * 2); }
+function dot(g, x, y, r, fill) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fillStyle = fill; g.fill(); }
+function speckle(g, W, H, rand, count, color) { g.fillStyle = color; for (let i = 0; i < count; i++) g.fillRect(rand() * W, rand() * H, 1.4, 1.4); }
+function series(rand, n, vol, drift = 0) { let v = 0; const out = []; for (let i = 0; i < n; i++) { v += (rand() - .5) * vol + drift; out.push(v); } return out; }
+function money(v, digits = 2) { return v.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits }); }
+
+function sparkline(g, values, x, y, w, h, color, fillTop, width = 3) {
+  const min = Math.min(...values), max = Math.max(...values), span = max - min || 1;
+  const pts = values.map((v, i) => [x + i / (values.length - 1) * w, y + h - (v - min) / span * h]);
+  if (fillTop) {
+    g.beginPath(); g.moveTo(pts[0][0], y + h);
+    pts.forEach(p => g.lineTo(p[0], p[1]));
+    g.lineTo(x + w, y + h); g.closePath();
+    g.fillStyle = linear(g, 0, y, 0, y + h, [[0, fillTop], [1, "rgba(0,0,0,0)"]]);
+    g.fill();
+  }
+  g.beginPath();
+  pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]));
+  g.strokeStyle = color; g.lineWidth = width; g.lineJoin = "round"; g.lineCap = "round"; g.stroke();
+  return pts;
+}
+function avatar(g, x, y, r, a, b, initials) {
+  g.fillStyle = linear(g, x - r, y - r, x + r, y + r, [[0, a], [1, b]]);
+  g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+  if (initials) text(g, initials, x, y + r * .3, font(700, Math.round(r * .78)), "#fff", { align: "center" });
+}
+function nav(g, W, logo, items, color, muted, { spacing = 2, logoFont = font(700, 22), endX = W - 64, itemFont = font(500, 16) } = {}) {
+  if (logo) text(g, logo, 64, 72, logoFont, color, { spacing });
+  let x = endX;
+  for (let i = items.length - 1; i >= 0; i--) {
+    text(g, items[i], x, 72, itemFont, muted, { align: "right" });
+    x -= measure(g, items[i], itemFont) + 40;
+  }
+}
+
+function paintProject(project, index) {
+  const W = 1200, H = 900;
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = H;
+  const g = canvas.getContext("2d");
+  const painters = {
+    "Monarch": paintMonarch, "Spektral": paintSpektral, "Owari": paintOwari,
+    "Trading Dashboard": paintTrading, "Crypto Exchange": paintCrypto, "Chartroom": paintTraderTale,
+    "Apex": paintAJP, "Developer Community": paintDevelopers,
+  };
+  (painters[project.title] || paintGeneric)(g, W, H, seeded(index * 7919 + 101), project);
+  return canvas;
+}
+
+function paintGeneric(g, W, H, rand, project) {
+  g.fillStyle = linear(g, 0, 0, W, H, [[0, "#111"], [1, "#222"]]); g.fillRect(0, 0, W, H);
+  text(g, project.title, W / 2, H / 2, font(700, 64), "#fff", { align: "center" });
+}
+
+function paintMonarch(g, W, H) {
+  g.fillStyle = linear(g, 0, 0, W, H, [[0, "#0c0806"], [1, "#1b0d05"]]);
+  g.fillRect(0, 0, W, H);
+  glow(g, 860, 460, 560, "rgba(255,120,30,0.30)");
+  glow(g, 160, 840, 380, "rgba(255,190,120,0.07)");
+  const cx = 860, cy = 440;
+  for (const side of [-1, 1]) {
+    g.save();
+    g.translate(cx, cy);
+    g.scale(side * .8, .8);
+    const upper = new Path2D();
+    upper.moveTo(0, -4); upper.bezierCurveTo(70, -260, 340, -340, 368, -170); upper.bezierCurveTo(386, -54, 190, -8, 0, -4);
+    const lower = new Path2D();
+    lower.moveTo(0, 10); lower.bezierCurveTo(140, 30, 300, 130, 236, 268); lower.bezierCurveTo(180, 350, 46, 226, 0, 10);
+    g.fillStyle = radial(g, 0, 0, 10, 390, [[0, "#ffd79a"], [.32, "#ff9426"], [.72, "#cf4510"], [1, "#3b0f03"]]);
+    g.strokeStyle = "#160602"; g.lineJoin = "round"; g.lineWidth = 16;
+    for (const wing of [upper, lower]) { g.fill(wing); g.stroke(wing); }
+    g.lineWidth = 5; g.strokeStyle = "rgba(22,6,2,0.82)";
+    for (const [wing, veins] of [[upper, [[110, -150, 300, -262], [150, -110, 360, -196], [170, -60, 380, -112]]], [lower, [[120, 40, 270, 150], [90, 90, 210, 260], [50, 70, 120, 260]]]]) {
+      g.save(); g.clip(wing);
+      for (const [qx, qy, ex, ey] of veins) { g.beginPath(); g.moveTo(8, 0); g.quadraticCurveTo(qx, qy, ex, ey); g.stroke(); }
+      g.restore();
+    }
+    for (const [x, y, r] of [[150, -205, 6], [240, -238, 7], [296, -232, 7], [336, -198, 7], [352, -150, 6], [244, 200, 5], [226, 236, 6], [196, 262, 5]]) dot(g, x, y, r, "rgba(255,238,214,0.92)");
+    g.restore();
+  }
+  g.fillStyle = "#140602";
+  g.beginPath(); g.ellipse(cx, cy + 20, 11, 100, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = "#140602"; g.lineWidth = 3;
+  for (const side of [-1, 1]) { g.beginPath(); g.moveTo(cx, cy - 70); g.quadraticCurveTo(cx + side * 20, cy - 150, cx + side * 52, cy - 172); g.stroke(); }
+
+  nav(g, W, "MONARCH", ["Wealth", "Private office", "Journal", "Contact"], "#f4e7d4", "rgba(244,231,212,0.55)", { spacing: 6 });
+  text(g, "PRIVATE WEALTH  ·  EST. 1994", 64, 250, font(600, 14), "#ff9a3d", { spacing: 4 });
+  text(g, "Wings of", 64, 350, font(400, 90, SERIF), "#f6eadb");
+  text(g, "quiet wealth.", 64, 440, `italic 400 90px ${SERIF}`, "#f6eadb");
+  text(g, "Discreet capital stewardship for families", 64, 510, font(400, 19), "rgba(246,234,219,0.6)");
+  text(g, "who measure success in generations.", 64, 538, font(400, 19), "rgba(246,234,219,0.6)");
+  fillBox(g, 64, 586, 214, 58, 29, linear(g, 64, 0, 278, 0, [[0, "#ffb75e"], [1, "#ff7a1f"]]));
+  text(g, "Request access", 171, 621, font(600, 17), "#1a0b03", { align: "center" });
+  g.fillStyle = "rgba(246,234,219,0.12)"; g.fillRect(64, 740, 1072, 1);
+  [["$4.2B", "Assets under care"], ["38", "Family offices"], ["31 yrs", "Of continuity"]].forEach(([v, l], i) => {
+    text(g, v, 64 + i * 260, 818, font(400, 48, SERIF), "#f6eadb");
+    text(g, l, 64 + i * 260, 850, font(500, 14), "rgba(246,234,219,0.5)");
+  });
+}
+
+function paintSpektral(g, W, H) {
+  g.fillStyle = "#050509"; g.fillRect(0, 0, W, H);
+  const cx = 600, cy = 470, R = 220;
+  const colors = ["#ff2d55", "#ff7a1a", "#ffd60a", "#34e37a", "#19c3ff", "#4f5bff", "#b44dff", "#ff2d55"];
+  const spectrum = () => {
+    if (g.createConicGradient) {
+      const c = g.createConicGradient(-Math.PI / 2, cx, cy);
+      colors.forEach((col, i) => c.addColorStop(i / (colors.length - 1), col));
+      return c;
+    }
+    return linear(g, cx - R, cy, cx + R, cy, colors.map((c, i) => [i / (colors.length - 1), c]));
+  };
+  g.lineCap = "round";
+  g.strokeStyle = linear(g, 0, 0, cx - R, 0, [[0, "rgba(255,255,255,0)"], [1, "rgba(255,255,255,0.95)"]]);
+  g.lineWidth = 3; g.beginPath(); g.moveTo(0, cy + 130); g.lineTo(cx - R + 6, cy); g.stroke();
+  colors.slice(0, 7).forEach((col, i) => {
+    g.strokeStyle = linear(g, cx + R, 0, W, 0, [[0, col], [1, "rgba(0,0,0,0)"]]);
+    g.globalAlpha = .6; g.lineWidth = 12;
+    g.beginPath(); g.moveTo(cx + R - 10, cy); g.lineTo(W + 20, cy - 170 + i * 56); g.stroke();
+  });
+  g.globalAlpha = 1;
+  g.save(); g.filter = "blur(70px)"; g.globalAlpha = .7; g.fillStyle = spectrum();
+  g.beginPath(); g.arc(cx, cy, R + 40, 0, Math.PI * 2); g.fill(); g.restore();
+  g.lineWidth = 3; g.strokeStyle = spectrum(); g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = radial(g, cx, cy - 70, 0, R, [[0, "#16161f"], [1, "#060609"]]);
+  g.beginPath(); g.arc(cx, cy, R - 6, 0, Math.PI * 2); g.fill();
+  text(g, "SERIES 05", cx, cy - 64, font(600, 12), "rgba(255,255,255,0.45)", { align: "center", spacing: 5 });
+  text(g, "SPEKTRAL", cx + 7, cy + 14, font(700, 50), "#ffffff", { align: "center", spacing: 14 });
+  text(g, "Light, decomposed into data.", cx, cy + 56, font(400, 18), "rgba(255,255,255,0.55)", { align: "center" });
+
+  nav(g, W, "spektral", ["Platform", "Research", "Pricing", "Sign in"], "#fff", "rgba(255,255,255,0.55)", { spacing: 1, logoFont: font(700, 24) });
+  text(g, "Hyperspectral imaging", 64, 160, font(500, 15), "rgba(255,255,255,0.5)");
+  text(g, "for every surface.", 64, 184, font(500, 15), "rgba(255,255,255,0.5)");
+  const segW = (1072 - 6 * 8) / 7;
+  ["380", "450", "495", "570", "590", "620", "750 nm"].forEach((label, i) => {
+    const x = 64 + i * (segW + 8);
+    text(g, label, x, 800, font(500, 13), "rgba(255,255,255,0.45)");
+    fillBox(g, x, 816, segW, 6, 3, colors[6 - i]);
+  });
+  text(g, "Visible band · 7 channels", 64, 862, font(500, 13), "rgba(255,255,255,0.3)");
+  text(g, "0.2 nm resolution", 1136, 862, font(500, 13), "rgba(255,255,255,0.3)", { align: "right" });
+}
+
+function paintOwari(g, W, H, rand) {
+  const paper = "#ebe4d6", ink = "#141210", red = "#b8321d";
+  g.fillStyle = paper; g.fillRect(0, 0, W, H);
+  speckle(g, W, H, rand, 6000, "rgba(70,45,20,0.08)");
+  const sx = 790, sy = 400, r = 200;
+  g.fillStyle = radial(g, sx - 70, sy - 70, 10, r * 1.25, [[0, "#e04a2b"], [1, red]]);
+  g.beginPath(); g.arc(sx, sy, r, 0, Math.PI * 2); g.fill();
+  for (let i = 0; i < 7; i++) { g.fillStyle = paper; g.fillRect(sx - r - 4, sy + 40 + i * 24, 2 * r + 8, 3 + i * 2.2); }
+  g.fillStyle = ink; g.fillRect(64, 640, 1072, 1.5);
+  nav(g, W, "owari", ["Objects", "Atelier", "Stockists", "Cart (0)"], ink, "rgba(20,18,16,0.6)", { spacing: 1, logoFont: `italic 400 34px ${SERIF}` });
+  text(g, "Ceramics & slow objects", 64, 186, `italic 400 34px ${SERIF}`, ink);
+  text(g, "Kyoto — Stockholm", 64, 218, font(500, 15), "rgba(20,18,16,0.55)");
+  [..."終わりの美しさ"].forEach((ch, i) => text(g, ch, 1110, 190 + i * 50, font(500, 38, MINCHO), ink, { align: "center" }));
+  fillBox(g, 1088, 556, 44, 44, 4, red);
+  text(g, "終", 1110, 590, font(700, 28, MINCHO), paper, { align: "center" });
+  text(g, "OWARI", 52, 836, font(800, 190), ink, { spacing: -8 });
+  text(g, "COLLECTION N°09", 1136, 790, font(600, 14), ink, { align: "right", spacing: 3 });
+  text(g, "The beauty of endings.", 1136, 830, `italic 400 26px ${SERIF}`, "rgba(20,18,16,0.7)", { align: "right" });
+}
+
+function paintTrading(g, W, H, rand) {
+  const up = "#2ee6a6", down = "#ff4d6a", panel = "#0f141c", muted = "rgba(255,255,255,0.45)";
+  g.fillStyle = "#0a0d12"; g.fillRect(0, 0, W, H);
+  glow(g, 480, 360, 520, "rgba(46,230,166,0.05)");
+  g.fillStyle = "#0e1219"; g.fillRect(0, 0, 76, H);
+  fillBox(g, 20, 24, 36, 36, 10, linear(g, 20, 24, 56, 60, [[0, up], [1, "#1a8fff"]]));
+  for (let i = 0; i < 6; i++) fillBox(g, 24, 110 + i * 62, 28, 28, 8, i === 1 ? "rgba(46,230,166,0.22)" : "rgba(255,255,255,0.07)");
+
+  text(g, "BTC / USDT", 104, 64, font(700, 26), "#fff");
+  text(g, "67,412.50", 270, 64, font(600, 26), up);
+  fillBox(g, 410, 40, 86, 32, 16, "rgba(46,230,166,0.14)");
+  text(g, "+2.41%", 453, 62, font(600, 15), up, { align: "center" });
+  ["1H", "4H", "1D", "1W"].forEach((tf, i) => {
+    const x = 636 + i * 56;
+    if (i === 2) fillBox(g, x, 40, 46, 32, 8, "rgba(255,255,255,0.1)");
+    text(g, tf, x + 23, 62, font(600, 14), i === 2 ? "#fff" : muted, { align: "center" });
+  });
+
+  fillBox(g, 100, 100, 760, 560, 18, panel);
+  const n = 44, opens = [], closes = [], highs = [], lows = [];
+  let price = 100;
+  for (let i = 0; i < n; i++) {
+    const o = price, c = o + (rand() - .44) * 6;
+    opens.push(o); closes.push(c);
+    highs.push(Math.max(o, c) + rand() * 3); lows.push(Math.min(o, c) - rand() * 3);
+    price = c;
+  }
+  const min = Math.min(...lows), max = Math.max(...highs);
+  const Y = v => 610 - (v - min) / (max - min) * 440;
+  g.lineWidth = 1;
+  for (let i = 0; i < 6; i++) {
+    const y = 150 + i * 92;
+    g.fillStyle = "rgba(255,255,255,0.05)"; g.fillRect(120, y, 700, 1);
+    text(g, money(67800 - i * 160, 0), 840, y + 4, font(500, 11), "rgba(255,255,255,0.3)", { align: "right" });
+  }
+  const step = 680 / n;
+  for (let i = 0; i < n; i++) {
+    const x = 132 + i * step, color = closes[i] >= opens[i] ? up : down;
+    g.fillStyle = color;
+    g.fillRect(x - .75, Y(highs[i]), 1.5, Y(lows[i]) - Y(highs[i]));
+    const top = Y(Math.max(opens[i], closes[i]));
+    g.fillRect(x - 4.5, top, 9, Math.max(2, Y(Math.min(opens[i], closes[i])) - top));
+  }
+  g.beginPath();
+  closes.forEach((_, i) => {
+    const slice = closes.slice(Math.max(0, i - 6), i + 1);
+    const avg = slice.reduce((a, b) => a + b, 0) / slice.length;
+    const x = 132 + i * step;
+    i ? g.lineTo(x, Y(avg)) : g.moveTo(x, Y(avg));
+  });
+  g.strokeStyle = "rgba(255,196,80,0.85)"; g.lineWidth = 2; g.stroke();
+  const ly = Y(closes[n - 1]);
+  g.setLineDash([4, 6]); g.strokeStyle = "rgba(46,230,166,0.6)"; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(120, ly); g.lineTo(780, ly); g.stroke(); g.setLineDash([]);
+  fillBox(g, 780, ly - 13, 72, 26, 6, up);
+  text(g, "67,412", 816, ly + 5, font(700, 13), "#06140f", { align: "center" });
+
+  fillBox(g, 100, 680, 760, 196, 18, panel);
+  text(g, "Volume", 124, 714, font(600, 13), muted);
+  for (let i = 0; i < n; i++) {
+    const h = 20 + rand() * 110, color = closes[i] >= opens[i] ? "rgba(46,230,166,0.5)" : "rgba(255,77,106,0.5)";
+    fillBox(g, 128 + i * step, 856 - h, 9, h, 2, color);
+  }
+
+  fillBox(g, 880, 100, 296, 776, 18, panel);
+  text(g, "Order book", 904, 140, font(600, 17), "#fff");
+  text(g, "Price", 904, 176, font(500, 12), "rgba(255,255,255,0.35)");
+  text(g, "Size (BTC)", 1152, 176, font(500, 12), "rgba(255,255,255,0.35)", { align: "right" });
+  for (let i = 0; i < 9; i++) {
+    const y = 208 + i * 26, depth = .15 + rand() * .85;
+    g.fillStyle = "rgba(255,77,106,0.12)"; g.fillRect(1152 - depth * 248, y - 17, depth * 248, 22);
+    text(g, money(67420.5 + (8 - i) * 2.5), 904, y, font(500, 14), down);
+    text(g, (rand() * 2).toFixed(4), 1152, y, font(500, 14), "rgba(255,255,255,0.75)", { align: "right" });
+  }
+  text(g, "67,412.50", 904, 474, font(700, 24), up);
+  text(g, "↑ $67,412.50", 1152, 474, font(500, 13), muted, { align: "right" });
+  for (let i = 0; i < 9; i++) {
+    const y = 520 + i * 26, depth = .15 + rand() * .85;
+    g.fillStyle = "rgba(46,230,166,0.12)"; g.fillRect(1152 - depth * 248, y - 17, depth * 248, 22);
+    text(g, money(67410 - i * 2.5), 904, y, font(500, 14), up);
+    text(g, (rand() * 2).toFixed(4), 1152, y, font(500, 14), "rgba(255,255,255,0.75)", { align: "right" });
+  }
+  fillBox(g, 904, 790, 120, 56, 12, up);
+  text(g, "Buy", 964, 824, font(700, 17), "#06140f", { align: "center" });
+  fillBox(g, 1032, 790, 120, 56, 12, down);
+  text(g, "Sell", 1092, 824, font(700, 17), "#fff", { align: "center" });
+}
+
+function paintCrypto(g, W, H, rand) {
+  const blue = "#4b7bff", up = "#3ee08f", down = "#ff5c7a";
+  g.fillStyle = linear(g, 0, 0, 0, H, [[0, "#060a18"], [1, "#0b1330"]]); g.fillRect(0, 0, W, H);
+  glow(g, 900, 300, 520, "rgba(56,110,255,0.35)");
+  glow(g, 160, 820, 420, "rgba(140,70,255,0.18)");
+  g.fillStyle = "rgba(255,255,255,0.025)";
+  for (let x = 0; x < W; x += 60) g.fillRect(x, 0, 1, H);
+  for (let y = 0; y < H; y += 60) g.fillRect(0, y, W, 1);
+
+  dot(g, 78, 64, 14, linear(g, 64, 50, 92, 78, [[0, "#7aa2ff"], [1, "#a066ff"]]));
+  text(g, "Ledgr", 102, 72, font(700, 24), "#fff");
+  nav(g, W, null, ["Markets", "Earn", "Wallet", "Learn"], "#fff", "rgba(255,255,255,0.6)", { endX: W - 64 - 130 - 30 });
+  fillBox(g, W - 64 - 130, 46, 130, 42, 21, "rgba(255,255,255,0.1)");
+  text(g, "Sign up", W - 64 - 65, 73, font(600, 15), "#fff", { align: "center" });
+
+  text(g, "Trade what", 64, 290, font(700, 70), "#fff", { spacing: -2 });
+  text(g, "comes next.", 64, 370, font(700, 70), "#fff", { spacing: -2 });
+  text(g, "Deep liquidity, zero-fee spot and institutional", 64, 430, font(400, 19), "rgba(255,255,255,0.6)");
+  text(g, "custody — in one beautifully calm interface.", 64, 458, font(400, 19), "rgba(255,255,255,0.6)");
+  fillBox(g, 64, 500, 190, 56, 28, linear(g, 64, 0, 254, 0, [[0, "#5b8cff"], [1, "#8b5cff"]]));
+  text(g, "Start trading", 159, 534, font(600, 16), "#fff", { align: "center" });
+  strokeBox(g, 268, 500, 140, 56, 28, "rgba(255,255,255,0.25)", 1.5);
+  text(g, "Markets", 338, 534, font(600, 16), "#fff", { align: "center" });
+
+  fillBox(g, 640, 160, 500, 420, 28, "rgba(255,255,255,0.05)");
+  strokeBox(g, 640, 160, 500, 420, 28, "rgba(255,255,255,0.12)");
+  text(g, "ETH / USD", 672, 206, font(600, 15), "rgba(255,255,255,0.55)");
+  text(g, "3,284.17", 672, 260, font(700, 46), "#fff", { spacing: -1 });
+  fillBox(g, 900, 228, 86, 32, 16, "rgba(62,224,143,0.15)");
+  text(g, "+5.82%", 943, 250, font(600, 15), up, { align: "center" });
+  const pts = sparkline(g, series(rand, 60, 4, .35), 672, 310, 436, 230, "#8fb0ff", "rgba(75,123,255,0.45)", 3);
+  const last = pts[pts.length - 1];
+  dot(g, last[0], last[1], 10, "rgba(143,176,255,0.25)");
+  dot(g, last[0], last[1], 5, "#fff");
+
+  [["B", "Bitcoin", "#f7931a", "64,912.40", "+1.82%"], ["E", "Ethereum", "#7b8cff", "3,284.17", "+5.82%"],
+   ["S", "Solana", "#14c9a5", "182.36", "−0.94%"], ["X", "Ripple", "#9aa4b5", "0.6242", "+0.37%"]].forEach(([s, name, color, p, ch], i) => {
+    const x = 64 + i * 268, y = 650, positive = !ch.startsWith("−");
+    fillBox(g, x, y, 252, 180, 22, "rgba(255,255,255,0.045)");
+    strokeBox(g, x, y, 252, 180, 22, "rgba(255,255,255,0.09)");
+    dot(g, x + 40, y + 42, 18, color);
+    text(g, s, x + 40, y + 49, font(800, 17), "#fff", { align: "center" });
+    text(g, name, x + 70, y + 48, font(600, 16), "#fff");
+    text(g, `$${p}`, x + 24, y + 104, font(700, 24), "#fff");
+    text(g, ch, x + 228, y + 104, font(600, 14), positive ? up : down, { align: "right" });
+    sparkline(g, series(rand, 24, 3, positive ? .25 : -.25), x + 24, y + 124, 204, 36, positive ? up : down, null, 2);
+  });
+  void blue;
+}
+
+function paintTraderTale(g, W, H, rand) {
+  const violet = "#6c4cf5", ink = "#17142a", muted = "rgba(23,20,42,0.5)", up = "#16b26a", card = "#ffffff";
+  g.fillStyle = "#f2f0f9"; g.fillRect(0, 0, W, H);
+  g.fillStyle = card; g.fillRect(0, 0, W, 88);
+  g.fillStyle = "rgba(23,20,42,0.06)"; g.fillRect(0, 88, W, 1);
+  text(g, "chartroom", 40, 56, font(800, 26), violet, { spacing: -1 });
+  fillBox(g, 300, 24, 420, 42, 21, "#f2f0f9");
+  text(g, "Search traders, tickers, ideas…", 326, 51, font(400, 15), muted);
+  fillBox(g, 950, 24, 140, 42, 21, violet);
+  text(g, "Post idea", 1020, 51, font(600, 15), "#fff", { align: "center" });
+  avatar(g, 1134, 45, 20, "#ffb86b", "#ff6b8b", "AR");
+
+  fillBox(g, 40, 112, 260, 300, 20, card);
+  avatar(g, 170, 182, 42, "#ffb86b", "#ff6b8b", "AR");
+  text(g, "Alex Rivera", 170, 256, font(700, 20), ink, { align: "center" });
+  text(g, "@arivera · Swing trader", 170, 280, font(400, 14), muted, { align: "center" });
+  [["+38%", "Return"], ["1.2k", "Followers"], ["86", "Ideas"]].forEach(([v, l], i) => {
+    const x = 84 + i * 86;
+    text(g, v, x, 344, font(700, 19), i === 0 ? up : ink, { align: "center" });
+    text(g, l, x, 368, font(500, 12), muted, { align: "center" });
+  });
+
+  fillBox(g, 40, 432, 260, 444, 20, card);
+  text(g, "Trending", 64, 474, font(700, 18), ink);
+  ["$NVDA", "$TSLA", "$BTC", "$AAPL", "$SOL", "$AMD", "$META", "$ETH"].forEach((tag, i) => {
+    const x = 64 + (i % 2) * 112, y = 500 + Math.floor(i / 2) * 52;
+    fillBox(g, x, y, 100, 38, 19, i === 0 ? "rgba(108,76,245,0.12)" : "#f4f3fa");
+    text(g, tag, x + 50, y + 25, font(600, 14), i === 0 ? violet : ink, { align: "center" });
+  });
+  text(g, "Weekly digest", 64, 744, font(700, 16), ink);
+  text(g, "Top 5 setups the community", 64, 772, font(400, 14), muted);
+  text(g, "is watching this week.", 64, 794, font(400, 14), muted);
+  text(g, "Read now →", 64, 836, font(600, 14), violet);
+
+  fillBox(g, 324, 112, 536, 390, 20, card);
+  avatar(g, 370, 158, 24, "#7b61ff", "#3ac6ff", "MC");
+  text(g, "Mira Chen", 406, 154, font(700, 17), ink);
+  text(g, "@mira · 2h", 406, 176, font(400, 14), muted);
+  fillBox(g, 768, 140, 68, 30, 15, "rgba(22,178,106,0.12)");
+  text(g, "Long", 802, 160, font(700, 13), up, { align: "center" });
+  text(g, "Breakout confirmed on $NVDA — volume backs it.", 348, 224, font(500, 17), ink);
+  text(g, "Targets 142 / 150, stop under 128.", 348, 250, font(400, 17), "rgba(23,20,42,0.75)");
+  fillBox(g, 348, 274, 488, 164, 14, "#f7f6fc");
+  sparkline(g, series(rand, 48, 3, .3), 368, 292, 448, 126, up, "rgba(22,178,106,0.25)", 2.5);
+  text(g, "1.4k likes   ·   212 replies   ·   96 reposts", 348, 476, font(500, 14), muted);
+
+  fillBox(g, 324, 522, 536, 354, 20, card);
+  avatar(g, 370, 568, 24, "#ff8a65", "#f04d8b", "JO");
+  text(g, "Jonas Okafor", 406, 564, font(700, 17), ink);
+  text(g, "@jonas · 5h", 406, 586, font(400, 14), muted);
+  text(g, "Momentum is fading into resistance. Sizing small.", 348, 634, font(500, 17), ink);
+  fillBox(g, 348, 660, 488, 140, 16, linear(g, 348, 660, 836, 800, [[0, "#6c4cf5"], [1, "#9b6bff"]]));
+  text(g, "SHORT  $TSLA", 376, 708, font(800, 24), "#fff", { spacing: 1 });
+  text(g, "Entry 248.20  →  Target 231.00", 376, 742, font(500, 16), "rgba(255,255,255,0.85)");
+  text(g, "Stop 256.40", 376, 772, font(500, 14), "rgba(255,255,255,0.65)");
+  fillBox(g, 724, 684, 88, 36, 18, "rgba(255,255,255,0.18)");
+  text(g, "R:R 2.1", 768, 708, font(700, 14), "#fff", { align: "center" });
+  text(g, "864 likes   ·   97 replies", 348, 842, font(500, 14), muted);
+
+  fillBox(g, 884, 112, 276, 764, 20, card);
+  text(g, "Top traders", 908, 154, font(700, 18), ink);
+  text(g, "This month", 1136, 154, font(500, 13), muted, { align: "right" });
+  [["Sana Patel", "@sana", "+62.4%", "#ffb86b", "#ff6b8b"], ["Leo Martins", "@leom", "+51.0%", "#7b61ff", "#3ac6ff"],
+   ["Yuki Tanaka", "@yuki", "+47.8%", "#3ee0a0", "#1a9fff"], ["Omar Haddad", "@omar", "+39.2%", "#ff8a65", "#f04d8b"],
+   ["Ella Novak", "@ellan", "+33.5%", "#b38cff", "#6c4cf5"], ["Ravi Kumar", "@ravi", "+28.1%", "#ffd36b", "#ff8a3d"],
+   ["Nora Berg", "@nora", "+24.7%", "#6be3ff", "#4b7bff"], ["Theo Laurent", "@theo", "+21.9%", "#ff9ec4", "#c34cf5"]].forEach(([name, handle, ret, a, b], i) => {
+    const y = 214 + i * 82;
+    avatar(g, 928, y, 22, a, b, name.split(" ").map(p => p[0]).join(""));
+    text(g, name, 962, y - 3, font(600, 15), ink);
+    text(g, handle, 962, y + 18, font(400, 13), muted);
+    text(g, ret, 1136, y + 6, font(700, 15), up, { align: "right" });
+  });
+}
+
+function paintAJP(g, W, H) {
+  const Y = "#f5d90a", ink = "#0a0a0a";
+  g.fillStyle = ink; g.fillRect(0, 0, W, H);
+  glow(g, 880, 300, 560, "rgba(245,217,10,0.10)");
+  g.lineWidth = 2; g.strokeStyle = "rgba(255,255,255,0.05)";
+  for (let r = 60; r <= 480; r += 60) { g.beginPath(); g.arc(880, 310, r, 0, Math.PI * 2); g.stroke(); }
+
+  nav(g, W, "APEX", ["Events", "Rankings", "Athletes", "Watch"], Y, "rgba(255,255,255,0.65)", { spacing: 2, logoFont: font(900, 30) });
+  text(g, "SEASON 2026  ·  GI / NO-GI", 64, 170, font(600, 14), Y, { spacing: 4 });
+  text(g, "GRAND", 56, 300, font(900, 150), "#fff", { spacing: -6 });
+  g.font = font(900, 150); g.lineWidth = 2.5; g.strokeStyle = "#fff";
+  if ("letterSpacing" in g) g.letterSpacing = "-6px";
+  g.textAlign = "left"; g.strokeText("SLAM", 56, 440);
+  if ("letterSpacing" in g) g.letterSpacing = "0px";
+  text(g, "The world's premier jiu-jitsu tour.", 64, 500, font(400, 19), "rgba(255,255,255,0.6)");
+
+  const fighter = (x, y, w, name, score, win) => {
+    fillBox(g, x, y, w, 44, 10, "#151515");
+    strokeBox(g, x, y, w, 44, 10, "rgba(255,255,255,0.1)");
+    if (win) g.fillStyle = Y, g.fillRect(x, y + 10, 3, 24);
+    text(g, name, x + 16, y + 28, font(600, 14), win ? "#fff" : "rgba(255,255,255,0.5)");
+    text(g, score, x + w - 14, y + 28, font(700, 14), win ? Y : "rgba(255,255,255,0.35)", { align: "right" });
+  };
+  const r1 = [[150, "R. Silva", "6", true], [200, "K. Ito", "2", false], [290, "M. Costa", "0", false], [340, "D. Petrov", "4", true]];
+  r1.forEach(([y, n, s, w]) => fighter(700, y, 150, n, s, w));
+  fighter(890, 175, 140, "R. Silva", "3", true);
+  fighter(890, 315, 140, "D. Petrov", "2", false);
+  g.strokeStyle = "rgba(255,255,255,0.22)"; g.lineWidth = 1.5;
+  const link = (x1, y1, x2, y2) => { g.beginPath(); g.moveTo(x1, y1); g.lineTo((x1 + x2) / 2, y1); g.lineTo((x1 + x2) / 2, y2); g.lineTo(x2, y2); g.stroke(); };
+  link(850, 172, 890, 197); link(850, 222, 890, 197); link(850, 312, 890, 337); link(850, 362, 890, 337);
+  link(1030, 197, 1060, 266); link(1030, 337, 1060, 266);
+  fillBox(g, 1060, 240, 90, 52, 12, Y);
+  text(g, "FINAL", 1105, 272, font(800, 14), ink, { align: "center", spacing: 2 });
+
+  g.save(); g.translate(W / 2, 600); g.rotate(-.06);
+  g.fillStyle = Y; g.fillRect(-W, -42, W * 2, 84);
+  let x = -W;
+  const phrase = "APEX GRAND SLAM   •   ";
+  while (x < W) { text(g, phrase, x, 12, font(900, 32), ink, { spacing: 2 }); x += measure(g, phrase, font(900, 32)) + 2 * phrase.length; }
+  g.restore();
+
+  [["14", "NOV", "Abu Dhabi"], ["02", "DEC", "Tokyo"], ["18", "JAN", "London"]].forEach(([d, m, city], i) => {
+    const x = 64 + i * 368, y = 704;
+    fillBox(g, x, y, 336, 150, 18, "#141414");
+    strokeBox(g, x, y, 336, 150, 18, "rgba(255,255,255,0.08)");
+    text(g, d, x + 28, y + 84, font(900, 56), Y, { spacing: -2 });
+    text(g, m, x + 30, y + 114, font(700, 14), "#fff", { spacing: 3 });
+    text(g, city, x + 128, y + 66, font(700, 22), "#fff");
+    text(g, "Registration open", x + 128, y + 94, font(500, 14), "rgba(255,255,255,0.5)");
+    strokeBox(g, x + 276, y + 52, 40, 40, 20, "rgba(255,255,255,0.25)");
+    text(g, "→", x + 296, y + 78, font(600, 18), "#fff", { align: "center" });
+  });
+}
+
+function paintDevelopers(g, W, H) {
+  const green = "#3fb950", panel = "#0f151d", line = "rgba(255,255,255,0.08)", muted = "rgba(230,237,243,0.5)";
+  g.fillStyle = "#0b0f14"; g.fillRect(0, 0, W, H);
+  glow(g, 300, 320, 520, "rgba(63,185,80,0.10)");
+  glow(g, 1000, 700, 520, "rgba(88,166,255,0.08)");
+  text(g, "</> devhub", 64, 72, font(700, 22, MONO), green);
+  nav(g, W, null, ["Feed", "Questions", "Jobs", "Events"], "#fff", "rgba(230,237,243,0.6)", { endX: W - 64 - 110 - 30 });
+  fillBox(g, W - 64 - 110, 46, 110, 42, 10, green);
+  text(g, "Join", W - 64 - 55, 73, font(700, 15), "#06140a", { align: "center" });
+
+  fillBox(g, 64, 120, 620, 600, 20, panel);
+  strokeBox(g, 64, 120, 620, 600, 20, line);
+  ["#ff5f57", "#febc2e", "#28c840"].forEach((c, i) => dot(g, 94 + i * 20, 148, 6, c));
+  text(g, "feed.ts", 168, 153, font(400, 14, MONO), "#e6edf3");
+  g.fillStyle = line; g.fillRect(64, 176, 620, 1);
+  const K = "#ff7b72", F = "#d2a8ff", N = "#79c0ff", S = "#a5d6ff", T = "#e6edf3", C = "#8b949e";
+  const code = [
+    [["import", K], [" { useFeed } ", T], ["from", K], [" \"@devhub/core\"", S]],
+    [],
+    [["export async function", K], [" trending", F], ["(tag: ", T], ["string", N], [") {", T]],
+    [["  const", K], [" posts = ", T], ["await", K], [" useFeed", F], ["({ tag, limit: ", T], ["20", N], [" });", T]],
+    [["  return", K], [" posts", T]],
+    [["    .filter", F], ["(p => p.votes > ", T], ["100", N], [")", T]],
+    [["    .sort", F], ["((a, b) => b.score - a.score)", T]],
+    [["    .map", F], ["(", T], ["toCard", F], [");", T]],
+    [["}", T]],
+    [],
+    [["// ship it", C]],
+  ];
+  const cf = font(400, 17, MONO);
+  code.forEach((tokens, i) => {
+    const y = 218 + i * 30;
+    text(g, String(i + 1), 112, y, cf, "rgba(230,237,243,0.25)", { align: "right" });
+    let x = 136;
+    tokens.forEach(([t, c]) => { text(g, t, x, y, cf, c); x += measure(g, t, cf); });
+    if (i === code.length - 1) { g.fillStyle = green; g.fillRect(x + 8, y - 16, 10, 20); }
+  });
+  g.fillStyle = line; g.fillRect(64, 572, 620, 1);
+  text(g, "TERMINAL", 92, 606, font(700, 12, MONO), muted, { spacing: 2 });
+  text(g, "$", 92, 646, font(700, 16, MONO), green);
+  text(g, "devhub publish --tag webgl", 114, 646, font(400, 16, MONO), "#e6edf3");
+  text(g, "✓ Published to 128k developers in 0.8s", 92, 684, font(400, 16, MONO), muted);
+
+  [["Why we moved our monorepo to Bun", "Lena Park", "2h", ["bun", "tooling"], "482", "#3fb950", "#58a6ff"],
+   ["A tiny guide to WebGL picking", "Marco Ruiz", "5h", ["webgl", "graphics"], "317", "#d2a8ff", "#ff7b72"],
+   ["Designing APIs devs actually love", "Aisha Bello", "1d", ["api", "dx"], "1.2k", "#ffa657", "#f778ba"]].forEach(([title, author, time, tags, votes, a, b], i) => {
+    const y = 120 + i * 200;
+    fillBox(g, 712, y, 424, 180, 18, panel);
+    strokeBox(g, 712, y, 424, 180, 18, line);
+    fillBox(g, 732, y + 24, 52, 68, 12, "rgba(63,185,80,0.12)");
+    text(g, "▲", 758, y + 52, font(700, 14), green, { align: "center" });
+    text(g, votes, 758, y + 76, font(700, 15), "#e6edf3", { align: "center" });
+    avatar(g, 814, y + 40, 14, a, b);
+    text(g, author, 836, y + 45, font(600, 14), "#e6edf3");
+    text(g, `· ${time}`, 836 + measure(g, author, font(600, 14)) + 6, y + 45, font(400, 14), muted);
+    text(g, title, 802, y + 92, font(600, 18), "#ffffff");
+    let tx = 802;
+    tags.forEach(tag => {
+      const w = measure(g, `#${tag}`, font(400, 13, MONO)) + 24;
+      fillBox(g, tx, y + 118, w, 30, 15, "rgba(88,166,255,0.12)");
+      text(g, `#${tag}`, tx + 12, y + 138, font(400, 13, MONO), "#79c0ff");
+      tx += w + 8;
+    });
+  });
+
+  [["128k", "developers"], ["3.4M", "answers shared"], ["940", "meetups this year"]].forEach(([v, l], i) => {
+    text(g, v, 64 + i * 230, 818, font(700, 40), "#fff", { spacing: -1 });
+    text(g, l, 64 + i * 230, 850, font(500, 14), muted);
+  });
+  const palette = [["#3fb950", "#58a6ff"], ["#d2a8ff", "#ff7b72"], ["#ffa657", "#f778ba"], ["#79c0ff", "#3fb950"], ["#f778ba", "#d2a8ff"]];
+  palette.forEach(([a, b], i) => {
+    dot(g, 900 + i * 30, 818, 22, "#0b0f14");
+    avatar(g, 900 + i * 30, 818, 19, a, b);
+  });
+  text(g, "+2.4k online", 1136, 824, font(600, 15), "#e6edf3", { align: "right" });
+}
+
+/* ---------- motion + WebGL conveyor ---------- */
+
+function advanceMotion(state, frames, count, reduced) {
+  const f = TUNE.friction, decay = Math.pow(f, frames);
+  state.offset = wrap(state.offset + (reduced ? 0 : state.velocity * f * (1 - decay) / (1 - f)), count);
+  state.velocity = reduced ? 0 : state.velocity * decay;
+  state.present += (state.targetPresent - state.present) * (reduced ? 1 : 1 - Math.pow(.93, frames));
+  const smoothing = 1 - Math.pow(.968, frames);
+  state.parallaxX = reduced ? 0 : state.parallaxX + (state.pointerX - state.parallaxX) * smoothing;
+  state.parallaxY = reduced ? 0 : state.parallaxY + (state.pointerY - state.parallaxY) * smoothing;
+}
+
+function conveyorPoint(t) {
+  const half = 2.9, radius = 1.02, straight = half * 2, arc = Math.PI * radius;
+  let distance = wrap(t, 1) * (straight * 2 + arc * 2);
+  if (distance < straight) return { y: -half + distance, z: radius, ny: 0, nz: 1 };
+  distance -= straight;
+  if (distance < arc) {
+    const angle = Math.PI / 2 - distance / radius;
+    return { y: half + Math.cos(angle) * radius, z: Math.sin(angle) * radius, ny: Math.cos(angle), nz: Math.sin(angle) };
+  }
+  distance -= arc;
+  if (distance < straight) return { y: half - distance, z: -radius, ny: 0, nz: -1 };
+  distance -= straight;
+  const angle = -Math.PI / 2 - distance / radius;
+  return { y: -half + Math.cos(angle) * radius, z: Math.sin(angle) * radius, ny: Math.cos(angle), nz: Math.sin(angle) };
+}
+
+function buildConveyorGeometry(count, segments = 256) {
+  const width = (11.6 + Math.PI * 2.04) / count * 4 / 3;
+  const vertices = new Float32Array((segments + 1) * 2 * 7);
+  const indices = new Uint16Array(segments * 6);
+  for (let i = 0; i <= segments; i++) {
+    const point = conveyorPoint(i / segments);
+    for (let side = 0; side < 2; side++) {
+      vertices.set([(side - .5) * width, point.y, point.z, side, i / segments, point.ny, point.nz], (i * 2 + side) * 7);
+    }
+    if (i < segments) {
+      const a = i * 2;
+      indices.set([a, a + 2, a + 1, a + 1, a + 2, a + 3], i * 6);
+    }
+  }
+  return { vertices, indices };
+}
+
+function createConveyor(canvas, images, projects) {
+  const gl = canvas.getContext("webgl", { alpha: true, antialias: true, premultipliedAlpha: false });
+  if (!gl) throw new Error("WebGL is unavailable.");
+  const vertexSource = `
+    attribute vec3 position;
+    attribute vec2 uv;
+    attribute vec2 normalYZ;
+    uniform vec3 rotation, rig, camera, target;
+    uniform vec3 translation;
+    uniform float aspect;
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vPosition, vView, vLight;
+    vec3 rotate(vec3 p, vec3 r) {
+      vec3 c = cos(r), s = sin(r);
+      p.xy = mat2(c.z, s.z, -s.z, c.z) * p.xy;
+      p.xz = mat2(c.y, -s.y, s.y, c.y) * p.xz;
+      p.yz = mat2(c.x, s.x, -s.x, c.x) * p.yz;
+      return p;
+    }
+    vec3 unrotate(vec3 p, vec3 r) {
+      vec3 c = cos(r), s = sin(r);
+      p.yz = mat2(c.x, -s.x, s.x, c.x) * p.yz;
+      p.xz = mat2(c.y, s.y, -s.y, c.y) * p.xz;
+      p.xy = mat2(c.z, -s.z, s.z, c.z) * p.xy;
+      return p;
+    }
+    void main() {
+      vUv = uv;
+      vNormal = rotate(rotate(vec3(0.0, normalYZ), rotation), rig);
+      vPosition = position;
+      vLight = unrotate(unrotate(normalize(vec3(-0.45, 1.1, 0.8)), rig), rotation);
+      vec3 world = rotate(rotate(position * 0.79, rotation), rig) + translation;
+      vView = camera - world;
+      vec3 forward = normalize(target - camera);
+      vec3 right = normalize(cross(forward, vec3(0.0, 1.0, 0.0)));
+      vec3 up = cross(right, forward);
+      vec3 delta = world - camera;
+      vec3 view = vec3(dot(delta, right), dot(delta, up), -dot(delta, forward));
+      view.xy *= 1.122;
+      gl_Position = vec4(view.x * 3.2708526 / aspect, view.y * 3.2708526, -1.002002 * view.z - 0.2002002, -view.z);
+      gl_Position.y += gl_Position.w * 0.2;
+    }`;
+  const fragmentSource = `
+    precision highp float;
+    uniform sampler2D atlas;
+    uniform float offset, count, picking;
+    uniform vec2 grid, atlasSize;
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vPosition, vView, vLight;
+    float edgeShadow(vec3 origin, vec3 ray, float distance) {
+      if (distance < 0.025) return 0.0;
+      float halfWidth = (11.6 + 6.408849) / count * 0.666667;
+      float edge = halfWidth - abs(origin.x + ray.x * distance);
+      return smoothstep(-0.06, 0.06 + distance * 0.12, edge);
+    }
+    float rayShadow(vec3 origin, vec3 ray) {
+      float shadow = 0.0;
+      if (abs(ray.z) > 0.0001) {
+        for (int side = 0; side < 2; side++) {
+          float z = side == 0 ? -1.02 : 1.02;
+          float distance = (z - origin.z) / ray.z;
+          if (abs(origin.y + ray.y * distance) <= 2.9)
+            shadow = max(shadow, edgeShadow(origin, ray, distance));
+        }
+      }
+      float a = dot(ray.yz, ray.yz);
+      for (int end = 0; end < 2; end++) {
+        float signY = end == 0 ? -1.0 : 1.0;
+        vec2 delta = origin.yz - vec2(signY * 2.9, 0.0);
+        float b = dot(delta, ray.yz);
+        float discriminant = b * b - a * (dot(delta, delta) - 1.0404);
+        if (discriminant >= 0.0 && a > 0.0001) {
+          for (int root = 0; root < 2; root++) {
+            float distance = (-b + (root == 0 ? -1.0 : 1.0) * sqrt(discriminant)) / a;
+            if (signY * (origin.y + ray.y * distance) >= 2.9)
+              shadow = max(shadow, edgeShadow(origin, ray, distance));
+          }
+        }
+      }
+      return shadow;
+    }
+    float visibility(vec3 normal) {
+      vec3 light = normalize(vLight);
+      vec3 tangent = normalize(cross(light, vec3(0.0, 1.0, 0.0)));
+      vec3 bitangent = cross(light, tangent);
+      vec3 origin = vPosition + normal * 0.018;
+      float shadow = rayShadow(origin, light) * 2.0;
+      shadow += rayShadow(origin, normalize(light + tangent * 0.12));
+      shadow += rayShadow(origin, normalize(light - tangent * 0.12));
+      shadow += rayShadow(origin, normalize(light + bitangent * 0.12));
+      shadow += rayShadow(origin, normalize(light - bitangent * 0.12));
+      return 1.0 - shadow / 6.0;
+    }
+    void main() {
+      float phase = mod(vUv.y * count + offset, count);
+      float tile = floor(phase);
+      if (picking > 0.5) { gl_FragColor = vec4((tile + 1.0) / 255.0, 0.0, 0.0, 1.0); return; }
+      vec2 cell = vec2(mod(tile, grid.x), floor(tile / grid.x));
+      vec2 local = vec2(vUv.x, 1.0 - fract(phase));
+      vec2 inset = 0.5 * grid / atlasSize;
+      vec2 sampleUv = (cell + mix(inset, 1.0 - inset, local)) / grid;
+      vec3 color = texture2D(atlas, sampleUv).rgb;
+      vec3 normal = normalize(vNormal);
+      float side = dot(normal, vView) >= 0.0 ? 1.0 : -1.0;
+      normal *= side;
+      vec3 localNormal = vec3(0.0, normalize(vec2(vPosition.y - clamp(vPosition.y, -2.9, 2.9), vPosition.z))) * side;
+      float visible = visibility(localNormal);
+      vec3 light = normalize(vec3(-0.45, 1.1, 0.8));
+      float diffuse = max(0.0, dot(normal, light)) * visible;
+      float ambient = side > 0.0 ? 0.36 : 0.14;
+      float fold = smoothstep(2.35, 3.92, abs(vPosition.y));
+      ambient *= 1.0 - (side < 0.0 ? 0.35 : 0.12) * fold;
+      float highlight = pow(max(0.0, dot(normal, normalize(light + normalize(vView)))), 28.0) * visible * 0.035;
+      float luma = dot(color, vec3(0.299, 0.587, 0.114));
+      color = max(vec3(0.0), mix(vec3(luma), color, 1.04));
+      vec3 lit = pow(color, vec3(2.2)) * (ambient * vec3(0.94, 0.97, 1.0) + diffuse * 0.9 + highlight);
+      gl_FragColor = vec4(pow(clamp(lit, 0.0, 1.0), vec3(1.0 / 2.2)), 1.0);
+    }`;
+  const program = gl.createProgram();
+  const shaders = [];
+  try {
+    for (const [type, source] of [[gl.VERTEX_SHADER, vertexSource], [gl.FRAGMENT_SHADER, fragmentSource]]) {
+      const shader = gl.createShader(type);
+      shaders.push(shader);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader));
+      gl.attachShader(program, shader);
+    }
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+  } catch (error) {
+    gl.deleteProgram(program);
+    throw error;
+  } finally { shaders.forEach(shader => gl.deleteShader(shader)); }
+  gl.useProgram(program);
+  const geometry = buildConveyorGeometry(projects.length);
+  const vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, geometry.vertices, gl.STATIC_DRAW);
+  for (const [name, size, start] of [["position", 3, 0], ["uv", 2, 3], ["normalYZ", 2, 5]]) {
+    const attribute = gl.getAttribLocation(program, name);
+    gl.enableVertexAttribArray(attribute);
+    gl.vertexAttribPointer(attribute, size, gl.FLOAT, false, 28, start * 4);
+  }
+  const indexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geometry.indices, gl.STATIC_DRAW);
+
+  const columns = Math.ceil(Math.sqrt(projects.length * .75));
+  const rows = Math.ceil(projects.length / columns);
+  const maxSize = Math.min(4096, gl.getParameter(gl.MAX_TEXTURE_SIZE));
+  const tileWidth = Math.floor(Math.min(1200, maxSize / columns, maxSize / rows * 4 / 3) / 4) * 4;
+  const tileHeight = tileWidth * .75;
+  const atlas = document.createElement("canvas");
+  atlas.width = columns * tileWidth;
+  atlas.height = rows * tileHeight;
+  const ctx = atlas.getContext("2d");
+  ctx.fillStyle = "#0f1316";
+  ctx.fillRect(0, 0, atlas.width, atlas.height);
+  images.forEach((image, index) => {
+    const x = index % columns * tileWidth, y = Math.floor(index / columns) * tileHeight;
+    if (image) {
+      const iw = image.naturalWidth || image.width, ih = image.naturalHeight || image.height;
+      const scale = Math.min(tileWidth / iw, tileHeight / ih);
+      const width = iw * scale, height = ih * scale;
+      ctx.drawImage(image, x + (tileWidth - width) / 2, y + (tileHeight - height) / 2, width, height);
+    } else {
+      ctx.fillStyle = "#8b9198";
+      ctx.font = `${tileWidth / 32}px sans-serif`;
+      ctx.fillText(projects[index].title, x + 24, y + tileHeight / 2, tileWidth - 48);
+    }
+  });
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlas);
+  const anisotropy = gl.getExtension("EXT_texture_filter_anisotropic");
+  if (anisotropy) {
+    gl.texParameterf(gl.TEXTURE_2D, anisotropy.TEXTURE_MAX_ANISOTROPY_EXT,
+      Math.min(8, gl.getParameter(anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+  }
+  const locations = Object.fromEntries(["rotation", "rig", "translation", "camera", "target", "aspect", "offset", "count", "picking", "grid", "atlasSize"].map(name => [name, gl.getUniformLocation(program, name)]));
+  gl.uniform1f(locations.count, projects.length);
+  gl.uniform2f(locations.grid, columns, rows);
+  gl.uniform2f(locations.atlasSize, atlas.width, atlas.height);
+  gl.enable(gl.DEPTH_TEST);
+  gl.clearColor(0, 0, 0, 0);
+  let viewportWidth = 1, viewportHeight = 1;
+  const pixel = new Uint8Array(4);
+
+  function draw(state, picking = false) {
+    const ease = state.present * state.present * (3 - 2 * state.present);
+    const fade = 1 - ease;
+    const x = state.parallaxX * fade, y = state.parallaxY * fade;
+    const zoom = Math.max(1, .9 * viewportHeight / viewportWidth);
+    gl.uniform3f(locations.camera, (-2 * fade + x * .12) * zoom, (-9.35 * fade - y * .08) * zoom, (10.99 - ease * 4.79) * zoom);
+    gl.uniform3f(locations.target, 0, -.2 * fade, .1 * fade);
+    gl.uniform3f(locations.rotation, .07 * fade, (-.594 + Math.sin(state.offset * Math.PI * 2 / projects.length) * .081) * fade, -.28 * fade);
+    gl.uniform3f(locations.rig, -y * .075, x * .1, 0);
+    gl.uniform3f(locations.translation, x * .075, y * .03 + Math.sin(state.offset * Math.PI * 4 / projects.length) * .02 - .04 - ease * .06, 0);
+    gl.uniform1f(locations.offset, state.offset);
+    gl.uniform1f(locations.picking, picking ? 1 : 0);
+    if (picking) gl.disable(gl.DITHER);
+    else gl.enable(gl.DITHER);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.drawElements(gl.TRIANGLES, geometry.indices.length, gl.UNSIGNED_SHORT, 0);
+  }
+  return {
+    draw,
+    resize(width, height) {
+      viewportWidth = width; viewportHeight = height;
+      const ratio = Math.min(devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform1f(locations.aspect, width / height);
+    },
+    pick(x, y, state) {
+      draw(state, true);
+      gl.readPixels(Math.min(canvas.width - 1, Math.max(0, Math.floor(x / viewportWidth * canvas.width))),
+        Math.min(canvas.height - 1, Math.max(0, Math.floor((1 - y / viewportHeight) * canvas.height))), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+      draw(state);
+      return pixel[3] === 255 && pixel[0] > 0 && pixel[0] <= projects.length ? pixel[0] - 1 : -1;
+    },
+  };
+}
+
+function createNoise(canvas) {
+  const gl = canvas.getContext("webgl", { alpha: true, antialias: false, depth: false, stencil: false });
+  const fallback = reason => {
+    console.warn("Shader grain is unavailable; using a generated noise texture.", reason);
+    canvas.style.backgroundImage = noiseTexture();
+    canvas.style.backgroundSize = "128px 128px";
+    return { resize() {}, draw() {} };
+  };
+  if (!gl) return fallback("WebGL context was not available.");
+
+  function compile(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      const message = gl.getShaderInfoLog(shader);
+      gl.deleteShader(shader);
+      throw new Error(message);
+    }
+    return shader;
+  }
+
+  let program, vertex, fragment;
+  try {
+    vertex = compile(gl.VERTEX_SHADER, `
+      attribute vec2 position;
+      void main() { gl_Position = vec4(position, 0.0, 1.0); }
+    `);
+    fragment = compile(gl.FRAGMENT_SHADER, `
+      precision highp float;
+      uniform float frame;
+      float random(vec2 p) {
+        return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+      }
+      void main() {
+        vec2 pixel = gl_FragCoord.xy + vec2(mod(frame, 997.0) * 17.0, mod(frame, 991.0) * 31.0);
+        float grain = (random(pixel) + random(pixel + 19.7)
+          + random(pixel + 43.1) + random(pixel + 71.9)) * 0.25;
+        gl_FragColor = vec4(vec3(grain), 1.0);
+      }
+    `);
+    program = gl.createProgram();
+    gl.attachShader(program, vertex);
+    gl.attachShader(program, fragment);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+  } catch (error) {
+    if (program) gl.deleteProgram(program);
+    return fallback(error);
+  } finally {
+    if (vertex) gl.deleteShader(vertex);
+    if (fragment) gl.deleteShader(fragment);
+  }
+  canvas.style.backgroundImage = "none";
+  gl.useProgram(program);
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const position = gl.getAttribLocation(program, "position");
+  gl.enableVertexAttribArray(position);
+  gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+  const frame = gl.getUniformLocation(program, "frame");
+  let previousFrame = -1;
+
+  return {
+    resize() {
+      const ratio = 2;
+      canvas.width = Math.round(document.documentElement.clientWidth * ratio);
+      canvas.height = Math.round(document.documentElement.clientHeight * ratio);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      previousFrame = -1;
+    },
+    draw(time) {
+      const currentFrame = Math.floor(time / 80);
+      if (gl.isContextLost() || currentFrame === previousFrame) return;
+      previousFrame = currentFrame;
+      gl.uniform1f(frame, currentFrame);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    },
+  };
+}
+
+function layoutViewport(width, height) {
+  const scale = height / 1080;
+  return { scale, width: width / scale };
+}
+</script>
+</body>
+</html>
