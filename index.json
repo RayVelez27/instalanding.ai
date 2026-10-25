@@ -2,8 +2,505 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 61,
+  "count": 68,
   "pages": [
+    {
+      "slug": "easel-ai-artist-assistant-page",
+      "title": "Easel AI Artist Assistant Page",
+      "description": "A two-ink risograph page for an AI studio assistant for artists: four pink ink drums roll down the hero and print a panel as you scroll, blue and pink plates slide into register, every illustration is greyscale SVG turned duotone by a blend, and a live plan ticket prices as you pick",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 25, 2026",
+      "bestFor": [
+        "AI tools for artists and creatives",
+        "creative software launches",
+        "SaaS with plan builders",
+        "print and design studios"
+      ],
+      "style": [
+        "risograph",
+        "two-color",
+        "bold-type",
+        "svg-illustration",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "layers",
+        "process",
+        "features",
+        "studies",
+        "pricing",
+        "uses",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.27",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/easel-ai-artist-assistant-page/index.html",
+        "prompt": "pages/easel-ai-artist-assistant-page/PROMPT.md",
+        "preview": "pages/easel-ai-artist-assistant-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/easel-artist-assistant.html",
+      "page": "https://instalanding.ai/prompt/easel-ai-artist-assistant-page"
+    },
+    {
+      "slug": "ochre-ai-meditation-app-page",
+      "title": "Ochre AI Meditation App Page",
+      "description": "A sunset-poster page for an AI meditation app: a thin \"OCHRE\" is split ink-on-paper by a dark field that sweeps across as the sun sets, the hero phone breathes over a live WebGL ocean, a moon window opens into the night, and every landscape is painted on canvas",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 24, 2026",
+      "bestFor": [
+        "wellness and meditation apps",
+        "consumer AI apps",
+        "health and sleep products",
+        "mobile app launches"
+      ],
+      "style": [
+        "sunset-poster",
+        "minimal-type",
+        "canvas-art",
+        "webgl",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "ticker",
+        "manifesto",
+        "features",
+        "soundscapes",
+        "privacy",
+        "day",
+        "pricing",
+        "gallery",
+        "reviews",
+        "trial",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Reddit Sans"
+        ],
+        "features": [
+          "webgl",
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/ochre-ai-meditation-app-page/index.html",
+        "prompt": "pages/ochre-ai-meditation-app-page/PROMPT.md",
+        "preview": "pages/ochre-ai-meditation-app-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/ochre-meditation.html",
+      "page": "https://instalanding.ai/prompt/ochre-ai-meditation-app-page"
+    },
+    {
+      "slug": "tokenhaus-ai-design-system-academy-page",
+      "title": "tokenhaus AI Design System Academy Page",
+      "description": "A four-ink Bauhaus page for an AI design-systems academy: the hero is a grid of quarter-circle tiles that turn as the next section slides over it, \"SYSTEM\" fans out into echoes in pink, amber and white, courses grow out of circles into pills, and every swatch, specimen and tutor portrait is drawn in SVG",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 24, 2026",
+      "bestFor": [
+        "online courses and cohorts",
+        "design and education brands",
+        "AI tools for designers",
+        "bootcamps and academies"
+      ],
+      "style": [
+        "bauhaus",
+        "geometric",
+        "bold-color",
+        "svg-illustration",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "about",
+        "courses",
+        "manifesto",
+        "work",
+        "process",
+        "tutors",
+        "numbers",
+        "voices",
+        "fees",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Gabarito",
+          "Instrument Sans"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/tokenhaus-ai-design-system-academy-page/index.html",
+        "prompt": "pages/tokenhaus-ai-design-system-academy-page/PROMPT.md",
+        "preview": "pages/tokenhaus-ai-design-system-academy-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/tokenhaus-design-academy.html",
+      "page": "https://instalanding.ai/prompt/tokenhaus-ai-design-system-academy-page"
+    },
+    {
+      "slug": "ostler-ai-hotel-concierge-page",
+      "title": "Ostler AI Hotel Concierge Page",
+      "description": "A late-night oxblood page for an AI hotel concierge: a giant \"Ostler\" springs apart letter by letter over a guest's phone chat, six module covers slide past sideways, \"Awake\" zooms into a hotel facade at night, and every phone, dashboard and room is drawn in SVG",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 24, 2026",
+      "bestFor": [
+        "hospitality software",
+        "AI agents and assistants",
+        "customer support automation",
+        "vertical B2B SaaS"
+      ],
+      "style": [
+        "editorial",
+        "card-stack",
+        "fill-type",
+        "svg-illustration",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "ticker",
+        "logos",
+        "story",
+        "modules",
+        "pricing",
+        "statement",
+        "process",
+        "changelog",
+        "voices",
+        "gallery",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Gabarito",
+          "Instrument Sans"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/ostler-ai-hotel-concierge-page/index.html",
+        "prompt": "pages/ostler-ai-hotel-concierge-page/PROMPT.md",
+        "preview": "pages/ostler-ai-hotel-concierge-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/ostler-hotel-concierge.html",
+      "page": "https://instalanding.ai/prompt/ostler-ai-hotel-concierge-page"
+    },
+    {
+      "slug": "wayfind-ai-travel-companion-page",
+      "title": "Wayfind AI Travel Companion Page",
+      "description": "A sand-and-sea expedition poster of a page for an AI travel companion: \"wayfind\" is cut out of a desert photo that opens to full bleed as you scroll, mode posters stack and tilt, a nine-day route draws itself sideways, and every photo is raymarched live in WebGL",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 24, 2026",
+      "bestFor": [
+        "travel and booking apps",
+        "AI agents and assistants",
+        "consumer subscription apps",
+        "outdoor and adventure brands"
+      ],
+      "style": [
+        "editorial",
+        "expedition-poster",
+        "knockout-type",
+        "webgl",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "manifesto",
+        "modes",
+        "agents",
+        "itinerary",
+        "disruptions",
+        "team",
+        "reviews",
+        "gallery",
+        "pricing",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Hubot Sans",
+          "Special Gothic"
+        ],
+        "features": [
+          "webgl",
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/wayfind-ai-travel-companion-page/index.html",
+        "prompt": "pages/wayfind-ai-travel-companion-page/PROMPT.md",
+        "preview": "pages/wayfind-ai-travel-companion-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/wayfind-ai-travel.html",
+      "page": "https://instalanding.ai/prompt/wayfind-ai-travel-companion-page"
+    },
+    {
+      "slug": "tarn-file-transfer-page",
+      "title": "Tarn File Transfer Page",
+      "description": "A frosted steel-grey page for a heavy-file transfer service: the hero zooms out of a giant glass send button into its frame, a magnifying lens glides across the manifesto, a light sweeps the service tiles, and a send button you can try with your own file",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 23, 2026",
+      "bestFor": [
+        "file transfer and storage products",
+        "creative and media tools",
+        "B2B SaaS for studios",
+        "developer and infrastructure tools"
+      ],
+      "style": [
+        "glassmorphism",
+        "monochrome",
+        "frosted",
+        "svg-illustration",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "manifesto",
+        "services",
+        "process",
+        "speed",
+        "demo",
+        "work",
+        "pricing",
+        "voices",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Geist",
+          "Hubot Sans"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "8B AI Website Builder",
+          "href": "https://8b.com/",
+          "note": "Generated this page from a single prompt"
+        }
+      ],
+      "files": {
+        "html": "pages/tarn-file-transfer-page/index.html",
+        "prompt": "pages/tarn-file-transfer-page/PROMPT.md",
+        "preview": "pages/tarn-file-transfer-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/tarn-file-transfer.html",
+      "page": "https://instalanding.ai/prompt/tarn-file-transfer-page"
+    },
+    {
+      "slug": "somatic-ai-wellness-companion-page",
+      "title": "Somatic AI Wellness Companion Page",
+      "description": "An acid-lime page for an AI wellness companion: a breathing point-sphere orb sits behind \"SOMATIC SIGNALS\" stretched to the full width, a diamond window opens to fill the screen as you scroll, five programs slide past sideways, and every heart trace, sleep map and portrait is drawn in code",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 23, 2026",
+      "bestFor": [
+        "AI health and wellness apps",
+        "wearables and sleep tracking",
+        "digital health startups",
+        "consumer AI companions"
+      ],
+      "style": [
+        "acid",
+        "bold-type",
+        "stretched-type",
+        "canvas",
+        "scroll-driven",
+        "horizontal-scroll"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "about",
+        "runs",
+        "values",
+        "week",
+        "crew",
+        "voices",
+        "steps",
+        "gallery",
+        "season",
+        "membership",
+        "faq",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.13.0",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "lenis",
+            "version": "1.3.4",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Anybody",
+          "Bodoni Moda",
+          "Space Grotesk",
+          "Space Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/somatic-ai-wellness-companion-page/index.html",
+        "prompt": "pages/somatic-ai-wellness-companion-page/PROMPT.md",
+        "preview": "pages/somatic-ai-wellness-companion-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/somatic-ai-wellness.html",
+      "page": "https://instalanding.ai/prompt/somatic-ai-wellness-companion-page"
+    },
     {
       "slug": "latent-ai-fashion-atelier-page",
       "title": "Latent AI Fashion Atelier Page",
