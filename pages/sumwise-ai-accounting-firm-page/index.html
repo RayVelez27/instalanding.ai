@@ -1,0 +1,1983 @@
+<!doctype html>
+<!--
+  INSTALANDING.AI · Sumwise AI Accounting Firm Page
+  slug     sumwise-ai-accounting-firm-page
+  prompt   https://instalanding.ai/p/sumwise-ai-accounting-firm-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/sumwise-ai-accounting-firm-page
+  license  Built on the Tallyhouse template by 8B (MIT): https://8b.com/templates/tallyhouse/
+           (source https://github.com/8bsite/accountant-website-template). Fonts: Google Fonts (OFL).
+           Fictional brand ("Sumwise"); every customer, accountant, price and figure is invented. Replace names,
+           numbers and copy before shipping. Every picture is inline SVG; no image files.
+
+  MAP
+  tokens    @layer tokens: --color-1 white, --color-2 ink #0b0b0b, --color-3 orange #fe7141, --color-4 lilac #cdabfe,
+            --color-5 sage #d1ddd3, --color-6 / --color-7 greys; Google Sans (--font-1) with a metric-matched fallback;
+            --space-1 and an SVG --grain. Layers: tokens, base, atoms (m-text*, m-btn, m-link, m-photo, m-mark,
+            m-rule), layout, sections, scenes.
+  sections  nav, hero, statement (inside the hero), monthly, services, everything, ask, switching, tax-year,
+            stories, accountants, faq, pricing, contact, footer (each region carries data-section)
+  scripts   1. UI that works without motion: menu, hide-on-scroll nav with a progress bar, the live counter,
+               bar and price-block heights from their numbers, the chat replay, the local-only form
+            2. queueMotion + GSAP 3.13 + ScrollTrigger and Lenis 1.3.27 (jsdelivr): the ink cover spreading to full
+               screen while eight illustration tiles fly out and back, the monthly report walk-through, halftone
+               resolving into each service slab, the grid dealing in, the pinned tax-year track with chips that
+               fill as they cross the line, people settling, price blocks rising, the footer closing
+  assets    every illustration is a <g id="ill-*"> or <g id="pt-*"> in the sprite at the top of <body>, drawn in
+            greys and multiplied over each frame's flat tint
+
+  ADAPTING
+  - Reuse an illustration with <svg class="m-photo__img" viewBox="0 0 400 500"><use href="#ill-..."/></svg> inside
+    .m-photo, and set --photo-tint on the frame.
+  - Price block heights come from <data value> in each .fe-price; cash bars from <data value> in each .mo-bar.
+  - prefers-reduced-motion: no smooth scroll, pinning or scrubbing; the chat shows in full.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sumwise — The AI accounting firm that does it all</title>
+<meta name="description" content="Sumwise is an AI accounting firm for small business. Bookkeeping, taxes, payroll, invoicing, bill pay and forecasts, done around the clock and checked by a licensed CPA.">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2064%2064'%3E%3Crect%20width%3D'64'%20height%3D'64'%20rx%3D'14'%20fill%3D'%230b0b0b'%2F%3E%3Ctext%20x%3D'32'%20y%3D'45'%20font-family%3D'Arial%2CHelvetica%2Csans-serif'%20font-size%3D'38'%20font-weight%3D'700'%20text-anchor%3D'middle'%20fill%3D'%23fe7141'%3ES%3C%2Ftext%3E%3C%2Fsvg%3E">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* latin-ext */
+@font-face { font-family: 'Google Sans'; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url(https://fonts.gstatic.com/s/googlesans/v71/4UasrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iqcsih3SAyH6cAwhX9RPjwUvaYr.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+/* latin */
+@font-face { font-family: 'Google Sans'; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url(https://fonts.gstatic.com/s/googlesans/v71/4UasrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iqcsih3SAyH6cAwhX9RPjIUvQ.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+</style>
+<style>
+@layer tokens, base, atoms, layout, sections, scenes;
+</style>
+<style>
+@layer tokens {
+:root {
+  --color-1: #ffffff;
+  --color-2: #0b0b0b;
+  --color-3: #fe7141;
+  --color-4: #cdabfe;
+  --color-5: #d1ddd3;
+  --color-6: #595959;
+  --color-7: #a8a8a8;
+  --font-1: "Google Sans", "Google Sans Fallback", Arial, sans-serif;
+  --space-1: clamp(16px, 1.25vw, 20px);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+}
+</style>
+<style>
+@layer base {
+@font-face { font-family: "Google Sans Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"), local("Helvetica Bold"); font-weight: 550 799; size-adjust: 97.2%; ascent-override: 99.7%; descent-override: 29.8%; line-gap-override: 0%; }
+@font-face { font-family: "Google Sans Fallback"; src: local("Arial"), local("ArialMT"), local("Helvetica"); font-weight: 100 549; size-adjust: 102.5%; ascent-override: 94.7%; descent-override: 28.3%; line-gap-override: 0%; }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+body { margin: 0; background: var(--color-1); color: var(--color-2); font-family: var(--font-1); font-size: 17px; line-height: 1.45; letter-spacing: -0.01em; overflow-x: clip; -webkit-font-smoothing: antialiased; }
+img, svg { display: block; max-width: 100%; }
+h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; }
+:focus-visible { outline: 2px solid var(--color-2); outline-offset: 3px; }
+::selection { background: var(--color-3); color: var(--color-2); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+}
+</style>
+<style>
+@layer atoms {
+.m-text { font-family: var(--font-1); font-size: 17px; font-weight: 400; line-height: 1.45; letter-spacing: -0.01em; }
+.m-text-2 { font-family: var(--font-1); font-size: clamp(48px, 6.6vw, 96px); font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; }
+.m-text-3 { font-family: var(--font-1); font-size: clamp(34px, 4.2vw, 56px); font-weight: 500; line-height: 1; letter-spacing: -0.045em; }
+.m-text-4 { font-family: var(--font-1); font-size: clamp(20px, 2vw, 27px); font-weight: 500; line-height: 1.14; letter-spacing: -0.03em; }
+.m-text-5 { font-family: var(--font-1); font-size: 12px; font-weight: 600; line-height: 1.2; letter-spacing: 0.07em; text-transform: uppercase; }
+.m-text-6 { font-family: var(--font-1); font-size: 14px; font-weight: 400; line-height: 1.4; letter-spacing: -0.005em; }
+
+.m-btn { position: relative; isolation: isolate; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: 0 20px; background: var(--color-2); color: var(--color-1); font-family: var(--font-1); font-size: 16px; font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; text-decoration: none; border: 0; cursor: pointer; overflow: hidden; }
+.m-btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-1); clip-path: inset(50% 50% 50% 50%); transition: clip-path .5s cubic-bezier(.7, 0, .2, 1); }
+.m-btn__arrow { font-size: 22px; line-height: 1; transition: transform .5s cubic-bezier(.7, 0, .2, 1); }
+@media (hover: hover) {
+  .m-btn:hover { color: var(--color-2); }
+  .m-btn:hover::before { clip-path: inset(0 0 0 0); }
+  .m-btn:hover .m-btn__arrow { transform: translateX(6px); }
+}
+.m-btn-2 { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; min-height: 48px; padding: 0 18px; background: var(--color-3); color: var(--color-2); font-family: var(--font-1); font-size: 16px; font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; text-decoration: none; border: 0; cursor: pointer; overflow: hidden; }
+.m-btn-2::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-2); clip-path: inset(50% 50% 50% 50%); transition: clip-path .5s cubic-bezier(.7, 0, .2, 1); }
+.m-btn-2__icon { font-size: 22px; font-weight: 400; line-height: 1; transition: transform .5s cubic-bezier(.7, 0, .2, 1); }
+@media (hover: hover) {
+  .m-btn-2:hover { color: var(--color-1); }
+  .m-btn-2:hover::before { clip-path: inset(0 0 0 0); }
+  .m-btn-2:hover .m-btn-2__icon { transform: rotate(90deg); }
+}
+.m-link { color: var(--color-2); font-weight: 500; text-decoration: none; background: linear-gradient(var(--color-4), var(--color-4)) no-repeat 0 100% / 0% 100%, linear-gradient(currentColor, currentColor) no-repeat 0 100% / 100% 1px; transition: background-size .45s cubic-bezier(.7, 0, .2, 1); padding: 0 2px 1px; }
+@media (hover: hover) { .m-link:hover { background-size: 100% 100%, 100% 1px; } }
+.m-link-2 { color: var(--color-1); font-weight: 500; text-decoration: none; background: linear-gradient(var(--color-4), var(--color-4)) no-repeat 0 100% / 0% 100%, linear-gradient(currentColor, currentColor) no-repeat 0 100% / 100% 1px; transition: background-size .45s cubic-bezier(.7, 0, .2, 1), color .2s .1s; padding: 0 2px 1px; }
+@media (hover: hover) { .m-link-2:hover { background-size: 100% 100%, 100% 1px; color: var(--color-2); } }
+.m-icon { position: relative; isolation: isolate; display: inline-grid; place-items: center; min-width: 48px; min-height: 48px; padding: 0 14px; background: transparent; color: inherit; border: 1px solid currentColor; font-family: var(--font-1); font-size: 16px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; cursor: pointer; overflow: hidden; }
+.m-icon::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--color-4); clip-path: inset(100% 0 0 0); transition: clip-path .4s cubic-bezier(.7, 0, .2, 1); }
+@media (hover: hover) { .m-icon:hover { color: var(--color-2); } .m-icon:hover::before { clip-path: inset(0 0 0 0); } }
+
+.m-photo { position: relative; overflow: hidden; isolation: isolate; background: var(--photo-tint, var(--color-4)); }
+.m-photo::after { content: ""; position: absolute; inset: 0; z-index: 3; background-image: var(--grain); background-size: 180px; opacity: .14; mix-blend-mode: multiply; pointer-events: none; }
+.m-photo__img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.06); mix-blend-mode: multiply; }
+svg.m-photo__img { overflow: hidden; }
+.m-badge { display: inline-block; padding: 5px 7px 4px; background: var(--color-1); color: var(--color-2); font-family: var(--font-1); font-size: 11px; font-weight: 600; line-height: 1.1; letter-spacing: 0.07em; text-transform: uppercase; }
+.m-mark { --mark-color: var(--color-4); color: var(--color-2); background: linear-gradient(var(--mark-color), var(--mark-color)) no-repeat 0 0 / 100% 100%; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 0.08em; }
+.m-rule { display: block; height: 1px; background: currentColor; opacity: .55; transform-origin: 0 50%; }
+.m-field { display: grid; gap: 8px; }
+.m-field__label { font-size: 12px; font-weight: 600; line-height: 1.2; letter-spacing: 0.07em; text-transform: uppercase; }
+.m-field__input { width: 100%; min-height: 52px; padding: 14px 16px; background: var(--color-1); color: var(--color-2); border: 1px solid var(--color-1); border-radius: 0; font-size: 17px; line-height: 1.3; }
+.m-field__input:focus-visible { outline: 2px solid var(--color-3); outline-offset: 2px; }
+}
+</style>
+<style>
+@layer layout {
+.wrap { padding-inline: var(--space-1); }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; }
+@media (max-width: 767px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 12px; } }
+}
+</style>
+<style>
+@layer sections {
+#nav { position: fixed; inset: 0 0 auto 0; z-index: 50; display: flex; align-items: stretch; height: 48px; background: var(--color-1); border-bottom: 1px solid var(--color-2); transition: transform .45s cubic-bezier(.7, 0, .2, 1); }
+#nav.is-hidden { transform: translateY(-100%); }
+#nav .nav__progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--color-3); transform: scaleX(var(--p, 0)); transform-origin: 0 50%; pointer-events: none; }
+#nav .nav__logo { display: flex; align-items: center; gap: 8px; padding: 0 16px; background: var(--color-2); color: var(--color-1); text-decoration: none; font-size: 22px; font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+#nav .nav__logo small { font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 3px 5px 2px; color: var(--color-2); background: var(--color-3); }
+#nav .nav__cta { min-width: 260px; min-height: 0; }
+#nav .nav__links { display: flex; margin-left: auto; }
+#nav .nav__link { display: flex; align-items: center; padding: 0 22px; border-left: 1px solid var(--color-2); font-size: 15px; font-weight: 500; letter-spacing: -0.02em; text-decoration: none; background: linear-gradient(var(--color-4), var(--color-4)) no-repeat 0 100% / 100% 0%; transition: background-size .4s cubic-bezier(.7, 0, .2, 1); }
+@media (hover: hover) { #nav .nav__link:hover { background-size: 100% 100%; } }
+#nav .nav__menu { display: none; margin-left: auto; border-width: 0 0 0 1px; min-height: 0; }
+#nav .menu { position: fixed; inset: 0; z-index: 60; display: grid; grid-template-rows: auto 1fr auto; background: var(--color-2); color: var(--color-1); padding: 0 0 24px; overflow-y: auto; }
+#nav .menu[hidden] { display: none; }
+#nav .menu :focus-visible { outline-color: var(--color-3); }
+#nav .menu__top { display: flex; justify-content: space-between; height: 48px; border-bottom: 1px solid var(--color-7); }
+#nav .menu__close { border-width: 0 0 0 1px; min-height: 0; color: var(--color-1); }
+#nav .menu__links { display: grid; align-content: start; padding: 24px var(--space-1); }
+#nav .menu__links a { display: block; padding: 10px 0; border-bottom: 1px solid var(--color-7); color: var(--color-1); text-decoration: none; font-size: 40px; font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; }
+#nav .menu__cta { margin: 0 var(--space-1); }
+@media (max-width: 899px) {
+  #nav .nav__links, #nav .nav__cta { display: none; }
+  #nav .nav__menu { display: inline-grid; }
+}
+}
+</style>
+<style>
+@layer sections {
+#opening { position: relative; background: var(--color-1); }
+#opening .op-cover :focus-visible, #opening .op-second :focus-visible { outline-color: var(--color-3); }
+#opening .op-stage { --cw: min(52vw, 680px); --ch: min(calc(100svh - 150px), 640px); --cy: calc(48px + (100svh - 48px - var(--ch)) / 2); position: sticky; top: 0; height: 100svh; overflow: hidden; }
+#opening .op-tiles { position: absolute; inset: 0; z-index: 0; }
+#opening .op-tile { position: absolute; left: var(--tx); top: var(--ty); width: var(--tw); height: var(--th); }
+#opening .op-tile__frame { position: absolute; inset: 0; }
+#opening .op-tile__frame .m-photo__img { position: absolute; inset: -14% 0 auto; height: 128%; }
+#opening .op-tile .m-badge { position: absolute; z-index: 4; white-space: nowrap; }
+#opening .op-tile:nth-child(1) { --tx: -2%; --ty: 9%; --tw: 25%; --th: 36%; --photo-tint: var(--color-4); }
+#opening .op-tile:nth-child(1) .m-badge { right: 0; bottom: 0; }
+#opening .op-tile:nth-child(2) { --tx: 4%; --ty: 58%; --tw: 17%; --th: 27%; --photo-tint: var(--color-5); }
+#opening .op-tile:nth-child(2) .m-badge { left: 0; bottom: 0; }
+#opening .op-tile:nth-child(3) { --tx: 15%; --ty: 76%; --tw: 15%; --th: 30%; --photo-tint: var(--color-3); }
+#opening .op-tile:nth-child(3) .m-badge { left: 0; top: 0; }
+#opening .op-tile:nth-child(4) { --tx: 59%; --ty: 7%; --tw: 21%; --th: 26%; --photo-tint: var(--color-3); }
+#opening .op-tile:nth-child(4) .m-badge { right: 0; top: 0; }
+#opening .op-tile:nth-child(5) { --tx: 80%; --ty: 14%; --tw: 14%; --th: 21%; --photo-tint: var(--color-4); }
+#opening .op-tile:nth-child(5) .m-badge { right: 0; bottom: 0; }
+#opening .op-tile:nth-child(6) { --tx: 86%; --ty: 40%; --tw: 18%; --th: 30%; --photo-tint: var(--color-5); }
+#opening .op-tile:nth-child(6) .m-badge { left: 0; bottom: 0; }
+#opening .op-tile:nth-child(7) { --tx: 70%; --ty: 62%; --tw: 17%; --th: 32%; --photo-tint: var(--color-4); }
+#opening .op-tile:nth-child(7) .m-badge { right: 0; top: 0; }
+#opening .op-tile:nth-child(8) { --tx: 45%; --ty: 94%; --tw: 15%; --th: 22%; --photo-tint: var(--color-3); }
+#opening .op-tile:nth-child(8) .m-badge { right: 0; bottom: auto; top: 0; }
+#opening .op-ground { --spread: 0; position: absolute; inset: 0; background: var(--color-2); clip-path: inset(calc(var(--cy) * (1 - var(--spread))) calc((100% - var(--cw)) / 2 * (1 - var(--spread))) calc((100% - var(--cy) - var(--ch)) * (1 - var(--spread))) calc((100% - var(--cw)) / 2 * (1 - var(--spread)))); }
+#opening .op-cover { position: absolute; top: var(--cy); left: calc((100% - var(--cw)) / 2); width: var(--cw); height: var(--ch); display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr auto; padding: 22px 22px 18px; background: var(--color-2); color: var(--color-1); }
+#opening .op-head { grid-column: 1 / -1; }
+#opening .op-title { font-size: clamp(46px, 8.4vw, 112px); max-width: 9ch; }
+#opening .op-lead { max-width: 25em; margin-top: 22px; font-size: clamp(17px, 1.55vw, 21px); line-height: 1.22; font-weight: 400; letter-spacing: -0.02em; }
+#opening .op-live { grid-row: 2; grid-column: 1; align-self: end; display: flex; align-items: center; gap: 10px; margin-bottom: 18px; color: var(--color-7); }
+#opening .op-live b { color: var(--color-1); font-weight: 600; font-variant-numeric: tabular-nums; }
+#opening .op-live__dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--color-3); }
+#opening .op-actions { grid-row: 3; align-self: end; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
+#opening .op-year { grid-row: 3; grid-column: 2; align-self: end; font-size: clamp(44px, 6vw, 88px); font-weight: 700; line-height: .8; letter-spacing: -0.06em; }
+#opening .op-second { position: relative; z-index: 2; min-height: 100svh; background: var(--color-2); color: var(--color-1); padding: 120px var(--space-1) 64px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; align-content: space-between; row-gap: 64px; }
+#opening .op-statement { grid-column: 1 / span 10; font-size: clamp(36px, 4.9vw, 70px); line-height: 1.02; letter-spacing: -0.05em; }
+#opening .op-statement .m-mark { padding: 0 .06em; }
+#opening .op-ledger { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 16px; }
+#opening .op-ledger li { display: grid; gap: 14px; align-content: start; }
+#opening .op-ledger .m-rule { color: var(--color-7); opacity: 1; }
+#opening .op-ledger p { max-width: 24em; color: var(--color-7); }
+#opening .op-ledger .m-text-5 { color: var(--color-1); }
+#opening .op-more { grid-column: 1 / -1; justify-self: start; }
+@media (prefers-reduced-motion: no-preference) {
+  #opening .op-live__dot { animation: op-ping 1.6s infinite; }
+  #opening .op-tile__frame { animation: op-open .7s cubic-bezier(.2, .7, .1, 1) backwards; animation-delay: calc(var(--i, 0) * 60ms); }
+  #opening .op-tile:nth-child(2) .op-tile__frame { --i: 2; } #opening .op-tile:nth-child(3) .op-tile__frame { --i: 4; }
+  #opening .op-tile:nth-child(4) .op-tile__frame { --i: 1; } #opening .op-tile:nth-child(5) .op-tile__frame { --i: 3; }
+  #opening .op-tile:nth-child(6) .op-tile__frame { --i: 5; } #opening .op-tile:nth-child(7) .op-tile__frame { --i: 6; }
+  #opening .op-tile:nth-child(8) .op-tile__frame { --i: 7; }
+  #opening .op-tile__frame .m-photo__img { animation: op-pan 5.2s ease-in-out infinite alternate; }
+  #opening .op-tile:nth-child(even) .op-tile__frame .m-photo__img { animation-duration: 4.4s; animation-direction: alternate-reverse; }
+  #opening .op-stage.is-idle .m-photo__img { animation-play-state: paused; }
+  #opening .op-head, #opening .op-actions, #opening .op-live { animation: op-rise .8s cubic-bezier(.2, .7, .1, 1) backwards; }
+  #opening .op-live { animation-delay: .08s; }
+  #opening .op-actions { animation-delay: .12s; }
+}
+@keyframes op-ping { 0% { box-shadow: 0 0 0 0 rgba(254, 113, 65, .75); } 100% { box-shadow: 0 0 0 11px rgba(254, 113, 65, 0); } }
+@keyframes op-open { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes op-pan { from { transform: translate3d(0, -9%, 0); } to { transform: translate3d(0, 9%, 0); } }
+@keyframes op-rise { from { transform: translate3d(0, 28px, 0); } to { transform: none; } }
+@media (max-width: 767px) {
+  #opening .op-stage { --cw: calc(100% - 2 * var(--space-1)); --ch: 66svh; --cy: 28svh; }
+  #opening .op-cover { padding: 16px 16px 14px; }
+  #opening .op-title { font-size: clamp(42px, 12.6vw, 58px); }
+  #opening .op-lead { margin-top: 14px; font-size: 16px; }
+  #opening .op-live { font-size: 13px; margin-bottom: 14px; }
+  #opening .op-actions { grid-column: 1 / -1; }
+  #opening .op-year { grid-row: 2; align-self: end; justify-self: end; font-size: 40px; margin-bottom: 14px; }
+  #opening .op-tile:nth-child(1) { --tx: -6%; --ty: 7.5%; --tw: 42%; --th: 17%; }
+  #opening .op-tile:nth-child(2) { --tx: 38%; --ty: 6.5%; --tw: 26%; --th: 12%; }
+  #opening .op-tile:nth-child(2) .m-badge { left: 0; bottom: 0; top: auto; }
+  #opening .op-tile:nth-child(3) { --tx: 66%; --ty: 9%; --tw: 40%; --th: 16%; }
+  #opening .op-tile:nth-child(4) { --tx: 34%; --ty: 18.5%; --tw: 30%; --th: 9%; }
+  #opening .op-tile:nth-child(5) { --tx: 6%; --ty: 95.5%; --tw: 34%; --th: 12%; }
+  #opening .op-tile:nth-child(5) .m-badge { left: 0; top: 0; right: auto; bottom: auto; }
+  #opening .op-tile:nth-child(6) { --tx: 56%; --ty: 94.5%; --tw: 38%; --th: 12%; }
+  #opening .op-tile:nth-child(6) .m-badge { right: 0; top: 0; left: auto; bottom: auto; }
+  #opening .op-tile:nth-child(7), #opening .op-tile:nth-child(8) { display: none; }
+  #opening .op-second { padding-top: 96px; grid-template-columns: 1fr; row-gap: 40px; }
+  #opening .op-statement { grid-column: 1; font-size: clamp(32px, 9vw, 40px); }
+  #opening .op-ledger { grid-template-columns: 1fr; row-gap: 24px; }
+  #opening .op-more { grid-column: 1; }
+}
+}
+</style>
+<style>
+@layer sections {
+#month { background: var(--color-4); padding: 104px 0 120px; }
+#month .mo-grid { row-gap: 48px; align-items: start; }
+#month .mo-intro { grid-column: 1 / span 5; display: grid; gap: 24px; }
+#month .mo-lead { max-width: 30em; }
+#month .mo-notes { grid-column: 1 / span 5; grid-row: 2; display: grid; }
+#month .mo-note { display: grid; grid-template-columns: 44px 1fr; column-gap: 18px; row-gap: 10px; align-content: start; min-height: 40svh; padding-top: 22px; border-top: 1px solid var(--color-2); }
+#month .mo-note:last-child { min-height: 0; padding-bottom: 8px; }
+#month .mo-note > :not(.mo-key) { grid-column: 2; }
+#month .mo-note p { max-width: 26em; }
+#month .mo-key { grid-row: 1 / span 2; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--color-2); font-size: 18px; font-weight: 600; transition: background-color .4s, color .4s; }
+#month .mo-key.is-on { background: var(--color-2); color: var(--color-1); }
+#month .mo-sheet { position: sticky; top: 64px; grid-column: 7 / span 6; grid-row: 1 / span 2; display: grid; gap: 12px; padding: 24px 26px 20px; background: var(--color-1); font-size: 15px; line-height: 1.3; box-shadow: 0 1px 0 var(--color-2), 18px 18px 0 -1px rgba(11,11,11,.08); }
+#month .mo-sheet__head { display: grid; gap: 6px; padding-bottom: 6px; }
+#month .mo-sheet__top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+#month .mo-auto { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 3px; background: var(--color-2); color: var(--color-1); font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; }
+#month .mo-auto::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--color-3); }
+#month .mo-client { font-size: clamp(22px, 2vw, 28px); font-weight: 500; letter-spacing: -0.035em; line-height: 1.05; }
+#month .mo-sheet .m-text-6 { color: var(--color-6); }
+#month .mo-part { position: relative; z-index: 1; display: grid; gap: 8px; padding-top: 10px; border-top: 1px solid var(--color-2); }
+#month .mo-rows { display: grid; }
+#month .mo-rows div { display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px dotted var(--color-6); }
+#month .mo-rows .is-total { font-weight: 600; border-bottom: 0; }
+#month .mo-rows dd { font-variant-numeric: tabular-nums; text-align: right; }
+#month .mo-cash { display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 22px; }
+#month .mo-big { font-size: clamp(30px, 2.8vw, 40px); font-weight: 500; letter-spacing: -0.05em; line-height: .9; }
+#month .mo-bars { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 4px; height: 76px; }
+#month .mo-bar { position: relative; display: grid; grid-template-rows: 1fr auto; gap: 3px; height: 100%; }
+#month .mo-bar__fill { align-self: end; height: calc(var(--v, .5) * 100%); background: var(--color-2); transform-origin: 50% 100%; }
+#month .mo-bar:last-child .mo-bar__fill { background: var(--color-3); }
+#month .mo-bar__label { font-size: 10px; font-weight: 600; text-align: center; line-height: 1; }
+#month .mo-pot { font-weight: 600; }
+#month .mo-band { position: absolute; z-index: 0; top: 0; left: 12px; right: 12px; height: 100px; background: var(--color-5); transform-origin: 50% 0; pointer-events: none; }
+@media (max-width: 899px) {
+  #month { padding: 88px 0 96px; }
+  #month .mo-intro, #month .mo-notes, #month .mo-sheet { grid-column: 1 / -1; grid-row: auto; }
+  #month .mo-sheet { position: relative; top: 0; padding: 18px 16px; }
+  #month .mo-note { min-height: 0; padding-bottom: 28px; }
+}
+}
+</style>
+<style>
+@layer sections {
+#services { background: var(--color-1); padding-top: 112px; }
+#services .sv-head { row-gap: 22px; padding-bottom: 56px; }
+#services .sv-head .m-rule { grid-column: 1 / -1; }
+#services .sv-head h2 { grid-column: 1 / span 7; }
+#services .sv-head p { grid-column: 9 / span 4; align-self: end; }
+#services .sv-slab { background: var(--slab-color, var(--color-3)); color: var(--color-2); }
+#services .sv-slab__in { min-height: 100svh; padding-top: 16px; padding-bottom: 28px; row-gap: 28px; align-content: start; }
+#services .sv-slab .m-rule { grid-column: 1 / -1; }
+#services .sv-name { grid-column: 1 / span 6; font-size: clamp(54px, 8.4vw, 124px); }
+#services .sv-copy { grid-column: 7 / span 5; display: grid; gap: 16px; align-content: start; padding-top: 6px; }
+#services .sv-copy .m-text { max-width: 30em; }
+#services .sv-photo { grid-column: 1 / span 5; align-self: end; aspect-ratio: 4 / 3; }
+#services .sv-dots { --dot-cell: 6px; --dot-r: 1.2px; position: absolute; inset: 0; z-index: 1; background-image: radial-gradient(circle at 50% 50%, var(--slab-color, var(--color-3)) var(--dot-r), transparent calc(var(--dot-r) + .7px)); background-size: var(--dot-cell) var(--dot-cell); background-position: 50% 50%; pointer-events: none; }
+#services .sv-list { grid-column: 7 / span 6; align-self: end; display: grid; gap: 12px; }
+#services .sv-list ul { border-top: 1px solid var(--color-2); }
+#services .sv-list li { padding: 10px 0; border-bottom: 1px solid var(--color-2); }
+#services .sv-list .m-btn { margin-top: 8px; }
+@media (min-width: 900px) and (min-height: 680px) { #services .sv-slab { position: sticky; top: 0; } }
+@media (max-width: 899px) {
+  #services { padding-top: 88px; }
+  #services .sv-head h2, #services .sv-head p { grid-column: 1 / -1; }
+  #services .sv-slab__in { min-height: 0; padding-bottom: 40px; row-gap: 22px; }
+  #services .sv-name, #services .sv-copy, #services .sv-photo, #services .sv-list { grid-column: 1 / -1; }
+  #services .sv-name { font-size: clamp(46px, 14vw, 72px); }
+}
+}
+</style>
+<style>
+@layer sections {
+#all { padding: 120px 0 128px; }
+#all .al-head { row-gap: 22px; padding-bottom: 48px; }
+#all .al-head .m-rule { grid-column: 1 / -1; }
+#all .al-head h2 { grid-column: 1 / span 7; }
+#all .al-head p { grid-column: 9 / span 4; align-self: end; }
+#all .al-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--color-2); border-left: 1px solid var(--color-2); }
+#all .al-cell { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-rows: auto auto 1fr auto; gap: 8px; min-height: 252px; padding: 20px 20px 22px; border-right: 1px solid var(--color-2); border-bottom: 1px solid var(--color-2); }
+#all .al-cell::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--cell, var(--color-4)); clip-path: inset(100% 0 0 0); transition: clip-path .55s cubic-bezier(.7, 0, .2, 1); }
+#all .al-cell:nth-child(3n + 1) { --cell: var(--color-3); }
+#all .al-cell:nth-child(3n + 2) { --cell: var(--color-4); }
+#all .al-cell:nth-child(3n) { --cell: var(--color-5); }
+#all .al-icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 18px; background: var(--color-2); color: var(--color-1); transition: transform .55s cubic-bezier(.7, 0, .2, 1); }
+#all .al-icon svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+#all .al-cell h3 { font-size: clamp(20px, 1.7vw, 24px); }
+#all .al-cell p { max-width: 22em; color: var(--color-6); transition: color .3s; }
+#all .al-tag { justify-self: start; align-self: end; margin-top: 14px; padding: 5px 7px 4px; border: 1px solid var(--color-2); font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; line-height: 1.1; }
+@media (hover: hover) {
+  #all .al-cell:hover::before { clip-path: inset(0 0 0 0); }
+  #all .al-cell:hover p { color: var(--color-2); }
+  #all .al-cell:hover .al-icon { transform: rotate(-8deg) scale(1.06); }
+}
+@media (max-width: 899px) {
+  #all { padding: 96px 0; }
+  #all .al-head h2, #all .al-head p { grid-column: 1 / -1; }
+  #all .al-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #all .al-cell { min-height: 0; padding: 16px 14px 18px; }
+  #all .al-icon { margin-bottom: 10px; }
+}
+@media (max-width: 520px) { #all .al-grid { grid-template-columns: 1fr; } }
+}
+</style>
+<style>
+@layer sections {
+#ask { background: var(--color-3); padding: 120px 0; overflow: clip; }
+#ask .ak { row-gap: 48px; align-items: center; }
+#ask .ak-copy { grid-column: 1 / span 5; display: grid; gap: 24px; }
+#ask .ak-prompts { display: flex; flex-wrap: wrap; gap: 8px; }
+#ask .ak-prompts li { padding: 10px 14px; border: 1px solid var(--color-2); font-size: 15px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.2; }
+#ask .ak-chat { grid-column: 7 / span 6; display: grid; grid-template-rows: auto 1fr auto; min-height: 600px; background: var(--color-2); color: var(--color-1); box-shadow: 18px 18px 0 -1px rgba(11,11,11,.22); }
+#ask .ak-top { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #2c2c2c; }
+#ask .ak-avatar { display: grid; place-items: center; width: 36px; height: 36px; background: var(--color-3); color: var(--color-2); font-size: 20px; font-weight: 700; letter-spacing: -0.05em; }
+#ask .ak-top div { display: grid; gap: 2px; }
+#ask .ak-top strong { font-size: 16px; font-weight: 600; }
+#ask .ak-top div span { display: flex; align-items: center; gap: 6px; color: var(--color-7); font-size: 13px; }
+#ask .ak-top div span::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #6fdc8c; }
+#ask .ak-log { display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; padding: 20px 18px; }
+#ask .ak-msg { max-width: 86%; padding: 12px 14px; font-size: 16px; line-height: 1.4; letter-spacing: -0.012em; }
+#ask .ak-msg.is-you { align-self: flex-end; background: var(--color-1); color: var(--color-2); }
+#ask .ak-msg.is-ai { align-self: flex-start; background: #1b1b1b; border: 1px solid #2c2c2c; }
+#ask .ak-msg.is-ai b { color: var(--color-3); font-weight: 600; }
+#ask .ak-card { display: grid; gap: 6px; margin: 12px 0 10px; padding: 12px 12px 10px; background: var(--color-1); color: var(--color-2); }
+#ask .ak-card svg { width: 100%; height: auto; }
+#ask .ak-card p { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--color-6); }
+#ask .ak-card p b { color: var(--color-2); }
+#ask .ak-typing { display: none; align-self: flex-start; gap: 5px; padding: 15px 16px; background: #1b1b1b; border: 1px solid #2c2c2c; }
+#ask .ak-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--color-7); animation: ak-dot 1s infinite ease-in-out; }
+#ask .ak-typing span:nth-child(2) { animation-delay: .15s; } #ask .ak-typing span:nth-child(3) { animation-delay: .3s; }
+#ask .ak-log.is-playing .ak-msg.is-pending { display: none; }
+#ask .ak-typing.is-on { display: flex; }
+#ask .ak-msg.is-in { animation: ak-in .5s cubic-bezier(.2, .7, .1, 1); }
+#ask .ak-input { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 54px; margin: 0 18px 18px; padding: 0 6px 0 16px; border: 1px solid #3a3a3a; color: var(--color-7); font-size: 15px; }
+#ask .ak-send { display: grid; place-items: center; width: 42px; height: 42px; background: var(--color-3); color: var(--color-2); font-size: 20px; font-weight: 600; }
+@keyframes ak-dot { 0%, 80%, 100% { transform: translateY(0); opacity: .5; } 40% { transform: translateY(-5px); opacity: 1; } }
+@keyframes ak-in { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (max-width: 899px) {
+  #ask { padding: 96px 0; }
+  #ask .ak-copy, #ask .ak-chat { grid-column: 1 / -1; }
+  #ask .ak-chat { min-height: 560px; margin-inline: calc(-1 * var(--space-1)); box-shadow: none; }
+  #ask .ak-msg { max-width: 92%; font-size: 15px; }
+}
+}
+</style>
+<style>
+@layer sections {
+#switch { padding: 128px 0; }
+#switch .sw { row-gap: 40px; align-items: center; }
+#switch .sw-photo { --photo-tint: var(--color-3); grid-column: 1 / span 6; margin-left: calc(-1 * var(--space-1)); aspect-ratio: 1 / 1; }
+#switch .sw-copy { grid-column: 8 / span 5; display: grid; gap: 24px; }
+#switch .sw-steps { display: grid; }
+#switch .sw-steps li { display: grid; grid-template-columns: 52px 1fr; column-gap: 16px; row-gap: 8px; padding-bottom: 20px; }
+#switch .sw-steps .m-rule { grid-column: 1 / -1; margin-bottom: 14px; }
+#switch .sw-num { font-size: 34px; font-weight: 500; letter-spacing: -0.05em; line-height: .9; }
+#switch .sw-steps h3 { margin-bottom: 6px; }
+#switch .sw-copy > .m-link { justify-self: start; }
+@media (max-width: 899px) {
+  #switch { padding: 96px 0; }
+  #switch .sw-photo { grid-column: 1 / -1; margin-right: calc(-1 * var(--space-1)); aspect-ratio: 4 / 3; }
+  #switch .sw-copy { grid-column: 1 / -1; }
+}
+}
+</style>
+<style>
+@layer sections {
+#year { background: var(--color-2); color: var(--color-1); }
+#year :focus-visible { outline-color: var(--color-3); }
+#year .yr-pin { display: grid; align-content: center; row-gap: 40px; min-height: 100svh; padding: 88px 0 56px; }
+#year .yr-head { row-gap: 18px; }
+#year .yr-head .m-rule { grid-column: 1 / -1; }
+#year .yr-head h2 { grid-column: 1 / span 6; }
+#year .yr-intro { grid-column: 8 / span 5; color: var(--color-7); max-width: 30em; }
+#year .yr-key { grid-column: 8 / span 5; display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; }
+#year .yr-key li { display: flex; align-items: center; gap: 8px; }
+#year .yr-swatch { width: 14px; height: 14px; background: var(--chip); }
+#year .yr-view { position: relative; overflow-x: auto; overflow-y: hidden; }
+#year .yr-track { display: flex; width: max-content; padding: 0 52vw 6px var(--space-1); }
+#year .yr-month { display: grid; align-content: start; gap: 12px; width: 268px; margin-right: 16px; padding-top: 14px; border-top: 1px solid var(--color-7); }
+#year .yr-name { font-size: 44px; font-weight: 500; letter-spacing: -0.05em; line-height: 1; }
+#year .yr-name span { margin-left: 8px; font-size: 14px; letter-spacing: 0; color: var(--color-7); font-weight: 500; }
+#year .yr-chips { display: grid; gap: 8px; }
+#year .yr-chip { position: relative; display: grid; gap: 3px; padding: 10px 12px 11px; background: var(--color-1); color: var(--color-2); }
+#year .yr-chip__fill { position: absolute; inset: 0; background: var(--chip); transform-origin: 0 50%; }
+#year .yr-date, #year .yr-what { position: relative; }
+#year .yr-date { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
+#year .yr-what { font-size: 15px; line-height: 1.25; }
+#year .yr-line { position: absolute; z-index: 2; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px; background: var(--color-3); pointer-events: none; }
+@media (max-width: 899px) {
+  #year .yr-pin { row-gap: 28px; padding: 72px 0 40px; }
+  #year .yr-head h2, #year .yr-intro, #year .yr-key { grid-column: 1 / -1; }
+  #year .yr-head h2 { font-size: clamp(30px, 8.6vw, 40px); }
+  #year .yr-intro { font-size: 15px; }
+  #year .yr-month { width: 76vw; }
+  #year .yr-name { font-size: 36px; }
+}
+}
+@layer scenes {
+@media (prefers-reduced-motion: no-preference) {
+  #year.is-tracked .yr-view { overflow: hidden; }
+}
+}
+</style>
+<style>
+@layer sections {
+#cases { padding: 128px 0 0; }
+#cases .cs-head { display: grid; gap: 22px; padding-bottom: 56px; }
+#cases .cs-case { display: grid; grid-template-columns: 5fr 7fr; min-height: min(78svh, 620px); }
+#cases .cs-case:nth-child(even) { grid-template-columns: 7fr 5fr; }
+#cases .cs-case:nth-child(even) .cs-portrait { order: 2; }
+#cases .cs-portrait { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr auto; gap: 20px; padding: 20px; background: var(--color-2); color: var(--color-1); }
+#cases .cs-glyph { font-size: 96px; font-weight: 700; line-height: .7; letter-spacing: -0.08em; color: var(--color-3); }
+#cases .cs-photo { grid-column: 2; grid-row: 1 / span 2; width: clamp(150px, 17vw, 240px); aspect-ratio: 4 / 5; }
+#cases .cs-who { grid-column: 1 / -1; grid-row: 3; display: grid; gap: 4px; }
+#cases .cs-who strong { font-size: 22px; font-weight: 500; letter-spacing: -0.03em; }
+#cases .cs-who span { color: var(--color-7); }
+#cases .cs-quote { display: grid; align-content: space-between; gap: 40px; padding: 20px 24px 24px; background: var(--case-color, var(--color-5)); }
+#cases .cs-text { max-width: 17em; font-size: clamp(26px, 3.1vw, 44px); line-height: 1.06; letter-spacing: -0.045em; }
+#cases .cs-fact { display: grid; gap: 6px; max-width: 28em; }
+#cases .cs-fact .m-rule { margin-bottom: 8px; }
+@media (max-width: 899px) {
+  #cases { padding-top: 96px; }
+  #cases .cs-case, #cases .cs-case:nth-child(even) { grid-template-columns: 1fr; min-height: 0; }
+  #cases .cs-case:nth-child(even) .cs-portrait { order: 0; }
+  #cases .cs-portrait { min-height: 300px; }
+  #cases .cs-glyph { font-size: 72px; }
+  #cases .cs-photo { width: 150px; }
+  #cases .cs-quote { padding: 18px 16px 22px; }
+}
+}
+</style>
+<style>
+@layer sections {
+#people { padding: 128px 0 120px; overflow: clip; }
+#people .pp-head { row-gap: 22px; padding-bottom: 56px; }
+#people .pp-head .m-rule { grid-column: 1 / -1; }
+#people .pp-head h2 { grid-column: 1 / span 7; }
+#people .pp-head p { grid-column: 9 / span 4; align-self: end; }
+#people .pp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 16px; }
+#people .pp-person { display: grid; gap: 8px; align-content: start; background: var(--color-1); }
+#people .pp-photo { position: relative; aspect-ratio: 4 / 5; margin-bottom: 6px; }
+#people .pp-photo .m-badge { position: absolute; z-index: 4; left: 0; bottom: 0; }
+#people .pp-person:nth-child(4n + 1) .pp-photo { --photo-tint: var(--color-3); }
+#people .pp-person:nth-child(4n + 2) .pp-photo { --photo-tint: var(--color-5); }
+#people .pp-person:nth-child(4n + 3) .pp-photo { --photo-tint: var(--color-4); }
+#people .pp-person:nth-child(4n + 4) .pp-photo { --photo-tint: var(--color-3); }
+#people .pp-role { color: var(--color-6); max-width: 22em; }
+@media (max-width: 899px) {
+  #people { padding: 96px 0; }
+  #people .pp-head h2, #people .pp-head p { grid-column: 1 / -1; }
+  #people .pp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 12px; }
+}
+}
+</style>
+<style>
+@layer sections {
+#faq { padding: 120px 0; background: var(--color-5); }
+#faq .fq { row-gap: 40px; align-items: start; }
+#faq .fq-head { grid-column: 1 / span 5; display: grid; gap: 22px; }
+#faq .fq-head p { max-width: 26em; color: var(--color-6); }
+#faq .fq-list { grid-column: 7 / span 6; border-top: 1px solid var(--color-2); }
+#faq .fq-item { border-bottom: 1px solid var(--color-2); }
+#faq .fq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 0; cursor: pointer; list-style: none; }
+#faq .fq-item summary::-webkit-details-marker { display: none; }
+#faq .fq-item summary:focus-visible { outline-offset: 4px; }
+#faq .fq-icon { flex: none; min-width: 44px; min-height: 44px; padding: 0; font-size: 24px; font-weight: 400; }
+#faq .fq-icon span { display: block; transition: transform .35s cubic-bezier(.7, 0, .2, 1); }
+#faq .fq-item[open] .fq-icon span { transform: rotate(45deg); }
+@media (hover: hover) {
+  #faq .fq-item summary:hover .fq-icon { color: var(--color-2); }
+  #faq .fq-item summary:hover .fq-icon::before { clip-path: inset(0 0 0 0); }
+}
+#faq .fq-a { max-width: 34em; padding: 0 64px 24px 0; }
+@media (prefers-reduced-motion: no-preference) {
+  #faq .fq-item[open] .fq-a { animation: fq-in .5s cubic-bezier(.2, .7, .1, 1); }
+}
+@keyframes fq-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@media (max-width: 899px) {
+  #faq { padding: 96px 0; }
+  #faq .fq-head, #faq .fq-list { grid-column: 1 / -1; }
+  #faq .fq-a { padding-right: 0; }
+}
+}
+</style>
+<style>
+@layer sections {
+#fees { padding: 128px 0 120px; }
+#fees .fe-head { row-gap: 22px; padding-bottom: 48px; }
+#fees .fe-head .m-rule { grid-column: 1 / -1; }
+#fees .fe-head h2 { grid-column: 1 / span 7; }
+#fees .fe-head p { grid-column: 9 / span 4; align-self: end; }
+#fees .fe-plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+#fees .fe-plan { display: grid; grid-template-rows: auto 1fr auto; }
+#fees .fe-stage { --room: 86px; position: relative; height: min(52svh, 420px); border-bottom: 2px solid var(--color-2); }
+#fees .fe-fill { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--h, .6) * (100% - var(--room))); background: var(--plan-color, var(--color-5)); }
+#fees .fe-top { position: absolute; left: 0; right: 0; bottom: calc(var(--h, .6) * (100% - var(--room))); display: flex; align-items: end; justify-content: space-between; gap: 12px; padding-bottom: 12px; }
+#fees .fe-price { font-size: clamp(44px, 4.6vw, 66px); font-weight: 500; line-height: .85; letter-spacing: -0.055em; white-space: nowrap; }
+#fees .fe-price small { margin-left: 4px; font-size: 15px; letter-spacing: -0.01em; }
+#fees .fe-list { padding: 18px 0 24px; }
+#fees .fe-list li { padding: 9px 0; border-bottom: 1px solid color-mix(in srgb, var(--color-2) 30%, transparent); }
+@media (max-width: 899px) {
+  #fees { padding: 96px 0; }
+  #fees .fe-head h2, #fees .fe-head p { grid-column: 1 / -1; }
+  #fees .fe-plans { grid-template-columns: 1fr; row-gap: 48px; }
+  #fees .fe-stage { height: 220px; }
+}
+}
+</style>
+<style>
+@layer sections {
+#contact { padding: 128px 0; }
+#contact .ct { row-gap: 48px; align-items: start; }
+#contact .ct-copy { grid-column: 1 / span 5; display: grid; gap: 26px; }
+#contact .ct-title { font-size: clamp(46px, 5.8vw, 86px); }
+#contact .ct-details { display: grid; border-top: 1px solid var(--color-2); }
+#contact .ct-details div { display: grid; grid-template-columns: 7em 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--color-2); }
+#contact .ct-details dt { padding-top: 3px; }
+#contact .ct-form { grid-column: 7 / span 6; display: grid; gap: 18px; padding: 28px; background: var(--color-2); color: var(--color-1); }
+#contact .ct-form :focus-visible { outline-color: var(--color-3); }
+#contact .ct-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+#contact .ct-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; padding: 0; border: 0; }
+#contact .ct-choices legend { margin-bottom: 8px; padding: 0; }
+#contact .ct-choice { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; background: var(--choice-color, var(--color-5)); color: var(--color-2); cursor: pointer; font-weight: 500; }
+#contact .ct-choice input { width: 20px; height: 20px; margin: 0; accent-color: var(--color-2); }
+#contact .ct-choice input:focus-visible { outline: 2px solid var(--color-2); outline-offset: 2px; }
+#contact textarea.m-field__input { min-height: 120px; resize: vertical; }
+#contact .ct-form .m-btn-2 { min-height: 60px; }
+#contact .ct-note { color: var(--color-7); }
+#contact .ct-status { padding: 14px 16px; background: var(--color-4); color: var(--color-2); font-weight: 500; }
+@media (max-width: 899px) {
+  #contact { padding: 96px 0; }
+  #contact .ct-copy, #contact .ct-form { grid-column: 1 / -1; }
+  #contact .ct-form { padding: 20px 16px; margin-inline: calc(-1 * var(--space-1)); }
+  #contact .ct-pair { grid-template-columns: 1fr; }
+}
+@media (max-width: 420px) { #contact .ct-choices { grid-template-columns: 1fr; } }
+}
+</style>
+<style>
+@layer sections {
+#footer { position: relative; overflow: hidden; padding: 56px var(--space-1) 18px; background: var(--color-2); color: var(--color-1); }
+#footer :focus-visible { outline-color: var(--color-3); }
+#footer .ft-cols { row-gap: 32px; align-items: end; }
+#footer .ft-col { grid-column: span 2; display: grid; gap: 12px; align-content: start; align-self: start; }
+#footer .ft-col ul { display: grid; gap: 6px; justify-items: start; }
+#footer .ft-col .m-text-5 { color: var(--color-7); }
+#footer .ft-year { pointer-events: none; grid-column: 9 / span 4; justify-self: end; font-size: clamp(72px, 13vw, 200px); font-weight: 700; line-height: .78; letter-spacing: -0.065em; color: var(--color-3); }
+#footer .ft-mark { pointer-events: none; margin-top: 48px; font-size: calc(min(100vw - 2 * var(--space-1), 1800px) / (var(--len) * 0.5)); font-weight: 700; line-height: .8; letter-spacing: -0.065em; white-space: nowrap; }
+#footer .ft-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--color-7); color: var(--color-7); }
+@media (max-width: 899px) {
+  #footer { padding-top: 44px; }
+  #footer .ft-col { grid-column: span 2; }
+  #footer .ft-col:nth-child(2) { grid-column: 1 / -1; order: 1; }
+  #footer .ft-col:nth-child(3) { order: 0; }
+  #footer .ft-year { order: 2; }
+  #footer .ft-year { grid-column: 1 / -1; justify-self: start; font-size: 26vw; }
+  #footer .ft-mark { margin-top: 28px; }
+}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     ILLUSTRATION LIBRARY — every image on the page is drawn here.
+     Drawn in greys on a transparent ground (400×500 units), then
+     multiplied over each frame's flat tint for a duotone print look.
+     ============================================================ -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+<defs>
+  <pattern id="p-stripe" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="28" height="28" fill="#fff"/><rect width="14" height="28" fill="#0b0b0b"/></pattern>
+  <pattern id="p-plaid" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#6a6a6a"/><rect y="15" width="40" height="10" fill="#0b0b0b" opacity=".55"/><rect x="15" width="10" height="40" fill="#0b0b0b" opacity=".55"/><rect y="5" width="40" height="2" fill="#fff" opacity=".4"/><rect x="5" width="2" height="40" fill="#fff" opacity=".4"/></pattern>
+  <pattern id="p-teeth" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="5" height="10" fill="#0b0b0b"/></pattern>
+  <pattern id="p-dots" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="1.7" fill="#0b0b0b"/></pattern>
+
+  <!-- shared face (built for a head at 200,220) -->
+  <g id="face">
+    <g fill="none" stroke="#0b0b0b" stroke-width="3.5" stroke-linecap="round">
+      <path d="M163 205 Q176 197 189 204"/><path d="M211 204 Q224 197 237 205"/>
+      <path d="M200 230 L194 250 Q199 255 207 251"/>
+      <path d="M180 268 Q200 282 220 268"/>
+    </g>
+    <ellipse cx="176" cy="224" rx="5" ry="6.5" fill="#0b0b0b"/><ellipse cx="224" cy="224" rx="5" ry="6.5" fill="#0b0b0b"/>
+  </g>
+
+  <!-- scanning beam, sweeps top to bottom -->
+  <g id="scan">
+    <rect x="-20" y="-40" width="440" height="40" fill="#0b0b0b" opacity=".07"/>
+    <rect x="-20" y="0" width="440" height="4" fill="#0b0b0b"/>
+    <animateTransform attributeName="transform" type="translate" values="0 50;0 450;0 50" dur="5s" repeatCount="indefinite"/>
+  </g>
+
+  <!-- receipt -->
+  <g id="rc">
+    <path d="M0 0 H160 V250 l-10 10 l-10 -10 l-10 10 l-10 -10 l-10 10 l-10 -10 l-10 10 l-10 -10 l-10 10 l-10 -10 l-10 10 l-10 -10 l-10 10 l-10 -10 l-10 10 l-10 -10 Z" fill="#fff" stroke="#0b0b0b" stroke-width="3" stroke-linejoin="round"/>
+    <rect x="40" y="24" width="80" height="11" fill="#0b0b0b"/>
+    <g fill="#9a9a9a"><rect x="20" y="64" width="70" height="5"/><rect x="110" y="64" width="30" height="5"/><rect x="20" y="82" width="54" height="5"/><rect x="110" y="82" width="30" height="5"/><rect x="20" y="100" width="76" height="5"/><rect x="110" y="100" width="30" height="5"/><rect x="20" y="118" width="48" height="5"/><rect x="110" y="118" width="30" height="5"/><rect x="20" y="136" width="64" height="5"/><rect x="110" y="136" width="30" height="5"/><rect x="20" y="154" width="58" height="5"/><rect x="110" y="154" width="30" height="5"/><rect x="20" y="172" width="70" height="5"/><rect x="110" y="172" width="30" height="5"/></g>
+    <path d="M20 200 H140" stroke="#0b0b0b" stroke-width="2" stroke-dasharray="4 4"/>
+    <rect x="20" y="214" width="50" height="9" fill="#0b0b0b"/><rect x="100" y="214" width="40" height="9" fill="#0b0b0b"/>
+  </g>
+
+  <!-- paper sheet -->
+  <g id="sheet">
+    <rect width="110" height="150" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+    <g fill="#9a9a9a"><rect x="14" y="20" width="50" height="7" fill="#0b0b0b"/><rect x="14" y="42" width="82" height="4"/><rect x="14" y="56" width="70" height="4"/><rect x="14" y="70" width="80" height="4"/><rect x="14" y="84" width="60" height="4"/><rect x="14" y="98" width="76" height="4"/><rect x="14" y="112" width="44" height="4"/></g>
+  </g>
+
+  <!-- ===== Receipts read ===== -->
+  <g id="ill-receipts">
+    <circle cx="200" cy="250" r="180" fill="url(#p-dots)" opacity=".35"/>
+    <use href="#rc" transform="translate(30 170) rotate(-18)"/>
+    <use href="#rc" transform="translate(210 120) rotate(14)"/>
+    <use href="#rc" transform="translate(120 100) rotate(4)"/>
+    <use href="#rc" transform="translate(220 200) rotate(-8)"/>
+    <use href="#rc" transform="translate(70 220) rotate(9)"/>
+    <path d="M150 112 V82 a14 14 0 0 1 28 0 V128 a8 8 0 0 1 -16 0 V92" fill="none" stroke="#0b0b0b" stroke-width="5" stroke-linecap="round" transform="rotate(4 160 100)"/>
+    <g fill="#bdbdbd" stroke="#0b0b0b" stroke-width="3">
+      <ellipse cx="340" cy="390" rx="32" ry="11"/><ellipse cx="340" cy="378" rx="32" ry="11"/><ellipse cx="340" cy="366" rx="32" ry="11"/><ellipse cx="344" cy="354" rx="32" ry="11" fill="#fff"/>
+    </g>
+    <path d="M24 84 V40 H68 M332 40 H376 V84 M376 420 V464 H332 M68 464 H24 V420" fill="none" stroke="#0b0b0b" stroke-width="7" stroke-linecap="square"/>
+    <use href="#scan"/>
+  </g>
+
+  <!-- ===== Invoices sent ===== -->
+  <g id="ill-invoice">
+    <circle cx="200" cy="260" r="180" fill="url(#p-dots)" opacity=".35"/>
+    <g transform="rotate(-6 180 270)">
+      <rect x="64" y="120" width="230" height="310" fill="#fff" stroke="#0b0b0b" stroke-width="4"/>
+      <rect x="86" y="144" width="40" height="40" fill="#0b0b0b"/>
+      <text x="272" y="168" font-family="Google Sans, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="end" letter-spacing="2" fill="#0b0b0b">INVOICE</text>
+      <text x="272" y="186" font-family="Google Sans, Arial, sans-serif" font-size="12" text-anchor="end" fill="#5a5a5a">#2026-0412</text>
+      <g fill="#9a9a9a"><rect x="86" y="208" width="90" height="5"/><rect x="86" y="222" width="64" height="5"/></g>
+      <rect x="86" y="248" width="186" height="14" fill="#bdbdbd"/>
+      <g fill="#9a9a9a"><rect x="86" y="280" width="100" height="5"/><rect x="232" y="280" width="40" height="5"/><rect x="86" y="300" width="84" height="5"/><rect x="232" y="300" width="40" height="5"/><rect x="86" y="320" width="110" height="5"/><rect x="232" y="320" width="40" height="5"/></g>
+      <path d="M86 344 H272" stroke="#0b0b0b" stroke-width="2" stroke-dasharray="4 4"/>
+      <rect x="86" y="360" width="50" height="10" fill="#0b0b0b"/>
+      <text x="272" y="372" font-family="Google Sans, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="end" fill="#0b0b0b">$2,480</text>
+      <g transform="translate(150 404) rotate(-12)">
+        <g>
+          <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.35;.42;.92;1" dur="4s" repeatCount="indefinite"/>
+          <rect x="-46" y="-20" width="92" height="40" rx="4" fill="none" stroke="#0b0b0b" stroke-width="5"/>
+          <text x="0" y="9" font-family="Google Sans, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle" letter-spacing="3" fill="#0b0b0b">PAID</text>
+        </g>
+      </g>
+    </g>
+    <g transform="translate(310 120)">
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;10 -14;0 0" dur="3s" repeatCount="indefinite"/>
+        <path d="M-150 150 C-120 90 -110 110 -70 30" fill="none" stroke="#0b0b0b" stroke-width="3" stroke-dasharray="8 8"><animate attributeName="stroke-dashoffset" values="0;-32" dur="1s" repeatCount="indefinite"/></path>
+        <path d="M-60 12 L64 -40 L-12 26 Z" fill="#fff" stroke="#0b0b0b" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M-12 26 L64 -40 L4 56 Z" fill="#bdbdbd" stroke="#0b0b0b" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M-12 26 L4 56 L-20 38 Z" fill="#0b0b0b"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ===== Cash forecast ===== -->
+  <g id="ill-forecast">
+    <circle cx="200" cy="250" r="180" fill="url(#p-dots)" opacity=".35"/>
+    <rect x="36" y="96" width="328" height="300" rx="8" fill="#fff" stroke="#0b0b0b" stroke-width="4"/>
+    <text x="58" y="132" font-family="Google Sans, Arial, sans-serif" font-size="16" font-weight="700" fill="#0b0b0b">Cash · next 90 days</text>
+    <g stroke="#bdbdbd" stroke-width="2" stroke-dasharray="4 6"><path d="M58 170 H342 M58 226 H342 M58 282 H342 M58 338 H342"/></g>
+    <g fill="#d6d6d6" stroke="#0b0b0b" stroke-width="2"><rect x="76" y="306" width="26" height="54"/><rect x="116" y="282" width="26" height="78"/><rect x="156" y="292" width="26" height="68"/><rect x="196" y="258" width="26" height="102"/></g>
+    <path d="M360 360 H58" stroke="#0b0b0b" stroke-width="3"/>
+    <polygon points="209,238 249,206 289,164 332,124 332,196 289,218 249,236" fill="#0b0b0b" opacity=".12"/>
+    <polyline points="89,292 129,264 169,276 209,238" fill="none" stroke="#0b0b0b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M209 238 L249 222 L289 192 L332 160" fill="none" stroke="#0b0b0b" stroke-width="5" stroke-dasharray="10 9" stroke-linecap="round"><animate attributeName="stroke-dashoffset" values="0;-38" dur="1.4s" repeatCount="indefinite"/></path>
+    <g fill="#fff" stroke="#0b0b0b" stroke-width="3"><circle cx="89" cy="292" r="6"/><circle cx="129" cy="264" r="6"/><circle cx="169" cy="276" r="6"/><circle cx="209" cy="238" r="7"/></g>
+    <circle cx="332" cy="160" r="9" fill="#0b0b0b"/>
+    <circle cx="332" cy="160" r="9" fill="none" stroke="#0b0b0b" stroke-width="3"><animate attributeName="r" values="9;26" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.6s" repeatCount="indefinite"/></circle>
+    <g transform="translate(330 68)"><path d="M0 -24 L6 -6 L24 0 L6 6 L0 24 L-6 6 L-24 0 L-6 -6 Z" fill="#0b0b0b"><animateTransform attributeName="transform" type="scale" values="1;.6;1" dur="2.2s" repeatCount="indefinite"/></path></g>
+    <g transform="translate(286 52)"><path d="M0 -10 L3 -3 L10 0 L3 3 L0 10 L-3 3 L-10 0 L-3 -3 Z" fill="#0b0b0b"><animateTransform attributeName="transform" type="scale" values=".6;1;.6" dur="2.2s" repeatCount="indefinite"/></path></g>
+    <g font-family="Google Sans, Arial, sans-serif" font-size="12" font-weight="600" fill="#5a5a5a"><text x="89" y="380" text-anchor="middle">JUL</text><text x="169" y="380" text-anchor="middle">SEP</text><text x="249" y="380" text-anchor="middle">NOV</text><text x="332" y="380" text-anchor="middle">JAN</text></g>
+  </g>
+
+  <!-- ===== Taxes filed ===== -->
+  <g id="ill-filed">
+    <circle cx="200" cy="250" r="180" fill="url(#p-dots)" opacity=".35"/>
+    <use href="#sheet" transform="translate(40 70) rotate(-10)"/>
+    <g transform="rotate(4 200 250)">
+      <rect x="78" y="86" width="246" height="330" fill="#fff" stroke="#0b0b0b" stroke-width="4"/>
+      <rect x="78" y="86" width="246" height="46" fill="#0b0b0b"/>
+      <text x="96" y="116" font-family="Google Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#fff" letter-spacing="1">TAX RETURN · 2026</text>
+      <g fill="none" stroke="#0b0b0b" stroke-width="3">
+        <rect x="96" y="152" width="16" height="16"/><rect x="96" y="188" width="16" height="16"/><rect x="96" y="224" width="16" height="16"/><rect x="96" y="260" width="16" height="16"/>
+        <path d="M99 160 l4 4 l7 -9 M99 196 l4 4 l7 -9 M99 232 l4 4 l7 -9 M99 268 l4 4 l7 -9" stroke-linecap="round"/>
+      </g>
+      <g fill="#9a9a9a"><rect x="124" y="156" width="110" height="6"/><rect x="250" y="156" width="54" height="6"/><rect x="124" y="192" width="90" height="6"/><rect x="250" y="192" width="54" height="6"/><rect x="124" y="228" width="120" height="6"/><rect x="250" y="228" width="54" height="6"/><rect x="124" y="264" width="80" height="6"/><rect x="250" y="264" width="54" height="6"/></g>
+      <path d="M96 300 H306" stroke="#0b0b0b" stroke-width="2" stroke-dasharray="4 4"/>
+      <path d="M96 382 H220" stroke="#0b0b0b" stroke-width="2"/>
+      <path d="M104 372 c10 -22 18 8 28 -8 s14 14 26 -4 s12 10 22 0 s10 6 20 -2" fill="none" stroke="#0b0b0b" stroke-width="3" stroke-linecap="round"/>
+      <text x="96" y="400" font-family="Google Sans, Arial, sans-serif" font-size="11" font-weight="600" fill="#5a5a5a" letter-spacing="1">PREPARER · CPA</text>
+    </g>
+    <g transform="translate(212 236) rotate(-14)">
+      <g>
+        <animateTransform attributeName="transform" type="scale" values="1.7;1;1;1" keyTimes="0;.1;.92;1" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.92;1" dur="4s" repeatCount="indefinite"/>
+        <rect x="-102" y="-38" width="204" height="76" rx="6" fill="#fff" fill-opacity=".55" stroke="#0b0b0b" stroke-width="8"/>
+        <text x="0" y="17" font-family="Google Sans, Arial, sans-serif" font-size="50" font-weight="700" text-anchor="middle" letter-spacing="6" fill="#0b0b0b">FILED</text>
+      </g>
+    </g>
+    <circle cx="326" cy="420" r="32" fill="#0b0b0b"/>
+    <path d="M310 420 l11 11 l20 -22" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- ===== Always on (AI core) ===== -->
+  <g id="ill-chip">
+    <circle cx="200" cy="250" r="185" fill="url(#p-dots)" opacity=".35"/>
+    <g fill="none" stroke="#0b0b0b" stroke-width="3" stroke-linejoin="round">
+      <path id="t1" d="M160 176 V120 H90 V82"/><path id="t2" d="M200 176 V68"/><path id="t3" d="M240 176 V130 H320 V94"/>
+      <path id="t4" d="M274 230 H344"/><path id="t5" d="M274 270 H320 V336"/><path id="t6" d="M240 324 V396 H300 V424"/>
+      <path id="t7" d="M200 324 V440"/><path id="t8" d="M160 324 V380 H90 V414"/><path id="t9" d="M126 230 H58"/><path id="t10" d="M126 270 H80 V330"/>
+    </g>
+    <g fill="#fff" stroke="#0b0b0b" stroke-width="3">
+      <circle cx="90" cy="70" r="12"/><circle cx="320" cy="82" r="12"/><circle cx="320" cy="348" r="12"/><circle cx="300" cy="436" r="12"/><circle cx="90" cy="426" r="12"/><circle cx="80" cy="342" r="12"/>
+      <circle cx="200" cy="50" r="20"/><circle cx="362" cy="230" r="18"/><circle cx="200" cy="458" r="18"/><circle cx="40" cy="230" r="18"/>
+    </g>
+    <g font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#0b0b0b"><text x="200" y="57">$</text><text x="362" y="237">%</text><text x="200" y="465">✓</text><text x="40" y="237">∑</text></g>
+    <g fill="#0b0b0b">
+      <circle r="6"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#t1"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="1.8s" begin=".4s" repeatCount="indefinite"><mpath href="#t2"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="2.6s" begin=".9s" repeatCount="indefinite"><mpath href="#t3"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="1.6s" begin=".2s" repeatCount="indefinite"><mpath href="#t4"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="2.2s" begin="1.1s" repeatCount="indefinite"><mpath href="#t5"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="2.5s" begin=".6s" repeatCount="indefinite"><mpath href="#t6"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="1.9s" begin="1.3s" repeatCount="indefinite"><mpath href="#t7"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="2.4s" begin=".3s" repeatCount="indefinite"><mpath href="#t8"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="1.7s" begin=".8s" repeatCount="indefinite"><mpath href="#t9"/></animateMotion></circle>
+      <circle r="6"><animateMotion dur="2.1s" begin="1.5s" repeatCount="indefinite"><mpath href="#t10"/></animateMotion></circle>
+    </g>
+    <path d="M150 183 H250 M150 317 H250" stroke="#0b0b0b" stroke-width="14" stroke-dasharray="8 12"/>
+    <path d="M133 200 V300 M267 200 V300" stroke="#0b0b0b" stroke-width="14" stroke-dasharray="8 12"/>
+    <rect x="140" y="190" width="120" height="120" rx="10" fill="#0b0b0b"/>
+    <rect x="156" y="206" width="88" height="88" rx="4" fill="none" stroke="#7a7a7a" stroke-width="2"/>
+    <text x="200" y="266" font-family="Google Sans, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="#fff">AI</text>
+    <rect x="156" y="206" width="88" height="88" rx="4" fill="#fff" opacity="0"><animate attributeName="opacity" values="0;.18;0" dur="2s" repeatCount="indefinite"/></rect>
+  </g>
+
+  <!-- ===== Bills paid ===== -->
+  <g id="ill-billpay">
+    <circle cx="200" cy="250" r="180" fill="url(#p-dots)" opacity=".35"/>
+    <g transform="rotate(-8 190 210)">
+      <rect x="34" y="136" width="316" height="150" rx="8" fill="#fff" stroke="#0b0b0b" stroke-width="4"/>
+      <rect x="54" y="156" width="70" height="10" fill="#0b0b0b"/>
+      <text x="56" y="200" font-family="Google Sans, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#5a5a5a">PAY TO THE ORDER OF</text>
+      <path d="M54 220 H240" stroke="#0b0b0b" stroke-width="2"/>
+      <text x="58" y="214" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="500" fill="#0b0b0b">Northside Flour Co.</text>
+      <rect x="252" y="188" width="80" height="36" fill="none" stroke="#0b0b0b" stroke-width="3"/>
+      <text x="292" y="212" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#0b0b0b">$1,860</text>
+      <rect x="54" y="254" width="140" height="10" fill="url(#p-teeth)"/>
+      <path d="M232 260 c10 -18 16 6 26 -6 s12 12 22 -2 s10 8 20 0" fill="none" stroke="#0b0b0b" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <g fill="#bdbdbd" stroke="#0b0b0b" stroke-width="3">
+      <ellipse cx="96" cy="430" rx="40" ry="13"/><ellipse cx="96" cy="416" rx="40" ry="13"/><ellipse cx="96" cy="402" rx="40" ry="13"/><ellipse cx="96" cy="388" rx="40" ry="13"/><ellipse cx="100" cy="374" rx="40" ry="13" fill="#fff"/>
+    </g>
+    <rect x="220" y="300" width="140" height="150" rx="8" fill="#fff" stroke="#0b0b0b" stroke-width="4"/>
+    <path d="M220 308 a8 8 0 0 1 8 -8 h124 a8 8 0 0 1 8 8 v26 h-140 Z" fill="#0b0b0b"/>
+    <text x="290" y="324" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle" letter-spacing="2" fill="#fff">OCT</text>
+    <text x="290" y="408" font-family="Google Sans, Arial, sans-serif" font-size="62" font-weight="700" text-anchor="middle" letter-spacing="-3" fill="#0b0b0b">14</text>
+    <path d="M250 300 v-14 M330 300 v-14" stroke="#0b0b0b" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="352" cy="440" r="28" fill="#0b0b0b"/>
+    <path d="M338 440 l10 10 l18 -20" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="44" stroke-dashoffset="44"><animate attributeName="stroke-dashoffset" values="44;0;0" keyTimes="0;.25;1" dur="2.6s" repeatCount="indefinite"/></path>
+  </g>
+
+  <!-- ===== CPA reviewed ===== -->
+  <g id="ill-shield">
+    <circle cx="200" cy="250" r="185" fill="url(#p-dots)" opacity=".35"/>
+    <use href="#sheet" transform="translate(28 150) rotate(-14)"/>
+    <use href="#sheet" transform="translate(266 120) rotate(12)"/>
+    <path d="M200 84 L316 128 V250 C316 334 264 384 200 414 C136 384 84 334 84 250 V128 Z" fill="#fff" stroke="#0b0b0b" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M200 110 L292 146 V250 C292 320 250 360 200 386 C150 360 108 320 108 250 V146 Z" fill="#0b0b0b"/>
+    <path d="M150 248 L188 286 L256 206" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="170" stroke-dashoffset="170"><animate attributeName="stroke-dashoffset" values="170;0;0" keyTimes="0;.3;1" dur="3.2s" repeatCount="indefinite"/></path>
+    <text x="200" y="346" font-family="Google Sans, Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" letter-spacing="4" fill="#fff">CPA</text>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;-16 -10;0 0" dur="4s" repeatCount="indefinite"/>
+      <line x1="346" y1="414" x2="384" y2="462" stroke="#0b0b0b" stroke-width="16" stroke-linecap="round"/>
+      <circle cx="316" cy="384" r="44" fill="#fff" fill-opacity=".55" stroke="#0b0b0b" stroke-width="8"/>
+      <path d="M290 370 a30 30 0 0 1 22 -16" fill="none" stroke="#0b0b0b" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- ===== Books closed ===== -->
+  <g id="ill-calculator">
+    <circle cx="220" cy="250" r="180" fill="url(#p-dots)" opacity=".35"/>
+    <g transform="rotate(8 140 265)">
+      <rect x="30" y="120" width="220" height="290" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+      <g fill="#9a9a9a"><rect x="50" y="146" width="90" height="10" fill="#0b0b0b"/><rect x="50" y="180" width="170" height="5"/><rect x="50" y="198" width="140" height="5"/><rect x="50" y="216" width="160" height="5"/><rect x="50" y="234" width="120" height="5"/><rect x="50" y="270" width="170" height="5"/><rect x="50" y="288" width="150" height="5"/></g>
+    </g>
+    <g transform="rotate(-8 240 250)">
+      <rect x="150" y="105" width="180" height="290" rx="22" fill="#0b0b0b"/>
+      <rect x="168" y="125" width="144" height="58" rx="6" fill="#e6e6e6"/>
+      <text x="292" y="167" font-family="Google Sans, Arial, sans-serif" font-size="28" font-weight="600" text-anchor="end" fill="#0b0b0b" letter-spacing="-1">$4,170</text>
+      <rect x="295" y="144" width="3" height="26" fill="#0b0b0b"><animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite" calcMode="discrete"/></rect>
+      <g fill="#7a7a7a">
+        <rect x="168" y="200" width="30" height="30" rx="8"/><rect x="206" y="200" width="30" height="30" rx="8"/><rect x="244" y="200" width="30" height="30" rx="8"/>
+        <rect x="168" y="244" width="30" height="30" rx="8"/><rect x="206" y="244" width="30" height="30" rx="8"/><rect x="244" y="244" width="30" height="30" rx="8"/>
+        <rect x="168" y="288" width="30" height="30" rx="8"/><rect x="206" y="288" width="30" height="30" rx="8"/><rect x="244" y="288" width="30" height="30" rx="8"/>
+        <rect x="168" y="332" width="68" height="30" rx="8"/><rect x="244" y="332" width="30" height="30" rx="8"/>
+      </g>
+      <g fill="#fff"><rect x="282" y="200" width="30" height="30" rx="8"/><rect x="282" y="244" width="30" height="30" rx="8"/><rect x="282" y="288" width="30" height="74" rx="8"/></g>
+      <g font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" fill="#0b0b0b"><text x="297" y="222">÷</text><text x="297" y="266">×</text><text x="297" y="332">=</text></g>
+    </g>
+    <g transform="rotate(30 100 410)">
+      <rect x="30" y="402" width="160" height="16" rx="8" fill="#0b0b0b"/><path d="M190 402 L214 410 L190 418 Z" fill="#9a9a9a" stroke="#0b0b0b" stroke-width="2"/><rect x="40" y="402" width="20" height="16" fill="#fff"/>
+    </g>
+  </g>
+
+  <!-- ===== Banks synced ===== -->
+  <g id="ill-bank">
+    <circle cx="200" cy="250" r="185" fill="url(#p-dots)" opacity=".35"/>
+    <polygon points="200,84 344,158 56,158" fill="#fff" stroke="#0b0b0b" stroke-width="5" stroke-linejoin="round"/>
+    <circle cx="200" cy="132" r="16" fill="#0b0b0b"/>
+    <text x="200" y="140" font-family="Google Sans, Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" fill="#fff">$</text>
+    <rect x="56" y="158" width="288" height="18" fill="#0b0b0b"/>
+    <g fill="#fff" stroke="#0b0b0b" stroke-width="3"><rect x="76" y="184" width="34" height="122"/><rect x="132" y="184" width="34" height="122"/><rect x="188" y="184" width="34" height="122"/><rect x="244" y="184" width="34" height="122"/><rect x="300" y="184" width="34" height="122" transform="translate(-10 0)"/></g>
+    <g stroke="#9a9a9a" stroke-width="3"><path d="M88 194 V296 M98 194 V296 M144 194 V296 M154 194 V296 M200 194 V296 M210 194 V296 M256 194 V296 M266 194 V296 M302 194 V296 M312 194 V296"/></g>
+    <rect x="46" y="306" width="308" height="16" fill="#0b0b0b"/>
+    <rect x="36" y="322" width="328" height="16" fill="#7a7a7a" stroke="#0b0b0b" stroke-width="3"/>
+    <g fill="none" stroke="#0b0b0b" stroke-width="3" stroke-dasharray="6 8">
+      <path d="M120 338 C120 380 80 380 80 418"><animate attributeName="stroke-dashoffset" values="0;28" dur="1s" repeatCount="indefinite"/></path>
+      <path d="M200 338 V412"><animate attributeName="stroke-dashoffset" values="0;28" dur="1s" repeatCount="indefinite"/></path>
+      <path d="M280 338 C280 380 320 380 320 418"><animate attributeName="stroke-dashoffset" values="0;28" dur="1s" repeatCount="indefinite"/></path>
+    </g>
+    <rect x="34" y="420" width="92" height="58" rx="7" fill="#9a9a9a" stroke="#0b0b0b" stroke-width="3"/>
+    <rect x="34" y="434" width="92" height="10" fill="#0b0b0b"/><rect x="46" y="456" width="30" height="8" fill="#fff"/>
+    <rect x="180" y="412" width="40" height="72" rx="8" fill="#0b0b0b"/><rect x="186" y="422" width="28" height="48" rx="2" fill="#fff"/>
+    <rect x="276" y="420" width="88" height="58" rx="5" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+    <g fill="#9a9a9a"><rect x="288" y="434" width="50" height="5"/><rect x="288" y="446" width="64" height="5"/><rect x="288" y="458" width="40" height="5"/></g>
+    <g transform="translate(346 72)">
+      <circle r="30" fill="#fff" stroke="#0b0b0b" stroke-width="4"/>
+      <g fill="none" stroke="#0b0b0b" stroke-width="5" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite"/>
+        <path d="M-16 -6 A17 17 0 0 1 14 -10"/><path d="M16 6 A17 17 0 0 1 -14 10"/>
+        <path d="M14 -10 L16 -20 M14 -10 L4 -12" /><path d="M-14 10 L-16 20 M-14 10 L-4 12"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ===== Payroll team ===== -->
+  <g id="ill-team">
+    <circle cx="200" cy="250" r="180" fill="url(#p-dots)" opacity=".35"/>
+    <path d="M30 104 H370" stroke="#0b0b0b" stroke-width="5" stroke-linecap="round"/>
+    <g stroke="#0b0b0b" stroke-width="3"><path d="M80 104 V118 M170 104 V114 M310 104 V120"/></g>
+    <g fill="#0b0b0b"><circle cx="80" cy="140" r="22"/><circle cx="170" cy="132" r="18"/><circle cx="310" cy="146" r="26"/></g>
+    <g fill="#fff"><circle cx="80" cy="140" r="12"/><circle cx="170" cy="132" r="9"/><circle cx="310" cy="146" r="14"/></g>
+    <path d="M40 420 C44 300 74 252 110 252 C146 252 176 300 180 420 Z" fill="#0b0b0b"/>
+    <path d="M84 280 H136 L146 420 H74 Z" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+    <circle cx="110" cy="208" r="38" fill="#bfbfbf" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M72 206 C70 170 92 160 112 160 C134 160 150 174 148 202 C136 186 118 182 100 184 C86 186 76 194 72 206 Z" fill="#0b0b0b"/>
+    <use href="#face" transform="translate(110 208) scale(.52) translate(-200 -228)"/>
+    <path d="M220 420 C224 304 254 260 290 260 C326 260 356 304 360 420 Z" fill="#3a3a3a"/>
+    <path d="M264 288 H316 L326 420 H254 Z" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+    <circle cx="290" cy="164" r="18" fill="#0b0b0b"/>
+    <circle cx="290" cy="214" r="36" fill="#d6d6d6" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M254 212 C252 182 272 172 292 172 C312 172 328 184 326 210 C306 190 274 192 254 212 Z" fill="#0b0b0b"/>
+    <use href="#face" transform="translate(290 214) scale(.5) translate(-200 -228)"/>
+    <path d="M128 430 C132 296 166 240 200 240 C234 240 268 296 272 430 Z" fill="#1f1f1f"/>
+    <path d="M174 270 H226 L236 430 H164 Z" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+    <circle cx="200" cy="196" r="40" fill="#8c8c8c" stroke="#0b0b0b" stroke-width="3"/>
+    <use href="#face" transform="translate(200 198) scale(.56) translate(-200 -228)"/>
+    <g fill="#fff" stroke="#0b0b0b" stroke-width="3"><circle cx="178" cy="132" r="20"/><circle cx="222" cy="132" r="20"/><circle cx="200" cy="120" r="24"/><rect x="170" y="134" width="60" height="26" rx="3"/></g>
+    <rect x="-10" y="410" width="420" height="100" fill="#4a4a4a"/><rect x="-10" y="402" width="420" height="14" fill="#0b0b0b"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -8;0 0" dur="2.4s" repeatCount="indefinite"/>
+      <rect x="40" y="440" width="96" height="44" rx="4" fill="#fff" stroke="#0b0b0b" stroke-width="3"/><text x="88" y="469" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#0b0b0b">PAID ✓</text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 -8;0 0;0 -8" dur="2.4s" repeatCount="indefinite"/>
+      <rect x="264" y="440" width="96" height="44" rx="4" fill="#fff" stroke="#0b0b0b" stroke-width="3"/><text x="312" y="469" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#0b0b0b">PAID ✓</text>
+    </g>
+  </g>
+
+  <!-- ===== Switching: the shoebox, being read ===== -->
+  <g id="ill-shoebox">
+    <circle cx="200" cy="250" r="185" fill="url(#p-dots)" opacity=".35"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -12;0 0" dur="5s" repeatCount="indefinite"/>
+      <use href="#sheet" transform="translate(262 46) rotate(22) scale(.6)"/>
+      <use href="#rc" transform="translate(60 40) rotate(-26) scale(.42)"/>
+    </g>
+    <path d="M80 260 L120 232 H360 L320 260 Z" fill="#3a3a3a" stroke="#0b0b0b" stroke-width="4" stroke-linejoin="round"/>
+    <use href="#sheet" transform="translate(110 132) rotate(-14)"/>
+    <use href="#sheet" transform="translate(220 128) rotate(16)"/>
+    <use href="#rc" transform="translate(176 104) rotate(4) scale(.62)"/>
+    <use href="#sheet" transform="translate(150 150) rotate(-3)"/>
+    <path d="M80 260 H320 V392 H80 Z" fill="#bdbdbd" stroke="#0b0b0b" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M320 260 L360 232 V364 L320 392 Z" fill="#7a7a7a" stroke="#0b0b0b" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="150" y="296" width="100" height="52" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+    <text x="200" y="320" font-family="Google Sans, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="1" fill="#0b0b0b">RECEIPTS</text>
+    <text x="200" y="338" font-family="Google Sans, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#0b0b0b">2019–25 ??</text>
+    <g transform="rotate(-24 70 410)"><rect x="-10" y="390" width="160" height="38" fill="#fff" stroke="#0b0b0b" stroke-width="4"/><path d="M-10 402 H150" stroke="#0b0b0b" stroke-width="3"/></g>
+    <use href="#sheet" transform="translate(268 404) rotate(-78) scale(.6)"/>
+    <use href="#scan"/>
+  </g>
+
+  <!-- ===== Portraits ===== -->
+  <g id="pt-mo">
+    <circle cx="200" cy="215" r="170" fill="url(#p-dots)" opacity=".45"/>
+    <rect x="334" y="40" width="34" height="260" rx="17" fill="url(#p-stripe)" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M40 500 C50 385 120 352 200 352 C280 352 350 385 360 500 Z" fill="url(#p-plaid)" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M172 290 h56 v62 q-28 22 -56 0 Z" fill="#8c8c8c" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M162 348 L200 396 L238 348 L224 342 L200 372 L176 342 Z" fill="#fff" stroke="#0b0b0b" stroke-width="2.5" stroke-linejoin="round"/>
+    <ellipse cx="130" cy="228" rx="12" ry="18" fill="#8c8c8c" stroke="#0b0b0b" stroke-width="3"/><ellipse cx="270" cy="228" rx="12" ry="18" fill="#8c8c8c" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="200" cy="220" rx="70" ry="86" fill="#8c8c8c" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M130 212 C126 150 162 124 200 124 C240 124 276 150 270 212 C262 172 240 156 200 156 C162 156 140 172 130 212 Z" fill="#0b0b0b"/>
+    <path d="M132 236 C135 300 170 316 200 317 C230 316 265 300 268 236 C258 272 240 288 200 290 C160 288 142 272 132 236 Z" fill="#0b0b0b"/>
+    <use href="#face"/>
+    <path d="M180 258 Q200 248 220 258 Q200 264 180 258 Z" fill="#0b0b0b"/>
+  </g>
+
+  <g id="pt-tom">
+    <circle cx="200" cy="215" r="170" fill="url(#p-dots)" opacity=".45"/>
+    <path d="M40 500 C50 385 120 352 200 352 C280 352 350 385 360 500 Z" fill="#2b2b2b" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M120 386 Q200 368 280 386 L300 500 H100 Z" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M140 386 L174 352 M260 386 L226 352" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+    <g fill="#bdbdbd"><circle cx="160" cy="430" r="4"/><circle cx="236" cy="452" r="3"/><circle cx="200" cy="420" r="3"/><circle cx="252" cy="410" r="4"/></g>
+    <path d="M172 290 h56 v62 q-28 22 -56 0 Z" fill="#d6d6d6" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="130" cy="228" rx="12" ry="18" fill="#d6d6d6" stroke="#0b0b0b" stroke-width="3"/><ellipse cx="270" cy="228" rx="12" ry="18" fill="#d6d6d6" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="200" cy="220" rx="70" ry="86" fill="#d6d6d6" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M132 196 C138 146 168 128 200 128 C232 128 262 146 268 196 C256 170 236 160 216 164 C202 152 180 154 162 166 C150 174 140 184 132 196 Z" fill="#5c5c5c" stroke="#0b0b0b" stroke-width="2"/>
+    <use href="#face"/>
+    <path d="M178 268 Q200 290 222 268" fill="#fff" stroke="#0b0b0b" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+
+  <g id="pt-priya">
+    <circle cx="200" cy="215" r="170" fill="url(#p-dots)" opacity=".45"/>
+    <path d="M118 215 C110 120 160 110 200 110 C250 110 292 124 284 215 C292 290 302 340 312 384 L88 384 C100 340 110 290 118 215 Z" fill="#0b0b0b"/>
+    <path d="M40 500 C50 385 120 352 200 352 C280 352 350 385 360 500 Z" fill="#4a4a4a" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M60 470 Q120 440 180 470 M220 470 Q280 440 340 470" fill="none" stroke="#0b0b0b" stroke-width="2" opacity=".5"/>
+    <path d="M172 290 h56 v62 q-28 22 -56 0 Z" fill="#ababab" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="200" cy="220" rx="70" ry="86" fill="#ababab" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M128 214 C128 152 168 124 205 124 C246 124 274 150 272 204 C252 172 216 160 190 168 C164 176 140 194 128 214 Z" fill="#0b0b0b"/>
+    <use href="#face"/>
+    <path d="M250 420 H316 V480 Q316 496 300 496 H266 Q250 496 250 480 Z" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M316 434 Q336 434 334 452 Q332 466 316 464" fill="none" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="248" cy="462" rx="18" ry="24" fill="#ababab" stroke="#0b0b0b" stroke-width="3"/>
+    <g fill="none" stroke="#0b0b0b" stroke-width="3" stroke-linecap="round">
+      <path d="M272 412 C264 400 280 392 272 378"><animate attributeName="opacity" values="0;1;0" dur="2.8s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 6;0 -12" dur="2.8s" repeatCount="indefinite"/></path>
+      <path d="M294 412 C286 400 302 392 294 378"><animate attributeName="opacity" values="0;1;0" dur="2.8s" begin="1.3s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 6;0 -12" dur="2.8s" begin="1.3s" repeatCount="indefinite"/></path>
+    </g>
+  </g>
+
+  <g id="pt-hana">
+    <circle cx="200" cy="215" r="170" fill="url(#p-dots)" opacity=".45"/>
+    <path d="M40 500 C50 385 120 352 200 352 C280 352 350 385 360 500 Z" fill="#0b0b0b"/>
+    <path d="M168 352 L200 430 L232 352 Z" fill="#fff" stroke="#0b0b0b" stroke-width="2"/>
+    <path d="M150 360 L190 440 L170 500 M250 360 L210 440 L230 500" fill="none" stroke="#5a5a5a" stroke-width="3"/>
+    <path d="M172 290 h56 v62 q-28 22 -56 0 Z" fill="#7f7f7f" stroke="#0b0b0b" stroke-width="3"/>
+    <circle cx="200" cy="112" r="36" fill="#0b0b0b"/>
+    <ellipse cx="130" cy="228" rx="12" ry="18" fill="#7f7f7f" stroke="#0b0b0b" stroke-width="3"/><ellipse cx="270" cy="228" rx="12" ry="18" fill="#7f7f7f" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="200" cy="220" rx="70" ry="86" fill="#7f7f7f" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M130 212 C128 150 165 128 200 128 C238 128 272 150 270 212 C262 170 236 150 200 150 C165 150 140 168 130 212 Z" fill="#0b0b0b"/>
+    <use href="#face"/>
+    <circle cx="128" cy="254" r="7" fill="#fff" stroke="#0b0b0b" stroke-width="3"/><circle cx="272" cy="254" r="7" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+  </g>
+
+  <g id="pt-daniel">
+    <circle cx="200" cy="215" r="170" fill="url(#p-dots)" opacity=".45"/>
+    <path d="M40 500 C50 385 120 352 200 352 C280 352 350 385 360 500 Z" fill="#7a7a7a" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M172 290 h56 v62 q-28 22 -56 0 Z" fill="#cfcfcf" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M168 352 Q200 372 232 352" fill="none" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M60 470 C110 418 290 418 340 470 L340 500 L60 500 Z" fill="#cfcfcf" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M120 448 C170 430 230 430 280 448" fill="none" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M40 500 L60 440 L110 432 L100 500 Z M360 500 L340 440 L290 432 L300 500 Z" fill="#7a7a7a" stroke="#0b0b0b" stroke-width="3" stroke-linejoin="round"/>
+    <ellipse cx="130" cy="228" rx="12" ry="18" fill="#cfcfcf" stroke="#0b0b0b" stroke-width="3"/><ellipse cx="270" cy="228" rx="12" ry="18" fill="#cfcfcf" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="200" cy="220" rx="70" ry="86" fill="#cfcfcf" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M132 236 C135 300 170 316 200 317 C230 316 265 300 268 236 C258 272 240 288 200 290 C160 288 142 272 132 236 Z" fill="url(#p-dots)" opacity=".9"/>
+    <path d="M128 206 C124 146 164 120 204 122 C246 124 278 150 272 206 C264 180 250 166 232 160 C210 168 176 170 150 162 C140 172 132 186 128 206 Z" fill="#4d4d4d" stroke="#0b0b0b" stroke-width="2"/>
+    <use href="#face"/>
+  </g>
+
+  <g id="pt-sofia">
+    <circle cx="200" cy="215" r="170" fill="url(#p-dots)" opacity=".45"/>
+    <path d="M116 220 C104 130 154 112 202 112 C252 112 300 130 286 220 C300 290 300 330 316 380 C290 396 268 370 262 340 L138 340 C132 370 110 396 84 380 C100 330 102 290 116 220 Z" fill="#3d3d3d"/>
+    <path d="M40 500 C50 385 120 352 200 352 C280 352 350 385 360 500 Z" fill="#9a9a9a" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M160 356 L200 450 L240 356 Z" fill="#fff" stroke="#0b0b0b" stroke-width="2"/>
+    <g fill="#0b0b0b"><circle cx="190" cy="470" r="4"/><circle cx="210" cy="470" r="4"/></g>
+    <path d="M172 290 h56 v62 q-28 22 -56 0 Z" fill="#c6c6c6" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="200" cy="220" rx="70" ry="86" fill="#c6c6c6" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M126 220 C120 150 164 126 206 126 C246 126 280 152 274 214 C262 176 230 156 196 158 C176 172 152 192 126 220 Z" fill="#3d3d3d"/>
+    <use href="#face"/>
+    <g fill="none" stroke="#0b0b0b" stroke-width="3.5"><circle cx="176" cy="224" r="19"/><circle cx="224" cy="224" r="19"/><path d="M195 222 Q200 216 205 222 M157 220 L134 214 M243 220 L266 214"/></g>
+  </g>
+
+  <g id="pt-karim">
+    <circle cx="200" cy="215" r="170" fill="url(#p-dots)" opacity=".45"/>
+    <path d="M40 500 C50 385 120 352 200 352 C280 352 350 385 360 500 Z" fill="#333" stroke="#0b0b0b" stroke-width="3"/>
+    <path d="M158 352 L200 382 L242 352 L232 344 L200 364 L168 344 Z" fill="#fff" stroke="#0b0b0b" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M172 290 h56 v58 q-28 22 -56 0 Z" fill="#9e9e9e" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="130" cy="228" rx="12" ry="18" fill="#9e9e9e" stroke="#0b0b0b" stroke-width="3"/><ellipse cx="270" cy="228" rx="12" ry="18" fill="#9e9e9e" stroke="#0b0b0b" stroke-width="3"/>
+    <ellipse cx="200" cy="220" rx="70" ry="86" fill="#9e9e9e" stroke="#0b0b0b" stroke-width="3"/>
+    <g fill="#0b0b0b"><circle cx="150" cy="156" r="26"/><circle cx="182" cy="134" r="27"/><circle cx="218" cy="132" r="27"/><circle cx="250" cy="150" r="26"/><circle cx="136" cy="186" r="18"/><circle cx="266" cy="184" r="18"/><circle cx="200" cy="150" r="22"/></g>
+    <path d="M130 228 C130 310 170 330 200 332 C230 330 270 310 270 228 C262 262 248 278 228 282 Q200 270 172 282 C152 278 138 262 130 228 Z" fill="#0b0b0b"/>
+    <use href="#face"/>
+    <path d="M178 258 Q200 246 222 258 Q200 266 178 258 Z" fill="#0b0b0b"/>
+    <path d="M184 274 Q200 284 216 274" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</defs>
+</svg>
+
+<header id="nav" class="nav" data-section="nav" data-8b-section="navigation">
+  <a class="nav__logo" href="#opening">Sumwise<small>AI</small></a>
+  <a class="nav__cta m-btn-2" href="#contact"><span class="m-btn-2__label">Start free for 30 days</span><span class="m-btn-2__icon" aria-hidden="true">+</span></a>
+  <nav class="nav__links" aria-label="Main">
+    <a class="nav__link" href="#all">Product</a>
+    <a class="nav__link" href="#fees">Pricing</a>
+    <a class="nav__link" href="#faq">Questions</a>
+    <a class="nav__link" href="#contact">Contact</a>
+  </nav>
+  <button class="nav__menu m-icon" type="button" aria-expanded="false" aria-controls="menu">Menu +</button>
+  <span class="nav__progress" aria-hidden="true"></span>
+  <div class="menu" id="menu" data-lenis-prevent hidden>
+    <div class="menu__top">
+      <a class="nav__logo" href="#opening">Sumwise<small>AI</small></a>
+      <button class="menu__close m-icon" type="button">Close ×</button>
+    </div>
+    <nav class="menu__links" aria-label="Menu">
+      <a href="#month">Monthly close</a>
+      <a href="#services">Services</a>
+      <a href="#all">Everything it does</a>
+      <a href="#ask">Ask it anything</a>
+      <a href="#year">The tax year</a>
+      <a href="#fees">Pricing</a>
+      <a href="#faq">Questions</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="menu__cta m-btn-2" href="#contact"><span class="m-btn-2__label">Start free for 30 days</span><span class="m-btn-2__icon" aria-hidden="true">+</span></a>
+  </div>
+</header>
+<main>
+<section id="opening" class="opening" data-section="hero" data-8b-section="opening">
+  <div class="op-stage">
+    <div class="op-tiles">
+      <figure class="op-tile"><div class="op-tile__frame m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A pile of receipts being scanned"><use href="#ill-receipts"/></svg></div><figcaption class="m-badge">Receipts read</figcaption></figure>
+      <figure class="op-tile"><div class="op-tile__frame m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An invoice flying off as a paper plane"><use href="#ill-invoice"/></svg></div><figcaption class="m-badge">Invoices sent</figcaption></figure>
+      <figure class="op-tile"><div class="op-tile__frame m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A cash forecast chart trending upward"><use href="#ill-forecast"/></svg></div><figcaption class="m-badge">Cash forecast</figcaption></figure>
+      <figure class="op-tile"><div class="op-tile__frame m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A tax return stamped filed"><use href="#ill-filed"/></svg></div><figcaption class="m-badge">Taxes filed</figcaption></figure>
+      <figure class="op-tile"><div class="op-tile__frame m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An AI chip with data flowing in"><use href="#ill-chip"/></svg></div><figcaption class="m-badge">Always on</figcaption></figure>
+      <figure class="op-tile"><div class="op-tile__frame m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A supplier payment and a calendar date ticked off"><use href="#ill-billpay"/></svg></div><figcaption class="m-badge">Bills paid</figcaption></figure>
+      <figure class="op-tile"><div class="op-tile__frame m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A shield with a check mark and a magnifying glass"><use href="#ill-shield"/></svg></div><figcaption class="m-badge">CPA reviewed</figcaption></figure>
+      <figure class="op-tile"><div class="op-tile__frame m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A calculator on a balanced ledger"><use href="#ill-calculator"/></svg></div><figcaption class="m-badge">Books closed</figcaption></figure>
+    </div>
+    <div class="op-ground" aria-hidden="true"></div>
+    <div class="op-cover">
+      <div class="op-head">
+        <h1 class="m-text-2 op-title">Accounting that does it&nbsp;all.</h1>
+        <p class="m-text-4 op-lead">Sumwise is an AI accounting firm for small business. Bookkeeping, taxes, payroll and bill pay, done around the clock and checked by a real CPA.</p>
+      </div>
+      <p class="op-live m-text-6"><span class="op-live__dot" aria-hidden="true"></span><span><b data-live>12,804</b> transactions categorized today</span></p>
+      <div class="op-actions">
+        <a class="m-btn-2" href="#contact"><span class="m-btn-2__label">Start free for 30 days</span><span class="m-btn-2__icon" aria-hidden="true">+</span></a>
+        <a class="m-link-2" href="#fees">See pricing</a>
+      </div>
+      <p class="op-year"><span class="sr-only">Open </span>24/7</p>
+    </div>
+  </div>
+  <div class="op-second" data-section="statement">
+    <p class="m-text-2 op-statement">Last year you did the books at midnight. Now they're done by midnight, every night, whether you <mark class="m-mark" style="--mark-color: var(--color-3)">cut hair</mark>, <mark class="m-mark" style="--mark-color: var(--color-4)">bake bread</mark> or <mark class="m-mark" style="--mark-color: var(--color-5)">wire houses</mark>.</p>
+    <ul class="op-ledger">
+      <li><span class="m-rule" aria-hidden="true"></span><span class="m-text-5">Does it all</span><p class="m-text">Books, taxes, payroll, invoicing, bill pay and forecasts in one place, all working from the same live numbers.</p></li>
+      <li><span class="m-rule" aria-hidden="true"></span><span class="m-text-5">Always on</span><p class="m-text">Every transaction is categorized minutes after it clears, and every deadline is prepared weeks early. Even at 3am.</p></li>
+      <li><span class="m-rule" aria-hidden="true"></span><span class="m-text-5">Human-checked</span><p class="m-text">A licensed CPA reviews every close and signs every return. You get the speed of software and a person who's accountable.</p></li>
+    </ul>
+    <a class="m-link-2 op-more" href="#month">See what it sends you every month</a>
+  </div>
+</section>
+
+<section id="month" class="month" data-section="monthly" data-8b-section="monthly-report">
+  <div class="mo-grid wrap grid">
+    <div class="mo-intro">
+      <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+      <h2 class="m-text-3">Your books close themselves. Every night.</h2>
+      <p class="m-text mo-lead">Sumwise reads every transaction, receipt and invoice as it lands, so your numbers are never a month behind. On the 1st, it sends you one page about the month before, checked by your CPA. There's no dashboard to learn and no jargon.</p>
+    </div>
+    <ol class="mo-notes">
+      <li class="mo-note"><span class="mo-key" aria-hidden="true">1</span><h3 class="m-text-4">Profit, not turnover</h3><p class="m-text">What the business actually made after costs, compared with the same month last year, with the one reason it moved.</p></li>
+      <li class="mo-note"><span class="mo-key" aria-hidden="true">2</span><h3 class="m-text-4">Cash you can see coming</h3><p class="m-text">Twelve months of bank balance in one row of bars, plus a forecast that redraws itself every night. A quiet February becomes a plan, not a surprise.</p></li>
+      <li class="mo-note"><span class="mo-key" aria-hidden="true">3</span><h3 class="m-text-4">Tax already set aside</h3><p class="m-text">The exact amount for your next estimated payment and sales tax, moved into a tax account automatically if you want.</p></li>
+      <li class="mo-note"><span class="mo-key" aria-hidden="true">4</span><h3 class="m-text-4">Done for you</h3><p class="m-text">Everything it filed, paid and chased this month, so you know it all happened without having to do any of it.</p></li>
+    </ol>
+    <article class="mo-sheet" aria-label="Sample monthly report">
+      <header class="mo-sheet__head">
+        <div class="mo-sheet__top"><p class="m-text-5">Monthly close · September 2026</p><span class="mo-auto">Auto-closed</span></div>
+        <p class="mo-client">Ferris &amp; Daughter Bakery LLC</p>
+        <p class="m-text-6">Closed by Sumwise Oct 1 at 6:02 am · Reviewed by Hana Okafor, CPA</p>
+      </header>
+      <div class="mo-part" role="group" aria-label="1. Profit">
+        <h3 class="m-text-5">1 · Profit</h3>
+        <dl class="mo-rows">
+          <div><dt>Money in</dt><dd>$38,420</dd></div>
+          <div><dt>Money out</dt><dd>$31,960</dd></div>
+          <div class="is-total"><dt>Profit</dt><dd>$6,460</dd></div>
+        </dl>
+        <p class="m-text-6">Up $1,180 on September 2025. Flour costs fell after Sumwise flagged a cheaper supplier in June.</p>
+      </div>
+      <div class="mo-part" role="group" aria-label="2. Cash">
+        <h3 class="m-text-5">2 · Cash in the bank</h3>
+        <div class="mo-cash">
+          <p class="mo-big">$14,205</p>
+          <ol class="mo-bars">
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="9840">October $9,840</data><span class="mo-bar__label" aria-hidden="true">O</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="11320">November $11,320</data><span class="mo-bar__label" aria-hidden="true">N</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="15760">December $15,760</data><span class="mo-bar__label" aria-hidden="true">D</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="8210">January $8,210</data><span class="mo-bar__label" aria-hidden="true">J</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="7350">February $7,350</data><span class="mo-bar__label" aria-hidden="true">F</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="9120">March $9,120</data><span class="mo-bar__label" aria-hidden="true">M</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="10480">April $10,480</data><span class="mo-bar__label" aria-hidden="true">A</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="11950">May $11,950</data><span class="mo-bar__label" aria-hidden="true">M</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="12600">June $12,600</data><span class="mo-bar__label" aria-hidden="true">J</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="13870">July $13,870</data><span class="mo-bar__label" aria-hidden="true">J</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="12940">August $12,940</data><span class="mo-bar__label" aria-hidden="true">A</span></li>
+            <li class="mo-bar"><span class="mo-bar__fill" aria-hidden="true"></span><data class="sr-only" value="14205">September $14,205</data><span class="mo-bar__label" aria-hidden="true">S</span></li>
+          </ol>
+        </div>
+      </div>
+      <div class="mo-part" role="group" aria-label="3. Tax set aside">
+        <h3 class="m-text-5">3 · Tax set aside</h3>
+        <dl class="mo-rows">
+          <div><dt>Q4 estimated tax, this month's share</dt><dd>$1,230</dd></div>
+          <div><dt>Sales tax collected</dt><dd>$2,940</dd></div>
+        </dl>
+        <p class="mo-pot">$4,170 moved to your tax account on Oct 2.</p>
+      </div>
+      <div class="mo-part" role="group" aria-label="4. Done for you">
+        <h3 class="m-text-5">4 · Done for you</h3>
+        <dl class="mo-rows">
+          <div><dt>Transactions categorized</dt><dd>1,284</dd></div>
+          <div><dt>Invoices sent and chased</dt><dd>46</dd></div>
+          <div><dt>Bills paid on time</dt><dd>31 of 31</dd></div>
+          <div><dt>Payroll for 6</dt><dd>ran Sep 30</dd></div>
+          <div><dt>Questions for you</dt><dd>2, in the app</dd></div>
+        </dl>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="services" class="services" data-section="services" data-8b-section="services">
+  <div class="sv-head wrap grid">
+    <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+    <h2 class="m-text-3">Three departments, one AI, working every hour of every day.</h2>
+    <p class="m-text">Take one, two or all three. They share the same live books, so nothing is ever typed in twice by anyone.</p>
+  </div>
+  <div class="sv-slabs">
+    <article class="sv-slab" style="--slab-color: var(--color-3); --photo-tint: var(--color-4)">
+      <div class="sv-slab__in wrap grid">
+        <span class="m-rule" aria-hidden="true"></span>
+        <h3 class="m-text-2 sv-name">Books</h3>
+        <div class="sv-copy">
+          <p class="m-text-4">Closed every night, not every quarter.</p>
+          <p class="m-text">Connect your bank accounts, cards and payment apps once. Sumwise categorizes every transaction as it clears, matches receipts and invoices, reconciles to the cent, and flags anything odd for a human.</p>
+        </div>
+        <div class="sv-photo m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A bank connected to cards, phones and receipts"><use href="#ill-bank"/></svg><span class="sv-dots" aria-hidden="true"></span></div>
+        <div class="sv-list">
+          <p class="m-text-5">Included</p>
+          <ul class="m-text">
+            <li>Live bank, card, Stripe and Shopify feeds</li>
+            <li>Receipts matched from your email and photos</li>
+            <li>Invoices sent, chased and reconciled</li>
+            <li>Bills read, approved with a tap and paid</li>
+            <li>Month-end close on the 1st, reviewed by a CPA</li>
+          </ul>
+          <a class="m-btn" href="#fees"><span class="m-btn__label">See bookkeeping pricing</span><span class="m-btn__arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="sv-slab" style="--slab-color: var(--color-5); --photo-tint: var(--color-3)">
+      <div class="sv-slab__in wrap grid">
+        <span class="m-rule" aria-hidden="true"></span>
+        <h3 class="m-text-2 sv-name">Taxes</h3>
+        <div class="sv-copy">
+          <p class="m-text-4">Filed early. Never a surprise.</p>
+          <p class="m-text">Because the books are always current, Sumwise prepares federal and state returns all year round, sets aside estimated tax every month, and files sales tax wherever you owe it. A licensed CPA reviews and signs every return.</p>
+        </div>
+        <div class="sv-photo m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A tax return stamped filed"><use href="#ill-filed"/></svg><span class="sv-dots" aria-hidden="true"></span></div>
+        <div class="sv-list">
+          <p class="m-text-5">Included</p>
+          <ul class="m-text">
+            <li>Business and owner income tax returns</li>
+            <li>Quarterly estimated payments, calculated and scheduled</li>
+            <li>Sales tax in every state where you have nexus</li>
+            <li>W-9 collection and 1099 filing</li>
+            <li>IRS and state notices answered for you</li>
+          </ul>
+          <a class="m-btn" href="#fees"><span class="m-btn__label">See tax pricing</span><span class="m-btn__arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="sv-slab" style="--slab-color: var(--color-4); --photo-tint: var(--color-5)">
+      <div class="sv-slab__in wrap grid">
+        <span class="m-rule" aria-hidden="true"></span>
+        <h3 class="m-text-2 sv-name">Payroll</h3>
+        <div class="sv-copy">
+          <p class="m-text-4">Everyone paid. Nobody chased.</p>
+          <p class="m-text">W-2 employees and contractors in all 50 states. Approve the run with one tap, and Sumwise pays everyone, files the payroll taxes and keeps benefits and 401(k) contributions in sync.</p>
+        </div>
+        <div class="sv-photo m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A kitchen team, all marked paid"><use href="#ill-team"/></svg><span class="sv-dots" aria-hidden="true"></span></div>
+        <div class="sv-list">
+          <p class="m-text-5">Included</p>
+          <ul class="m-text">
+            <li>Weekly, biweekly or monthly pay runs</li>
+            <li>Contractor payments and 1099-NECs</li>
+            <li>Payroll tax deposits and quarterly 941s</li>
+            <li>Benefits and 401(k) deductions</li>
+            <li>Onboarding: W-4, I-9 and direct deposit</li>
+          </ul>
+          <a class="m-btn" href="#fees"><span class="m-btn__label">See payroll pricing</span><span class="m-btn__arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="all" class="all" data-section="everything" data-8b-section="everything">
+  <div class="wrap">
+    <div class="al-head grid">
+      <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+      <h2 class="m-text-3">Everything a finance team does. <mark class="m-mark" style="--mark-color: var(--color-3)" data-8b-motion="mark">Done.</mark></h2>
+      <p class="m-text">Twelve jobs that usually need a bookkeeper, an accountant, a payroll provider and a fractional CFO. Sumwise is all four.</p>
+    </div>
+    <ul class="al-grid">
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 0 1 2-2h14v14H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/><path d="M8 7h8M8 11h5"/></svg></span><h3 class="m-text-4">Bookkeeping</h3><p class="m-text-6">Every transaction categorized as it clears, with the reasoning shown.</p><span class="al-tag">Automated</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg></span><h3 class="m-text-4">Reconciliation</h3><p class="m-text-6">Every account matched to the cent, every night.</p><span class="al-tag">Automated</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg></span><h3 class="m-text-4">Receipt capture</h3><p class="m-text-6">Snap a photo, forward an email, or let it find them in your inbox.</p><span class="al-tag">Automated</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 3L3 11l7 3 3 7 8-18z"/><path d="M10 14l5-5"/></svg></span><h3 class="m-text-4">Invoicing</h3><p class="m-text-6">Invoices sent, politely chased, and matched when they're paid.</p><span class="al-tag">Automated</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><h3 class="m-text-4">Bill pay</h3><p class="m-text-6">Bills read, approved with a tap and paid on the right day.</p><span class="al-tag">You approve</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.8.3 5 2.6 5 5.8"/></svg></span><h3 class="m-text-4">Payroll</h3><p class="m-text-6">Employees and contractors in all 50 states, with benefits and 401(k).</p><span class="al-tag">You approve</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 14l2.5 2.5L16 12"/></svg></span><h3 class="m-text-4">Income tax</h3><p class="m-text-6">Federal and state returns for the business and its owners.</p><span class="al-tag">CPA-signed</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg></span><h3 class="m-text-4">Sales tax</h3><p class="m-text-6">Nexus tracked, returns filed and tax remitted wherever you sell.</p><span class="al-tag">Automated</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><h3 class="m-text-4">1099s</h3><p class="m-text-6">W-9s collected all year, so 1099s are filed in January without a scramble.</p><span class="al-tag">Automated</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/></svg></span><h3 class="m-text-4">Cash forecasting</h3><p class="m-text-6">13-week and 12-month forecasts, redrawn every night.</p><span class="al-tag">Automated</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M6 17v-6M11 17V7M16 17v-9"/></svg></span><h3 class="m-text-4">Board-ready reports</h3><p class="m-text-6">P&amp;L, balance sheet and cash flow on demand, ready for a bank or investor.</p><span class="al-tag">CPA-reviewed</span></li>
+      <li class="al-cell"><span class="al-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></span><h3 class="m-text-4">Ask anything</h3><p class="m-text-6">Plain-English answers about your own numbers, in seconds.</p><span class="al-tag">24/7</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="ask" class="ask" data-section="ask" data-8b-section="ask">
+  <div class="ak wrap grid">
+    <div class="ak-copy">
+      <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+      <h2 class="m-text-3">Ask it anything. It answers from your own books.</h2>
+      <p class="m-text">No more waiting a week for your accountant to reply. Sumwise knows every transaction, contract and deadline in your business, and it can do the thing you asked about, not just explain it.</p>
+      <ul class="ak-prompts" aria-label="Things people ask">
+        <li>Can I afford a new hire?</li>
+        <li>Why was August so thin?</li>
+        <li>What do I owe in January?</li>
+        <li>Who hasn't paid me?</li>
+        <li>Is this deductible?</li>
+      </ul>
+    </div>
+    <div class="ak-chat" role="group" aria-label="Example conversation with Sumwise">
+      <div class="ak-top">
+        <span class="ak-avatar" aria-hidden="true">S</span>
+        <div><strong>Sumwise</strong><span>Online · CPA on call: Hana</span></div>
+      </div>
+      <ol class="ak-log">
+        <li class="ak-msg is-you">Can we afford to hire another baker in March?</li>
+        <li class="ak-msg is-ai">Yes, with room to spare. A $4,200/month hire from March 1 keeps your lowest cash point at <b>$9,870</b> on Feb 26. That's above your $8,000 safety line.
+          <div class="ak-card">
+            <svg viewBox="0 0 240 70" aria-hidden="true">
+              <path d="M0 58 H240" stroke="#0b0b0b" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <path d="M0 26 L20 24 L40 32 L60 40 L80 46 L100 51 L120 44 L140 36 L160 30 L180 24 L200 18 L240 10" fill="none" stroke="#0b0b0b" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="100" cy="51" r="5" fill="#fe7141" stroke="#0b0b0b" stroke-width="1.5"/>
+            </svg>
+            <p><span>Cash low point <b>$9,870</b></span><span>Safety line $8,000</span></p>
+          </div>
+          I'd hold off on the new mixer until May.</li>
+        <li class="ak-msg is-you">Great. Set her up.</li>
+        <li class="ak-msg is-ai">Done. Maria starts on payroll March 1, her W-4 and I-9 are in her inbox, and the forecast is updated. Hana will look it over this afternoon.</li>
+        <li class="ak-typing" aria-hidden="true"><span></span><span></span><span></span></li>
+      </ol>
+      <div class="ak-input" aria-hidden="true"><span>Ask about your numbers…</span><span class="ak-send">↑</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="switch" class="switch" data-section="switching" data-8b-section="switching">
+  <div class="sw wrap grid">
+    <figure class="sw-photo m-photo" data-8b-motion="tint"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A shoebox overflowing with papers being scanned"><use href="#ill-shoebox"/></svg></figure>
+    <div class="sw-copy">
+      <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+      <h2 class="m-text-3">Switching takes <mark class="m-mark" style="--mark-color: var(--color-3)" data-8b-motion="mark">ten minutes.</mark></h2>
+      <p class="m-text">Most customers come from another accountant, another app or a shoebox. Sumwise can read all three. This is the whole process.</p>
+      <ol class="sw-steps">
+        <li><span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span><span class="sw-num">1</span><div><h3 class="m-text-4">Connect your accounts</h3><p class="m-text">Banks, cards, payroll and your old software. Connections are read-only and encrypted, and setup takes about ten minutes.</p></div></li>
+        <li><span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span><span class="sw-num">2</span><div><h3 class="m-text-4">It rebuilds your history</h3><p class="m-text">Sumwise imports and recategorizes past years, scans the shoebox, and your CPA checks what it found.</p></div></li>
+        <li><span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span><span class="sw-num">3</span><div><h3 class="m-text-4">Your first close arrives</h3><p class="m-text">Usually within 48 hours, including anything your last setup missed.</p></div></li>
+      </ol>
+      <a class="m-link" href="#contact">Start the switch</a>
+    </div>
+  </div>
+</section>
+
+<section id="year" class="year" data-section="tax-year" data-8b-section="tax-year">
+  <div class="yr-pin">
+    <div class="yr-head wrap grid">
+      <span class="m-rule" aria-hidden="true"></span>
+      <h2 class="m-text-3">The tax year, handled before it's due.</h2>
+      <p class="m-text yr-intro">January to December, these are the dates a US small business has to meet. They live in Sumwise's calendar, not yours. It prepares each one weeks early, a CPA signs off, and it files.</p>
+      <ul class="yr-key" aria-label="Kinds of deadline">
+        <li><span class="yr-swatch" style="--chip: var(--color-3)" aria-hidden="true"></span>Returns and filings</li>
+        <li><span class="yr-swatch" style="--chip: var(--color-4)" aria-hidden="true"></span>Estimates and sales tax</li>
+        <li><span class="yr-swatch" style="--chip: var(--color-5)" aria-hidden="true"></span>Payroll</li>
+      </ul>
+    </div>
+    <div class="yr-view">
+      <ol class="yr-track">
+        <li class="yr-month"><h3 class="yr-name">Jan<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-4)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">January 15</span><span class="yr-what">Fourth-quarter estimated tax for owners</span></li>
+          <li class="yr-chip" style="--chip: var(--color-5)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">January 31</span><span class="yr-what">W-2s and 1099-NECs sent and filed</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Feb<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-5)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">February 15</span><span class="yr-what">Payroll tax deposit for January</span></li>
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">February 28</span><span class="yr-what">Year-end close signed off by your CPA</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Mar<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">March 15</span><span class="yr-what">S-corp and partnership returns</span></li>
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">March 15</span><span class="yr-what">K-1s to every owner</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Apr<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">April 15</span><span class="yr-what">Individual and C-corp income tax returns</span></li>
+          <li class="yr-chip" style="--chip: var(--color-4)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">April 15</span><span class="yr-what">First-quarter estimated tax</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">May<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-5)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">April 30 – May 15</span><span class="yr-what">Quarterly 941 and the April payroll tax deposit</span></li>
+          <li class="yr-chip" style="--chip: var(--color-4)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">May 20</span><span class="yr-what">Sales tax returns in many states</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Jun<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-4)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">June 15</span><span class="yr-what">Second-quarter estimated tax</span></li>
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">June 30</span><span class="yr-what">Mid-year tax projection and forecast refresh</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Jul<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-4)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">July 20</span><span class="yr-what">Quarterly sales tax returns</span></li>
+          <li class="yr-chip" style="--chip: var(--color-5)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">July 31</span><span class="yr-what">Form 941 for the second quarter</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Aug<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-5)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">August 15</span><span class="yr-what">Payroll tax deposit for July</span></li>
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">August 31</span><span class="yr-what">Year-to-date tax projection updated</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Sep<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-4)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">September 15</span><span class="yr-what">Third-quarter estimated tax</span></li>
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">September 15</span><span class="yr-what">Extended S-corp and partnership returns</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Oct<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">October 15</span><span class="yr-what">Extended individual and C-corp returns</span></li>
+          <li class="yr-chip" style="--chip: var(--color-5)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">October 31</span><span class="yr-what">Form 941 for the third quarter</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Nov<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-5)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">November 15</span><span class="yr-what">Payroll tax deposit for October</span></li>
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">November 30</span><span class="yr-what">Year-end plan: equipment, bonuses, retirement</span></li>
+        </ul></li>
+        <li class="yr-month"><h3 class="yr-name">Dec<span>2027</span></h3><ul class="yr-chips">
+          <li class="yr-chip" style="--chip: var(--color-4)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">December 15</span><span class="yr-what">Fourth-quarter estimated tax for C-corps</span></li>
+          <li class="yr-chip" style="--chip: var(--color-3)"><span class="yr-chip__fill" aria-hidden="true"></span><span class="yr-date">December 31</span><span class="yr-what">Last day for 401(k) deferrals and equipment purchases</span></li>
+        </ul></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="cases" class="cases" data-section="stories" data-8b-section="client-stories">
+  <div class="cs-head wrap">
+    <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+    <h2 class="m-text-3">Three kinds of business, all handled.</h2>
+  </div>
+  <div class="cs-list">
+    <article class="cs-case" style="--case-color: var(--color-5)">
+      <div class="cs-portrait">
+        <span class="cs-glyph" aria-hidden="true">“</span>
+        <figure class="cs-photo m-photo" style="--photo-tint: var(--color-3)" data-8b-motion="tint"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Portrait of Mo Adeyemi in a plaid shirt"><use href="#pt-mo"/></svg></figure>
+        <p class="cs-who"><strong>Mo Adeyemi</strong><span class="m-text-6">The Cutting Room, Oakland. Barbershop, four chairs.</span></p>
+      </div>
+      <div class="cs-quote">
+        <blockquote class="cs-text m-text-4"><p>I used to find out what I owed in April. Now Sumwise tells me every morning, and tax season is <mark class="m-mark" style="--mark-color: var(--color-1)" data-8b-motion="mark">boring</mark>.</p></blockquote>
+        <p class="cs-fact m-text-6"><span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>Customer since 2024. Books, taxes and payroll for three.</p>
+      </div>
+    </article>
+    <article class="cs-case" style="--case-color: var(--color-3)">
+      <div class="cs-portrait">
+        <span class="cs-glyph" aria-hidden="true">“</span>
+        <figure class="cs-photo m-photo" style="--photo-tint: var(--color-4)" data-8b-motion="tint"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Portrait of Tom Ferris in a baker's apron"><use href="#pt-tom"/></svg></figure>
+        <p class="cs-who"><strong>Tom Ferris</strong><span class="m-text-6">Ferris &amp; Daughter, Portland. Bakery and two market stalls.</span></p>
+      </div>
+      <div class="cs-quote">
+        <blockquote class="cs-text m-text-4"><p>In its first week it found <mark class="m-mark" style="--mark-color: var(--color-1)" data-8b-motion="mark">$4,200 of deductions</mark> my last accountant never claimed. The new oven has more or less paid for itself.</p></blockquote>
+        <p class="cs-fact m-text-6"><span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>Customer since 2025. Business plan, payroll for six.</p>
+      </div>
+    </article>
+    <article class="cs-case" style="--case-color: var(--color-4)">
+      <div class="cs-portrait">
+        <span class="cs-glyph" aria-hidden="true">“</span>
+        <figure class="cs-photo m-photo" style="--photo-tint: var(--color-5)" data-8b-motion="tint"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Portrait of Priya Nair holding a coffee"><use href="#pt-priya"/></svg></figure>
+        <p class="cs-who"><strong>Priya Nair</strong><span class="m-text-6">Sol Coffee, Austin. Café with nine staff.</span></p>
+      </div>
+      <div class="cs-quote">
+        <blockquote class="cs-text m-text-4"><p>Payroll for nine people used to eat my Sunday. Now I approve it <mark class="m-mark" style="--mark-color: var(--color-1)" data-8b-motion="mark">on my phone</mark> in four seconds and get on with the week.</p></blockquote>
+        <p class="cs-fact m-text-6"><span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>Customer since 2025. Payroll, sales tax and bill pay.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="people" class="people" data-section="accountants" data-8b-section="accountants">
+  <div class="wrap">
+    <div class="pp-head grid">
+      <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+      <h2 class="m-text-3">One AI. Four humans who check its work.</h2>
+      <p class="m-text">Sumwise does the work. Every close, return and filing is reviewed by a licensed professional who knows your business, and you can book time with them whenever you like.</p>
+    </div>
+    <ul class="pp-grid">
+      <li class="pp-person"><figure class="pp-photo m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Portrait of Hana Okafor"><use href="#pt-hana"/></svg><figcaption class="m-badge">CPA</figcaption></figure><h3 class="m-text-4">Hana Okafor</h3><p class="m-text-6 pp-role">Head of Tax. Signs off returns for restaurants, cafés and retail.</p></li>
+      <li class="pp-person"><figure class="pp-photo m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Portrait of Daniel Price with his arms folded"><use href="#pt-daniel"/></svg><figcaption class="m-badge">CPA</figcaption></figure><h3 class="m-text-4">Daniel Price</h3><p class="m-text-6 pp-role">Controller. Trades, construction, and anyone with a fleet of vans.</p></li>
+      <li class="pp-person"><figure class="pp-photo m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Portrait of Sofia Marin in glasses"><use href="#pt-sofia"/></svg><figcaption class="m-badge">CPP</figcaption></figure><h3 class="m-text-4">Sofia Marin</h3><p class="m-text-6 pp-role">Payroll lead. Multi-state payroll, benefits and 401(k).</p></li>
+      <li class="pp-person"><figure class="pp-photo m-photo"><svg class="m-photo__img" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Portrait of Karim Haddad"><use href="#pt-karim"/></svg><figcaption class="m-badge">EA</figcaption></figure><h3 class="m-text-4">Karim Haddad</h3><p class="m-text-6 pp-role">Freelancers and sole proprietors, estimated tax and IRS notices.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section id="faq" class="faq" data-section="faq" data-8b-section="questions">
+  <div class="fq wrap grid">
+    <div class="fq-head">
+      <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+      <h2 class="m-text-3">Questions people ask before letting an AI do their books.</h2>
+      <p class="m-text">Anything else, ask Sumwise itself during the free trial, or ask a human on a demo call.</p>
+    </div>
+    <div class="fq-list">
+      <details class="fq-item"><summary><span class="m-text-4">Does an AI really file my taxes?</span><span class="fq-icon m-icon" aria-hidden="true"><span>+</span></span></summary><p class="m-text fq-a">Sumwise prepares everything, and a licensed CPA on our team reviews and signs every return before it's filed. You see it and approve it on your phone first.</p></details>
+      <details class="fq-item"><summary><span class="m-text-4">Is my financial data safe?</span><span class="fq-icon m-icon" aria-hidden="true"><span>+</span></span></summary><p class="m-text fq-a">Bank connections are read-only, and your data is encrypted in transit and at rest. It's never used to train models for anyone else, and you can export or delete it at any time.</p></details>
+      <details class="fq-item"><summary><span class="m-text-4">What if it gets something wrong?</span><span class="fq-icon m-icon" aria-hidden="true"><span>+</span></span></summary><p class="m-text fq-a">When it's unsure about something, it asks a human instead of guessing. If we make a mistake on a filing, we fix it and pay any penalties and interest it caused.</p></details>
+      <details class="fq-item"><summary><span class="m-text-4">Which banks and software does it work with?</span><span class="fq-icon m-icon" aria-hidden="true"><span>+</span></span></summary><p class="m-text fq-a">Most US banks and card issuers, plus Stripe, Square, Shopify and PayPal. If you already use QuickBooks or Xero, it imports your history in one go.</p></details>
+      <details class="fq-item"><summary><span class="m-text-4">Can I talk to a person?</span><span class="fq-icon m-icon" aria-hidden="true"><span>+</span></span></summary><p class="m-text fq-a">Always. Every plan includes a named CPA you can reach by chat, email or video, and the Scale plan adds a monthly call.</p></details>
+      <details class="fq-item"><summary><span class="m-text-4">How easy is it to leave?</span><span class="fq-icon m-icon" aria-hidden="true"><span>+</span></span></summary><p class="m-text fq-a">Cancel in any month, with no exit fee. Export your full books, documents and filings in one click, in formats any accountant can read.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="fees" class="fees" data-section="pricing" data-8b-section="fees">
+  <div class="wrap">
+    <div class="fe-head grid">
+      <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+      <h2 class="m-text-3">One monthly price. The height of each block is its price.</h2>
+      <p class="m-text">No hourly billing, no year-end invoice and no surprise fee at tax time. Payroll is $6 per person a month on any plan.</p>
+    </div>
+    <div class="fe-plans">
+      <article class="fe-plan" style="--plan-color: var(--color-5)">
+        <div class="fe-stage"><span class="fe-fill" aria-hidden="true"></span><div class="fe-top"><h3 class="m-text-4">Solo</h3><p class="fe-price"><data value="49">$49</data><small>a month</small></p></div></div>
+        <ul class="fe-list m-text">
+          <li>Bookkeeping, receipts and invoicing</li>
+          <li>Your federal and state income tax return</li>
+          <li>Quarterly estimates, calculated and scheduled</li>
+          <li>Ask Sumwise anything, any time</li>
+        </ul>
+        <a class="m-btn" href="#contact"><span class="m-btn__label">Start as a freelancer</span><span class="m-btn__arrow" aria-hidden="true">→</span></a>
+      </article>
+      <article class="fe-plan" style="--plan-color: var(--color-4)">
+        <div class="fe-stage"><span class="fe-fill" aria-hidden="true"></span><div class="fe-top"><h3 class="m-text-4">Business</h3><p class="fe-price"><data value="199">$199</data><small>a month</small></p></div></div>
+        <ul class="fe-list m-text">
+          <li>Books, bill pay and invoicing</li>
+          <li>Business and owner tax returns</li>
+          <li>Sales tax in every state</li>
+          <li>Payroll for up to 10 people</li>
+          <li>Monthly close reviewed by your CPA</li>
+        </ul>
+        <a class="m-btn" href="#contact"><span class="m-btn__label">Start your business</span><span class="m-btn__arrow" aria-hidden="true">→</span></a>
+      </article>
+      <article class="fe-plan" style="--plan-color: var(--color-3)">
+        <div class="fe-stage"><span class="fe-fill" aria-hidden="true"></span><div class="fe-top"><h3 class="m-text-4">Scale</h3><p class="fe-price"><data value="499">$499</data><small>a month</small></p></div></div>
+        <ul class="fe-list m-text">
+          <li>Everything in the Business plan</li>
+          <li>Payroll for up to 50, with benefits</li>
+          <li>Multiple entities and currencies</li>
+          <li>13-week cash and 12-month forecasts</li>
+          <li>Board-ready reports and a monthly CPA call</li>
+        </ul>
+        <a class="m-btn" href="#contact"><span class="m-btn__label">Start at scale</span><span class="m-btn__arrow" aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact" data-section="contact" data-8b-section="contact">
+  <div class="ct wrap grid">
+    <div class="ct-copy">
+      <span class="m-rule" aria-hidden="true" data-8b-motion="rule"></span>
+      <h2 class="m-text-2 ct-title">Try it free for <mark class="m-mark" style="--mark-color: var(--color-3)" data-8b-motion="mark">30 days</mark>.</h2>
+      <p class="m-text">Connect one account and watch it close last month in minutes. Or book a 20-minute demo with a CPA and leave with a fixed price.</p>
+      <dl class="ct-details m-text">
+        <div><dt class="m-text-5">Where</dt><dd>Remote-first, serving all 50 states</dd></div>
+        <div><dt class="m-text-5">Phone</dt><dd><a class="m-link" href="tel:+15550102400">(555) 010-2400</a></dd></div>
+        <div><dt class="m-text-5">Email</dt><dd><a class="m-link" href="mailto:hello@sumwise.example">hello@sumwise.example</a></dd></div>
+        <div><dt class="m-text-5">Hours</dt><dd>Sumwise: always. Humans: Monday to Friday, 6am to 6pm PT</dd></div>
+      </dl>
+    </div>
+    <form class="ct-form" action="#" method="post">
+      <div class="ct-pair">
+        <label class="m-field"><span class="m-field__label">Your name</span><input class="m-field__input" name="name" type="text" autocomplete="name" required></label>
+        <label class="m-field"><span class="m-field__label">Work email</span><input class="m-field__input" name="email" type="email" autocomplete="email" required></label>
+      </div>
+      <label class="m-field"><span class="m-field__label">Phone, if you'd like a demo call</span><input class="m-field__input" name="phone" type="tel" autocomplete="tel"></label>
+      <fieldset class="ct-choices">
+        <legend class="m-text-5">What should it take off your plate?</legend>
+        <label class="ct-choice" style="--choice-color: var(--color-3)"><input type="checkbox" name="need" value="books">Books</label>
+        <label class="ct-choice" style="--choice-color: var(--color-5)"><input type="checkbox" name="need" value="taxes">Taxes</label>
+        <label class="ct-choice" style="--choice-color: var(--color-4)"><input type="checkbox" name="need" value="payroll">Payroll</label>
+        <label class="ct-choice" style="--choice-color: var(--color-1)"><input type="checkbox" name="need" value="everything">All of it</label>
+      </fieldset>
+      <label class="m-field"><span class="m-field__label">What does the business do?</span><textarea class="m-field__input" name="message" rows="4"></textarea></label>
+      <button class="m-btn-2" type="submit"><span class="m-btn-2__label">Start my free trial</span><span class="m-btn-2__icon" aria-hidden="true">+</span></button>
+      <p class="ct-note m-text-6">No card needed. We only use your details to set up your account.</p>
+      <p class="ct-status" role="status" hidden>You're in. Check your inbox to connect your first account.</p>
+    </form>
+  </div>
+</section>
+</main>
+<footer id="footer" data-section="footer" data-8b-section="footer">
+  <div class="ft-cols grid">
+    <div class="ft-col"><p class="m-text-5">Company</p><p class="m-text">Remote-first<br>Serving all 50 states</p></div>
+    <div class="ft-col"><p class="m-text-5">Talk</p><ul class="m-text"><li><a class="m-link-2" href="tel:+15550102400">(555) 010-2400</a></li><li><a class="m-link-2" href="mailto:hello@sumwise.example">hello@sumwise.example</a></li></ul></div>
+    <nav class="ft-col" aria-label="Footer"><p class="m-text-5">Pages</p><ul class="m-text"><li><a class="m-link-2" href="#month">Monthly close</a></li><li><a class="m-link-2" href="#all">Everything it does</a></li><li><a class="m-link-2" href="#year">The tax year</a></li><li><a class="m-link-2" href="#fees">Pricing</a></li></ul></nav>
+    <p class="ft-year"><span class="sr-only">Open </span>24/7</p>
+  </div>
+  <p class="ft-mark" style="--len:7">Sumwise</p>
+  <div class="ft-base m-text-6"><p>© 2026 Sumwise · a fictional brand; every figure is illustrative · Design: <a href="https://8b.com/" style="color:inherit">8B</a>.</p><p>AI bookkeeping, tax and payroll, reviewed by licensed CPAs.</p></div>
+</footer>
+
+<script>
+(() => {
+  const nav = document.getElementById('nav');
+  const toggle = nav.querySelector('.nav__menu');
+  const menu = nav.querySelector('.menu');
+  const close = menu.querySelector('.menu__close');
+  const setOpen = open => {
+    menu.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) { window.lenis?.stop(); close.focus(); } else { window.lenis?.start(); }
+  };
+  toggle.addEventListener('click', () => setOpen(true));
+  close.addEventListener('click', () => { setOpen(false); toggle.focus(); });
+  menu.addEventListener('click', event => { if (event.target.closest('a')) setOpen(false); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidden) { setOpen(false); toggle.focus(); } });
+  let last = window.scrollY, travel = 0, ticking = false;
+  const update = () => {
+    ticking = false;
+    const y = window.scrollY, delta = y - last;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    nav.style.setProperty('--p', max > 0 ? Math.min(1, y / max).toFixed(4) : 0);
+    last = y;
+    if (!delta) return;
+    travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
+    if (y < 80) nav.classList.remove('is-hidden');
+    else if (travel > 24) nav.classList.add('is-hidden');
+    else if (travel < -24) nav.classList.remove('is-hidden');
+  };
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  nav.addEventListener('focusin', () => nav.classList.remove('is-hidden'));
+})();
+(() => {
+  const stage = document.querySelector('#opening .op-stage');
+  if (!('IntersectionObserver' in window)) return;
+  new IntersectionObserver(([entry]) => stage.classList.toggle('is-idle', !entry.isIntersecting)).observe(stage);
+})();
+/* live counter in the hero */
+(() => {
+  const out = document.querySelector('[data-live]');
+  if (!out || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let n = Number(out.textContent.replace(/\D/g, '')) || 0;
+  setInterval(() => { if (document.hidden) return; n += 1 + Math.floor(Math.random() * 4); out.textContent = n.toLocaleString('en-US'); }, 1400);
+})();
+(() => {
+  const bars = [...document.querySelectorAll('#month .mo-bar')];
+  const values = bars.map(bar => Number(bar.querySelector('data')?.value) || 0);
+  const max = Math.max(...values, 1);
+  bars.forEach((bar, index) => bar.style.setProperty('--v', (values[index] / max).toFixed(3)));
+})();
+(() => {
+  const plans = [...document.querySelectorAll('#fees .fe-plan')];
+  const values = plans.map(plan => Number(plan.querySelector('.fe-price data')?.value) || 0);
+  const max = Math.max(...values, 1);
+  plans.forEach((plan, index) => plan.style.setProperty('--h', Math.max(values[index] / max, 0.08).toFixed(3)));
+})();
+/* chat: plays the conversation once when it scrolls into view */
+(() => {
+  const log = document.querySelector('#ask .ak-log');
+  if (!log || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const msgs = [...log.querySelectorAll('.ak-msg')];
+  const typing = log.querySelector('.ak-typing');
+  log.classList.add('is-playing');
+  msgs.forEach(m => m.classList.add('is-pending'));
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const play = async () => {
+    for (const m of msgs) {
+      if (m.classList.contains('is-ai')) { typing.classList.add('is-on'); await wait(1300); typing.classList.remove('is-on'); }
+      else await wait(700);
+      m.classList.remove('is-pending'); m.classList.add('is-in');
+      await wait(450);
+    }
+  };
+  const io = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) { io.disconnect(); play(); } }, { threshold: 0.35 });
+  io.observe(log);
+})();
+(() => {
+  const form = document.querySelector('#contact .ct-form');
+  const status = form.querySelector('.ct-status');
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    status.hidden = false;
+    form.querySelector('button[type="submit"]').disabled = true;
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+  const parsed = document.readyState === 'loading' ? new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true })) : Promise.resolve();
+  const ready = () => Promise.all([fonts, parsed]).then(() => firsts);
+  const nextTask = () => window.scheduler?.yield?.() ?? new Promise(resolve => setTimeout(resolve));
+  const refresh = () => {
+    if (typeof window.refreshScroll === 'function') return window.refreshScroll();
+    window.ScrollTrigger?.sort(); window.ScrollTrigger?.refresh();
+  };
+  const run = (setup, name) => {
+    for (const trigger of window.ScrollTrigger?.getAll() || []) if (!trigger.end && window.ScrollTrigger.getAll().includes(trigger)) trigger.refresh(0, 1);
+    const context = window.gsap.context(() => {});
+    const log = new MutationObserver(() => {});
+    log.observe(document.documentElement, { attributes: true, attributeOldValue: true, subtree: true });
+    let failure = null, records;
+    try { context.add(() => { try { setup(); } catch (error) { failure = error; } }); }
+    finally { records = log.takeRecords(); log.disconnect(); }
+    if (!failure) return true;
+    try { context.revert(); } catch (error) { console.error(name, 'revert failed', error); }
+    for (const { target, attributeName, oldValue } of records.reverse()) {
+      const now = target.getAttribute(attributeName);
+      if (oldValue == null) { if (now != null) target.removeAttribute(attributeName); }
+      else if (now !== oldValue) target.setAttribute(attributeName, oldValue);
+    }
+    console.error(name, failure);
+    return false;
+  };
+  let firsts = Promise.resolve(), tail = null, pending = 0, lazy = null, building = 0, firstCount = 0;
+  window.motionReady = ready();
+  parsed.then(() => { if (firstCount && !tail) firsts.then(refresh); });
+  window.queueMotion = (setup, { first = false, near, id } = {}) => {
+    if (!window.gsap || typeof setup !== 'function') return;
+    const name = id || 'motion';
+    if (near instanceof Element && window.IntersectionObserver) {
+      const watch = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        watch.disconnect();
+        building++;
+        lazy = (lazy || ready()).then(nextTask).then(() => run(setup, name)).finally(() => { if (!--building) refresh(); });
+      }, { rootMargin: '100% 0px' });
+      watch.observe(near);
+      return;
+    }
+    if (first) { firstCount++; firsts = firsts.then(() => fonts).then(() => { if (!run(setup, name)) refresh(); }); }
+    else {
+      pending++;
+      tail = (tail || ready()).then(nextTask).then(() => run(setup, name))
+        .finally(() => { if (!--pending) refresh(); });
+    }
+    window.motionReady = Promise.all([firsts, tail]);
+  };
+})();
+</script>
+<script>
+if (window.gsap && window.ScrollTrigger) {
+gsap.registerPlugin(ScrollTrigger);
+const navBar = document.getElementById('nav');
+window.refreshScroll = function () {
+  document.documentElement.style.setProperty('scroll-padding-top', navBar.offsetHeight + 'px');
+  ScrollTrigger.sort();
+  ScrollTrigger.refresh();
+};
+gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+  if (!window.Lenis) return;
+  const lenis = window.lenis = new Lenis({ lerp: 0.09, anchors: { offset: -navBar.offsetHeight } });
+  const tick = time => lenis.raf(time * 1000);
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(tick);
+  gsap.ticker.lagSmoothing(0);
+  return () => { gsap.ticker.remove(tick); gsap.ticker.lagSmoothing(500, 33); lenis.destroy(); window.lenis = null; };
+});
+
+window.effects = {
+  rule(element, vars = {}) {
+    return gsap.timeline(vars).fromTo(element, { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: 'power3.inOut' });
+  },
+  tint(element, vars = {}) {
+    const art = element.querySelector('img, svg') || element;
+    return gsap.timeline(vars)
+      .fromTo(art, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'power3.inOut' })
+      .fromTo(art, { scale: 1.12 }, { scale: 1, duration: 1.4, ease: 'power2.out' }, 0);
+  },
+  mark(element, vars = {}) {
+    const ink = getComputedStyle(element).color, base = getComputedStyle(element.parentElement).color;
+    return gsap.timeline(vars).fromTo(element, { backgroundSize: '0% 100%', color: base }, { backgroundSize: '100% 100%', color: ink, duration: .9, ease: 'power3.inOut' });
+  }
+};
+['rule', 'tint', 'mark'].forEach(name => {
+  document.querySelectorAll('[data-8b-section]').forEach(section => {
+    const elements = [...section.querySelectorAll(`[data-8b-motion~="${name}"]`)];
+    if (!elements.length) return;
+    const id = `effect:${name}:${section.id}`;
+    queueMotion(() => gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      elements.forEach((element, index) => ScrollTrigger.create({
+        id: `${id}:${index}`, trigger: element, start: 'top 88%', once: true,
+        animation: effects[name](element, { delay: (index % 3) * 0.08 })
+      }));
+    }), section.getBoundingClientRect().top < innerHeight ? { first: true, id } : { near: section, id });
+  });
+});
+
+/* opening cover */
+queueMotion(() => {
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    const section = document.getElementById('opening');
+    const stage = section.querySelector('.op-stage');
+    const ground = stage.querySelector('.op-ground');
+    const cover = stage.querySelector('.op-cover');
+    const year = cover.querySelector('.op-year');
+    const tiles = [...stage.querySelectorAll('.op-tile')];
+    const marks = [...section.querySelectorAll('.op-statement .m-mark')];
+    const box = () => {
+      const s = stage.getBoundingClientRect(), c = cover.getBoundingClientRect();
+      return { w: s.width, h: s.height, l: c.left - s.left, t: c.top - s.top, r: s.right - c.right, b: s.bottom - c.bottom, cx: c.left - s.left + c.width / 2, cy: c.top - s.top + c.height / 2 };
+    };
+    const tl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
+      id: 'opening-cover', trigger: section, start: 'top top', end: () => '+=' + stage.offsetHeight, scrub: 0.6, invalidateOnRefresh: true
+    }});
+    tl.fromTo(ground, { '--spread': 0 }, { '--spread': 1, duration: .46, ease: 'power1.inOut' }, .02);
+    tl.to(year, { x: () => box().r - 22, y: () => box().b - 18, duration: .46, ease: 'power1.inOut' }, .02);
+    tiles.forEach((tile, index) => {
+      const vector = () => {
+        const g = box(), r = tile.getBoundingClientRect(), s = stage.getBoundingClientRect();
+        const dx = r.left - s.left + r.width / 2 - g.cx, dy = r.top - s.top + r.height / 2 - g.cy;
+        const len = Math.hypot(dx, dy) || 1;
+        return { x: dx / len * g.w * .5, y: dy / len * g.h * .5 };
+      };
+      tl.to(tile, { x: () => vector().x, y: () => vector().y, rotation: index % 2 ? 9 : -8, scale: .82, duration: .5, ease: 'power1.in' }, 0)
+        .to(tile, { x: 0, y: 0, rotation: 0, scale: 1, duration: .3, ease: 'none' }, .62);
+    });
+    marks.forEach((mark, index) => tl.add(effects.mark(mark).duration(.18), .48 + index * .05));
+    tl.to({}, { duration: .04 }, .96);
+  });
+}, { first: true, id: 'scene:opening-cover' });
+
+/* monthly report walk-through */
+queueMotion(() => {
+  gsap.matchMedia().add({
+    wide: '(min-width: 900px) and (prefers-reduced-motion: no-preference)',
+    narrow: '(max-width: 899px) and (prefers-reduced-motion: no-preference)'
+  }, context => {
+    const section = document.getElementById('month');
+    const sheet = section.querySelector('.mo-sheet');
+    const parts = [...sheet.querySelectorAll('.mo-part')];
+    const keys = [...section.querySelectorAll('.mo-note .mo-key')];
+    const fills = [...sheet.querySelectorAll('.mo-bar__fill')];
+    const cash = parts.findIndex(part => part.contains(fills[0]));
+    const band = document.createElement('span');
+    band.className = 'mo-band';
+    band.setAttribute('aria-hidden', 'true');
+    sheet.prepend(band);
+    gsap.set(band, { autoAlpha: 0 });
+    gsap.set(fills, { scaleY: 0.06 });
+    let active = -1;
+    const place = index => {
+      if (index === active) return;
+      active = index;
+      keys.forEach((key, i) => key.classList.toggle('is-on', i === index));
+      const part = parts[index];
+      if (part) gsap.to(band, { autoAlpha: 1, y: part.offsetTop - 6, scaleY: (part.offsetHeight + 12) / 100, duration: 0.6, ease: 'power3.inOut', overwrite: true });
+      else gsap.to(band, { autoAlpha: 0, duration: 0.3, overwrite: true });
+      gsap.to(fills, { scaleY: cash >= 0 && index >= cash ? 1 : 0.06, duration: 0.8, stagger: 0.035, ease: 'power3.out', overwrite: true });
+    };
+    const steps = context.conditions.wide ? [...section.querySelectorAll('.mo-note')] : parts;
+    steps.forEach((step, index) => ScrollTrigger.create({
+      id: `month-walk:${index}`, trigger: step, start: 'top 58%', end: 'bottom 58%',
+      onToggle: self => {
+        if (self.isActive) place(index);
+        else if (index === 0 && self.direction < 0) place(-1);
+      }
+    }));
+    return () => { band.remove(); keys.forEach(key => key.classList.remove('is-on')); };
+  });
+}, { near: document.getElementById('month'), id: 'scene:month-walk' });
+
+/* services: halftone resolves into the illustration */
+queueMotion(() => {
+  gsap.matchMedia().add({
+    stack: '(min-width: 900px) and (min-height: 680px) and (prefers-reduced-motion: no-preference)',
+    flow: '(max-width: 899px) and (prefers-reduced-motion: no-preference), (max-height: 679px) and (prefers-reduced-motion: no-preference)'
+  }, context => {
+    const section = document.getElementById('services');
+    const list = section.querySelector('.sv-slabs');
+    const slabs = [...list.querySelectorAll('.sv-slab')];
+    const slabTop = index => list.getBoundingClientRect().top + window.scrollY + slabs.slice(0, index).reduce((sum, slab) => sum + slab.offsetHeight, 0);
+    slabs.forEach((slab, index) => {
+      const dots = slab.querySelector('.sv-dots');
+      const art = slab.querySelector('.sv-photo .m-photo__img');
+      const photo = slab.querySelector('.sv-photo');
+      const scrollTrigger = context.conditions.stack
+        ? { id: `services-clarity:${index}`, trigger: list, start: () => slabTop(index) - innerHeight * 0.85, end: () => slabTop(index) + innerHeight * 0.05, scrub: 0.5, invalidateOnRefresh: true }
+        : { id: `services-clarity:${index}`, trigger: photo, start: 'top 95%', end: 'center 55%', scrub: 0.5 };
+      const timeline = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger });
+      timeline.fromTo(dots, { '--dot-cell': '46px', '--dot-r': '20px' }, { '--dot-cell': '6px', '--dot-r': '1.2px', ease: 'power1.inOut' }, 0)
+        .fromTo(art, { scale: 1.2 }, { scale: 1 }, 0);
+      if (context.conditions.stack && index) timeline.fromTo(slabs[index - 1], { scale: 1 }, { scale: 0.9, transformOrigin: '50% 0%' }, 0);
+    });
+  });
+}, { near: document.getElementById('services'), id: 'scene:services-clarity' });
+
+/* everything grid: cells deal in */
+queueMotion(() => {
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    const grid = document.querySelector('#all .al-grid');
+    const cells = [...grid.querySelectorAll('.al-cell')];
+    ScrollTrigger.create({
+      id: 'all-deal', trigger: grid, start: 'top 82%', once: true,
+      animation: gsap.timeline()
+        .from(cells, { y: 48, autoAlpha: 0, duration: .8, ease: 'power3.out', stagger: { each: .05, grid: 'auto', from: 'start' } })
+        .from(cells.map(c => c.querySelector('.al-icon')), { scale: 0, rotation: -40, duration: .6, ease: 'back.out(2)', stagger: .05 }, .15)
+    });
+  });
+}, { near: document.getElementById('all'), id: 'scene:all-deal' });
+
+/* tax year horizontal track */
+queueMotion(() => {
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    const section = document.getElementById('year');
+    const pin = section.querySelector('.yr-pin');
+    const view = section.querySelector('.yr-view');
+    const track = section.querySelector('.yr-track');
+    const chips = [...track.querySelectorAll('.yr-chip')];
+    const fills = chips.map(chip => chip.querySelector('.yr-chip__fill'));
+    const setters = fills.map(fill => gsap.quickSetter(fill, 'scaleX'));
+    const line = document.createElement('span');
+    line.className = 'yr-line';
+    line.setAttribute('aria-hidden', 'true');
+    view.append(line);
+    section.classList.add('is-tracked');
+    view.scrollLeft = 0;
+    let geometry = [];
+    const measure = () => {
+      const box = track.getBoundingClientRect();
+      geometry = chips.map(chip => { const rect = chip.getBoundingClientRect(); return { left: rect.left - box.left, width: rect.width || 1 }; });
+    };
+    const paint = () => {
+      const x = Number(gsap.getProperty(track, 'x')) || 0;
+      const lineX = view.clientWidth / 2;
+      geometry.forEach((chip, index) => setters[index](gsap.utils.clamp(0, 1, (lineX - chip.left - x) / chip.width)));
+    };
+    const distance = () => Math.max(0, track.scrollWidth - view.clientWidth);
+    gsap.to(track, {
+      x: () => -distance(), ease: 'none', onUpdate: paint,
+      scrollTrigger: { id: 'year-filed', trigger: pin, start: 'top top', end: () => '+=' + distance(), pin: true, scrub: 0.5, invalidateOnRefresh: true, onRefresh: () => { measure(); paint(); } }
+    });
+    measure();
+    paint();
+    return () => { line.remove(); section.classList.remove('is-tracked'); gsap.set(fills, { clearProps: 'transform' }); };
+  });
+}, { id: 'scene:year-filed' });
+
+/* people settle in */
+queueMotion(() => {
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    const section = document.getElementById('people');
+    const grid = section.querySelector('.pp-grid');
+    const people = [...grid.querySelectorAll('.pp-person')];
+    const tilt = [-7, 5, -4, 8, -6, 4];
+    const timeline = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
+      id: 'people-settle', trigger: grid, start: 'top 95%', end: 'top 32%', scrub: 0.6, invalidateOnRefresh: true
+    }});
+    people.forEach((person, index) => {
+      const offset = () => {
+        const g = grid.getBoundingClientRect(), r = person.getBoundingClientRect();
+        const dx = g.left + g.width / 2 - (r.left + r.width / 2);
+        return { x: dx * 0.62, y: (index % 2 ? -1 : 1) * r.height * 0.12 + 80 };
+      };
+      timeline.from(person, { x: () => offset().x, y: () => offset().y, rotation: tilt[index % tilt.length], ease: 'power2.out' }, index * 0.04);
+    });
+  });
+}, { near: document.getElementById('people'), id: 'scene:people-settle' });
+
+/* fees rise */
+queueMotion(() => {
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    const section = document.getElementById('fees');
+    const plans = [...section.querySelectorAll('.fe-plan')];
+    const timeline = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
+      id: 'fees-rise', trigger: section.querySelector('.fe-plans'), start: 'top 88%', end: 'top 30%', scrub: 0.6, invalidateOnRefresh: true
+    }});
+    plans.forEach((plan, index) => {
+      const fill = plan.querySelector('.fe-fill'), top = plan.querySelector('.fe-top');
+      timeline.fromTo(fill, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.out' }, index * 0.15)
+        .fromTo(top, { y: () => fill.offsetHeight }, { y: 0, ease: 'power2.out' }, index * 0.15);
+    });
+  });
+}, { near: document.getElementById('fees'), id: 'scene:fees-rise' });
+
+/* footer close */
+queueMotion(() => {
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    const footer = document.getElementById('footer');
+    const mark = footer.querySelector('.ft-mark');
+    const year = footer.querySelector('.ft-year');
+    const timeline = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
+      id: 'footer-close', trigger: footer, start: 'top bottom', end: 'bottom bottom', scrub: 0.6, invalidateOnRefresh: true
+    }});
+    timeline.fromTo(mark, { yPercent: 35, scale: 1.08, transformOrigin: '0% 100%' }, { yPercent: 0, scale: 1, ease: 'power2.out' }, 0)
+      .fromTo(year, { x: () => -Math.max(0, footer.clientWidth - year.offsetWidth - 40) * 0.6 }, { x: 0, ease: 'power2.out' }, 0);
+  });
+}, { near: document.getElementById('footer'), id: 'scene:footer-close' });
+}
+</script>
+</body>
+</html>
