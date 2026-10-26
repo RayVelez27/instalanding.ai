@@ -6,7 +6,7 @@ A loud neo-brutalist page for a swarm of AI agents that help social workers: hug
 
 **Open it:** [`index.html`](index.html) runs straight from disk — one file, every asset inlined, no build step. [Live demo](https://instalanding.ai/demos/kindswarm-casework.html) · [Page on InstaLanding](https://instalanding.ai/prompt/social-work-agent-swarm-landing-page)
 
-**Build it yourself:** [`PROMPT.md`](PROMPT.md) is the one-shot brief this file was built from. Paste it into any AI builder or coding agent.
+**The prompt:** [`PROMPT.md`](PROMPT.md) is this same file with a short instruction on top: keep the design, replace the brand and copy, convert to your stack. Paste it into Claude Code, Cursor, ChatGPT or any builder and it builds this page.
 
 | | |
 | --- | --- |
@@ -16,7 +16,7 @@ A loud neo-brutalist page for a swarm of AI agents that help social workers: hug
 | Libraries | none — plain HTML, CSS and JS |
 | Fonts | Stardos Stencil, IBM Plex Sans Condensed, IBM Plex Mono (Google Fonts) |
 | Uses | inline-svg, reduced-motion |
-| Size | 75 KB · brief ~1,488 tokens |
+| Size | 75 KB · prompt ~19,423 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 

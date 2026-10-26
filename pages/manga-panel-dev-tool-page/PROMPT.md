@@ -1,33 +1,1173 @@
-Build a single-file HTML landing page for "OVERCLOCK", a fictional one-command deploy tool, styled as an issue of a black-and-white manga. Bangers, Anton, Barlow Condensed and JetBrains Mono from Google Fonts, everything else inline. No images and no libraries: every illustration is inline SVG animated with SMIL, and the screentone is CSS. Strictly two inks, #111 and an off-white paper #f8f8f5. Use example domains only, especially in the curl | sh install line.
+INSTALANDING.AI · Manga Panel Dev Tool Page
 
-THE PAGE
-One 1120px panel with a 4px ink border and a hard 10px offset shadow, sitting on a halftone-dotted grey desk. Under 640px the panel goes full bleed and loses the frame.
+The page below is the build. Use it as the starting point, not as inspiration:
+- Keep its layout, design values (colours, type, spacing, radii) and motion exactly as they are.
+- Replace the fictional brand, copy, names and numbers with mine.
+- If I name a stack (React, Next.js, Vue, Svelte, Astro...), convert it faithfully to that stack;
+  otherwise ship it as this one HTML file.
+- Read the MAP and ADAPTING notes in its header comment before you edit.
+- Check it in a real browser: no console errors, no horizontal scroll at 390px, reduced motion respected.
 
-THE HAND-DRAWN LINE
-Two SVG filters declared once (feTurbulence into feDisplacementMap): a strong one for outlines and a light one for display pieces. Never filter a box that contains body text, or the text wobbles too. Instead set border:0 on cards, steps, plans and the terminal and draw the outline as an ::after overlay with the filter on it. Apply the light filter directly to buttons, tags, badges, the logo mark and the big numbers.
+Credit: keep this line as a comment at the top of the file you produce:
+Manga Panel Dev Tool Page · INSTALANDING.AI (MIT) · https://instalanding.ai/prompt/manga-panel-dev-tool-page
 
-THE HERO
-A dot-screen background with a huge paper circle bleeding off the top left behind the copy. An "issue" tag (Vol. 03 · Dev Tools · 2026), then the h1 in Bangers, white fill with a 7px ink stroke using paint-order: stroke fill, rotated -2deg, with a boxed Japanese subtitle under it (限界を超えろ, beyond the limit). A lede on a padded paper panel (so the dot screen never runs behind the words) with one phrase reversed out in ink, two hard-shadow buttons that lift on hover and press on active, and a copyable install line.
-On the right, a terminal panel tilted 1.5deg with a doubled offset shadow and a speech-bubble "12 seconds?!". It types oc deploy --prod, then streams detection, a cache hit, a build time, a block progress bar and a ✓ LIVE line, holds, and loops.
-Behind it all, the scene: a retro sun rising into place, sliced by paper bars that slide down it and thicken as they go, two rings pulsing outward from it, a seeded skyline of ink buildings with lit and blinking windows, and a perspective grid floor scrolling toward the viewer. Reserve the hero's bottom padding for it.
+overclock-deploy.html:
+```html
+<!doctype html>
+<!--
+  INSTALANDING.AI · Manga Panel Dev Tool Page
+  slug     manga-panel-dev-tool-page
+  prompt   https://instalanding.ai/p/manga-panel-dev-tool-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/manga-panel-dev-tool-page
+  license  MIT. Fictional brand; replace names, copy, numbers and domains before shipping.
 
-THE SCENE BUILDER
-Don't hand-write the suns and skylines. Mark them up as empty <g data-sun> and <g data-skyline> groups configured by data attributes (centre, radius, bar count, start, end, duration, invert; width, base, min and max height, seed, a dip so buildings shorten under the sun, night mode) and build them with one small script from a seeded PRNG, so the city is identical on every load. Pause each SVG's animations with an IntersectionObserver while it is off screen.
+  MAP
+  tokens    :root custom properties at the top of <style>: --ink #111, --paper, --white, --grey, --mid.
+            Strictly black and white. Fonts (Google Fonts): Bangers (comic display), Anton (numbers,
+            tags), Barlow Condensed (body), JetBrains Mono (code).
+  sections  nav, hero, stats, features, how-it-works, pricing, faq, cta, footer
+  scripts   one inline <script>, three blocks: the terminal typing loop in the hero; the scene builder
+            (fills every <g data-sun> with a sliced retro sun whose gaps animate down it, and every
+            <g data-skyline> with a seeded city skyline with blinking windows, then pauses each SVG's
+            SMIL animations while it is off screen); the copy-install button and the beta signup form.
+  assets    none: every illustration is inline SVG animated with SMIL; the wobble is two SVG
+            feTurbulence filters (#sketchy, #sketchy-sm) declared once at the top of <body>.
 
-THE ROGUES' GALLERY
-A diagonal-hatched break strip ("3 villains are wanted!"), then three villain cards in a 2+2 grid, the first full width split art/info. Each has a numbered tag, an animated scene, a boxed stat tag, a katakana sound effect, a name in Bangers, an ink "villain · defeated by X" role strip, a paragraph and a dashed-rule fact list:
-The Slow Build: a speedometer whose needle swings from 14 MIN to 0.8 S with speed lines, over a conveyor of ticked boxes on spinning wheels.
-Config Hell: four config file tabs whose tangled wires straighten into the OC badge, an "AUTO-DETECTED ✓" stamp and packets running down the wires.
-The 3 AM Outage: an inverted night panel, a small sliced moon, twinkling stars, a skyline in night mode and a heartbeat line that spikes, with a "ROLLBACK!" flag.
+  ADAPTING
+  - The hand-drawn outlines are ::after overlays filtered by #sketchy, not the elements' own borders
+    (the "SKETCH LAYER" block sets border:0). Keep it that way: filtering a box itself wobbles its text.
+  - Suns and skylines are configured by data attributes (cx, cy, r, bars, start, end, dur, invert;
+    w, base, min, max, seed, dip, mode). Change those, not the generated markup.
+  - The hero's bottom padding (280px) reserves room for the sun, skyline and perspective floor; shrink
+    one and you must shrink the others, at every breakpoint.
+  - Under prefers-reduced-motion the suns are drawn as static slices and every scene is frozen on a
+    good frame (setCurrentTime 1.6), not hidden.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OVERCLOCK · Deploy in One Command</title>
+<meta name="description" content="A fictional one-command deploy tool pitched as a black-and-white manga issue: a sliced retro sun over a city skyline, a typing terminal, three villains defeated and a power-level pricing table.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#111;
+  --paper:#f8f8f5;
+  --white:#fff;
+  --grey:#e2e2df;
+  --mid:#bdbdb8;
+}
+*,*:before,*:after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle,#d8d8d3 1px,transparent 1.3px) 0 0/9px 9px,
+    #ecece7;
+  color:var(--ink);
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:17px;
+  line-height:1.55;
+}
+a{color:inherit}
+.mono{font-family:"JetBrains Mono",monospace}
 
-THE REST
-A "how it works" frame with a tab on its top edge, three steps with ghosted big numbers and code chips, and a note that uses strikethrough, wavy underline, an ink highlight and a hatched mark. A second break ("Choose your power level"), then three plans, the middle one inverted and tilted -1deg with a "Most picked!" tag.
+.page{
+  max-width:1120px;
+  margin:28px auto;
+  background:var(--paper);
+  border:4px solid var(--ink);
+  box-shadow:10px 10px 0 var(--ink);
+  overflow:hidden;
+}
 
-READER MAIL
-A third break ("Got questions?"), then a two-column FAQ of six native <details> items, the first open. Each summary is a tilted ink "Q.01" tag, the question in Bangers (wavy underline on hover) and a round plus that rotates into a filled minus when open. Wobble the item outlines with the same ::after overlay, hide the default marker, give the summary a dashed inset focus ring, and fade the answer in under a thick ink left rule.
+/* ---------- NAV ---------- */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 22px;
+  border-bottom:4px solid var(--ink);
+  background:var(--white);
+}
+.logo{
+  font:400 30px/1 "Bangers",sans-serif;letter-spacing:2px;
+  text-decoration:none;display:flex;align-items:center;gap:8px;
+}
+.logo-mark{
+  width:34px;height:34px;background:var(--ink);color:var(--white);
+  display:grid;place-items:center;font:400 18px "Anton",sans-serif;
+  transform:rotate(-6deg);
+}
+.nav ul{display:flex;gap:24px;list-style:none;margin:0;padding:0}
+.nav ul a{
+  text-decoration:none;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;font-size:14px;
+}
+.nav ul a:hover{background:var(--ink);color:var(--white)}
+.btn{
+  display:inline-block;cursor:pointer;white-space:nowrap;
+  background:var(--ink);color:var(--white);
+  border:3px solid var(--ink);
+  padding:9px 20px;
+  font:400 20px/1 "Bangers",sans-serif;letter-spacing:2px;
+  text-decoration:none;
+  box-shadow:4px 4px 0 var(--mid);
+  transition:transform .12s,box-shadow .12s;
+}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--mid)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--mid)}
+.btn-ghost{background:var(--white);color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.btn-ghost:hover{box-shadow:6px 6px 0 var(--ink)}
 
-THE FINAL CHAPTER
-An ink end panel split copy and art. Copy: a bordered "Final chapter · Your move" kicker, "To be deployed…" in huge paper Bangers with a hard grey drop shadow, a tilted paper caption, a line of copy, a terminal-style signup (a "$" prompt cell, the email field and an ink "Join beta →" button fused into one paper bar with a hard shadow that lifts on focus-within), an inline validation line and three ✓ perks. Art: an inverted sliced sun setting on a horizon, pulsing rings, twinkling stars and a perspective floor whose cross-lines accelerate toward the viewer, with a floating paper chip showing the ✓ LIVE result. Faint concentric rings and a masked dot screen texture the ink. A thin footer.
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;overflow:hidden;
+  min-height:500px;
+  border-bottom:5px solid var(--ink);
+  background:radial-gradient(circle,var(--ink) 1.2px,transparent 1.4px) 0 0/7px 7px;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:24px;
+  padding:52px 34px 60px;
+}
+.hero:before{
+  content:"";position:absolute;
+  width:820px;height:820px;
+  background:var(--paper);border:6px solid var(--ink);border-radius:50%;
+  left:-330px;top:-300px;
+}
+.hero:after{
+  content:"ゴゴゴゴ";position:absolute;right:-10px;bottom:-24px;
+  font:900 82px sans-serif;letter-spacing:-20px;
+  transform:rotate(-6deg);color:var(--ink);
+}
+.hero-copy{position:relative;z-index:3;min-width:0}
+.issue{
+  display:inline-block;background:var(--ink);color:var(--white);
+  padding:4px 12px;font-size:12px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;
+}
+.hero h1{
+  margin:20px 0 0;
+  font:400 82px/.86 "Bangers",sans-serif;letter-spacing:3px;
+  text-transform:uppercase;color:var(--white);
+  -webkit-text-stroke:7px var(--ink);paint-order:stroke fill;
+  transform:rotate(-2deg);
+}
+.hero h1 .jp{
+  display:block;width:max-content;max-width:100%;
+  color:var(--ink);-webkit-text-stroke:0;background:var(--white);
+  border:3px solid var(--ink);
+  padding:4px 10px 2px;margin:12px 0 0 50px;
+  font:400 22px "Anton",sans-serif;letter-spacing:2px;
+}
+.hero-lead{
+  max-width:460px;margin:26px 0 22px;font-size:19px;
+  background:var(--paper);padding:14px 18px;
+}
+.hero-lead strong{background:var(--ink);color:var(--white);padding:0 5px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.install{
+  display:flex;align-items:center;gap:10px;margin-top:20px;
+  background:var(--white);border:3px solid var(--ink);
+  padding:7px 8px 7px 14px;width:max-content;max-width:100%;
+  font-size:14px;
+}
+.install code{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.install button{
+  border:0;background:var(--ink);color:var(--white);cursor:pointer;
+  font:700 11px "Barlow Condensed",sans-serif;letter-spacing:2px;
+  text-transform:uppercase;padding:5px 9px;
+}
 
-THE FLOOR
-One h1 and a main, data-section on every region, aria-hidden on every scene, the terminal given role="img" with a label describing the run, labels on the copy button and the email field, visible focus rings in both inks, no horizontal scroll at 390px. Under prefers-reduced-motion stop the typing (print the finished run), draw the suns as static slices and freeze every SMIL scene on a good frame rather than hiding it.
+/* terminal panel */
+.term-wrap{position:relative;z-index:3;align-self:center}
+.term{
+  background:var(--ink);color:#eaeae4;border:4px solid var(--ink);
+  box-shadow:10px 10px 0 var(--white),10px 10px 0 4px var(--ink);
+  transform:rotate(1.5deg);
+}
+.term-bar{
+  display:flex;align-items:center;gap:7px;padding:9px 12px;
+  background:var(--white);border-bottom:4px solid var(--ink);color:var(--ink);
+}
+.term-bar i{width:12px;height:12px;border:2.5px solid var(--ink);border-radius:50%;display:block}
+.term-bar i:first-child{background:var(--ink)}
+.term-bar span{margin-left:auto;font:700 11px "Barlow Condensed";letter-spacing:2px;text-transform:uppercase}
+.term pre{
+  margin:0;padding:18px 18px 22px;min-height:280px;
+  font:13px/1.75 "JetBrains Mono",monospace;white-space:pre-wrap;
+}
+.term .ok{background:#eaeae4;color:var(--ink);padding:0 4px;font-weight:700}
+.term .dim{color:#8a8a85}
+.cursor{display:inline-block;width:9px;height:16px;background:#eaeae4;vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.bubble{
+  position:absolute;z-index:4;right:-6px;top:-44px;
+  background:var(--white);border:3px solid var(--ink);border-radius:50%;
+  padding:16px 22px;font:400 20px/1 "Bangers",sans-serif;letter-spacing:1px;
+  transform:rotate(4deg);
+}
+
+/* ---------- STATS ---------- */
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:4px solid var(--ink);background:var(--white);
+}
+.stat{padding:18px 20px;border-right:3px solid var(--ink);position:relative}
+.stat:last-child{border-right:0}
+.stat b{display:block;font:400 42px/1 "Anton",sans-serif}
+.stat span{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+
+.wrap{padding:14px}
+
+/* ---------- BREAK ---------- */
+.break{
+  height:84px;position:relative;margin:14px 0;overflow:hidden;
+  border:3px solid var(--ink);
+  background:repeating-linear-gradient(-12deg,var(--white) 0,var(--white) 7px,var(--ink) 8px,var(--ink) 9px);
+}
+.break span{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) rotate(-2deg);white-space:nowrap;
+  background:var(--white);border:3px solid var(--ink);
+  padding:4px 22px;font:400 32px "Bangers",sans-serif;letter-spacing:2px;
+}
+
+/* ---------- FEATURES ---------- */
+.section-title{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+  margin:6px 4px 14px;
+}
+.section-title h2{
+  margin:0;font:400 48px/.9 "Bangers",sans-serif;letter-spacing:2px;
+  text-transform:uppercase;
+}
+.section-title p{margin:0;max-width:360px;font-size:15px;text-align:right}
+
+.features{
+  display:grid;grid-template-columns:1.05fr .95fr;gap:12px;
+  grid-template-areas:"one one" "two three";
+}
+.card{position:relative;overflow:hidden;border:3px solid var(--ink);background:var(--white)}
+.card-one{grid-area:one;display:grid;grid-template-columns:56% 44%;min-height:320px}
+.card-two{grid-area:two}
+.card-three{grid-area:three}
+.art{
+  position:relative;overflow:hidden;
+  background:repeating-linear-gradient(45deg,#eee 0,#eee 2px,#fff 2px,#fff 6px);
+  display:grid;place-items:center;
+}
+.card-one .art{border-right:4px solid var(--ink)}
+.card-two .art,.card-three .art{height:230px;border-bottom:4px solid var(--ink)}
+.art:after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(0,0,0,.3) .8px,transparent 1px) 0 0/4px 4px;opacity:.25;
+}
+.num{
+  position:absolute;z-index:4;left:10px;top:10px;
+  width:42px;height:42px;background:var(--ink);color:var(--white);
+  display:grid;place-items:center;font:400 20px "Anton",sans-serif;
+  transform:rotate(-5deg);
+}
+.sfx{
+  position:absolute;z-index:4;right:8px;bottom:-8px;
+  font:900 42px sans-serif;letter-spacing:-9px;transform:rotate(-8deg);
+  color:var(--white);-webkit-text-stroke:2px var(--ink);
+}
+/* speed lines art */
+.speed{
+  position:absolute;inset:0;
+  background:repeating-conic-gradient(from 0deg at 50% 50%,var(--ink) 0 1.2deg,transparent 1.2deg 7deg);
+  -webkit-mask:radial-gradient(circle,transparent 28%,#000 30%);
+          mask:radial-gradient(circle,transparent 28%,#000 30%);
+  opacity:.85;
+}
+.art-label{
+  position:relative;z-index:3;background:var(--white);border:4px solid var(--ink);
+  padding:12px 18px;font:400 30px/1 "Anton",sans-serif;text-align:center;
+  transform:rotate(-3deg);box-shadow:6px 6px 0 var(--ink);
+}
+.art-label small{display:block;font:700 11px "Barlow Condensed";letter-spacing:3px;margin-top:6px}
+.art-code{
+  position:relative;z-index:3;background:var(--ink);color:#eaeae4;
+  padding:14px 16px;font:12px/1.7 "JetBrains Mono",monospace;
+  border:3px solid var(--ink);transform:rotate(2deg);box-shadow:6px 6px 0 var(--white),6px 6px 0 3px var(--ink);
+  max-width:86%;
+}
+.art-code s{color:#8a8a85}
+.graph{position:relative;z-index:3;width:80%;height:auto}
+
+.info{padding:18px 18px 20px}
+.info h3{
+  margin:0 0 2px;font:400 30px/.95 "Bangers",sans-serif;letter-spacing:1px;
+  text-transform:uppercase;
+}
+.role{
+  display:inline-block;background:var(--ink);color:var(--white);
+  padding:2px 8px;margin:4px 0 12px;font-size:11px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+}
+.info p{margin:0}
+.facts{
+  margin-top:13px;padding-top:10px;border-top:2px dashed var(--ink);
+  font-size:14px;
+}
+.facts b{text-transform:uppercase;letter-spacing:1px}
+
+/* ---------- HOW IT WORKS ---------- */
+.story{
+  margin-top:26px;border:3px solid var(--ink);padding:30px 26px 26px;position:relative;
+  background:radial-gradient(circle at 90% 15%,#ddd 1px,transparent 1.4px) 0 0/6px 6px;
+}
+.story:before{
+  content:"HOW IT WORKS";position:absolute;right:14px;top:-20px;
+  background:var(--ink);color:var(--white);padding:3px 13px;
+  font:400 18px "Anton",sans-serif;letter-spacing:2px;transform:rotate(2deg);
+}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.step{background:var(--white);border:3px solid var(--ink);padding:16px;position:relative}
+.step-n{
+  font:400 64px/.8 "Anton",sans-serif;color:var(--grey);
+  position:absolute;right:10px;top:8px;
+}
+.step h4{margin:0 0 8px;font:400 24px "Bangers",sans-serif;letter-spacing:1px;position:relative}
+.step p{margin:0 0 12px;position:relative}
+.step code{
+  display:block;background:var(--ink);color:#eaeae4;padding:8px 10px;
+  font:12px "JetBrains Mono",monospace;overflow-x:auto;white-space:nowrap;
+}
+.story-note{margin:20px 0 0;max-width:640px;text-align:justify}
+.story-note b{background:var(--ink);color:var(--white);padding:0 4px}
+.story-note u{text-decoration-style:wavy;text-underline-offset:3px}
+.story-note s{text-decoration-thickness:2px}
+.story-note mark{
+  background:repeating-linear-gradient(-45deg,transparent 0,transparent 2px,#ccc 2px,#ccc 4px);
+  font-weight:700;padding:0 4px;color:inherit;
+}
+
+/* ---------- PRICING ---------- */
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.plan{border:3px solid var(--ink);background:var(--white);padding:22px 20px;position:relative;display:flex;flex-direction:column}
+.plan h3{margin:0;font:400 28px "Bangers",sans-serif;letter-spacing:1px}
+.price{font:400 56px/1 "Anton",sans-serif;margin:10px 0 2px}
+.price small{font:600 16px "Barlow Condensed";letter-spacing:1px}
+.plan ul{list-style:none;padding:0;margin:14px 0 20px;flex:1}
+.plan li{padding:5px 0;border-bottom:2px dashed var(--grey)}
+.plan li:before{content:"▶ ";font-size:11px}
+.plan .btn{text-align:center}
+.plan-hot{background:var(--ink);color:var(--white);transform:rotate(-1deg)}
+.plan-hot li{border-color:#444}
+.plan-hot .btn{background:var(--white);color:var(--ink);border-color:var(--white);box-shadow:4px 4px 0 #555}
+.hot-tag{
+  position:absolute;top:-16px;right:14px;background:var(--white);color:var(--ink);
+  border:3px solid var(--ink);padding:2px 10px;font:400 16px "Bangers";letter-spacing:2px;
+  transform:rotate(4deg);
+}
+
+/* ---------- FAQ ---------- */
+.faq{margin-top:6px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.faq-item{position:relative;background:var(--white)}
+.faq-item:after{content:"";position:absolute;inset:0;border:3px solid var(--ink);filter:url(#sketchy);pointer-events:none}
+.faq-item summary{
+  list-style:none;display:flex;align-items:center;gap:14px;
+  padding:16px 18px;cursor:pointer;
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary:focus-visible{outline:3px dashed var(--ink);outline-offset:-8px}
+.faq-q{
+  flex:none;background:var(--ink);color:var(--white);
+  font:400 15px/1 "Anton",sans-serif;letter-spacing:1px;padding:6px 8px;
+  transform:rotate(-4deg);filter:url(#sketchy-sm);
+}
+.faq-text{flex:1;font:400 23px/1.05 "Bangers",sans-serif;letter-spacing:1px}
+.faq-item summary:hover .faq-text{text-decoration:underline wavy;text-underline-offset:5px;text-decoration-thickness:1.5px}
+.faq-icon{
+  flex:none;width:32px;height:32px;border:3px solid var(--ink);border-radius:50%;
+  position:relative;transition:transform .35s cubic-bezier(.16,1,.3,1),background .2s;
+}
+.faq-icon:before,.faq-icon:after{
+  content:"";position:absolute;left:50%;top:50%;width:12px;height:3px;
+  background:var(--ink);transform:translate(-50%,-50%);transition:transform .35s cubic-bezier(.16,1,.3,1),background .2s;
+}
+.faq-icon:after{transform:translate(-50%,-50%) rotate(90deg)}
+.faq-item[open] .faq-icon{background:var(--ink);transform:rotate(180deg)}
+.faq-item[open] .faq-icon:before,.faq-item[open] .faq-icon:after{background:var(--white)}
+.faq-item[open] .faq-icon:after{transform:translate(-50%,-50%) rotate(0deg)}
+.faq-item[open] summary{border-bottom:2px dashed var(--ink)}
+.faq-a{padding:16px 18px 20px}
+.faq-item[open] .faq-a{animation:faqIn .4s cubic-bezier(.16,1,.3,1)}
+@keyframes faqIn{from{opacity:0;translate:0 -6px}to{opacity:1;translate:0 0}}
+.faq-a p{margin:0;padding-left:14px;border-left:4px solid var(--ink)}
+.faq-a code{font:13px "JetBrains Mono",monospace;background:var(--ink);color:var(--white);padding:1px 6px}
+
+/* ---------- END PANEL (final chapter) ---------- */
+.end{
+  margin-top:26px;position:relative;overflow:hidden;
+  background:var(--ink);color:var(--white);
+  border:3px solid var(--ink);
+}
+.end:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-radial-gradient(circle at 0 0,transparent 0 26px,rgba(255,255,255,.05) 26px 28px);
+}
+.end:after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.09) 1px,transparent 1.3px) 0 0/7px 7px;
+  -webkit-mask:linear-gradient(200deg,transparent 45%,#000);
+          mask:linear-gradient(200deg,transparent 45%,#000);
+}
+.end-inner{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);min-height:470px}
+.end-copy{padding:50px 20px 46px 46px;display:flex;flex-direction:column;justify-content:center}
+.end-kicker{
+  align-self:flex-start;border:2px solid var(--white);padding:4px 11px;
+  font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+}
+.end-title{
+  margin:20px 0 0;font:400 84px/.86 "Bangers",sans-serif;letter-spacing:3px;
+  text-transform:uppercase;color:var(--paper);
+  text-shadow:5px 5px 0 #3d3d3d;transform:rotate(-2deg);transform-origin:left;
+}
+.end-sub{
+  align-self:flex-start;margin:18px 0 0 34px;
+  background:var(--paper);color:var(--ink);padding:5px 12px 3px;
+  font:400 21px "Anton",sans-serif;letter-spacing:1.5px;text-transform:uppercase;
+  transform:rotate(-1.5deg);
+}
+.end-lead{max-width:430px;margin:24px 0 22px;font-size:19px;color:#cfcfca}
+.signup{max-width:500px}
+.signup-field{
+  display:flex;align-items:stretch;background:var(--paper);
+  border:3px solid var(--paper);box-shadow:7px 7px 0 #3d3d3d;
+  transition:box-shadow .2s,transform .2s;
+}
+.signup-field:focus-within{box-shadow:7px 7px 0 var(--paper);transform:translate(-2px,-2px)}
+.signup-prompt{display:grid;place-items:center;padding:0 13px;background:var(--ink);color:var(--paper);font-weight:700}
+.signup input{
+  flex:1;min-width:0;border:0;background:var(--paper);color:var(--ink);
+  padding:15px 14px;font:15px "JetBrains Mono",monospace;outline:none;
+}
+.signup input::placeholder{color:#8a8a85}
+.signup .btn{
+  border:0;box-shadow:none;background:var(--ink);color:var(--paper);
+  padding:0 22px;font-size:21px;filter:none;
+}
+.signup .btn:hover{transform:none;box-shadow:none;background:#2c2c2c}
+.signup .btn:active{transform:none}
+.signup-msg{margin:14px 0 0;min-height:1.4em;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase}
+.end-perks{
+  list-style:none;display:flex;flex-wrap:wrap;gap:8px 22px;padding:0;margin:2px 0 0;
+  font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#cfcfca;
+}
+.end-perks li:before{content:"✓";display:inline-block;margin-right:7px;color:var(--paper)}
+.end-art{position:relative;min-height:380px;border-left:3px solid #2c2c2c}
+.end-art{overflow:hidden}
+.end-art svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+.end-chip{
+  position:absolute;z-index:3;left:50%;bottom:30px;
+  transform:translateX(-50%) rotate(-2deg);
+  background:var(--paper);color:var(--ink);border:3px solid var(--paper);
+  box-shadow:6px 6px 0 #3d3d3d;padding:9px 14px;
+  font:12px/1.6 "JetBrains Mono",monospace;white-space:nowrap;
+  animation:chipFloat 4s ease-in-out infinite;
+}
+.end-chip b{background:var(--ink);color:var(--paper);padding:0 5px;margin-right:6px}
+.end-chip .dim{color:#8a8a85}
+@keyframes chipFloat{50%{translate:0 -7px}}
+
+/* ---------- FOOTER ---------- */
+.foot{
+  padding:12px 16px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;
+  border-top:4px solid var(--ink);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  background:var(--white);
+}
+.foot nav{display:flex;gap:16px}
+.foot a{text-decoration:none}
+.foot a:hover{text-decoration:underline}
+a:focus-visible,button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.plan-hot a:focus-visible{outline-color:var(--white)}
+.signup .btn:focus-visible{outline-color:var(--paper);outline-offset:-6px}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr);padding:40px 22px 70px}
+  .hero h1{font-size:64px}
+  .term-wrap{margin-top:40px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(-n+2){border-bottom:3px solid var(--ink)}
+  .steps,.pricing,.faq-grid{grid-template-columns:1fr}
+  .end-inner{grid-template-columns:minmax(0,1fr)}
+  .end-copy{padding:40px 24px 24px}
+  .end-art{min-height:320px;border-left:0;border-top:3px solid #2c2c2c}
+  .plan-hot{transform:none}
+}
+@media(max-width:640px){
+  .page{margin:0;border-width:0 0 4px;box-shadow:none}
+  .nav ul{display:none}
+  .hero h1{font-size:50px;-webkit-text-stroke:5px var(--ink)}
+  .hero h1 .jp{margin-left:16px;font-size:18px}
+  .hero:after{font-size:56px;letter-spacing:-14px}
+  .bubble{right:0;top:-40px;font-size:16px;padding:12px 16px}
+  .section-title{flex-direction:column;align-items:flex-start}
+  .section-title p{text-align:left}
+  .section-title h2{font-size:40px}
+  .features{grid-template-columns:1fr;grid-template-areas:"one" "two" "three"}
+  .card-one{grid-template-columns:1fr}
+  .card-one .art{height:260px;border-right:0;border-bottom:4px solid var(--ink)}
+  .break span{font-size:22px;padding:3px 14px}
+  .end-title{font-size:50px}
+  .end-sub{margin-left:12px;font-size:17px}
+  .signup-field{flex-wrap:wrap}
+  .signup input{flex-basis:calc(100% - 44px)}
+  .signup .btn{width:100%;padding:13px 0}
+  .faq-text{font-size:20px}
+}
+/* =========================================================
+   SKETCH LAYER — hand-drawn wobble borrowed from the toggle
+   ========================================================= */
+
+/* wobbly ink outlines drawn as overlays so text stays crisp */
+.card,.plan,.step,.break,.story{border:0}
+.term{border:0;position:relative}
+.card:after,.plan:after,.step:after,.break:after,.story:after,.term:after{
+  content:"";position:absolute;inset:0;z-index:6;pointer-events:none;
+  border:3px solid var(--ink);filter:url(#sketchy);
+}
+.term:after{border-width:4px}
+.plan-hot:after{border-color:var(--ink)}
+
+/* little hand-drawn jitter on display pieces */
+.btn,.logo-mark,.issue,.num,.hot-tag,.bubble,.art-label,.break span,.role,
+.install,.stat b,.step-n,.end-kicker,.end-sub,.hero h1 .jp{filter:url(#sketchy-sm)}
+.hero:before{filter:url(#sketchy)}
+.speed{filter:url(#sketchy-sm)}
+
+/* =========================================================
+   RETRO SLICED-SUN SCENES — black & white, animated
+   ========================================================= */
+.hero{padding-bottom:280px}
+.hero:after{display:none}
+
+/* entrance */
+.hero-copy>*{animation:rise .9s cubic-bezier(.16,1,.3,1) both}
+.hero-copy>*:nth-child(2){animation-delay:.08s}
+.hero-copy>*:nth-child(3){animation-delay:.16s}
+.hero-copy>*:nth-child(4){animation-delay:.24s}
+.hero-copy>*:nth-child(5){animation-delay:.32s}
+.term-wrap{animation:rise 1.1s .35s cubic-bezier(.16,1,.3,1) both}
+@keyframes rise{from{opacity:0;translate:0 26px}to{opacity:1;translate:0 0}}
+
+/* the sun */
+.hero-sun{
+  position:absolute;z-index:1;pointer-events:none;
+  left:71%;bottom:130px;width:680px;aspect-ratio:1;
+  transform:translate(-50%,50%);
+  animation:sunrise 2.8s cubic-bezier(.16,1,.3,1) both;
+}
+.hero-sun svg{width:100%;height:100%;overflow:visible;display:block}
+@keyframes sunrise{from{transform:translate(-50%,100%)}to{transform:translate(-50%,50%)}}
+
+/* skyline + perspective floor */
+.hero-horizon{position:absolute;left:0;right:0;bottom:0;height:240px;z-index:2;pointer-events:none}
+.skyline{position:absolute;left:0;bottom:126px;width:100%;height:110px;display:block}
+.floor{
+  position:absolute;left:0;right:0;bottom:0;height:130px;
+  background:var(--paper);border-top:4px solid var(--ink);
+  overflow:hidden;perspective:200px;perspective-origin:70% 0;
+}
+.floor-plane{
+  position:absolute;left:-100%;right:-100%;top:0;height:420%;
+  transform-origin:50% 0;transform:rotateX(72deg);
+  background-image:
+    repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 72px),
+    repeating-linear-gradient(0deg,var(--ink) 0 2px,transparent 2px 72px);
+  animation:floor 1.5s linear infinite;
+}
+@keyframes floor{from{background-position:0 0,0 0}to{background-position:0 0,0 72px}}
+.floor:after{content:"";position:absolute;inset:0;background:linear-gradient(var(--paper),rgba(248,248,245,0) 55%)}
+
+/* card scenes */
+.art{background:var(--paper)}
+.scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+.art-tag{
+  position:absolute;z-index:4;top:12px;right:12px;
+  background:var(--white);border:3px solid var(--ink);
+  padding:6px 11px 5px;font:400 22px/1 "Anton",sans-serif;
+  transform:rotate(3deg);box-shadow:4px 4px 0 var(--ink);filter:url(#sketchy-sm);
+}
+.art-tag small{display:block;font:700 10px "Barlow Condensed",sans-serif;letter-spacing:2px;margin-top:4px}
+.card-three .num{background:var(--paper);color:var(--ink)}
+.card-three .art-tag{box-shadow:4px 4px 0 var(--paper)}
+
+.blink{animation:blink2 2.6s steps(1) infinite}
+@keyframes blink2{50%{opacity:0}}
+
+@media(max-width:900px){
+  .hero{padding-bottom:260px}
+  .hero-sun{left:50%;width:600px}
+  .floor{perspective-origin:50% 0}
+}
+@media(max-width:640px){
+  .hero{padding-bottom:230px}
+  .hero-sun{width:470px;bottom:110px}
+  .floor{height:110px}
+  .skyline{bottom:106px;height:90px}
+}
+
+
+@media(prefers-reduced-motion:reduce){
+  .cursor,.hero-sun,.floor-plane,.blink,.hero-copy>*,.term-wrap,.end-chip,.faq-a{animation:none!important}
+  .btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Hand-drawn wobble filters -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <filter id="sketchy" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="turbulence" baseFrequency="0.035 0.042" numOctaves="4" result="noise" seed="42"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="sketchy-sm" x="-18%" y="-18%" width="136%" height="136%">
+      <feTurbulence type="turbulence" baseFrequency="0.06" numOctaves="3" result="noise" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="page">
+
+  <!-- NAV -->
+  <header class="nav" data-section="nav">
+    <a class="logo" href="#top" aria-label="OVERCLOCK home"><span class="logo-mark">OC</span>OVERCLOCK</a>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="btn" href="#signup">Get started</a>
+  </header>
+
+  <!-- HERO -->
+  <main>
+  <section class="hero" id="top" data-section="hero">
+    <div class="hero-sun" aria-hidden="true">
+      <svg viewBox="0 0 640 640">
+        <circle cx="320" cy="320" r="276" fill="#f8f8f5" stroke="#111" stroke-width="3"/>
+        <circle cx="320" cy="320" r="276" fill="none" stroke="#111" stroke-width="2">
+          <animate attributeName="r" values="276;380" dur="6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".9;0" dur="6s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="320" cy="320" r="276" fill="none" stroke="#111" stroke-width="2">
+          <animate attributeName="r" values="276;380" dur="6s" begin="-3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".9;0" dur="6s" begin="-3s" repeatCount="indefinite"/>
+        </circle>
+        <g data-sun data-cx="320" data-cy="320" data-r="252" data-bars="8" data-dur="9" data-stroke="4" data-start=".04" data-end=".5"></g>
+      </svg>
+    </div>
+    <div class="hero-horizon" aria-hidden="true">
+      <svg class="skyline" viewBox="0 0 1200 110" preserveAspectRatio="xMidYMax slice">
+        <g data-skyline data-w="1200" data-base="110" data-min="24" data-max="100" data-seed="11" data-dip="0.7"></g>
+      </svg>
+      <div class="floor"><div class="floor-plane"></div></div>
+    </div>
+    <div class="hero-copy">
+      <div class="issue">Vol. 03 · Dev Tools · 2026</div>
+      <h1>
+        Ship it before<br>the deadline!
+        <span class="jp">限界を超えろ — beyond the limit</span>
+      </h1>
+      <p class="hero-lead">
+        OVERCLOCK turns any repo into a <strong>live, global deployment</strong>
+        in one command. No YAML sagas, no pipeline boss fights — just push,
+        and your code is out in the world before your coffee cools.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn" href="#signup">Start free</a>
+        <a class="btn btn-ghost" href="#how">See how it works</a>
+      </div>
+      <div class="install mono">
+        <code id="installCmd">curl -fsSL overclock.example/install | sh</code>
+        <button type="button" id="copyBtn" aria-label="Copy install command">Copy</button>
+      </div>
+    </div>
+
+    <div class="term-wrap">
+      <div class="bubble" aria-hidden="true">12 seconds?!</div>
+      <div class="term" role="img" aria-label="Terminal demo: oc deploy --prod goes live in 12 seconds">
+        <div class="term-bar"><i></i><i></i><i></i><span>~/my-app — zsh</span></div>
+        <pre id="term" aria-hidden="true"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats" data-section="stats">
+    <div class="stat"><b>12s</b><span>Median deploy</span></div>
+    <div class="stat"><b>99.99%</b><span>Uptime SLA</span></div>
+    <div class="stat"><b>38</b><span>Edge regions</span></div>
+    <div class="stat"><b>0</b><span>Config files needed</span></div>
+  </div>
+
+  <div class="wrap">
+
+    <div class="break"><span>3 villains are wanted!</span></div>
+
+    <!-- FEATURES -->
+    <section id="features" data-section="features">
+      <div class="section-title">
+        <h2>The rogues' gallery</h2>
+        <p>Every dev team fights the same three enemies. OVERCLOCK was built to take them down — permanently.</p>
+      </div>
+
+      <div class="features">
+
+        <article class="card card-one">
+          <div class="art">
+            <svg class="scene" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="400" height="260" fill="#f8f8f5"/>
+              <path d="M105 130A95 95 0 0 1 295 130Z" fill="#f8f8f5" stroke="#111" stroke-width="5" stroke-linejoin="round"/>
+              <path d="M267.8 87.6A80 80 0 0 1 280 130" fill="none" stroke="#111" stroke-width="12"/><line x1="114.0" y1="130.0" x2="130.0" y2="130.0" stroke="#111" stroke-width="3.5"/><line x1="116.9" y1="107.7" x2="125.6" y2="110.1" stroke="#111" stroke-width="2"/><line x1="125.5" y1="87.0" x2="133.3" y2="91.5" stroke="#111" stroke-width="2"/><line x1="139.2" y1="69.2" x2="150.5" y2="80.5" stroke="#111" stroke-width="3.5"/><line x1="157.0" y1="55.5" x2="161.5" y2="63.3" stroke="#111" stroke-width="2"/><line x1="177.7" y1="46.9" x2="180.1" y2="55.6" stroke="#111" stroke-width="2"/><line x1="200.0" y1="44.0" x2="200.0" y2="60.0" stroke="#111" stroke-width="3.5"/><line x1="222.3" y1="46.9" x2="219.9" y2="55.6" stroke="#111" stroke-width="2"/><line x1="243.0" y1="55.5" x2="238.5" y2="63.3" stroke="#111" stroke-width="2"/><line x1="260.8" y1="69.2" x2="249.5" y2="80.5" stroke="#111" stroke-width="3.5"/><line x1="274.5" y1="87.0" x2="266.7" y2="91.5" stroke="#111" stroke-width="2"/><line x1="283.1" y1="107.7" x2="274.4" y2="110.1" stroke="#111" stroke-width="2"/><line x1="286.0" y1="130.0" x2="270.0" y2="130.0" stroke="#111" stroke-width="3.5"/>
+              <text x="110" y="150" font-family="Bangers, sans-serif" font-size="15" letter-spacing="1" fill="#111">14 MIN</text>
+              <text x="290" y="150" text-anchor="end" font-family="Bangers, sans-serif" font-size="15" letter-spacing="1" fill="#111">0.8 S</text>
+              <g stroke="#111" stroke-width="3.5" stroke-linecap="round" opacity="0"><line x1="297.7" y1="94.4" x2="314.6" y2="88.3"/><line x1="282.0" y1="66.0" x2="296.1" y2="54.9"/><line x1="258.2" y1="43.8" x2="268.2" y2="28.9"/>
+                <animate attributeName="opacity" values="0;0;1;0;1;0;1;0;0" keyTimes="0;.31;.33;.4;.47;.56;.66;.85;1" dur="5s" repeatCount="indefinite"/>
+              </g>
+              <g transform="translate(200 130)">
+                <g>
+                  <animateTransform attributeName="transform" type="rotate" values="-82;-82;74;64;72;72;-82" keyTimes="0;.12;.32;.38;.44;.85;1" calcMode="spline" keySplines=".4 0 .2 1;.5 0 .1 1;.4 0 .6 1;.4 0 .6 1;.4 0 .2 1;.6 0 .3 1" dur="5s" repeatCount="indefinite"/>
+                  <path d="M-5 0L0 -84L5 0Z" fill="#111"/>
+                </g>
+                <circle r="12" fill="#111"/><circle r="4" fill="#f8f8f5"/>
+              </g>
+              <rect x="162" y="140" width="76" height="22" fill="#111"/>
+              <text x="200" y="156" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" fill="#f8f8f5">14:00<animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;.3;.31;.92;.93;1" dur="5s" repeatCount="indefinite"/></text>
+              <text x="200" y="156" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" fill="#f8f8f5" opacity="0">0.8s ✓<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.3;.31;.92;.93;1" dur="5s" repeatCount="indefinite"/></text>
+              <g><g transform="translate(-64 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><g transform="translate(0 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><g transform="translate(64 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><g transform="translate(128 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><g transform="translate(192 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><g transform="translate(256 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><g transform="translate(320 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><g transform="translate(384 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><g transform="translate(448 208)"><g><path d="M-16 -18H-5M-20 -9H-5" stroke="#111" stroke-width="2" stroke-linecap="round"/><rect x="0" y="-24" width="24" height="24" fill="#f8f8f5" stroke="#111" stroke-width="2"/><path d="M0 -24L8 -32H32L24 -24Z" fill="#f8f8f5" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M24 -24L32 -32V-8L24 0Z" fill="#111" stroke="#111" stroke-width="2" stroke-linejoin="round"/><path d="M5 -12L10 -7L19 -17" fill="none" stroke="#111" stroke-width="2.6"/></g></g><animateTransform attributeName="transform" type="translate" values="0 0;64 0" dur=".45s" repeatCount="indefinite"/></g>
+              <line x1="0" x2="400" y1="209" y2="209" stroke="#111" stroke-width="3"/>
+              <rect y="231" width="400" height="40" fill="#111"/>
+              <g transform="translate(20 220)"><circle r="9" fill="#f8f8f5" stroke="#111" stroke-width="2.5"/><g stroke="#111" stroke-width="2"><line x1="-9" x2="9"/><line y1="-9" y2="9"/><animateTransform attributeName="transform" type="rotate" values="0;360" dur=".6s" repeatCount="indefinite"/></g></g><g transform="translate(68 220)"><circle r="9" fill="#f8f8f5" stroke="#111" stroke-width="2.5"/><g stroke="#111" stroke-width="2"><line x1="-9" x2="9"/><line y1="-9" y2="9"/><animateTransform attributeName="transform" type="rotate" values="0;360" dur=".6s" repeatCount="indefinite"/></g></g><g transform="translate(116 220)"><circle r="9" fill="#f8f8f5" stroke="#111" stroke-width="2.5"/><g stroke="#111" stroke-width="2"><line x1="-9" x2="9"/><line y1="-9" y2="9"/><animateTransform attributeName="transform" type="rotate" values="0;360" dur=".6s" repeatCount="indefinite"/></g></g><g transform="translate(164 220)"><circle r="9" fill="#f8f8f5" stroke="#111" stroke-width="2.5"/><g stroke="#111" stroke-width="2"><line x1="-9" x2="9"/><line y1="-9" y2="9"/><animateTransform attributeName="transform" type="rotate" values="0;360" dur=".6s" repeatCount="indefinite"/></g></g><g transform="translate(212 220)"><circle r="9" fill="#f8f8f5" stroke="#111" stroke-width="2.5"/><g stroke="#111" stroke-width="2"><line x1="-9" x2="9"/><line y1="-9" y2="9"/><animateTransform attributeName="transform" type="rotate" values="0;360" dur=".6s" repeatCount="indefinite"/></g></g><g transform="translate(260 220)"><circle r="9" fill="#f8f8f5" stroke="#111" stroke-width="2.5"/><g stroke="#111" stroke-width="2"><line x1="-9" x2="9"/><line y1="-9" y2="9"/><animateTransform attributeName="transform" type="rotate" values="0;360" dur=".6s" repeatCount="indefinite"/></g></g><g transform="translate(308 220)"><circle r="9" fill="#f8f8f5" stroke="#111" stroke-width="2.5"/><g stroke="#111" stroke-width="2"><line x1="-9" x2="9"/><line y1="-9" y2="9"/><animateTransform attributeName="transform" type="rotate" values="0;360" dur=".6s" repeatCount="indefinite"/></g></g><g transform="translate(356 220)"><circle r="9" fill="#f8f8f5" stroke="#111" stroke-width="2.5"/><g stroke="#111" stroke-width="2"><line x1="-9" x2="9"/><line y1="-9" y2="9"/><animateTransform attributeName="transform" type="rotate" values="0;360" dur=".6s" repeatCount="indefinite"/></g></g>
+            </svg>
+            <div class="art-tag">0.8s<small>build · was 14 min</small></div>
+            <div class="num">01</div>
+            <div class="sfx">ドドド</div>
+          </div>
+          <div class="info">
+            <h3>The Slow Build</h3>
+            <div class="role">villain · defeated by turbo cache</div>
+            <p>
+              Our content-addressed build cache remembers every artifact your
+              team has ever compiled. Change one file, rebuild one file.
+              Monorepos with 400 packages go from lunch break to blink.
+            </p>
+            <div class="facts">
+              <b>Power:</b> Remote + local cache<br>
+              <b>Speed-up:</b> up to 40×<br>
+              <b>Works with:</b> Node, Go, Rust, Python<br>
+              <b>Setup:</b> none
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-two">
+          <div class="art">
+            <svg class="scene" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="400" height="260" fill="#f8f8f5"/>
+              <path d="M126 94C262 210 140 -10 286 114" fill="none" stroke="#111" stroke-width="3.2" stroke-linecap="round"><animate attributeName="d" values="M126 94C262 210 140 -10 286 114;M126 94C262 210 140 -10 286 114;M126 94C206 94 206 114 286 114;M126 94C206 94 206 114 286 114;M126 94C262 210 140 -10 286 114" calcMode="spline" keyTimes="0;.22;.46;.84;1" keySplines=".4 0 .2 1;.45 0 .15 1;.4 0 .2 1;.5 0 .3 1" dur="6s" repeatCount="indefinite"/></path><path d="M126 124C300 20 60 236 286 122" fill="none" stroke="#111" stroke-width="3.2" stroke-linecap="round"><animate attributeName="d" values="M126 124C300 20 60 236 286 122;M126 124C300 20 60 236 286 122;M126 124C206 124 206 122 286 122;M126 124C206 124 206 122 286 122;M126 124C300 20 60 236 286 122" calcMode="spline" keyTimes="0;.22;.46;.84;1" keySplines=".4 0 .2 1;.45 0 .15 1;.4 0 .2 1;.5 0 .3 1" dur="6s" repeatCount="indefinite"/></path><path d="M126 154C250 -10 210 262 286 130" fill="none" stroke="#111" stroke-width="3.2" stroke-linecap="round"><animate attributeName="d" values="M126 154C250 -10 210 262 286 130;M126 154C250 -10 210 262 286 130;M126 154C206 154 206 130 286 130;M126 154C206 154 206 130 286 130;M126 154C250 -10 210 262 286 130" calcMode="spline" keyTimes="0;.22;.46;.84;1" keySplines=".4 0 .2 1;.45 0 .15 1;.4 0 .2 1;.5 0 .3 1" dur="6s" repeatCount="indefinite"/></path><path d="M126 184C170 40 340 110 286 138" fill="none" stroke="#111" stroke-width="3.2" stroke-linecap="round"><animate attributeName="d" values="M126 184C170 40 340 110 286 138;M126 184C170 40 340 110 286 138;M126 184C206 184 206 138 286 138;M126 184C206 184 206 138 286 138;M126 184C170 40 340 110 286 138" calcMode="spline" keyTimes="0;.22;.46;.84;1" keySplines=".4 0 .2 1;.45 0 .15 1;.4 0 .2 1;.5 0 .3 1" dur="6s" repeatCount="indefinite"/></path><g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.47;.5;.8;.83;1" dur="6s" repeatCount="indefinite"/><rect x="-5" y="-4" width="10" height="8" fill="#f8f8f5" stroke="#111" stroke-width="2"><animateMotion dur="1s" begin="0.0s" repeatCount="indefinite" path="M126 94C206 94 206 114 286 114"/></rect></g><g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.47;.5;.8;.83;1" dur="6s" repeatCount="indefinite"/><rect x="-5" y="-4" width="10" height="8" fill="#f8f8f5" stroke="#111" stroke-width="2"><animateMotion dur="1s" begin="-0.25s" repeatCount="indefinite" path="M126 124C206 124 206 122 286 122"/></rect></g><g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.47;.5;.8;.83;1" dur="6s" repeatCount="indefinite"/><rect x="-5" y="-4" width="10" height="8" fill="#f8f8f5" stroke="#111" stroke-width="2"><animateMotion dur="1s" begin="-0.5s" repeatCount="indefinite" path="M126 154C206 154 206 130 286 130"/></rect></g><g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.47;.5;.8;.83;1" dur="6s" repeatCount="indefinite"/><rect x="-5" y="-4" width="10" height="8" fill="#f8f8f5" stroke="#111" stroke-width="2"><animateMotion dur="1s" begin="-0.75s" repeatCount="indefinite" path="M126 184C206 184 206 138 286 138"/></rect></g><g transform="translate(14 82)"><path d="M0 4V24H112V4H44L40 0H0Z" fill="#f8f8f5" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/><text x="10" y="17" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#111">deploy.yaml</text><circle cx="112" cy="12" r="4" fill="#111"/></g><g transform="translate(14 112)"><path d="M0 4V24H112V4H44L40 0H0Z" fill="#f8f8f5" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/><text x="10" y="17" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#111">Dockerfile</text><circle cx="112" cy="12" r="4" fill="#111"/></g><g transform="translate(14 142)"><path d="M0 4V24H112V4H44L40 0H0Z" fill="#f8f8f5" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/><text x="10" y="17" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#111">nginx.conf</text><circle cx="112" cy="12" r="4" fill="#111"/></g><g transform="translate(14 172)"><path d="M0 4V24H112V4H44L40 0H0Z" fill="#f8f8f5" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/><text x="10" y="17" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#111">.env.prod</text><circle cx="112" cy="12" r="4" fill="#111"/></g>
+              <g>
+                <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;.26;.32;.92;1" dur="6s" repeatCount="indefinite"/>
+                <g transform="translate(206 126) rotate(-8)">
+                  <path d="M0 -30L8 -14L26 -20L18 -4L32 6L14 10L16 28L2 16L-12 30L-12 12L-30 10L-18 -2L-28 -18L-10 -14Z" fill="#f8f8f5" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/>
+                  <text y="7" text-anchor="middle" font-family="Bangers, sans-serif" font-size="20" fill="#111">?!</text>
+                  <animateTransform attributeName="transform" type="rotate" values="-6;6;-6" dur=".5s" additive="sum" repeatCount="indefinite"/>
+                </g>
+              </g>
+              <circle cx="322" cy="126" r="36" fill="none" stroke="#111" stroke-width="2" opacity="0">
+                <animate attributeName="r" values="36;36;72;72" keyTimes="0;.46;.62;1" dur="6s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;.45;.46;.62;1" dur="6s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="322" cy="126" r="36" fill="#111"/>
+              <circle cx="322" cy="126" r="28" fill="none" stroke="#f8f8f5" stroke-width="2" stroke-dasharray="4 5">
+                <animateTransform attributeName="transform" type="rotate" values="0 322 126;360 322 126" dur="8s" repeatCount="indefinite"/>
+              </circle>
+              <text x="322" y="135" text-anchor="middle" font-family="Anton, sans-serif" font-size="24" fill="#f8f8f5">OC</text>
+              <g opacity="0" transform="translate(232 172) rotate(-4)">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.5;.52;.82;.86;1" dur="6s" repeatCount="indefinite"/>
+                <rect width="150" height="30" fill="#f8f8f5" stroke="#111" stroke-width="3"/>
+                <text x="75" y="21" text-anchor="middle" font-family="Bangers, sans-serif" font-size="17" letter-spacing="1.5" textLength="134" lengthAdjust="spacingAndGlyphs" fill="#111">AUTO-DETECTED ✓</text>
+              </g>
+            </svg>
+            <div class="art-tag">0 lines<small>of yaml</small></div>
+            <div class="num">02</div>
+            <div class="sfx">ゴゴ</div>
+          </div>
+          <div class="info">
+            <h3>Config Hell</h3>
+            <div class="role">villain · defeated by auto-detect</div>
+            <p>
+              OVERCLOCK reads your project and figures out the runtime,
+              build steps and routing itself. Override anything — but you
+              probably won't need to.
+            </p>
+            <div class="facts">
+              <b>Frameworks:</b> 60+<br>
+              <b>Lines of YAML:</b> 0<br>
+              <b>Escape hatch:</b> oc.toml
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-three">
+          <div class="art">
+            <svg class="scene" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="400" height="260" fill="#111"/>
+              <path transform="translate(300 30)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2s" begin="0s" repeatCount="indefinite"/></path><path transform="translate(110 58)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2s" begin="-0.5s" repeatCount="indefinite"/></path><path transform="translate(150 22)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2s" begin="-1.1s" repeatCount="indefinite"/></path><path transform="translate(250 36)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2s" begin="-0.3s" repeatCount="indefinite"/></path><path transform="translate(372 120)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2s" begin="-1.4s" repeatCount="indefinite"/></path><path transform="translate(220 84)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2s" begin="-0.8s" repeatCount="indefinite"/></path><path transform="translate(336 74)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2s" begin="-1.7s" repeatCount="indefinite"/></path><path transform="translate(390 30)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2s" begin="-0.2s" repeatCount="indefinite"/></path>
+              <g data-sun data-cx="112" data-cy="94" data-r="30" data-bars="5" data-start=".35" data-dur="7" data-invert="1" data-stroke="2"></g>
+              <path d="M-10 134H170L184 134L194 106L206 162L220 64L232 134H410" fill="none" stroke="#f8f8f5" stroke-width="3" stroke-linejoin="round" stroke-dasharray="640" stroke-dashoffset="640">
+                <animate attributeName="stroke-dashoffset" values="640;0;0;-640" keyTimes="0;.45;.75;1" dur="4.5s" repeatCount="indefinite"/>
+              </path>
+              <circle cx="220" cy="64" r="0" fill="none" stroke="#f8f8f5" stroke-width="2">
+                <animate attributeName="r" values="0;0;24;24" keyTimes="0;.28;.45;1" dur="4.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.28;.45;1" dur="4.5s" repeatCount="indefinite"/>
+              </circle>
+              <g transform="translate(236 52)" opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.3;.33;.82;.9;1" dur="4.5s" repeatCount="indefinite"/>
+                <rect width="92" height="26" fill="#f8f8f5" stroke="#111" stroke-width="2"/>
+                <text x="46" y="19" text-anchor="middle" font-family="Bangers, sans-serif" font-size="18" letter-spacing="1" textLength="78" lengthAdjust="spacingAndGlyphs" fill="#111">ROLLBACK!</text>
+              </g>
+              <g data-skyline data-w="400" data-base="262" data-min="56" data-max="118" data-seed="5" data-mode="night"></g>
+            </svg>
+            <div class="art-tag">&lt; 5s<small>to rollback</small></div>
+            <div class="num">03</div>
+            <div class="sfx">ドン</div>
+          </div>
+          <div class="info">
+            <h3>The 3 AM Outage</h3>
+            <div class="role">villain · defeated by auto-rollback</div>
+            <p>
+              Error rates spike? OVERCLOCK rolls back to the last healthy
+              release in seconds and pings your team with the exact diff
+              that broke it. Go back to sleep.
+            </p>
+            <div class="facts">
+              <b>Rollback time:</b> &lt; 5s<br>
+              <b>Alerts:</b> Slack, email, webhook<br>
+              <b>Pager fatigue:</b> cured
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="story" id="how" data-section="how-it-works" aria-label="How it works">
+      <div class="steps">
+        <div class="step">
+          <span class="step-n">01</span>
+          <h4>Install the CLI</h4>
+          <p>One binary, no dependencies. Mac, Linux, Windows.</p>
+          <code>curl -fsSL overclock.example/install | sh</code>
+        </div>
+        <div class="step">
+          <span class="step-n">02</span>
+          <h4>Link your repo</h4>
+          <p>Connect GitHub or GitLab — every push gets a preview URL.</p>
+          <code>oc link github.com/you/app</code>
+        </div>
+        <div class="step">
+          <span class="step-n">03</span>
+          <h4>Deploy. Done.</h4>
+          <p>Global edge rollout with TLS, CDN and logs built in.</p>
+          <code>oc deploy --prod</code>
+        </div>
+      </div>
+      <p class="story-note">
+        That's the whole story. No platform team required, no
+        <s>forty-tab runbook</s>, no <u>"works on my machine"</u>. Your code
+        goes from <b>git push</b> to production with
+        <mark>instant previews</mark>, zero-downtime swaps and full
+        observability — whether you're a solo hacker or a 500-person org.
+      </p>
+    </section>
+
+    <div class="break"><span>Choose your power level</span></div>
+
+    <!-- PRICING -->
+    <section id="pricing" data-section="pricing" aria-label="Pricing">
+      <div class="pricing">
+        <div class="plan">
+          <h3>Rookie</h3>
+          <div class="price">$0<small> / forever</small></div>
+          <ul>
+            <li>3 projects</li>
+            <li>Preview deploys</li>
+            <li>Shared build cache</li>
+            <li>Community support</li>
+          </ul>
+          <a class="btn btn-ghost" href="#signup">Start free</a>
+        </div>
+        <div class="plan plan-hot">
+          <span class="hot-tag">Most picked!</span>
+          <h3>Pro</h3>
+          <div class="price">$19<small> / dev / mo</small></div>
+          <ul>
+            <li>Unlimited projects</li>
+            <li>Turbo remote cache</li>
+            <li>Auto-rollback + alerts</li>
+            <li>Custom domains</li>
+          </ul>
+          <a class="btn" href="#signup">Go Pro</a>
+        </div>
+        <div class="plan">
+          <h3>Final Form</h3>
+          <div class="price">Custom</div>
+          <ul>
+            <li>SSO + audit logs</li>
+            <li>Dedicated regions</li>
+            <li>99.99% SLA</li>
+            <li>24/7 human support</li>
+          </ul>
+          <a class="btn btn-ghost" href="#signup">Talk to us</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <div class="break"><span>Got questions?</span></div>
+    <section class="faq" id="faq" data-section="faq">
+      <div class="section-title">
+        <h2>Reader mail</h2>
+        <p>Straight answers to what developers ask before their first deploy.</p>
+      </div>
+      <div class="faq-grid">
+        <details class="faq-item" open>
+          <summary><span class="faq-q">Q.01</span><span class="faq-text">Do I have to rewrite my app?</span><span class="faq-icon" aria-hidden="true"></span></summary>
+          <div class="faq-a"><p>Nope. OVERCLOCK auto-detects 60+ frameworks and runtimes. Already have a Dockerfile? We'll use it as-is. You only touch config if you want to override something.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary><span class="faq-q">Q.02</span><span class="faq-text">Will it replace my existing CI?</span><span class="faq-icon" aria-hidden="true"></span></summary>
+          <div class="faq-a"><p>Only if you want it to. Run <code>oc deploy</code> as a step inside GitHub Actions or GitLab CI, or let OVERCLOCK handle builds on every push by itself.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary><span class="faq-q">Q.03</span><span class="faq-text">How safe is the shared build cache?</span><span class="faq-icon" aria-hidden="true"></span></summary>
+          <div class="faq-a"><p>Cache entries are content-addressed, encrypted at rest and isolated per organization. Nothing is ever shared between teams, and you can purge it any time.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary><span class="faq-q">Q.04</span><span class="faq-text">Can I roll back by hand?</span><span class="faq-icon" aria-hidden="true"></span></summary>
+          <div class="faq-a"><p>Any time. <code>oc rollback</code> swaps back to any of your last 100 releases in seconds with zero downtime, on top of the automatic rollback when error rates spike.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary><span class="faq-q">Q.05</span><span class="faq-text">Where does my code actually run?</span><span class="faq-icon" aria-hidden="true"></span></summary>
+          <div class="faq-a"><p>Across 38 edge regions by default. On the Final Form plan you can pin workloads to specific regions to meet data-residency requirements.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary><span class="faq-q">Q.06</span><span class="faq-text">Is the free tier really free?</span><span class="faq-icon" aria-hidden="true"></span></summary>
+          <div class="faq-a"><p>Yes. Three projects, preview deploys and the shared cache, with no credit card. Upgrade only when you outgrow it.</p></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- END PANEL -->
+    <section class="end" id="signup" data-section="cta">
+      <div class="end-inner">
+        <div class="end-copy">
+          <span class="end-kicker">Final chapter · Your move</span>
+          <h2 class="end-title">To be<br>deployed…</h2>
+          <p class="end-sub">Will you become part of the story?</p>
+          <p class="end-lead">Your first production deploy is one command away. Grab a free account and ship before the coffee cools.</p>
+          <form class="signup" id="signupForm" novalidate>
+            <div class="signup-field">
+              <span class="signup-prompt mono" aria-hidden="true">$</span>
+              <input type="email" id="email" placeholder="you@company.dev" autocomplete="email" aria-label="Email address" required>
+              <button class="btn" type="submit">Join beta →</button>
+            </div>
+            <p class="signup-msg" id="signupMsg" aria-live="polite"></p>
+          </form>
+          <ul class="end-perks"><li>Free forever tier</li><li>No credit card</li><li>2-minute setup</li></ul>
+        </div>
+        <div class="end-art" aria-hidden="true">
+          <svg viewBox="0 0 400 360" preserveAspectRatio="xMidYMax meet">
+            <path transform="translate(40 40)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2.2s" begin="0s" repeatCount="indefinite"/></path><path transform="translate(120 24)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2.2s" begin="-0.6s" repeatCount="indefinite"/></path><path transform="translate(300 34)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2.2s" begin="-1.2s" repeatCount="indefinite"/></path><path transform="translate(360 90)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2.2s" begin="-0.3s" repeatCount="indefinite"/></path><path transform="translate(70 120)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2.2s" begin="-1.6s" repeatCount="indefinite"/></path><path transform="translate(250 70)" d="M0 -5V5M-5 0H5" stroke="#f8f8f5" stroke-width="1.6"><animate attributeName="opacity" values=".15;1;.15" dur="2.2s" begin="-0.9s" repeatCount="indefinite"/></path>
+            <g fill="none" stroke="#f8f8f5" stroke-width="2">
+              <circle cx="200" cy="250" r="146"><animate attributeName="r" values="146;230" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="5s" repeatCount="indefinite"/></circle>
+              <circle cx="200" cy="250" r="146"><animate attributeName="r" values="146;230" dur="5s" begin="-2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="5s" begin="-2.5s" repeatCount="indefinite"/></circle>
+            </g>
+            <circle cx="200" cy="250" r="140" fill="none" stroke="#f8f8f5" stroke-width="2"/>
+            <g data-sun data-cx="200" data-cy="250" data-r="128" data-bars="7" data-dur="7" data-invert="1" data-stroke="3" data-start=".05" data-end=".5"></g>
+            <rect x="-600" y="250" width="1600" height="110" fill="#111"/>
+            <g stroke="#f8f8f5" stroke-width="1.4"><line x1="200" y1="250" x2="-500" y2="360"/><line x1="200" y1="250" x2="-220" y2="360"/><line x1="200" y1="250" x2="-20" y2="360"/><line x1="200" y1="250" x2="110" y2="360"/><line x1="200" y1="250" x2="200" y2="360"/><line x1="200" y1="250" x2="290" y2="360"/><line x1="200" y1="250" x2="420" y2="360"/><line x1="200" y1="250" x2="620" y2="360"/><line x1="200" y1="250" x2="900" y2="360"/></g>
+            <g stroke="#f8f8f5" stroke-width="1.8"><line x1="-600" x2="1000" y1="252" y2="252"><animate attributeName="y1" values="252;362" dur="1.8s" begin="0s" calcMode="spline" keyTimes="0;1" keySplines=".6 0 1 1" repeatCount="indefinite"/><animate attributeName="y2" values="252;362" dur="1.8s" begin="0s" calcMode="spline" keyTimes="0;1" keySplines=".6 0 1 1" repeatCount="indefinite"/></line><line x1="-600" x2="1000" y1="252" y2="252"><animate attributeName="y1" values="252;362" dur="1.8s" begin="-0.45s" calcMode="spline" keyTimes="0;1" keySplines=".6 0 1 1" repeatCount="indefinite"/><animate attributeName="y2" values="252;362" dur="1.8s" begin="-0.45s" calcMode="spline" keyTimes="0;1" keySplines=".6 0 1 1" repeatCount="indefinite"/></line><line x1="-600" x2="1000" y1="252" y2="252"><animate attributeName="y1" values="252;362" dur="1.8s" begin="-0.9s" calcMode="spline" keyTimes="0;1" keySplines=".6 0 1 1" repeatCount="indefinite"/><animate attributeName="y2" values="252;362" dur="1.8s" begin="-0.9s" calcMode="spline" keyTimes="0;1" keySplines=".6 0 1 1" repeatCount="indefinite"/></line><line x1="-600" x2="1000" y1="252" y2="252"><animate attributeName="y1" values="252;362" dur="1.8s" begin="-1.35s" calcMode="spline" keyTimes="0;1" keySplines=".6 0 1 1" repeatCount="indefinite"/><animate attributeName="y2" values="252;362" dur="1.8s" begin="-1.35s" calcMode="spline" keyTimes="0;1" keySplines=".6 0 1 1" repeatCount="indefinite"/></line></g>
+            <line x1="-600" x2="1000" y1="250" y2="250" stroke="#f8f8f5" stroke-width="3"/>
+          </svg>
+          <div class="end-chip"><span class="dim">$</span> oc deploy --prod<br><b>✓ LIVE</b>my-app.overclock.example <span class="dim">12.1s</span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  </main>
+
+  <footer class="foot" data-section="footer">
+    <span>© 2026 Overclock Labs</span>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#how">Docs</a>
+    </nav>
+    <span>Built at max clock speed ★</span>
+  </footer>
+
+</div>
+
+<script>
+/* Terminal typing demo */
+(function(){
+  const el = document.getElementById('term');
+  const lines = [
+    {t:'$ oc deploy --prod', type:true},
+    {t:'<span class="dim">→ detecting project…</span>'},
+    {t:'  framework   Next.js 16'},
+    {t:'  runtime     node 24'},
+    {t:'<span class="dim">→ building (cache hit 97%)…</span>'},
+    {t:'  compiled    0.8s'},
+    {t:'<span class="dim">→ rolling out to 38 regions…</span>'},
+    {t:'  ██████████████████ 100%'},
+    {t:''},
+    {t:'<span class="ok">✓ LIVE</span> https://my-app.overclock.example  <span class="dim">(12.1s)</span>'}
+  ];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    el.innerHTML = lines.map(l => l.t).join('\n') + '\n$ <span class="cursor"></span>';
+    return;
+  }
+  let html = '';
+  function typeLine(i){
+    if (i >= lines.length){
+      el.innerHTML = html + '$ <span class="cursor"></span>';
+      setTimeout(() => { html=''; typeLine(0); }, 4500);
+      return;
+    }
+    const line = lines[i];
+    if (line.type){
+      let c = 0;
+      const iv = setInterval(() => {
+        c++;
+        el.innerHTML = html + line.t.slice(0,c) + '<span class="cursor"></span>';
+        if (c >= line.t.length){ clearInterval(iv); html += line.t + '\n'; setTimeout(() => typeLine(i+1), 350); }
+      }, 55);
+    } else {
+      html += line.t + '\n';
+      el.innerHTML = html + '<span class="cursor"></span>';
+      setTimeout(() => typeLine(i+1), 260);
+    }
+  }
+  typeLine(0);
+})();
+
+/* Sliced suns, skylines and motion control */
+(function(){
+  const INK='#111', PAPER='#f8f8f5';
+  const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let uid = 0;
+
+  function buildSun(g){
+    const d=g.dataset, cx=+d.cx, cy=+d.cy, r=+d.r, n=+(d.bars||7), dur=+(d.dur||6);
+    const inv=d.invert==='1', disk=inv?PAPER:INK, gap=inv?INK:PAPER, id='sun'+(uid++);
+    const st=d.start!==undefined?+d.start:.3, en=d.end!==undefined?+d.end:1;
+    const top=cy-r+2*r*st, bot=cy-r+2*r*en, h0=2, h1=r*(en-st)*0.32, x=cx-r, w=2*r;
+    let out=`<clipPath id="${id}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath>`+
+            `<g clip-path="url(#${id})"><rect x="${x}" y="${cy-r}" width="${w}" height="${2*r}" fill="${disk}"/>`;
+    for(let i=0;i<n;i++){
+      const t=i/n;
+      if(REDUCE){
+        out+=`<rect x="${x}" width="${w}" y="${(top+(bot-top)*t).toFixed(1)}" height="${(h0+(h1-h0)*t).toFixed(1)}" fill="${gap}"/>`;
+      } else {
+        const b=(-t*dur).toFixed(2);
+        out+=`<rect x="${x}" width="${w}" y="${top}" height="${h0}" fill="${gap}">`+
+             `<animate attributeName="y" values="${top};${bot}" dur="${dur}s" begin="${b}s" repeatCount="indefinite"/>`+
+             `<animate attributeName="height" values="${h0};${h1}" dur="${dur}s" begin="${b}s" repeatCount="indefinite"/></rect>`;
+      }
+    }
+    out+=`</g><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${inv?PAPER:INK}" stroke-width="${d.stroke||3}"/>`;
+    g.innerHTML=out;
+  }
+
+  function rng(seed){ return ()=>{ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; }; }
+
+  function buildSkyline(g){
+    const d=g.dataset, W=+d.w, base=+d.base, min=+d.min, max=+d.max, r=rng(+d.seed||1);
+    const night=d.mode==='night', dip=d.dip!==undefined?+d.dip:null;
+    const edge=night?` stroke="${PAPER}" stroke-width="2"`:'';
+    let x=-6, out='';
+    while(x<W){
+      const w=Math.round(26+r()*44);
+      let h=min+r()*(max-min);
+      if(dip!==null){ const k=Math.min(1,Math.abs((x+w/2)/W-dip)/0.22); h=min*.6+(h-min*.6)*(0.25+0.75*k); }
+      h=Math.round(h); const y=base-h;
+      out+=`<rect x="${x}" y="${y}" width="${w}" height="${h+6}" fill="${INK}"${edge}/>`;
+      if(r()<.5){
+        for(let wy=y+8; wy<base-8; wy+=11) for(let wx=x+6; wx<x+w-8; wx+=9){
+          if(r()<.55){ const bl=r()<.16;
+            out+=`<rect x="${wx}" y="${wy}" width="4" height="5" fill="${PAPER}"${bl?` class="blink" style="animation-delay:${(-r()*2.6).toFixed(2)}s"`:''}/>`; }
+        }
+      } else {
+        for(let wy=y+8; wy<base-6; wy+=8){
+          out+=`<rect x="${x+5}" y="${wy}" width="${w-10}" height="2.5" fill="${PAPER}"/>`;
+          if(r()<.35) out+=`<rect x="${x+w-10}" y="${wy}" width="3" height="2.5" fill="${INK}" class="blink" style="animation-delay:${(-r()*2.6).toFixed(2)}s"/>`;
+        }
+      }
+      if(r()<.28){
+        const ax=x+Math.round(w/2);
+        out+=`<line x1="${ax}" y1="${y}" x2="${ax}" y2="${y-16}" stroke="${night?PAPER:INK}" stroke-width="2"/>`+
+             `<circle cx="${ax}" cy="${y-18}" r="2.6" fill="${night?PAPER:INK}" class="blink" style="animation-delay:${(-r()*2.6).toFixed(2)}s"/>`;
+      }
+      x+=w+Math.round(r()*6);
+    }
+    g.innerHTML=out;
+  }
+
+  document.querySelectorAll('[data-sun]').forEach(buildSun);
+  document.querySelectorAll('[data-skyline]').forEach(buildSkyline);
+
+  const svgs=[...document.querySelectorAll('.scene, .hero-sun svg, .end-art svg')];
+  if(REDUCE){
+    svgs.forEach(sv=>{ try{ sv.setCurrentTime(1.6); sv.pauseAnimations(); }catch(e){} });
+  } else if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{
+      try{ e.isIntersecting ? e.target.unpauseAnimations() : e.target.pauseAnimations(); }catch(err){}
+    }),{rootMargin:'100px'});
+    svgs.forEach(sv=>io.observe(sv));
+  }
+})();
+
+/* Copy install command */
+document.getElementById('copyBtn').addEventListener('click', function(){
+  const txt = document.getElementById('installCmd').textContent;
+  const btn = this;
+  const done = () => { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy'; }, 1500); };
+  if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(done).catch(done); } else { done(); }
+});
+
+/* Signup form */
+document.getElementById('signupForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('email');
+  const msg = document.getElementById('signupMsg');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    msg.textContent = '✗ That email looks off — try again';
+    return;
+  }
+  msg.textContent = '✓ You\'re on the list. Next chapter soon!';
+  email.value = '';
+});
+</script>
+</body>
+</html>
+```
+

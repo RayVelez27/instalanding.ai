@@ -1,31 +1,892 @@
-Build a landing page for Latent, a fictional AI fashion atelier ("Clothes drafted by a model, finished by a tailor.": generative outerwear, engineered knit and smart optics, cut to a 3D scan of your body and released every Thursday), as one HTML file. GSAP 3.13 with ScrollTrigger and SplitText, and Lenis 1.3.4, all from jsdelivr. Google Fonts: Unbounded 300-900 for machine-scale display words, Geist 300-800 for headings and text, Doto 500-900 (a dot-matrix face) for the emphasised phrase in each heading, Geist Mono 400-500 for labels.
+INSTALANDING.AI · Latent AI Fashion Atelier Page
 
-DESIGN SYSTEM
-Ink #07070A with graphite #101015 and #18181F, bone #ECE7DC and #E2DCCF, violet #6D4CFF with a deep #2A1D78, cyan #5CE1FF and volt #D6FF5C. One iridescent gradient (105deg, violet to cyan to volt) for the logo tiles, highlights in the art and the footer wordmark. Sections are rounded cards (radius clamp(20px, 2.3vw, 34px)) inset by a gutter, coloured on-bone, on-violet or on-ink, each with two small crosshair marks in opposite corners. h2s in Geist 600 at -0.04em end on a lowercase Doto phrase; display words in Unbounded 800 uppercase at line-height .82. Pill buttons whose fill grows as a circle from the arrow end on hover, with a slight rotate on a springy cubic-bezier(.34, 1.56, .5, 1); links whose underline goes wavy on hover. An 8% SVG noise overlay across the page.
+The page below is the build. Use it as the starting point, not as inspiration:
+- Keep its layout, design values (colours, type, spacing, radii) and motion exactly as they are.
+- Replace the fictional brand, copy, names and numbers with mine.
+- If I name a stack (React, Next.js, Vue, Svelte, Astro...), convert it faithfully to that stack;
+  otherwise ship it as this one HTML file.
+- Read the MAP and ADAPTING notes in its header comment before you edit.
+- Check it in a real browser: no console errors, no horizontal scroll at 390px, reduced motion respected.
 
-PICTURES IN CODE (no image files)
-- A seeded PRNG (mulberry32) and seven SVG generators chosen by data-art and data-seed, painted once into each element at its own aspect, with a violet glow and an iridescent gradient for the "hot" lines: form (a torso made of horizontal scan lines from an eased width profile, with a glowing laser band and a ruler), portrait (head and shoulders from the same scan lines, tilted), drape (a perspective wireframe sheet of cloth), contour (a topographic pressure map), lens (two iridescent ringed lenses on a bridge), weave (an over-under woven texture, rotated), sphere (a Fibonacci point sphere with depth-sized dots and two orbit rings).
-- The hero: a canvas wireframe sheet in perspective, 36 rows by 60 columns, rippling from three sines over time and bulging toward the pointer with a gaussian; every fourth row stroked with the gradient. Cap DPR at 2, pause off screen, draw a single still frame under reduced motion.
-- Display words fit their box: measure at 100px and scale, re-run on font load and resize; a --len (letter count) gives a container-query fallback before the script runs.
+Credit: keep this line as a comment at the top of the file you produce:
+Latent AI Fashion Atelier Page · INSTALANDING.AI (MIT) · https://instalanding.ai/prompt/latent-ai-fashion-atelier-page
 
-STRUCTURE
-1. A fixed pill header with a blurred glass bar: the gradient logo tile and wordmark, five links, a "Book a scan" pill. Under 900px a round menu button turns into an X and drops a bone card with big links.
-2. Hero: a full-height card with the cloth canvas behind a gradient scrim, "LATENT" across the top edge clipped by the card, and at the bottom an eyebrow with a glowing volt dot, the title, a lede, the address; hours, a button and a gradient tile on the right. Pinned for 75% of a screen: the card scales to .86, tilts -2.5deg and sinks while the copy lifts and fades, and each letter of "LATENT" flies off upward on its own path. Before that, the letters rise in and rock gently.
-3. A ticker of mono facts separated by violet stars.
-4. Story (bone): the heading split into words that tip in, a rotated weave picture that drops in, a paragraph, three big violet facts (1.8M, 0.4mm, 0).
-5. Capsules: pinned and scrolled sideways: an intro, then six 4:5 covers (Shell, Optic, Mesh, Lumen, Sole, Knit) each with generative art, its name as a giant display word at the top edge, a price range and a line; cards sway and rotate and their words drift as they cross the screen (containerAnimation).
-6. Fit lab (ink): six services on drawn rules with prices in volt that stamp in, and a parallax torso scan.
-7. Statement: a full-screen gradient behind an ink layer in multiply mode with a white "ZERO" knocked out of it; pinned for 160% of a screen, the ink layer scales 9x from the centre of the word until the gradient fills the screen, then a bone card ("Nothing is cut until it's ordered") springs up.
-8. Process: a sticky intro beside four stacked sticky cards (Scan, Generate, Cut, Wear); each card shrinks and tilts as the next one slides over it.
-9. Releases (violet): five dates with giant day numbers that wipe in, a title, a line and a bone tag. Studio (bone): four people with portrait scans that open from a pill shape. Voices (ink): six bone quote cards in a marquee that eases to a stop on hover and focus. Lookbook: six scattered, rotated pictures at different parallax speeds around a giant "RENDERED" whose letters fall in. FAQ (bone): six details rows with a plus that turns into a minus. Visit (violet): a giant "STEP IN", hours, contacts, a sphere and a glass form that thanks inline and sends nothing. Footer: the gradient wordmark, links and a base row.
+latent-ai-fashion-atelier.html:
+```html
+<!doctype html>
+<!--
+  INSTALANDING.AI · Latent AI Fashion Atelier Page
+  slug     latent-ai-fashion-atelier-page
+  prompt   https://instalanding.ai/p/latent-ai-fashion-atelier-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/latent-ai-fashion-atelier-page
+  license  MIT for this file. Fictional brand ("Latent", Foundry Row 7, Canal Quarter); every capsule, price, release,
+           person, quote and figure is invented. Replace names, numbers and copy before shipping. Every picture is
+           generated in code (inline SVG and one canvas); no image files.
 
-THINGS THAT BREAK
-- Add a .motion class in the head before first paint unless prefers-reduced-motion, and drop it if GSAP has not loaded after 2.5s; every pin height and the sideways track live behind .motion, so the page still reads top to bottom without scripts.
-- The capsule rail's scroll length is the track's overflow (scrollWidth minus innerWidth): write it into a --run variable on every refreshInit and use invalidateOnRefresh, or the pin ends early after a resize.
-- The "ZERO" zoom needs its transform-origin measured from the word's real box (a function value), or the screen opens on the wrong spot.
-- Process cards stick at the header height plus 30px; the shrink of each card ends exactly at the next card's computed top.
-- Split text only after document.fonts.ready, and wrap each hero letter in an inner span so the intro rock and the scrubbed fly-away do not fight over the same transform.
-- Run every GSAP setup from a queue, one per task, and only set a section up when it comes within 120% of the viewport, so the first scroll does not stall.
+  MAP
+  tokens    one :root block at the top of the <style>: --ink / --graphite / --graphite-2 (darks), --bone / --bone-2
+            (lights), --violet / --violet-deep / --cyan / --volt and the --iri gradient, the five font stacks (Unbounded
+            display, Geist head + text, Doto dot-matrix for <em>, Geist Mono labels), --gap / --pad / --r / --r-s,
+            --mark (corner crosshairs), --head, and the --spring / --out easings.
+  sections  nav, hero, ticker, story, rails (capsules, horizontal), lab (fit lab prices), again (statement), make
+            (process, stacked cards), drops (releases), studio (team), voices (marquee), lookbook, faq, visit, footer
+            (each region carries data-section)
+  scripts   0. (head) adds .motion unless prefers-reduced-motion, and takes it away again if GSAP never arrives
+            1. ART, the generative picture kit: a seeded PRNG and seven SVG generators picked by data-art (form, portrait,
+               drape, contour, lens, weave, sphere), painted once into every [data-art] element at its own aspect
+            2. fit(): sizes every .fill display word to its box (re-run on font load and resize)
+            3. the hero cloth: a canvas wireframe sheet that ripples and bulges toward the pointer, paused off screen
+            4. UI: the menu, Lenis anchor scrolling, the local-only form
+            5. (motion only) GSAP 3.13 + ScrollTrigger + SplitText and Lenis 1.3.4 (jsdelivr): the hero card tilting
+               away while "Latent" scatters, the horizontal capsule rail, the "Zero" knockout zooming open, reveals,
+               word and letter splits, the stacked process cards, the voices marquee, the lookbook parallax; every
+               setup runs from a queue, one per task
+  assets    no image files
 
-THE FLOOR
-One h1, a main, every section with an id. Every generated picture is a role="img" figure with a label and an aria-hidden SVG; the ticker is aria-hidden. The menu uses aria-expanded and swaps its label; Escape closes it. Focus rings on everything; button and link hover states also apply on focus-visible. The form status is a live region. prefers-reduced-motion: no pinning, no marquee, the cloth drawn once. No horizontal scroll at 390px.
+  ADAPTING
+  - Change a picture with data-art (form, portrait, drape, contour, lens, weave, sphere) and data-seed; .art--ink,
+    .art--violet and .art--bone pick the field and ink colours.
+  - Display words (.fill) need --len set to their letter count for the no-JS fallback; data-fit scales the fit below
+    the full width. data-bounce="drop" letters fall in, "still" just takes a crooked stance.
+  - The capsule rail's scroll length is measured from the track (--run) on every refresh: add or remove covers freely.
+  - Process steps stick at the header height plus 30px; each card shrinks as the next one reaches its sticky top.
+  - prefers-reduced-motion: no pinning, no marquee, no cloth animation; the page reads top to bottom.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07070a">
+<title>Latent — clothes drafted by a model, finished by a tailor</title>
+<meta name="description" content="Latent is an AI fashion atelier: generative outerwear, engineered knit and smart optics, cut to a 3D scan of your body and released every Thursday.">
+<script>(()=>{const d=document.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;d.classList.add('motion');setTimeout(()=>{if(!window.gsap)d.classList.remove('motion')},2500)})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300..900&family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&family=Doto:wght@500..900&display=swap">
+<style>
+:root{
+  --ink:#07070a;--graphite:#101015;--graphite-2:#18181f;--bone:#ece7dc;--bone-2:#e2dccf;
+  --violet:#6d4cff;--violet-deep:#2a1d78;--cyan:#5ce1ff;--volt:#d6ff5c;
+  --iri:linear-gradient(105deg,#6d4cff 0%,#5ce1ff 50%,#d6ff5c 100%);
+  /* type: wide geometric display for machine-scale words, a neutral UI grotesk for reading, dot-matrix for model "output" accents */
+  --font-display:"Unbounded","Arial Black",system-ui,sans-serif;--font-head:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;--font-text:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-dot:"Doto","Geist Mono",ui-monospace,monospace;--font-mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --muted:color-mix(in oklab,currentColor 66%,transparent);--line:color-mix(in oklab,currentColor 18%,transparent);
+  --gap:clamp(10px,1.4vw,20px);--pad:clamp(22px,4.4vw,72px);--r:clamp(20px,2.3vw,34px);--r-s:clamp(12px,1.2vw,18px);
+  --mark:clamp(10px,.9vw,14px);--head:68px;
+  --spring:cubic-bezier(.34,1.56,.5,1);--out:cubic-bezier(.2,.8,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:var(--head)}
+body{margin:0;background:var(--ink);color:var(--bone);font:400 16.5px/1.6 var(--font-text);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::after{content:"";position:fixed;inset:0;z-index:200;pointer-events:none;opacity:.08;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+::selection{background:var(--volt);color:var(--ink)}
+a{color:inherit}
+h1,h2,h3,h4,p,ul,ol,dl,dd,figure,blockquote{margin:0}
+ul,ol{padding:0;list-style:none}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+main>*{position:relative;overflow-x:clip}
+main>*+*{margin-top:var(--gap)}
+
+/* generative art containers */
+.art{position:relative;overflow:hidden;isolation:isolate;background:var(--field,#0e0e13);color:var(--art-ink,var(--bone))}
+[data-art]>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.art--ink{--field:#0e0e13;--art-ink:var(--bone)}
+.art--violet{--field:var(--violet-deep);--art-ink:var(--bone)}
+.art--bone{--field:var(--bone-2);--art-ink:var(--ink)}
+.art::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px color-mix(in oklab,var(--art-ink,#fff) 10%,transparent);pointer-events:none;z-index:2}
+
+.card{position:relative;margin:0 var(--gap);border-radius:var(--r);padding:var(--pad)}
+.on-violet{background:var(--violet);color:var(--bone)}
+.on-bone{background:var(--bone);color:var(--ink)}
+.on-ink{background:var(--graphite);color:var(--bone);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+
+.marks::before,.marks::after{content:"";position:absolute;width:var(--mark);height:var(--mark);z-index:4;pointer-events:none;opacity:.8;
+  background:linear-gradient(currentColor,currentColor) center/100% 1.5px no-repeat,linear-gradient(currentColor,currentColor) center/1.5px 100% no-repeat}
+.marks::before{top:calc(var(--pad) * .42);right:calc(var(--pad) * .42)}
+.marks::after{bottom:calc(var(--pad) * .42);left:calc(var(--pad) * .42)}
+
+.display{font-family:var(--font-display);font-weight:800;text-transform:uppercase;line-height:.82;letter-spacing:-.005em}
+.fillbox{container-type:inline-size}
+.fill{display:block;white-space:nowrap;font-size:calc(100cqi / (var(--len) * .8))}
+.h2{font-family:var(--font-head);font-weight:600;font-size:clamp(38px,5.4vw,90px);line-height:.94;letter-spacing:-.04em;text-wrap:balance}
+.h2 em,.hero__title em,.again__title em{font-family:var(--font-dot);font-style:normal;font-weight:800;letter-spacing:-.02em;word-spacing:-.3em;text-transform:lowercase}
+.h3{font-family:var(--font-head);font-weight:600;font-size:clamp(22px,2.1vw,30px);line-height:1;letter-spacing:-.025em}
+.lead{font-size:clamp(17px,1.4vw,20px);line-height:1.5;font-weight:400}
+.label{font:500 11.5px/1.3 var(--font-mono);letter-spacing:.14em;text-transform:uppercase}
+.muted{color:var(--muted)}
+.iri-text{background:var(--iri);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--volt);box-shadow:0 0 12px var(--volt);margin-right:8px;vertical-align:1px}
+
+.btn{display:inline-flex;align-items:center;gap:.85em;white-space:nowrap;padding:.85em 1.2em .85em 1.45em;border:1px solid currentColor;border-radius:999px;font:500 14.5px/1 var(--font-text);letter-spacing:.01em;text-decoration:none;color:inherit;position:relative;isolation:isolate;overflow:hidden;background:none;cursor:pointer;transition:transform .5s var(--spring),color .35s}
+.btn::before{content:"";position:absolute;inset:-1px;z-index:-1;background:var(--btn-fill,var(--bone));clip-path:circle(0% at 88% 50%);transition:clip-path .55s var(--out)}
+.btn__arrow{width:28px;height:12px;flex:none;transition:transform .45s var(--spring)}
+.btn--solid{background:var(--bone);color:var(--ink);border-color:var(--bone);--btn-fill:var(--violet);--btn-on:var(--bone)}
+.on-bone .btn{--btn-fill:var(--ink);--btn-on:var(--bone)}
+.on-bone .btn--solid{background:var(--ink);color:var(--bone);border-color:var(--ink);--btn-fill:var(--violet)}
+.on-violet .btn--solid{--btn-fill:var(--ink)}
+.btn:focus-visible{color:var(--btn-on,var(--ink))}
+.btn:focus-visible::before{clip-path:circle(150% at 88% 50%)}
+@media (hover:hover){.btn:hover{transform:rotate(-2deg);color:var(--btn-on,var(--ink))}.btn:hover::before{clip-path:circle(150% at 88% 50%)}.btn:hover .btn__arrow{transform:translateX(5px)}}
+.link{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.26em;text-decoration-color:var(--line);transition:text-decoration-color .3s}
+@media (hover:hover){.link:hover{text-decoration-style:wavy;text-decoration-color:currentColor}}
+.link:focus-visible{text-decoration-style:wavy;text-decoration-color:currentColor}
+.icon-btn{width:44px;height:44px;flex:none;display:inline-grid;place-items:center;border-radius:50%;border:1px solid currentColor;background:none;color:inherit;cursor:pointer;padding:0}
+@keyframes wobble{0%{transform:rotate(0)}30%{transform:rotate(-14deg)}60%{transform:rotate(9deg)}100%{transform:rotate(0)}}
+@media (hover:hover){.icon-btn:hover{animation:wobble .6s var(--spring)}}
+
+/* header */
+.hdr{position:fixed;inset:0 0 auto;z-index:50;height:var(--head);padding:10px var(--gap) 0;pointer-events:none}
+.hdr__bar{pointer-events:auto;height:100%;display:flex;align-items:center;gap:18px;padding:0 6px 0 clamp(14px,1.6vw,22px);border-radius:999px;background:rgba(12,12,17,.7);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);color:var(--bone)}
+.hdr__brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:.04em;text-decoration:none;margin-right:auto;white-space:nowrap;text-transform:uppercase}
+.hdr__brand i{width:22px;height:22px;border-radius:6px;background:var(--iri);display:inline-block;box-shadow:0 0 18px rgba(109,76,255,.6)}
+.hdr__nav{display:flex;gap:clamp(14px,2vw,30px);font-size:14.5px;font-weight:500}
+.hdr__nav a{white-space:nowrap}
+.hdr__cta{padding:.72em 1.05em .72em 1.3em}
+.hdr__menu{display:none;border-color:var(--line)}
+.hdr__menu span{display:block;width:16px;height:1.5px;background:currentColor;transition:transform .4s var(--spring);grid-area:1/1}
+.hdr__menu span:first-child{transform:translateY(-3px)}
+.hdr__menu span:last-child{transform:translateY(3px)}
+.hdr.is-open .hdr__menu span:first-child{transform:rotate(45deg)}
+.hdr.is-open .hdr__menu span:last-child{transform:rotate(-45deg)}
+@media (max-width:900px){
+  .hdr__menu{display:inline-grid}.hdr__cta{display:none}
+  .hdr__nav{position:fixed;top:calc(var(--head) + 6px);left:var(--gap);right:var(--gap);flex-direction:column;gap:4px;padding:22px 24px 26px;border-radius:var(--r);background:var(--bone);color:var(--ink);font:600 clamp(30px,8vw,44px)/1.1 var(--font-head);letter-spacing:-.03em;opacity:0;visibility:hidden;transform:translateY(-10px) rotate(-1.5deg);transition:opacity .3s,transform .5s var(--spring),visibility 0s .3s}
+  .hdr.is-open .hdr__nav{opacity:1;visibility:visible;transform:none;transition:opacity .3s,transform .5s var(--spring)}
+  .hdr__nav a{text-decoration:none;white-space:normal}
+}
+
+/* hero */
+.hero{padding-top:var(--head)}
+.hero>*{margin-top:var(--gap)}
+.hero__card{position:relative;margin-left:var(--gap);margin-right:var(--gap);height:calc(100svh - var(--head) - 2 * var(--gap));min-height:600px;border-radius:var(--r);color:var(--bone);display:grid;grid-template-columns:minmax(0,1fr) auto;align-content:end;align-items:end;gap:28px 48px;padding:var(--pad);transform-origin:50% 100%}
+.hero__photo{position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:radial-gradient(90% 70% at 78% 18%,#241a5c 0%,transparent 60%),radial-gradient(60% 50% at 10% 30%,#0f2a33 0%,transparent 70%),#08080c;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+.hero__photo canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero__photo::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(7,7,10,.94) 0%,rgba(7,7,10,.45) 38%,transparent 64%)}
+.hero__wordclip{position:absolute;left:0;right:0;top:0;z-index:2;clip-path:inset(0 -30% -200% -30%);pointer-events:none}
+.hero__word{text-align:center;color:var(--bone);margin:-.07em auto 0;white-space:nowrap;line-height:.8;mix-blend-mode:difference}
+.hero__info{position:relative;z-index:3;max-width:580px;display:grid;gap:16px}
+.hero__title{font-family:var(--font-head);font-weight:600;font-size:clamp(28px,3vw,46px);line-height:.98;letter-spacing:-.035em;text-wrap:balance}
+.hero__lead{font-size:16px;line-height:1.5;max-width:44ch;color:color-mix(in oklab,var(--bone) 82%,transparent)}
+.hero__addr{margin-top:8px;color:color-mix(in oklab,var(--bone) 70%,transparent)}
+.hero__side{position:relative;z-index:3;display:grid;justify-items:end;gap:14px;text-align:right}
+.hero__logo{width:38px;height:38px;border-radius:10px;background:var(--iri);box-shadow:0 0 30px rgba(109,76,255,.55)}
+.motion .hero{height:calc(max(100svh,600px + var(--head) + 2 * var(--gap)) + 75svh)}
+.motion .hero__card{position:sticky;top:calc(var(--head) + var(--gap))}
+@media (max-width:700px){.hero__card{grid-template-columns:1fr;min-height:560px;gap:22px}.hero__side{grid-template-columns:auto 1fr;justify-items:start;align-items:center;text-align:left}.hero__side .label{grid-column:1/-1}.hero__logo{justify-self:end}}
+
+/* ticker */
+.ticker{overflow:hidden;border-block:1px solid rgba(255,255,255,.08);padding:16px 0;color:color-mix(in oklab,var(--bone) 75%,transparent)}
+.ticker__run{display:flex;width:max-content;animation:tick 48s linear infinite}
+.ticker__run span{padding:0 28px;white-space:nowrap}
+.ticker__run span::before{content:"✦";margin-right:28px;color:var(--violet)}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker__run{animation:none}}
+
+/* story */
+.story__card{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(28px,4vw,64px) clamp(16px,2vw,32px)}
+.story__title{grid-column:1/-1;max-width:19ch}
+.story__photo{grid-column:1/span 4;align-self:start;border-radius:var(--r-s);transform:rotate(-3deg);aspect-ratio:4/5}
+.story__body{grid-column:6/-1;display:grid;gap:clamp(28px,3vw,48px);align-content:start}
+.story__text{max-width:54ch}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:24px 28px;border-top:1px solid var(--line);padding-top:26px}
+.facts strong{display:block;font-family:var(--font-display);font-weight:700;font-size:clamp(38px,4vw,64px);line-height:.9;letter-spacing:-.05em;font-variant-numeric:tabular-nums;color:var(--violet)}
+.facts span{display:block;margin-top:10px;font-size:15px;line-height:1.35}
+@media (max-width:800px){.story__photo{grid-column:1/span 9}.story__body{grid-column:1/-1}}
+
+/* capsules */
+.rails{padding:clamp(40px,6vw,90px) 0}
+.rails__track{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:var(--gap) calc(var(--gap) * 1.5);padding:0 var(--gap)}
+.rails__intro{display:grid;gap:22px;align-content:center;padding:clamp(10px,2vw,30px) clamp(4px,1vw,12px) 30px}
+.rails__intro p{max-width:40ch}
+.rails__intro .link{justify-self:start;font-weight:500}
+.cover{position:relative;border-radius:var(--r);aspect-ratio:4/5;display:flex;flex-direction:column;justify-content:space-between;padding:0 0 clamp(18px,2vw,28px)}
+.cover__photo{position:absolute;inset:0;border-radius:inherit}
+.cover__photo svg{left:-8%!important;width:116%!important}
+.cover__photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(to top,color-mix(in oklab,var(--field) 96%,transparent) 8%,transparent 58%)}
+.cover__photo svg text{display:none}
+.cover__code{display:none;position:absolute;z-index:3;top:20px;left:22px;opacity:.85}
+.cover__wordbox{position:relative;z-index:2;clip-path:inset(0 0 -100% 0);padding:0 5%}
+.cover__word{margin-top:-.07em;text-align:center;line-height:.8}
+.cover__info{position:relative;z-index:2;padding:0 clamp(18px,2vw,28px);display:grid;gap:8px}
+.cover__price{font-family:var(--font-head);font-weight:600;font-variant-numeric:tabular-nums;font-size:clamp(21px,1.9vw,27px);line-height:1;letter-spacing:-.03em}
+.cover__text{font-size:15px;line-height:1.42;max-width:34ch;opacity:.86}
+.cover--violet{--field:var(--violet-deep);--art-ink:var(--bone);color:var(--bone)}
+.cover--ink{--field:#0e0e13;--art-ink:var(--bone);color:var(--bone)}
+.cover--bone{--field:var(--bone-2);--art-ink:var(--ink);color:var(--ink)}
+.cover.marks::before{top:18px;right:18px}
+.cover.marks::after{display:none}
+.motion .rails{padding:0;height:calc(100svh + var(--run,0px));overflow-x:clip}
+.motion .rails__pin{position:sticky;top:0;height:100svh;display:flex;align-items:center;padding-top:calc(var(--head) + 8px);overflow:clip}
+.motion .rails__track{display:flex;align-items:center;width:max-content;gap:clamp(20px,3vw,48px);padding:0 max(var(--gap),4vw)}
+.motion .rails__intro{width:min(440px,78vw);flex:none}
+.motion .cover{width:clamp(270px,min(29vw,52svh),420px);flex:none;will-change:transform}
+@media (max-width:700px){.motion .cover{width:min(80vw,42svh);aspect-ratio:2/3}}
+
+/* fit lab */
+.repairs__card{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(36px,5vw,96px)}
+.repairs__head{display:grid;gap:22px;align-content:start}
+.repairs__head .lead{max-width:38ch}
+.repairs__photo{margin-top:clamp(6px,1.5vw,24px);border-radius:var(--r-s);aspect-ratio:5/4}
+.prices{border-bottom:1px solid var(--line)}
+.price{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 24px;padding:22px 0 20px}
+.price__rule{position:absolute;left:0;right:0;top:0;height:1px;background:var(--line)}
+.price__name{font-family:var(--font-head);font-weight:600;font-size:clamp(21px,2vw,30px);line-height:1.02;letter-spacing:-.03em}
+.price__note{grid-column:1;font-size:15px;line-height:1.38;color:var(--muted)}
+.price__cost{grid-column:2;grid-row:1/span 2;align-self:center;font-family:var(--font-display);font-weight:700;font-size:clamp(28px,3vw,48px);font-variant-numeric:tabular-nums;line-height:.9;letter-spacing:-.05em;white-space:nowrap;color:var(--volt)}
+.repairs__foot{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline;font-weight:500}
+@media (max-width:860px){.repairs__card{grid-template-columns:1fr}.repairs__photo{aspect-ratio:3/2}}
+
+/* statement */
+.again__stage{position:relative;height:max(100svh,640px);overflow:clip;isolation:isolate}
+.again__photo{position:absolute;inset:0;color:var(--ink);background:radial-gradient(60% 60% at 30% 40%,rgba(255,255,255,.25),transparent 60%),linear-gradient(125deg,#6d4cff 0%,#4f7dff 30%,#5ce1ff 55%,#b8ff7a 80%,#d6ff5c 100%)}
+.again__photo text{display:none}
+.again__knock{position:absolute;inset:0;z-index:1;background:var(--ink);mix-blend-mode:multiply;container-type:inline-size;display:grid;align-content:center;padding:0 3vw 16svh}
+.again__word{color:#fff;text-align:center;line-height:.8}
+.again__card{position:absolute;z-index:2;left:var(--gap);bottom:var(--gap);width:min(640px,calc(100% - 2 * var(--gap)));margin:0;padding:clamp(24px,3vw,46px);display:grid;gap:16px;justify-items:start}
+.again__title{font-family:var(--font-head);font-weight:600;font-size:clamp(28px,3vw,46px);line-height:.98;letter-spacing:-.035em;text-wrap:balance}
+.again__card p{max-width:50ch}
+@media (max-width:700px){.again__knock{align-content:start;padding:22svh 3vw 0}}
+.motion .again__knock{will-change:transform}
+.motion .again{height:calc(max(100svh,640px) + 160svh)}
+.motion .again__stage{position:sticky;top:0}
+
+/* process */
+.sell{padding:clamp(50px,7vw,110px) var(--gap);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,5vw,80px);align-items:start}
+.sell__intro{position:sticky;top:calc(var(--head) + 40px);display:grid;gap:22px;justify-items:start;padding-left:calc(var(--pad) * .5)}
+.steps{display:grid;gap:var(--gap)}
+.step{position:relative;border-radius:var(--r);padding:clamp(24px,3vw,44px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:24px 32px;min-height:min(60svh,520px);transform-origin:50% 0}
+.step__text{display:grid;gap:18px;align-content:space-between}
+.step__num{opacity:.7}
+.step__title{font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:clamp(32px,3.6vw,60px);line-height:.88;letter-spacing:-.045em}
+.step__text p{max-width:34ch}
+.step__photo{border-radius:var(--r-s);min-height:220px}
+.step.marks::after{display:none}
+.motion .step{position:sticky;top:calc(var(--head) + 30px)}
+@media (max-width:860px){.sell{grid-template-columns:1fr}.sell__intro{position:static;padding-left:0}}
+@media (max-width:560px){.step{grid-template-columns:1fr;min-height:0}.step__photo{aspect-ratio:3/2;min-height:0}}
+
+/* releases */
+.drops__card{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(32px,5vw,90px)}
+.drops__head{display:grid;gap:22px;align-content:start}
+.drops__head .lead{max-width:30ch}
+.drops__list{border-top:1px solid var(--line)}
+.drop{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px clamp(20px,3vw,48px);align-items:center;padding:clamp(16px,1.8vw,26px) 0;border-bottom:1px solid var(--line)}
+.drop__date{display:flex;align-items:baseline;gap:8px;min-width:3.2em;font-family:var(--font-display)}
+.drop__day{font-weight:800;font-size:clamp(50px,5.8vw,96px);line-height:.8;letter-spacing:-.06em}
+.drop__month{font:500 13px/1 var(--font-mono);letter-spacing:.12em;text-transform:uppercase}
+.drop__body{display:grid;gap:6px}
+.drop__title{font-family:var(--font-head);font-weight:600;font-size:clamp(21px,2vw,30px);line-height:1;letter-spacing:-.03em}
+.drop__text{font-size:15px;line-height:1.42;color:var(--muted);max-width:46ch}
+.drop__tag{justify-self:end;white-space:nowrap;font:500 12px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;padding:.75em 1.1em;border-radius:999px;background:var(--bone);color:var(--violet-deep)}
+@media (max-width:860px){.drops__card{grid-template-columns:1fr}}
+@media (max-width:600px){.drop{grid-template-columns:auto minmax(0,1fr)}.drop__tag{grid-column:2;justify-self:start}}
+
+/* studio */
+.pickers__card{display:grid;gap:clamp(36px,5vw,72px)}
+.pickers__head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px 40px;align-items:end}
+.pickers__head .lead{max-width:40ch;justify-self:end}
+.people{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:clamp(28px,3vw,44px) clamp(16px,2vw,28px)}
+.person{display:grid;gap:8px;align-content:start}
+.person__photo{border-radius:var(--r-s);aspect-ratio:4/5;margin-bottom:12px}
+.person__name{font-family:var(--font-head);font-weight:600;font-size:clamp(23px,2.1vw,30px);line-height:1;letter-spacing:-.03em}
+.person__role{color:var(--violet)}
+.person__find{font-size:15px;line-height:1.42;color:var(--muted)}
+@media (max-width:760px){.pickers__head{grid-template-columns:1fr}.pickers__head .lead{justify-self:start}}
+@media (max-width:520px){.people{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* voices */
+.voices__card{display:grid;gap:clamp(30px,4vw,56px);padding-left:0;padding-right:0}
+.voices__title{padding:0 var(--pad);max-width:14ch}
+.voices__row{overflow:hidden}
+.voices__list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:var(--gap);padding:0 var(--pad)}
+.voice{display:grid;gap:22px;align-content:space-between;padding:clamp(22px,2.2vw,32px);border-radius:var(--r-s);background:var(--bone);color:var(--ink)}
+.voice blockquote p{font-family:var(--font-head);font-weight:400;font-size:clamp(21px,1.8vw,26px);line-height:1.2;letter-spacing:-.025em}
+.voice__who{color:var(--violet)}
+.motion .voices__list{display:flex;width:max-content;gap:0;padding:0}
+.motion .voice{width:clamp(270px,26vw,380px);margin-right:var(--gap)}
+
+/* lookbook */
+.lookbook{display:grid;place-items:center;min-height:clamp(1000px,96vw,1400px);padding:clamp(80px,10vw,160px) var(--gap)}
+.lookbook__stage{position:absolute;inset:0}
+.shot{position:absolute;margin:0;border-radius:var(--r-s);overflow:hidden}
+.shot--a{left:3%;top:5%;width:24%;aspect-ratio:3/4;rotate:-5deg;z-index:1}
+.shot--b{left:65%;top:2%;width:22%;aspect-ratio:4/5;rotate:4deg;z-index:3}
+.shot--c{left:33%;top:9%;width:17%;aspect-ratio:3/4;rotate:3deg;z-index:1}
+.shot--d{left:75%;top:45%;width:21%;aspect-ratio:3/4;rotate:-3deg;z-index:3}
+.shot--e{left:7%;top:56%;width:21%;aspect-ratio:4/5;rotate:6deg;z-index:3}
+.shot--f{left:39%;top:66%;width:26%;aspect-ratio:5/4;rotate:-2deg;z-index:1}
+.shot svg text{display:none}
+.shot figcaption{position:absolute;z-index:3;left:12px;bottom:10px;color:var(--art-ink);opacity:.8}
+.lookbook__center{position:relative;z-index:2;width:100%;display:grid;justify-items:center;gap:22px;text-align:center}
+.lookbook__wordbox{width:100%}
+.lookbook__word{margin:0 auto;color:var(--bone)}
+.lookbook__text{max-width:42ch;font-size:clamp(17px,1.4vw,20px)}
+.lookbook__link{font-weight:500}
+@media (max-width:700px){.lookbook{min-height:1260px}.shot--a{left:2%;top:2%;width:50%}.shot--b{left:52%;top:7%;width:46%}.shot--c{left:12%;top:23%;width:36%}.shot--d{left:54%;top:58%;width:44%}.shot--e{left:2%;top:66%;width:48%}.shot--f{left:36%;top:83%;width:54%}}
+
+/* faq */
+.faq__card{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,5vw,90px)}
+.faq__head{display:grid;gap:22px;align-content:start}
+.faq__head p{max-width:34ch}
+.faq__list{border-top:1px solid var(--line)}
+.qa{border-bottom:1px solid var(--line)}
+.qa summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 0}
+.qa summary::-webkit-details-marker{display:none}
+.qa__q{font-family:var(--font-head);font-weight:600;font-size:clamp(20px,1.9vw,28px);line-height:1.08;letter-spacing:-.03em;text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:.2em}
+.qa__icon{position:relative;width:40px;height:40px;flex:none;border-radius:50%;border:1px solid currentColor}
+.qa__icon::before,.qa__icon::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:1.5px;margin:-.75px 0 0 -7px;background:currentColor;transition:transform .45s var(--spring)}
+.qa__icon::after{transform:rotate(90deg)}
+.qa[open] .qa__icon::after{transform:rotate(0)}
+.qa[open] .qa__icon::before{transform:rotate(180deg)}
+.qa__a{padding:0 64px 24px 0}
+.qa__a p{max-width:58ch}
+@media (hover:hover){.qa summary:hover .qa__q{text-decoration-style:wavy;text-decoration-color:currentColor}.qa summary:hover .qa__icon{animation:wobble .6s var(--spring)}}
+.qa summary:focus-visible .qa__q{text-decoration-style:wavy;text-decoration-color:currentColor}
+@media (max-width:860px){.faq__card{grid-template-columns:1fr}.qa__a{padding-right:0}}
+
+/* visit */
+.visit__card{display:grid;gap:clamp(34px,4vw,64px);overflow:clip}
+.visit__word{text-align:center;margin-top:-.02em}
+.visit__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr) minmax(0,1fr);gap:clamp(24px,3vw,48px);align-items:start}
+.visit__info{display:grid;gap:26px}
+.hours{margin:0;display:grid;border-top:1px solid var(--line)}
+.hours div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.hours dt{font-weight:500}
+.hours dd{margin:0;font-family:var(--font-mono);font-size:14px;white-space:nowrap}
+.visit__links{display:flex;flex-wrap:wrap;gap:8px 22px;font-weight:500}
+.visit__photo{margin:0;border-radius:var(--r-s);aspect-ratio:4/5}
+.visit__form{display:grid;gap:18px;justify-items:start;padding:clamp(22px,2.4vw,34px);border-radius:var(--r-s);background:rgba(7,7,10,.22);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.field{display:grid;gap:6px;width:100%;font-size:14px;font-weight:500}
+.field input,.field textarea{width:100%;border:0;border-bottom:1px solid color-mix(in oklab,var(--bone) 45%,transparent);background:none;padding:8px 0 10px;font-size:17px;border-radius:0;resize:vertical;transition:border-color .3s}
+.field input:focus,.field textarea:focus{outline:none;border-bottom-color:var(--volt)}
+.visit__status{font-weight:600;min-height:1.4em}
+@media (max-width:1000px){.visit__grid{grid-template-columns:1fr 1fr}.visit__photo{grid-row:span 2;aspect-ratio:auto;height:100%;min-height:320px}}
+@media (max-width:640px){.visit__grid{grid-template-columns:1fr}.visit__photo{grid-row:auto;aspect-ratio:4/3;height:auto;min-height:0}}
+
+/* footer */
+.foot{margin-top:var(--gap);padding:clamp(40px,6vw,80px) calc(var(--gap) + var(--pad) * .5) 28px;display:grid;grid-template-columns:1fr auto;gap:28px 40px;align-items:end}
+.foot__brand{font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:clamp(56px,10vw,170px);line-height:.8;letter-spacing:-.05em;text-decoration:none}
+.foot__nav{display:flex;flex-wrap:wrap;gap:10px 26px;font-weight:500;justify-content:end}
+.foot__small{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;border-top:1px solid rgba(255,255,255,.1);padding-top:20px;color:var(--muted)}
+@media (max-width:700px){.foot{grid-template-columns:1fr}.foot__nav{justify-content:start}}
+.motion .hero__chi,.motion .voices__list{will-change:transform}
+</style>
+</head>
+<body>
+<header class="hdr" data-section="nav">
+  <div class="hdr__bar">
+    <a class="hdr__brand" href="#hero"><i aria-hidden="true"></i>Latent</a>
+    <nav class="hdr__nav" id="nav" aria-label="Main">
+      <a class="link" href="#rails">Capsules</a>
+      <a class="link" href="#lab">Fit lab</a>
+      <a class="link" href="#make">Process</a>
+      <a class="link" href="#drops">Releases</a>
+      <a class="link" href="#visit">Visit</a>
+    </nav>
+    <a class="btn btn--solid hdr__cta" href="#visit"><span>Book a scan</span><svg class="btn__arrow" viewBox="0 0 28 12" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+    <button class="icon-btn hdr__menu" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu" data-open="Open menu" data-close="Close menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  <section id="hero" data-section="hero" class="hero" data-kind="hero">
+    <div class="hero__card marks">
+      <div class="hero__photo" role="img" aria-label="A wireframe sheet of fabric rippling in a dark simulation space"><canvas></canvas></div>
+      <div class="hero__wordclip"><h1 class="hero__word display fill" style="--len:6" data-fit=".92">Latent</h1></div>
+      <div class="hero__info">
+        <p class="label"><span class="dot"></span>AW26 · Collection 07 · Generative outerwear</p>
+        <p class="hero__title">Clothes drafted by a model, <em>finished by a tailor.</em></p>
+        <p class="hero__lead">Bonded outerwear, engineered knit and smart optics, cut to a 3D scan of your body and released every Thursday.</p>
+        <p class="hero__addr label">Foundry Row 7, Canal Quarter — two minutes from the tram</p>
+      </div>
+      <div class="hero__side">
+        <p class="label">Tue – Sun · 11:00 – 20:00</p>
+        <a class="btn" href="#rails"><span>See the capsules</span><svg class="btn__arrow" viewBox="0 0 28 12" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        <span class="hero__logo" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker label" data-section="ticker" aria-hidden="true">
+    <div class="ticker__run">
+      <span>Pattern model v7.2 — live</span><span>Next release Thu 29 Oct, 11:00</span><span>Body scans deleted on request</span><span>Made to measure in nine days</span><span>Recycled nylon · Merino · Titanium</span><span>Zero deadstock since 2021</span>
+      <span>Pattern model v7.2 — live</span><span>Next release Thu 29 Oct, 11:00</span><span>Body scans deleted on request</span><span>Made to measure in nine days</span><span>Recycled nylon · Merino · Titanium</span><span>Zero deadstock since 2021</span>
+    </div>
+  </div>
+
+  <section id="story" data-section="story" data-kind="about">
+    <div class="story__card card on-bone marks">
+      <h2 class="story__title h2" data-split>We teach a machine two centuries of tailoring. <em>Then a tailor gets the last word.</em></h2>
+      <figure class="story__photo art art--violet" data-art="weave" data-seed="4" data-reveal="drop" role="img" aria-label="Interlaced threads in a generated weave pattern"></figure>
+      <div class="story__body">
+        <p class="story__text lead" data-reveal="up">Latent began in 2021 as three engineers and a cutter sharing a basement and a single GPU. Today the atelier drafts every pattern from a 3D scan of the person who will wear it, tests the drape in simulation, then cuts, bonds and finishes each piece by hand in the room behind the shop.</p>
+        <ul class="facts">
+          <li data-reveal="up"><strong>1.8M</strong><span>patterns drafted by the model</span></li>
+          <li data-reveal="up"><strong>0.4mm</strong><span>scan accuracy, shoulder to hem</span></li>
+          <li data-reveal="up"><strong>0</strong><span>pieces of deadstock, ever</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="rails" data-section="rails" class="rails" data-kind="collections">
+    <div class="rails__pin">
+      <div class="rails__track">
+        <div class="rails__intro">
+          <p class="label muted">Capsules · 06</p>
+          <h2 class="h2">Six capsules, <em>re-trained every Thursday</em></h2>
+          <p class="lead muted">Every piece is graded from your scan rather than a size chart, so the price covers the cut, not the label. Ready-to-wear runs XS to XXL for walk-ins.</p>
+          <a class="link" href="#drops">This month's releases</a>
+        </div>
+        <article class="cover cover--violet marks">
+          <figure class="cover__photo art" data-art="form" data-seed="7" role="img" aria-label="A dress form rendered as glowing scan lines"></figure>
+          <p class="cover__code label">CAP—01</p>
+          <div class="cover__wordbox fillbox"><h3 class="cover__word display fill" style="--len:5" data-bounce="still">Shell</h3></div>
+          <div class="cover__info"><p class="cover__price">£420 – £1,280</p><p class="cover__text">Bonded three-layer outerwear, seam-mapped to your shoulders and stride.</p></div>
+        </article>
+        <article class="cover cover--ink marks">
+          <figure class="cover__photo art" data-art="lens" data-seed="3" role="img" aria-label="Two iridescent circular lenses joined by a bridge"></figure>
+          <p class="cover__code label">CAP—02</p>
+          <div class="cover__wordbox fillbox"><h3 class="cover__word display fill" style="--len:5" data-bounce="still">Optic</h3></div>
+          <div class="cover__info"><p class="cover__price">£280 – £640</p><p class="cover__text">Titanium frames with photochromic lenses that shift as the light does.</p></div>
+        </article>
+        <article class="cover cover--bone marks">
+          <figure class="cover__photo art" data-art="drape" data-seed="9" role="img" aria-label="A wireframe of draped fabric"></figure>
+          <p class="cover__code label">CAP—03</p>
+          <div class="cover__wordbox fillbox"><h3 class="cover__word display fill" style="--len:4" data-bounce="still">Mesh</h3></div>
+          <div class="cover__info"><p class="cover__price">£160 – £520</p><p class="cover__text">Engineered 3D-knit tops, zoned for heat and stretch by the model.</p></div>
+        </article>
+        <article class="cover cover--violet marks">
+          <figure class="cover__photo art" data-art="sphere" data-seed="5" role="img" aria-label="A sphere of glowing points with orbit rings"></figure>
+          <p class="cover__code label">CAP—04</p>
+          <div class="cover__wordbox fillbox"><h3 class="cover__word display fill" style="--len:5" data-bounce="still">Lumen</h3></div>
+          <div class="cover__info"><p class="cover__price">£340 – £900</p><p class="cover__text">Fibre-optic weaves that glow faintly after dark. Charges by USB-C.</p></div>
+        </article>
+        <article class="cover cover--ink marks">
+          <figure class="cover__photo art" data-art="contour" data-seed="12" role="img" aria-label="Topographic contour lines like a pressure map of a footprint"></figure>
+          <p class="cover__code label">CAP—05</p>
+          <div class="cover__wordbox fillbox"><h3 class="cover__word display fill" style="--len:4" data-bounce="still">Sole</h3></div>
+          <div class="cover__info"><p class="cover__price">£220 – £480</p><p class="cover__text">Printed lattice midsoles tuned to your gait from a ten-second walk.</p></div>
+        </article>
+        <article class="cover cover--bone marks">
+          <figure class="cover__photo art" data-art="weave" data-seed="21" role="img" aria-label="A close-up generated knit texture"></figure>
+          <p class="cover__code label">CAP—06</p>
+          <div class="cover__wordbox fillbox"><h3 class="cover__word display fill" style="--len:4" data-bounce="still">Knit</h3></div>
+          <div class="cover__info"><p class="cover__price">£190 – £560</p><p class="cover__text">Merino and recycled nylon, knitted seamless in a single pass.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="lab" data-section="lab" data-kind="pricing">
+    <div class="repairs__card card on-ink marks">
+      <div class="repairs__head">
+        <p class="label muted">Level 2 · Fit lab</p>
+        <h2 class="h2" data-split>The fit <em>lab</em></h2>
+        <p class="lead">Upstairs: a scanning booth, a simulation wall and two tailors. Walk in for a scan, or book an hour to fit anything we make before a single panel is cut.</p>
+        <figure class="repairs__photo art art--ink" data-art="form" data-seed="2" data-parallax role="img" aria-label="A torso rendered from horizontal scan lines with a glowing laser band"></figure>
+      </div>
+      <div class="repairs__list">
+        <ul class="prices">
+          <li class="price"><span class="price__rule" data-rule aria-hidden="true"></span><h3 class="price__name">Body scan</h3><p class="price__note">Twelve seconds, 200,000 points, deleted on request</p><p class="price__cost" data-reveal="tag">Free</p></li>
+          <li class="price"><span class="price__rule" data-rule aria-hidden="true"></span><h3 class="price__name">Generative fitting</h3><p class="price__note">Your scan dressed in any piece, live on the wall</p><p class="price__cost" data-reveal="tag">£45</p></li>
+          <li class="price"><span class="price__rule" data-rule aria-hidden="true"></span><h3 class="price__name">Made to measure</h3><p class="price__note">Any ready-to-wear piece, re-graded to you</p><p class="price__cost" data-reveal="tag">£120</p></li>
+          <li class="price"><span class="price__rule" data-rule aria-hidden="true"></span><h3 class="price__name">Gait mapping</h3><p class="price__note">Ten seconds on the plate, tunes any Sole midsole</p><p class="price__cost" data-reveal="tag">£60</p></li>
+          <li class="price"><span class="price__rule" data-rule aria-hidden="true"></span><h3 class="price__name">Re-fit and alteration</h3><p class="price__note">Bodies change, so we re-scan and re-cut</p><p class="price__cost" data-reveal="tag">£35</p></li>
+          <li class="price"><span class="price__rule" data-rule aria-hidden="true"></span><h3 class="price__name">Lumen service</h3><p class="price__note">Fibre check, battery swap and firmware</p><p class="price__cost" data-reveal="tag">£25</p></li>
+        </ul>
+        <p class="repairs__foot"><span>Members get unlimited re-scans and a fifth off every fitting.</span><a class="link" href="#visit">Book a scan</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="again" data-section="again" class="again" data-kind="statement">
+    <div class="again__stage">
+      <div class="again__photo" data-art="drape" data-seed="17" role="img" aria-label="A draped wireframe over an iridescent gradient"></div>
+      <div class="again__knock"><p class="again__word display fill" style="--len:4" data-bounce="still">Zero</p></div>
+      <div class="again__card card on-bone marks">
+        <p class="label muted">Deadstock · 0 units</p>
+        <h2 class="again__title">Nothing is cut <em>until it's ordered</em></h2>
+        <p>No forecasts, no overproduction, no end-of-season fire sale. The model drafts on demand and the fabric waits on the roll, so offcuts are the only waste, and those go back to the mill to be re-spun.</p>
+        <a class="btn" href="#make"><span>See how it's made</span><svg class="btn__arrow" viewBox="0 0 28 12" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="make" data-section="make" class="sell" data-kind="process">
+    <div class="sell__intro">
+      <p class="label muted">Process · 9 days</p>
+      <h2 class="h2" data-split>From scan <em>to shoulder</em></h2>
+      <p class="lead muted">Nine days from the booth to your door, with a person checking every step the machine takes.</p>
+      <a class="btn btn--solid" href="#visit"><span>Book a scan</span><svg class="btn__arrow" viewBox="0 0 28 12" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+    </div>
+    <ol class="steps">
+      <li class="step on-bone marks">
+        <div class="step__text"><p class="step__num label">01 / 04</p><h3 class="step__title">Scan</h3><p>Stand in the booth for twelve seconds. We capture 200,000 points and keep only the measurements your patterns need.</p></div>
+        <figure class="step__photo art art--ink" data-art="portrait" data-seed="31" role="img" aria-label="A head and shoulders built from scan lines"></figure>
+      </li>
+      <li class="step on-violet marks">
+        <div class="step__text"><p class="step__num label">02 / 04</p><h3 class="step__title">Generate</h3><p>The pattern model drafts your piece and simulates the drape on your body. You watch it move before you approve it.</p></div>
+        <figure class="step__photo art art--violet" data-art="drape" data-seed="40" role="img" aria-label="Simulated cloth as a wireframe"></figure>
+      </li>
+      <li class="step on-ink marks">
+        <div class="step__text"><p class="step__num label">03 / 04</p><h3 class="step__title">Cut</h3><p>Panels are laser-cut from the roll, then bonded, stitched and pressed by hand in the atelier.</p></div>
+        <figure class="step__photo art art--bone" data-art="weave" data-seed="8" role="img" aria-label="A woven fabric texture"></figure>
+      </li>
+      <li class="step on-bone marks">
+        <div class="step__text"><p class="step__num label">04 / 04</p><h3 class="step__title">Wear</h3><p>Collect it in the shop or have it couriered. Re-fits are free for the first year, because bodies change.</p></div>
+        <figure class="step__photo art art--ink" data-art="sphere" data-seed="19" role="img" aria-label="A sphere of points with orbit rings"></figure>
+      </li>
+    </ol>
+  </section>
+
+  <section id="drops" data-section="drops" data-kind="events">
+    <div class="drops__card card on-violet marks">
+      <div class="drops__head">
+        <p class="label">Releases · Thursdays 11:00</p>
+        <h2 class="h2" data-split>Thursday <em>releases</em></h2>
+        <p class="lead">New capsules go live every Thursday at eleven. Members get the drop an hour early, with espresso on us.</p>
+      </div>
+      <ul class="drops__list">
+        <li class="drop" data-reveal="wipe"><p class="drop__date"><span class="drop__day">29</span><span class="drop__month">Oct</span></p><div class="drop__body"><h3 class="drop__title">Shell 04 — Storm</h3><p class="drop__text">Bonded three-layer parkas, seam-mapped to forty arm movements.</p></div><p class="drop__tag">Members 10:00</p></li>
+        <li class="drop" data-reveal="wipe"><p class="drop__date"><span class="drop__day">05</span><span class="drop__month">Nov</span></p><div class="drop__body"><h3 class="drop__title">Optic night</h3><p class="drop__text">New titanium frames, fitted with lenses while you wait. Open till nine.</p></div><p class="drop__tag">Late opening</p></li>
+        <li class="drop" data-reveal="wipe"><p class="drop__date"><span class="drop__day">12</span><span class="drop__month">Nov</span></p><div class="drop__body"><h3 class="drop__title">Lumen: Long Night</h3><p class="drop__text">Fibre-optic knitwear for the darkest weeks of the year.</p></div><p class="drop__tag">Members 10:00</p></li>
+        <li class="drop" data-reveal="wipe"><p class="drop__date"><span class="drop__day">19</span><span class="drop__month">Nov</span></p><div class="drop__body"><h3 class="drop__title">Open model day</h3><p class="drop__text">Sit with our engineers and watch your pattern get drafted, line by line.</p></div><p class="drop__tag">All day</p></li>
+        <li class="drop" data-reveal="wipe"><p class="drop__date"><span class="drop__day">26</span><span class="drop__month">Nov</span></p><div class="drop__body"><h3 class="drop__title">Archive re-run</h3><p class="drop__text">Past capsules re-graded to current scans, for one week only.</p></div><p class="drop__tag">From 11:00</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="studio" data-section="studio" data-kind="team">
+    <div class="pickers__card card on-bone marks">
+      <div class="pickers__head">
+        <h2 class="h2" data-split>The <em>studio</em></h2>
+        <p class="lead muted">Two engineers, a tailor and a textile chemist. Ask any of them how your jacket was made and they'll show you on the wall.</p>
+      </div>
+      <ul class="people">
+        <li class="person"><figure class="person__photo art art--ink" data-art="portrait" data-seed="11" data-reveal="pill" role="img" aria-label="Generated scan-line portrait"></figure><h3 class="person__name">Mira Okafor</h3><p class="person__role label">Creative director</p><p class="person__find">Currently obsessed with sleeves that know which way you're about to reach.</p></li>
+        <li class="person"><figure class="person__photo art art--violet" data-art="portrait" data-seed="24" data-reveal="pill" role="img" aria-label="Generated scan-line portrait"></figure><h3 class="person__name">Kenji Arata</h3><p class="person__role label">Pattern model lead</p><p class="person__find">Currently training a grader that finally understands linen.</p></li>
+        <li class="person"><figure class="person__photo art art--ink" data-art="portrait" data-seed="35" data-reveal="pill" role="img" aria-label="Generated scan-line portrait"></figure><h3 class="person__name">Saoirse Vale</h3><p class="person__role label">Head tailor</p><p class="person__find">Currently overruling the model, again, about lapels.</p></li>
+        <li class="person"><figure class="person__photo art art--violet" data-art="portrait" data-seed="48" data-reveal="pill" role="img" aria-label="Generated scan-line portrait"></figure><h3 class="person__name">Dev Malhotra</h3><p class="person__role label">Textile engineer</p><p class="person__find">Currently spinning yarn from nylon recovered from our own offcuts.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="voices" data-section="voices" data-kind="reviews">
+    <div class="voices__card card on-ink marks">
+      <h2 class="h2 voices__title" data-split>Overheard <em>in the booth</em></h2>
+      <div class="voices__row">
+        <ul class="voices__list">
+          <li class="voice"><blockquote><p>First jacket I've owned where the sleeves stop exactly where my wrists do.</p></blockquote><p class="voice__who label">Sam K. · member since 2023</p></li>
+          <li class="voice"><blockquote><p>Watched it drape on my scan before they cut it. Felt like cheating.</p></blockquote><p class="voice__who label">Priya N.</p></li>
+          <li class="voice"><blockquote><p>The tailor overruled the model on my collar. She was right.</p></blockquote><p class="voice__who label">Dan W. · fit lab</p></li>
+          <li class="voice"><blockquote><p>My Lumen scarf glows just enough on the cycle home. Nobody else has one.</p></blockquote><p class="voice__who label">Lou B.</p></li>
+          <li class="voice"><blockquote><p>Re-scanned after a year of climbing. They re-cut the shoulders for free.</p></blockquote><p class="voice__who label">Marco F. · member</p></li>
+          <li class="voice"><blockquote><p>Thursday queue, espresso in hand, new capsule on the wall. Best hour of my week.</p></blockquote><p class="voice__who label">Hannah O.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="lookbook" data-section="lookbook" class="lookbook" data-kind="gallery">
+    <div class="lookbook__stage">
+      <figure class="shot shot--a art art--violet" data-art="form" data-seed="52" data-speed="0.12" role="img" aria-label="Scan-line torso"><figcaption class="label">R—0412</figcaption></figure>
+      <figure class="shot shot--b art art--bone" data-art="portrait" data-seed="61" data-speed="0.4" role="img" aria-label="Scan-line portrait"><figcaption class="label">R—0388</figcaption></figure>
+      <figure class="shot shot--c art art--ink" data-art="lens" data-seed="14" data-speed="0.25" role="img" aria-label="Iridescent lenses"><figcaption class="label">R—0371</figcaption></figure>
+      <figure class="shot shot--d art art--ink" data-art="portrait" data-seed="73" data-speed="0.55" role="img" aria-label="Scan-line portrait"><figcaption class="label">R—0356</figcaption></figure>
+      <figure class="shot shot--e art art--bone" data-art="contour" data-seed="6" data-speed="0.3" role="img" aria-label="Contour map"><figcaption class="label">R—0349</figcaption></figure>
+      <figure class="shot shot--f art art--violet" data-art="drape" data-seed="88" data-speed="0.18" role="img" aria-label="Wireframe drape"><figcaption class="label">R—0333</figcaption></figure>
+    </div>
+    <div class="lookbook__center">
+      <p class="label muted">The wall · re-rendered</p>
+      <div class="lookbook__wordbox fillbox"><h2 class="lookbook__word display fill" style="--len:8" data-fit=".9" data-bounce="drop">Rendered</h2></div>
+      <p class="lookbook__text">Customers in what we cut for them, re-rendered from their scans. Tag us and we'll put yours on the screen wall by the booth.</p>
+      <a class="link lookbook__link" href="#visit">See the wall in the atelier</a>
+    </div>
+  </section>
+
+  <section id="faq" data-section="faq" data-kind="faq">
+    <div class="faq__card card on-bone marks">
+      <div class="faq__head">
+        <h2 class="h2" data-split>Asked <em>at the booth</em></h2>
+        <p class="muted">Anything else? Ask us in the atelier, or write and a person replies within a day.</p>
+      </div>
+      <div class="faq__list">
+        <details class="qa" data-reveal="up"><summary><span class="qa__q">What happens to my body scan?</span><span class="qa__icon" aria-hidden="true"></span></summary><div class="qa__a"><p>We keep the measurements your patterns need and nothing else. The raw point cloud is deleted after your fitting, and the measurements go too the moment you ask.</p></div></details>
+        <details class="qa" data-reveal="up"><summary><span class="qa__q">Does the model design everything?</span><span class="qa__icon" aria-hidden="true"></span></summary><div class="qa__a"><p>It drafts and grades patterns. People choose the fabrics, set the silhouettes and sign off every piece before it's cut.</p></div></details>
+        <details class="qa" data-reveal="up"><summary><span class="qa__q">How long does made to measure take?</span><span class="qa__icon" aria-hidden="true"></span></summary><div class="qa__a"><p>Nine working days on average. Shell outerwear can take up to fourteen when the bonding queue is long.</p></div></details>
+        <details class="qa" data-reveal="up"><summary><span class="qa__q">Can I return something made for me?</span><span class="qa__icon" aria-hidden="true"></span></summary><div class="qa__a"><p>Within 14 days for a free re-fit, or store credit if it still isn't right. Every seam is guaranteed for two years.</p></div></details>
+        <details class="qa" data-reveal="up"><summary><span class="qa__q">How do I wash the Lumen pieces?</span><span class="qa__icon" aria-hidden="true"></span></summary><div class="qa__a"><p>Unclip the battery, then hand-wash cold. The fibres are rated for two hundred washes before they start to dim.</p></div></details>
+        <details class="qa" data-reveal="up"><summary><span class="qa__q">Do you ship?</span><span class="qa__icon" aria-hidden="true"></span></summary><div class="qa__a"><p>Ready-to-wear ships worldwide. Made to measure needs one scan in person; after that, re-orders can be placed from home.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit" data-section="visit" data-kind="contact">
+    <div class="visit__card card on-violet marks">
+      <div class="visit__wordbox fillbox"><h2 class="visit__word display fill" style="--len:7" data-bounce="drop">Step in</h2></div>
+      <div class="visit__grid">
+        <div class="visit__info">
+          <p class="lead">Foundry Row 7, Canal Quarter. Two minutes from the tram, ten from the station.</p>
+          <dl class="hours">
+            <div><dt>Tuesday – Friday</dt><dd>11:00 – 20:00</dd></div>
+            <div><dt>Saturday</dt><dd>10:00 – 19:00</dd></div>
+            <div><dt>Sunday</dt><dd>12:00 – 17:00</dd></div>
+            <div><dt>Monday</dt><dd>Booth maintenance</dd></div>
+          </dl>
+          <p class="visit__links"><a class="link" href="mailto:hello@latent.example">hello@latent.example</a><a class="link" href="tel:+442079460321">020 7946 0321</a><a class="link" href="#visit">Instagram</a></p>
+        </div>
+        <figure class="visit__photo art art--ink" data-art="sphere" data-seed="66" data-parallax role="img" aria-label="A glowing point sphere"></figure>
+        <form class="visit__form" data-sent="Thanks — a person will reply within a day.">
+          <h3 class="h3">Book a scan</h3>
+          <label class="field"><span>Your name</span><input name="name" autocomplete="name" required></label>
+          <label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+          <label class="field"><span>What would you like made?</span><textarea name="message" rows="3"></textarea></label>
+          <button class="btn btn--solid" type="submit"><span>Send it</span><svg class="btn__arrow" viewBox="0 0 28 12" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+          <p class="visit__status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot" data-section="footer">
+  <a class="foot__brand iri-text" href="#hero">Latent</a>
+  <nav class="foot__nav" aria-label="Footer">
+    <a class="link" href="#rails">Capsules</a>
+    <a class="link" href="#lab">Fit lab</a>
+    <a class="link" href="#make">Process</a>
+    <a class="link" href="#faq">Questions</a>
+    <a class="link" href="#visit">Visit</a>
+  </nav>
+  <p class="foot__small label"><span>© 2026 Latent Atelier · a fictional brand; every figure is illustrative</span><span>Drafted by model v7.2 · Finished by hand</span></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+<script>
+(()=>{
+const root=document.documentElement;
+const init=(sel,fn)=>document.querySelectorAll(sel).forEach(el=>{try{fn(el)}catch(e){console.error(e)}});
+
+/* ================= generative art (replaces every photo) ================= */
+const ART=(()=>{
+  let n=0;
+  const rng=s=>{let a=(s*2654435761)>>>0||1;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
+  const f=v=>v.toFixed(1);
+  const TAU=Math.PI*2;
+  const defs=(id,W,H)=>`<defs>
+    <linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="${W}" y2="${H}"><stop offset="0" stop-color="#6d4cff"/><stop offset=".5" stop-color="#5ce1ff"/><stop offset="1" stop-color="#d6ff5c"/></linearGradient>
+    <radialGradient id="${id}r"><stop offset="0" stop-color="#6d4cff" stop-opacity=".55"/><stop offset="1" stop-color="#6d4cff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="${id}l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d4cff" stop-opacity=".75"/><stop offset=".55" stop-color="#5ce1ff" stop-opacity=".3"/><stop offset="1" stop-color="#d6ff5c" stop-opacity=".65"/></linearGradient>
+  </defs>`;
+  const ease=(pts,t)=>{for(let k=1;k<pts.length;k++){if(t<=pts[k][0]){const[t0,a]=pts[k-1],[t1,b]=pts[k],u=(t-t0)/(t1-t0),e=u*u*(3-2*u);return a+(b-a)*e}}return pts[pts.length-1][1]};
+  const mono=(x,y,txt,o=.7)=>`<text x="${f(x)}" y="${f(y)}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" fill="currentColor" fill-opacity="${o}">${txt}</text>`;
+  const glow=(W,H,r,id)=>`<circle cx="${f(W*(.2+r()*.6))}" cy="${f(H*(.2+r()*.5))}" r="${f(Math.max(W,H)*.55)}" fill="url(#${id}r)"/>`;
+
+  /* scan-line silhouette: torso or head */
+  const scan=(W,H,r,id,prof,N,tag)=>{
+    const S=Math.min(W,H*.8),cx=W/2,y0=H*.07,Ht=H*.93,sy=y0+Ht*(.22+r()*.45);
+    let s='',L='',R='';
+    for(let i=0;i<=N;i++){
+      const t=i/N,[hw0,xo]=prof(t),hw=hw0*S,x=cx+xo*S,y=y0+t*Ht;
+      if(hw<1.2)continue;
+      const hot=Math.abs(y-sy)<Ht*.035;
+      s+=`<path d="M${f(x-hw)} ${f(y)}Q${f(x)} ${f(y+hw*.44)} ${f(x+hw)} ${f(y)}" stroke="${hot?`url(#${id})`:'currentColor'}" stroke-opacity="${hot?1:(i%5?.32:.75)}" stroke-width="${hot?1.8:.8}"/>`;
+      L+=(L?'L':'M')+f(x-hw)+' '+f(y);R+=(R?'L':'M')+f(x+hw)+' '+f(y);
+    }
+    const ticks=Array.from({length:9},(_,k)=>`<line x1="${f(W-18)}" x2="${f(W-(k%4?24:32))}" y1="${f(H*.1+k*H*.1)}" y2="${f(H*.1+k*H*.1)}" stroke="currentColor" stroke-opacity=".5"/>`).join('');
+    return glow(W,H,r,id)+`<g fill="none">${s}<path d="${L}" stroke="currentColor" stroke-opacity=".9" stroke-width="1"/><path d="${R}" stroke="currentColor" stroke-opacity=".9" stroke-width="1"/></g>
+      <rect x="0" y="${f(sy-22)}" width="${W}" height="44" fill="url(#${id})" opacity=".12"/><rect x="0" y="${f(sy-.8)}" width="${W}" height="1.6" fill="url(#${id})"/>
+      <g fill="none">${ticks}</g>${mono(16,sy-10,`${tag} · Y${Math.round(sy)} · 0.4MM`)}${mono(16,H-18,'LATENT/SCAN',.45)}`;
+  };
+
+  const G={
+    form(W,H,r,id){
+      const sh=.33+r()*.07,ws=.2+r()*.05,hp=.28+r()*.05;
+      const pts=[[0,.075],[.06,.08],[.14,sh],[.3,sh-.03],[.52,ws],[.74,hp],[.88,hp-.01],[1,hp-.05]];
+      return scan(W,H,r,id,t=>[ease(pts,t),0],64,'TORSO');
+    },
+    portrait(W,H,r,id){
+      const tilt=(r()-.5)*.22,hair=1+r()*.3,tc=.25,rt=.2,sw=.42+r()*.08;
+      const body=[[.42,.055],[.57,.068],[.73,sw],[1,sw+.05]];
+      return scan(W,H,r,id,t=>{
+        const q=(t-tc)/rt;let head=q*q<1?.155*Math.sqrt(1-q*q):0;if(t<tc)head*=hair;
+        const b=t>.42?ease(body,t):0;
+        return[Math.max(head,b),t<.55?tilt*(.55-t):0];
+      },72,'HEAD');
+    },
+    drape(W,H,r,id){
+      const ph=r()*TAU,a=.75+r()*.6,fq=1.8+r()*2,F=Math.min(W,H*1.15)*.9,cy=H*.14,R=30,C=40;
+      const P=(u,v)=>{const z=(Math.sin(u*fq+ph)*.22+Math.cos(v*3.4+u*1.7+ph)*.16+Math.sin((u-v)*5.5+ph)*.05)*a,Z=v*1.2+2.4;return[W/2+u*1.8*F/Z,cy+(1.25-z)*F/Z]};
+      let s='';
+      for(let j=0;j<=C;j+=2){const u=-1+2*j/C;let d='';for(let i=0;i<=R;i++){const p=P(u,-1+2*i/R);d+=(i?'L':'M')+f(p[0])+' '+f(p[1])}s+=`<path d="${d}" stroke="currentColor" stroke-opacity=".16" stroke-width=".6"/>`}
+      for(let i=0;i<=R;i++){const v=-1+2*i/R;let d='';for(let j=0;j<=C;j++){const p=P(-1+2*j/C,v);d+=(j?'L':'M')+f(p[0])+' '+f(p[1])}
+        const hot=i%5===0,o=(1-i/R)*.7+.15;s+=`<path d="${d}" stroke="${hot?`url(#${id})`:'currentColor'}" stroke-opacity="${(hot?1:o).toFixed(2)}" stroke-width="${hot?1.5:.8}"/>`}
+      return glow(W,H,r,id)+`<g fill="none">${s}</g>${mono(16,26,'SIM · DRAPE · '+Math.round(r()*900+100)+' IT')}`;
+    },
+    contour(W,H,r,id){
+      const cx=W*(.35+r()*.3),cy=H*(.35+r()*.3),K=24,M=Math.max(W,H),p=[r()*6,r()*6,r()*6],a=[.12+r()*.1,.07+r()*.06,.035];
+      let s='';
+      for(let k=1;k<=K;k++){const Rk=k/K*M*.78;let d='';
+        for(let q=0;q<=110;q++){const th=q/110*TAU,rr=Rk*(1+a[0]*Math.sin(2*th+p[0]+k*.09)+a[1]*Math.sin(3*th+p[1]-k*.06)+a[2]*Math.sin(5*th+p[2]));d+=(q?'L':'M')+f(cx+rr*Math.cos(th))+' '+f(cy+rr*Math.sin(th)*.84)}
+        const hot=k%6===0;s+=`<path d="${d}Z" stroke="${hot?`url(#${id})`:'currentColor'}" stroke-opacity="${hot?1:.38}" stroke-width="${hot?1.7:.8}"/>`}
+      return glow(W,H,r,id)+`<g fill="none">${s}<path d="M${f(cx-14)} ${f(cy)}H${f(cx+14)}M${f(cx)} ${f(cy-14)}V${f(cy+14)}" stroke="currentColor"/></g><circle cx="${f(cx)}" cy="${f(cy)}" r="3" fill="url(#${id})"/>${mono(16,26,'PRESSURE MAP · KPA')}`;
+    },
+    lens(W,H,r,id){
+      const R=Math.min(W*.2,H*.28),cy=H*(.44+r()*.1),gap=R*.3,c1=W/2-R-gap/2,c2=W/2+R+gap/2;let s='';
+      [c1,c2].forEach(cx=>{
+        s+=`<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(R)}" fill="url(#${id}l)"/>`;
+        for(let k=1;k<=14;k++)s+=`<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(R*k/14)}" fill="none" stroke="currentColor" stroke-opacity="${k===14?.95:(.1+.025*k).toFixed(2)}" stroke-width="${k===14?2.2:.7}"/>`;
+        const a0=3.5,a1=4.3,rr=R*.78;s+=`<path d="M${f(cx+rr*Math.cos(a0))} ${f(cy+rr*Math.sin(a0))}A${f(rr)} ${f(rr)} 0 0 1 ${f(cx+rr*Math.cos(a1))} ${f(cy+rr*Math.sin(a1))}" stroke="#fff" stroke-opacity=".8" stroke-width="2.4" stroke-linecap="round" fill="none"/>`;
+      });
+      s+=`<path d="M${f(c1+R*.95)} ${f(cy-R*.3)}Q${f(W/2)} ${f(cy-R*.62)} ${f(c2-R*.95)} ${f(cy-R*.3)}" stroke="currentColor" stroke-width="2.2" fill="none"/>`;
+      s+=`<path d="M${f(c1-R)} ${f(cy-R*.12)}L0 ${f(cy-R*.42)}M${f(c2+R)} ${f(cy-R*.12)}L${W} ${f(cy-R*.42)}" stroke="currentColor" stroke-width="2.2" fill="none"/>`;
+      return glow(W,H,r,id)+s+mono(16,H-18,'TI-6AL-4V · PHOTOCHROMIC',.6);
+    },
+    weave(W,H,r,id){
+      const D=Math.hypot(W,H),st=13+r()*7,A=st*.3,ang=-16+r()*12;let v='',h='';
+      for(let x=-D/2;x<=D/2;x+=st){const j=Math.round(x/st);let d='';for(let y=-D/2;y<=D/2;y+=6)d+=(y>-D/2?'L':'M')+f(x+A*Math.sin(y/st*Math.PI+j*Math.PI))+' '+f(y);v+=`<path d="${d}" stroke="currentColor" stroke-opacity=".22" stroke-width="${f(st*.42)}" stroke-linecap="round"/>`}
+      for(let y=-D/2;y<=D/2;y+=st){const i=Math.round(y/st);let d='';for(let x=-D/2;x<=D/2;x+=6)d+=(x>-D/2?'L':'M')+f(x)+' '+f(y+A*Math.sin(x/st*Math.PI+i*Math.PI));const hot=((i%7)+7)%7===0;h+=`<path d="${d}" stroke="${hot?`url(#${id})`:'currentColor'}" stroke-opacity="${hot?.95:.5}" stroke-width="${f(st*.36)}" stroke-linecap="round"/>`}
+      return `<g fill="none" transform="translate(${f(W/2)} ${f(H/2)}) rotate(${f(ang)})">${v}${h}</g>`+glow(W,H,r,id);
+    },
+    sphere(W,H,r,id){
+      const N=560,R=Math.min(W,H)*.34,cx=W/2,cy=H/2,a=r()*6,b=r()*6,ca=Math.cos(a),sa=Math.sin(a),cb=Math.cos(b),sb=Math.sin(b);
+      let s=`<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(R*1.5)}" fill="url(#${id}r)"/>`;
+      for(let k=0;k<2;k++)s+=`<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(R*(1.42+k*.22))}" ry="${f(R*(.3+k*.08))}" transform="rotate(${f(-24+r()*48)} ${f(cx)} ${f(cy)})" fill="none" stroke="url(#${id})" stroke-opacity="${k?.5:.9}" stroke-width="1.2"/>`;
+      for(let i=0;i<N;i++){const y=1-2*(i+.5)/N,rad=Math.sqrt(1-y*y),th=i*2.39996,x=Math.cos(th)*rad,z=Math.sin(th)*rad,x1=x*ca+z*sa,z1=-x*sa+z*ca,y1=y*cb-z1*sb,z2=y*sb+z1*cb,k=(z2+1)/2;
+        s+=`<circle cx="${f(cx+x1*R)}" cy="${f(cy+y1*R)}" r="${(.45+k*1.7).toFixed(2)}" fill="${k>.8?`url(#${id})`:'currentColor'}" fill-opacity="${(.1+k*.9).toFixed(2)}"/>`}
+      return s+mono(16,26,'EMBEDDING · 512D → 3D');
+    }
+  };
+  const paint=el=>{const gen=G[el.dataset.art];if(!gen)return;const w=el.clientWidth||400,h=el.clientHeight||500,W=400,H=Math.max(180,Math.min(1100,Math.round(400*h/w)||500)),id='g'+(n++);
+    el.insertAdjacentHTML('afterbegin',`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">${defs(id,W,H)}${gen(W,H,rng(+el.dataset.seed||1),id)}</svg>`)};
+  return{paint};
+})();
+init('[data-art]',ART.paint);
+
+/* ================= fit display words to their boxes ================= */
+const fit=()=>document.querySelectorAll('.fill').forEach(el=>{const box=el.parentElement;if(!box)return;const cs=getComputedStyle(box);const target=(box.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight))*(parseFloat(el.dataset.fit)||1);if(target<=0)return;const prev=el.style.display;el.style.fontSize='100px';el.style.display='inline-block';el.style.width='max-content';el.style.justifySelf='start';const w=el.offsetWidth;el.style.display=prev;el.style.width='';el.style.justifySelf='';if(w>0)el.style.fontSize=(100*target/w).toFixed(2)+'px'});
+fit();
+const fonts=document.fonts?document.fonts.ready:Promise.resolve();
+fonts.then(fit);
+let rt;const refit=()=>{clearTimeout(rt);rt=setTimeout(fit,120)};addEventListener('resize',refit);
+if(window.ResizeObserver){const ro=new ResizeObserver(refit);document.querySelectorAll('.fill').forEach(el=>el.parentElement&&ro.observe(el.parentElement))}
+
+/* ================= hero cloth simulation (canvas) ================= */
+init('.hero__photo canvas',c=>{
+  const ctx=c.getContext('2d');if(!ctx)return;
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W=0,H=0,vis=true,raf=0,mx=0,my=.2,tx=null,ty=null;const t0=performance.now();
+  const size=()=>{const d=Math.min(window.devicePixelRatio||1,2);W=c.clientWidth;H=c.clientHeight;c.width=Math.round(W*d);c.height=Math.round(H*d);ctx.setTransform(d,0,0,d,0,0)};
+  const loop=()=>{if(!still&&vis&&!raf)raf=requestAnimationFrame(frame)};
+  function frame(now){
+    raf=0;const t=(now-t0)/1000;
+    const ax=tx==null?Math.sin(t*.27)*.55:tx,ay=ty==null?Math.cos(t*.21)*.45:ty;mx+=(ax-mx)*.05;my+=(ay-my)*.05;
+    ctx.clearRect(0,0,W,H);if(!W||!H)return loop();
+    const F=Math.min(W,H*1.35)*.8,cy=H*.16,R=36,C=60;
+    const g=ctx.createLinearGradient(W*.1,0,W*.9,H*.5);g.addColorStop(0,'#6d4cff');g.addColorStop(.5,'#5ce1ff');g.addColorStop(1,'#d6ff5c');
+    const pts=[];
+    for(let i=0;i<=R;i++){const v=-1+2*i/R,row=[];for(let j=0;j<=C;j++){const u=-1+2*j/C,du=u-mx,dv=v-my,z=Math.sin(u*2.2+t*.55)*.2+Math.cos(v*3+u*1.4-t*.42)*.16+Math.sin((u-v)*5+t*.8)*.045+.36*Math.exp(-(du*du+dv*dv)/.05),Z=v*1.3+2.5;row.push([W/2+u*2.2*F/Z,cy+(1.1-z)*F/Z])}pts.push(row)}
+    ctx.strokeStyle='rgba(236,231,220,1)';ctx.lineWidth=.6;ctx.globalAlpha=.08;
+    for(let j=0;j<=C;j+=3){ctx.beginPath();for(let i=0;i<=R;i++){const p=pts[i][j];i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])}ctx.stroke()}
+    for(let i=0;i<=R;i++){const hot=i%4===0;ctx.beginPath();pts[i].forEach((p,j)=>j?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.globalAlpha=(hot?.95:.55)*Math.pow(1-i/R,1.2)+.04;ctx.strokeStyle=hot?g:'rgba(236,231,220,1)';ctx.lineWidth=hot?1.4:.6;ctx.stroke()}
+    ctx.globalAlpha=1;loop();
+  }
+  size();
+  if(window.ResizeObserver)new ResizeObserver(()=>{size();if(still)frame(performance.now())}).observe(c);
+  new IntersectionObserver(es=>{vis=es[0].isIntersecting;loop()}).observe(c);
+  const host=c.closest('.hero')||c;
+  host.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();tx=((e.clientX-r.left)/r.width)*2-1;ty=1-((e.clientY-r.top)/r.height)*2.2});
+  host.addEventListener('pointerleave',()=>{tx=ty=null});
+  frame(performance.now());
+});
+
+/* ================= UI ================= */
+let lenis=null;
+init('.hdr',hdr=>{const btn=hdr.querySelector('.hdr__menu');if(!btn)return;const set=open=>{hdr.classList.toggle('is-open',open);btn.setAttribute('aria-expanded',String(open));const label=open?btn.dataset.close:btn.dataset.open;if(label)btn.setAttribute('aria-label',label)};btn.addEventListener('click',()=>set(!hdr.classList.contains('is-open')));hdr.querySelectorAll('.hdr__nav a').forEach(a=>a.addEventListener('click',()=>set(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false)})});
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||!lenis)return;const id=a.getAttribute('href');const t=id.length>1?document.getElementById(id.slice(1)):null;if(!t)return;e.preventDefault();lenis.scrollTo(t,{offset:-8,duration:1.4})});
+init('.visit__form',form=>{const status=form.querySelector('.visit__status');form.addEventListener('submit',e=>{e.preventDefault();if(status)status.textContent=form.dataset.sent||'';form.reset()})});
+
+/* ================= motion ================= */
+if(!root.classList.contains('motion')||!window.gsap||!window.ScrollTrigger)return;
+gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({autoRefreshEvents:'visibilitychange,DOMContentLoaded,resize'});
+const hasSplit=!!window.SplitText;if(hasSplit)gsap.registerPlugin(SplitText);
+const small=()=>innerWidth<700;
+const rnd=i=>{const x=Math.sin(i*91.7+13.1)*43758.5453;return x-Math.floor(x)};
+const stance=k=>({rotation:i=>(rnd(i)-0.5)*14*k,yPercent:i=>(rnd(i+11)-0.5)*12*k});
+const queue=[];let running=false;
+const step=()=>{const job=queue.shift();if(job){try{job()}catch(e){console.error(e)}}if(queue.length)setTimeout(step,0);else running=false};
+const enqueue=fn=>{queue.push(fn);if(!running){running=true;setTimeout(step,0)}};
+const each=(sel,fn)=>document.querySelectorAll(sel).forEach(el=>enqueue(()=>fn(el)));
+const near=(el,fn)=>{const o=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){o.disconnect();enqueue(fn)}},{rootMargin:'0px 0px 120% 0px'});o.observe(el)};
+const onEnter=(els,play)=>{const o=new IntersectionObserver(es=>{const hits=es.filter(e=>e.isIntersecting).map(e=>e.target);if(!hits.length)return;hits.forEach(t=>o.unobserve(t));play(hits)},{rootMargin:'0px 0px -12% 0px'});els.forEach(el=>o.observe(el))};
+const whileVisible=(el,anim)=>{anim.pause();new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?anim.resume():anim.pause())).observe(el)};
+enqueue(()=>{if(!window.Lenis)return;lenis=new Lenis({lerp:0.1});lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)});
+
+const prep=sec=>{
+  const q=s=>[...sec.querySelectorAll(s)];
+  const ups=q('[data-reveal="up"]');if(ups.length){gsap.set(ups,{y:44,opacity:0});onEnter(ups,hits=>gsap.to(hits,{y:0,opacity:1,duration:1,ease:'power3.out',stagger:0.09,clearProps:'transform'}))}
+  const tags=q('[data-reveal="tag"]');if(tags.length){gsap.set(tags,{scale:0.4,rotation:-14,opacity:0,transformOrigin:'70% 50%'});onEnter(tags,hits=>gsap.to(hits,{scale:1,rotation:0,opacity:1,duration:0.8,ease:'back.out(2.4)',stagger:0.08}))}
+  const wipes=q('[data-reveal="wipe"]');if(wipes.length){gsap.set(wipes,{clipPath:'inset(0% 100% 0% 0%)'});onEnter(wipes,hits=>gsap.to(hits,{clipPath:'inset(0% 0% 0% 0%)',duration:1,ease:'power3.inOut',stagger:0.1,clearProps:'clipPath'}))}
+  const rules=q('[data-rule]');if(rules.length){gsap.set(rules,{scaleX:0,transformOrigin:'0 50%'});onEnter(rules,hits=>gsap.to(hits,{scaleX:1,duration:1.1,ease:'power3.inOut',stagger:0.08}))}
+  q('[data-reveal="drop"]').forEach(el=>{const r=gsap.getProperty(el,'rotation')||0;gsap.set(el,{yPercent:-18,rotation:r+9,scale:1.08,opacity:0});onEnter([el],()=>gsap.to(el,{yPercent:0,rotation:r,scale:1,opacity:1,duration:1.2,ease:'back.out(1.6)'}))});
+  q('[data-reveal="pill"]').forEach(el=>{const r=getComputedStyle(el).borderTopLeftRadius||'0px',art=el.querySelector('svg');gsap.set(el,{clipPath:'inset(16% 22% 16% 22% round 999px)'});if(art)gsap.set(art,{scale:1.25});onEnter([el],()=>{gsap.to(el,{clipPath:'inset(0% 0% 0% 0% round '+r+')',duration:1.2,ease:'expo.inOut',clearProps:'clipPath'});if(art)gsap.to(art,{scale:1,duration:1.4,ease:'expo.out'})})});
+  q('[data-parallax]').forEach(el=>{const art=el.querySelector('svg');if(art)gsap.fromTo(art,{yPercent:-7,scale:1.16},{yPercent:7,scale:1.16,ease:'none',scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:true}})});
+  const groups=new Map;q('[data-speed]').forEach(el=>{const p=el.parentElement||el;if(!groups.has(p))groups.set(p,[]);groups.get(p).push(el)});
+  groups.forEach((els,p)=>{const tl=gsap.timeline({scrollTrigger:{trigger:p,start:'top bottom',end:'bottom top',scrub:true}});els.forEach(el=>tl.to(el,{yPercent:-(parseFloat(el.dataset.speed)||0)*100,ease:'none'},0))});
+  if(!hasSplit)return;
+  q('[data-split]').forEach(el=>fonts.then(()=>enqueue(()=>{const split=SplitText.create(el,{type:'words'});gsap.set(split.words,{yPercent:80,rotation:i=>(rnd(i+4)-0.5)*22,opacity:0});onEnter([el],()=>gsap.to(split.words,{yPercent:0,rotation:0,opacity:1,duration:0.95,ease:'back.out(2)',stagger:0.045}))})));
+  q('[data-bounce]').forEach(el=>fonts.then(()=>enqueue(()=>{const split=SplitText.create(el,{type:'chars',charsClass:'ch'});if(el.dataset.bounce!=='drop'){gsap.set(split.chars,stance(.8));return}gsap.set(split.chars,{yPercent:-150,rotation:i=>(rnd(i+3)-0.5)*80,opacity:0});onEnter([el],()=>gsap.to(split.chars,{...stance(.8),opacity:1,duration:1.3,ease:'elastic.out(1, 0.55)',stagger:{each:0.06,from:'random'}}))})));
+};
+
+each('.hero',hero=>{
+  const card=hero.querySelector('.hero__card'),word=hero.querySelector('.hero__word'),clip=hero.querySelector('.hero__wordclip'),canvas=hero.querySelector('.hero__photo canvas');
+  const text=hero.querySelectorAll('.hero__info, .hero__side');if(!card)return;
+  const tl=gsap.timeline({scrollTrigger:{trigger:hero,start:'top top',end:'bottom bottom',scrub:0.8}});
+  tl.to(card,{scale:small()?0.9:0.86,rotation:-2.5,yPercent:2,ease:'power1.in'},0);
+  if(canvas)tl.to(canvas,{yPercent:8,ease:'none'},0);
+  if(text.length)tl.to(text,{yPercent:-40,opacity:0,ease:'power1.in',stagger:0.05},0);
+  if(clip)tl.to(clip,{clipPath:'inset(-300% -30% -200% -30%)',ease:'none',duration:0.15},0);
+  if(!word||!hasSplit)return;
+  fonts.then(()=>enqueue(()=>{
+    const split=SplitText.create(word,{type:'chars',charsClass:'hero__ch'});
+    const inner=split.chars.map(c=>{const s=document.createElement('span');s.className='hero__chi';s.style.display='inline-block';while(c.firstChild)s.append(c.firstChild);c.append(s);return s});
+    gsap.from(inner,{yPercent:110,opacity:0,duration:1.4,ease:'expo.out',stagger:0.06,delay:0.1});
+    const rock=gsap.to(inner,{yPercent:i=>(rnd(i+5)-0.5)*8,rotation:i=>(rnd(i)-0.5)*4,duration:2.6,ease:'sine.inOut',yoyo:true,repeat:-1,stagger:{each:0.35},delay:1.8,paused:true});
+    whileVisible(hero,rock);
+    tl.to(split.chars,{yPercent:i=>-(120+rnd(i+2)*190),xPercent:i=>(rnd(i+8)-0.5)*60,rotation:i=>(rnd(i+1)-0.5)*70,ease:'power2.in',stagger:0.03},0);
+  }));
+});
+
+each('.rails',sec=>{
+  const pin=sec.querySelector('.rails__pin'),track=sec.querySelector('.rails__track');if(!pin||!track)return;
+  const dist=()=>Math.max(0,track.scrollWidth-innerWidth);const size=()=>sec.style.setProperty('--run',dist()+'px');size();ScrollTrigger.addEventListener('refreshInit',size);
+  const move=gsap.to(track,{x:()=>-dist(),ease:'none',scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:0.6,invalidateOnRefresh:true}});
+  near(sec,()=>sec.querySelectorAll('.cover').forEach((c,i)=>enqueue(()=>{const dir=i%2?-1:1,w=c.querySelector('.cover__word'),art=c.querySelector('.cover__photo svg');const tl=gsap.timeline({scrollTrigger:{trigger:c,containerAnimation:move,start:'left right',end:'right left',scrub:true}});tl.fromTo(c,{rotation:5*dir,yPercent:4},{rotation:-4*dir,yPercent:-3,ease:'none'},0);if(w)tl.fromTo(w,{xPercent:9},{xPercent:-9,ease:'none'},0);if(art)tl.fromTo(art,{xPercent:-5},{xPercent:5,ease:'none'},0)})));
+});
+
+each('.again',sec=>{
+  const knock=sec.querySelector('.again__knock'),word=sec.querySelector('.again__word'),art=sec.querySelector('.again__photo svg'),card=sec.querySelector('.again__card');if(!knock)return;
+  const origin=()=>word?word.offsetLeft+word.offsetWidth/2+'px '+(word.offsetTop+word.offsetHeight*0.55)+'px':'50% 50%';
+  const tl=gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:0.8,invalidateOnRefresh:true}});
+  tl.fromTo(knock,{scale:1,transformOrigin:origin},{scale:9,ease:'power2.in',duration:1},0.12).to(knock,{opacity:0,ease:'none',duration:0.35},0.75);
+  if(art)tl.fromTo(art,{scale:1.3},{scale:1,ease:'none',duration:1.1},0);
+  if(card)tl.fromTo(card,{yPercent:135,rotation:5},{yPercent:0,rotation:0,ease:'back.out(1.3)',duration:0.45},1.05);
+});
+
+enqueue(()=>document.querySelectorAll('main > *').forEach(sec=>near(sec,()=>prep(sec))));
+enqueue(()=>document.querySelectorAll('.sell').forEach(sec=>near(sec,()=>{const steps=gsap.utils.toArray(sec.querySelectorAll('.step'));steps.forEach((s,i)=>{const next=steps[i+1];if(!next)return;gsap.to(s,{scale:0.92,rotation:i%2?2.2:-2.2,yPercent:-2,ease:'none',scrollTrigger:{trigger:next,start:'top bottom',end:()=>'top '+(parseFloat(getComputedStyle(next).top)||100)+'px',scrub:true,invalidateOnRefresh:true}})})})));
+enqueue(()=>document.querySelectorAll('.voices__row').forEach(row=>near(row,()=>{const list=row.querySelector('.voices__list');if(!list||!list.children.length)return;[...list.children].forEach(li=>{const c=li.cloneNode(true);c.setAttribute('aria-hidden','true');list.append(c)});const run=gsap.to(list,{xPercent:-50,duration:list.children.length*4.5,ease:'none',repeat:-1,paused:true});const hold=()=>gsap.to(run,{timeScale:0,duration:0.5}),go=()=>gsap.to(run,{timeScale:1,duration:0.5});row.addEventListener('mouseenter',hold);row.addEventListener('mouseleave',go);row.addEventListener('focusin',hold);row.addEventListener('focusout',go);whileVisible(row,run)})));
+if(document.fonts&&document.fonts.status!=='loaded')fonts.then(()=>enqueue(()=>{fit();ScrollTrigger.refresh()}));
+})();
+</script>
+</body>
+</html>
+```
+

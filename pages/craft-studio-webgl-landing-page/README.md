@@ -6,7 +6,7 @@ Glass torus knot refracting giant type, scroll-lit statement, Swiss monochrome A
 
 **Open it:** [`index.html`](index.html) runs straight from disk — one file, every asset inlined, no build step. [Live demo](https://instalanding.ai/demos/craft-studio.html) · [Page on InstaLanding](https://instalanding.ai/prompt/craft-studio-webgl-landing-page)
 
-**Build it yourself:** [`PROMPT.md`](PROMPT.md) is the one-shot brief this file was built from. Paste it into any AI builder or coding agent.
+**The prompt:** [`PROMPT.md`](PROMPT.md) is this same file with a short instruction on top: keep the design, replace the brand and copy, convert to your stack. Paste it into Claude Code, Cursor, ChatGPT or any builder and it builds this page.
 
 | | |
 | --- | --- |
@@ -16,7 +16,7 @@ Glass torus knot refracting giant type, scroll-lit statement, Swiss monochrome A
 | Libraries | three 0.170.0 |
 | Fonts | Inter Tight, Instrument Serif, JetBrains Mono (Google Fonts) |
 | Uses | canvas-2d, inline-svg, inlined-images, reduced-motion |
-| Size | 86 KB · brief ~889 tokens |
+| Size | 86 KB · prompt ~22,274 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 

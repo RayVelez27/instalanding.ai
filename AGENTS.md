@@ -6,9 +6,9 @@ Instructions for coding agents using this repository to build or restyle a landi
 
 `pages/<slug>/` holds one complete landing page per folder:
 
-- `index.html` — the reference build. One file, every asset inlined, opens from disk, no build step.
-- `PROMPT.md` — the one-shot brief it was built from: stack, design values as numbers, structure,
-  and the things that break.
+- `index.html` — the code. One file, every asset inlined, opens from disk, no build step.
+- `PROMPT.md` — the prompt: a short instruction (keep the design, replace the brand and copy,
+  convert to the user's stack, keep the credit line), then the same `index.html` in full.
 - `README.md` — what the page is best for, its style, sections, stack and credits.
 
 `index.json` lists all of them with the same metadata. Read it first; it is small.
@@ -18,8 +18,8 @@ Instructions for coding agents using this repository to build or restyle a landi
 1. **Choose.** Match the user's request against `bestFor` and `style` in `index.json`. Shortlist two
    or three and read their `README.md` files, not their HTML.
 2. **Decide how to use it.**
-   - The user has a framework (React, Vue, Svelte, Astro, …): build from `PROMPT.md` in that
-     framework. This gives cleaner code than translating a 100 KB file.
+   - The user has a framework (React, Vue, Svelte, Astro, …): follow `PROMPT.md` and convert
+     the page to that framework without changing what renders.
    - The user wants this exact page, fast: copy `index.html` and adapt it.
 3. **Before editing an `index.html`,** read its header comment (the first ~30 lines). It maps the
    design tokens (`:root` custom properties), the `data-section` names in order, what each script
@@ -27,7 +27,7 @@ Instructions for coding agents using this repository to build or restyle a landi
 4. **Lift a section** by its `data-section` attribute: take that element, the CSS rules it uses and
    the tokens from `:root`. `data-component` marks widgets worth lifting on their own.
 5. **Adapt.** Replace the fictional brand, copy, numbers, logos and testimonials with the user's.
-   Keep the brief's design values and its warnings — they are why the result looks designed.
+   Keep every design value in the code as it is — they are why the result looks designed.
 6. **Verify in a browser:** no console errors, no horizontal scroll at 390px wide, and
    `prefers-reduced-motion` respected.
 

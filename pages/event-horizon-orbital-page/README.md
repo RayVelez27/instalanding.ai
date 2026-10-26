@@ -6,7 +6,7 @@ Satellite servicing under a ray-marched black hole you can drag to orbit, with n
 
 **Open it:** [`index.html`](index.html) runs straight from disk — one file, every asset inlined, no build step. [Live demo](https://instalanding.ai/demos/halcyon-orbital.html) · [Page on InstaLanding](https://instalanding.ai/prompt/event-horizon-orbital-page)
 
-**Build it yourself:** [`PROMPT.md`](PROMPT.md) is the one-shot brief this file was built from. Paste it into any AI builder or coding agent.
+**The prompt:** [`PROMPT.md`](PROMPT.md) is this same file with a short instruction on top: keep the design, replace the brand and copy, convert to your stack. Paste it into Claude Code, Cursor, ChatGPT or any builder and it builds this page.
 
 | | |
 | --- | --- |
@@ -16,7 +16,7 @@ Satellite servicing under a ray-marched black hole you can drag to orbit, with n
 | Libraries | three r128 |
 | Fonts | Archivo Narrow, Archivo, JetBrains Mono (Google Fonts) |
 | Uses | webgl, canvas-2d, inline-svg, reduced-motion |
-| Size | 131 KB · brief ~1,252 tokens |
+| Size | 131 KB · prompt ~33,678 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 

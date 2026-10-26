@@ -1,29 +1,1059 @@
-Build a landing page for ORVYN ONE, a fictional AI-native grand tourer that unlocks autonomy in five verified stages ("It already knows the road ahead."), as one HTML file. No libraries. Google Fonts: Geist 200-600 (everything, mostly 200-300), Geist Mono 400/500 (labels), Instrument Serif italic (one word per heading).
+INSTALANDING.AI · ORVYN Autonomous Car Page
 
-DESIGN SYSTEM
-Near-black (#020203 ground, #0b0b0f panels) with hairline white borders at 7-12%, ink #f3f2f7, mute #8b8a96, dim #55545f, and one five-colour spectrum: cyan #3fe0ff, blue #2f6bff, violet #6a2bff, magenta #ff1f6b, orange #ff4a12. Headings are Geist 300 with -0.04em tracking and one serif-italic word filled with the spectrum gradient. Mono labels are 11px, uppercase, tracked 0.18em. A moving film-grain overlay at 5.5%. The primary button is a dark pill whose 1px border is a conic spectrum spinning around it (an @property --sweep angle animated to 360deg) with a blurred copy glowing behind; the arrow nudges on hover. One out-ease (0.16, 1, 0.3, 1) and one in-out ease (0.7, 0, 0.2, 1).
+The page below is the build. Use it as the starting point, not as inspiration:
+- Keep its layout, design values (colours, type, spacing, radii) and motion exactly as they are.
+- Replace the fictional brand, copy, names and numbers with mine.
+- If I name a stack (React, Next.js, Vue, Svelte, Astro...), convert it faithfully to that stack;
+  otherwise ship it as this one HTML file.
+- Read the MAP and ADAPTING notes in its header comment before you edit.
+- Check it in a real browser: no console errors, no horizontal scroll at 390px, reduced motion respected.
 
-SECTIONS
-1. nav: fixed; logo (a dashed spectrum ring around a triangle) and ORVYN tracked wide, four mono links, a blinking "Fleet online · 41,208" and a Reserve button; it frosts after 20px.
-2. hero: copy on the left (a NEW pill, the headline with "ahead." in serif spectrum, a lede, Reserve and a "Watch it drive" play link, and a glass level card: LVL number, a coloured dot, name and description that cross-fade, and five dots that fill up to the current level). On the right, the autonomy dial (below).
-3. ticker: a marquee of fleet figures (4.12B autonomous km, 0.003 disengagements per 10k km, 300 m perception, model N-7.4, 22 sensors, 8 ms, 148 cities).
-4. autonomy: "Autonomy, unlocked in five stages." A five-part progress bar and five level cards (Assisted, Partial, Conditional, High, Full, each in its own spectrum colour) that light up in turn when scrolled into view: a soft colour bloom, a lock whose shackle swings open, the name, a line and verified km / state.
-5. systems: a six-column bento: a big perception card (a radar of rings and ticks with a car glyph at the centre, a rotating conic sweep and four labelled blips that flash as it passes, plus sensor counts), a neural driver card (36 live bars and 2,000 TOPS counting up), an energy card (a 270° tick gauge filling to 86%), a dual-motor card (28 flame bars and 2.9s), and an over-the-air card (three release rows, the newest tagged Tonight). Cards carry a pointer spotlight.
-6. manifesto: one huge centred sentence whose words light up one by one as it scrolls through the viewport.
-7. specs: a sticky square HUD on the left (tick rings, a spectrum arc that fills to 82%, 305 KM/H · VMAX, a live clock and coordinates in the corners) and a ten-row spec table on the right.
-8. reserve: "Your first drive is its thousandth." with a pill email form that confirms inline, then a horizon: a huge spectrum ring rising like a planet edge with a blurred glow, ticks and the five level colours as segments along its rim, fading into the page.
-9. footer: brand and three link columns, ORVYN as an outlined spectrum wordmark fading downward, and a status line.
+Credit: keep this line as a comment at the top of the file you produce:
+ORVYN Autonomous Car Page · INSTALANDING.AI (MIT) · https://instalanding.ai/prompt/orvyn-autonomous-car-page
 
-THE DIAL (SVG over CSS rings)
-- A square container. A back SVG (viewBox -500..500): five ring segments centred at 0, 30, 60, 90 and 120 degrees between r 322 and 352, labelled LVL 01-05 along the arc, each a button; above each, a lock pod at r 432 whose shackle rotates open and whose ring takes the level's colour once reached; a blurred wedge of the active colour behind the active segment; a slowly spinning dashed ring; a scanner line that enters from the left and stops at the outer ring.
-- CSS rings stacked in the middle: a "heat" ring (a conic violet → magenta → orange gradient masked to a thin band, with a blurred copy) and a progress ring (a conic blue → cyan sweep from -135deg to an @property --span angle, chopped into fine ticks with a repeating conic gradient), both radial-masked to bands.
-- A front SVG: 150 faint outer ticks, a counter-spinning ring of 180 coloured dots, 96 inner ticks coloured around the circle with a highlight that sweeps round every few seconds, a dark core disc with two pulsing rings, a white needle, and a centre readout (AUTONOMY, the big level number, the level name in its colour) sized in container units.
-- setLevel(n): --span = 70 + n × 43 degrees (transitioned 1.5s), needle and wedge rotate, reached segments darken to their colour and the active one fills, pods up to n open, the card and dots update. It autoplays 1 → 5 every 3.4s; a click on a segment, pod or dot sets the level and pauses autoplay for 9s.
+orvyn-autonomous-gt.html:
+```html
+<!doctype html>
+<!--
+  INSTALANDING.AI · ORVYN Autonomous Car Page
+  slug     orvyn-autonomous-car-page
+  prompt   https://instalanding.ai/p/orvyn-autonomous-car-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/orvyn-autonomous-car-page
+  license  MIT. Fictional concept vehicle; every figure, claim and date is invented. Replace them before shipping.
 
-THINGS THAT BREAK
-- Register --span and --sweep with @property, or the progress ring and button borders jump instead of animating.
-- Build the dial's ticks with createElementNS, not innerHTML strings, and keep the rings and SVGs in one square box so they stay concentric.
-- Run the shimmer, bars and flames only while they are on screen (IntersectionObserver).
+  MAP
+  tokens    :root at the top of <style>: near-black grounds (--bg, --bg-2, --panel), ink / mute / dim, two hairline
+            lines, five spectrum colours (cyan, blue, violet, magenta, orange) and the --spectrum gradient, two eases,
+            fonts (--sans Geist 200-600, --mono Geist Mono, --serif Instrument Serif italic for one word per heading),
+            --gutter. @property --span drives the dial's progress ring; @property --sweep spins the button borders.
+  sections  nav, hero, ticker, autonomy, systems, manifesto, specs, reserve, footer
+  scripts   one inline script, no libraries: the hero autonomy dial built in SVG plus layered conic-gradient rings
+            (five clickable level segments, lock pods that open, a needle, a progress ring swept by --span, tick rings,
+            a shimmering inner ring) that steps through LEVELS every 3.4s and pauses 9s after a click; the level card
+            and dots; the five-level track; radar, neural bars, flame bars, counters and the energy gauge; a card
+            spotlight; the manifesto lighting word by word on scroll; the spec table and telemetry HUD; the horizon
+            ticks; the reservation form; IntersectionObserver reveals.
+  assets    none: the logo, dial, radar, HUD and wordmark are inline SVG and CSS; fonts from Google Fonts
 
-THE FLOOR
-One h1, a main, role="group" on the dial with labelled segments that work with Enter and Space, labelled level dots, aria-hidden on decorative SVGs and the ticker, a labelled email input. prefers-reduced-motion stops the grain, spins, shimmer, marquee, autoplay and bars and shows everything revealed. Under 820px the dial sits above the copy at full width; no horizontal scroll at 390px.
+  ADAPTING
+  - LEVELS holds the five stages (name, colour, copy, verified km, state); the dial, card, dots, track and horizon all
+    read it, so change copy there. SEG_W sets the segment spacing on the dial.
+  - The progress ring transitions only because --span is registered with @property; keep the registration.
+  - The dial sizes from the viewport height (100svh − 96px) and uses container units for its centre readout.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORVYN ONE — Autonomous Grand Tourer</title>
+<meta name="description" content="ORVYN ONE: an AI-native grand tourer that unlocks autonomy in five verified stages.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+@property --span { syntax: '<angle>'; inherits: true; initial-value: 0deg; }
+@property --sweep { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+
+:root{
+  --bg:#020203;
+  --bg-2:#08080b;
+  --panel:#0b0b0f;
+  --ink:#f3f2f7;
+  --mute:#8b8a96;
+  --dim:#55545f;
+  --line:rgba(255,255,255,.07);
+  --line-2:rgba(255,255,255,.12);
+  --cyan:#3fe0ff;
+  --blue:#2f6bff;
+  --violet:#6a2bff;
+  --magenta:#ff1f6b;
+  --orange:#ff4a12;
+  --spectrum:linear-gradient(90deg,#3fe0ff 0%,#2f6bff 22%,#6a2bff 46%,#ff1f6b 74%,#ff4a12 100%);
+  --ease:cubic-bezier(.7,0,.2,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --sans:'Geist',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --serif:'Instrument Serif',ui-serif,Georgia,serif;
+  --gutter:clamp(16px,4vw,56px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color-scheme:dark;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:clip;line-height:1.5}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+::selection{background:var(--violet);color:#fff}
+
+/* film grain */
+body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:100;opacity:.055;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation:grain 1.2s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:400}
+.wrap{width:100%;max-width:1360px;margin:0 auto;padding:0 var(--gutter)}
+.grad-text{background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent}
+em.serif{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+
+/* ---------- NAV ---------- */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .5s,border-color .5s,backdrop-filter .5s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(2,2,3,.62);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-color:var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:72px;gap:24px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:500;letter-spacing:.32em;font-size:13px}
+.brand svg{width:26px;height:26px}
+.nav-links{display:flex;gap:34px}
+.nav-links a{color:var(--mute);transition:color .3s}
+.nav-links a:hover{color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:18px}
+.status{display:flex;align-items:center;gap:8px;color:var(--mute)}
+.status i{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:blink 2.4s infinite}
+@keyframes blink{50%{opacity:.25}}
+
+.btn{position:relative;display:inline-flex;align-items:center;gap:12px;height:48px;padding:0 24px;border-radius:999px;font-size:14px;font-weight:400;letter-spacing:.01em;cursor:pointer;border:0;background:none;white-space:nowrap;transition:transform .5s var(--ease-out)}
+.btn:active{transform:scale(.97)}
+.btn-primary{color:#fff;background:#0c0c10;isolation:isolate}
+.btn-primary::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:conic-gradient(from var(--sweep),#3fe0ff,#2f6bff,#6a2bff,#ff1f6b,#ff4a12,#3fe0ff);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:sweep 5s linear infinite;z-index:-1}
+.btn-primary::after{content:"";position:absolute;inset:-1px;border-radius:inherit;background:conic-gradient(from var(--sweep),#3fe0ff,#2f6bff,#6a2bff,#ff1f6b,#ff4a12,#3fe0ff);filter:blur(16px);opacity:.28;z-index:-2;animation:sweep 5s linear infinite;transition:opacity .5s}
+.btn-primary:hover::after{opacity:.6}
+@keyframes sweep{to{--sweep:360deg}}
+.btn-ghost{color:var(--ink);padding:0 6px}
+.btn-ghost .play{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;transition:border-color .3s,background .3s}
+.btn-ghost:hover .play{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.04)}
+.btn .arrow{transition:transform .5s var(--ease-out)}
+.btn:hover .arrow{transform:translateX(4px)}
+.nav .btn{height:40px;padding:0 18px;font-size:13px}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:clip;padding:112px 0 72px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.2fr);align-items:center;gap:clamp(24px,3vw,56px);width:100%}
+.hero-copy{grid-column:1;grid-row:1}
+.hero-dial{grid-column:2;grid-row:1;justify-self:end;width:min(calc(100% + var(--gutter)),calc(100svh - 96px),960px);min-width:min(100%,520px);aspect-ratio:1;margin-right:calc(-.5*var(--gutter))}
+.hide-sm{display:inline}
+.nw{white-space:nowrap}
+.hero-copy{position:relative;z-index:2;max-width:640px}
+.hero::before{content:"";position:absolute;inset:0 0 auto 0;height:150px;background:linear-gradient(var(--bg),transparent);z-index:1;pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;color:var(--mute);padding:8px 14px 8px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.02)}
+.eyebrow b{font-weight:400;color:var(--ink);background:rgba(255,255,255,.06);padding:3px 8px;border-radius:999px;letter-spacing:.14em}
+h1{font-size:clamp(40px,4.9vw,78px);line-height:.95;letter-spacing:-.045em;font-weight:300;margin:30px 0 26px}
+h1 em.serif{font-size:1.06em;padding-right:.06em}
+.lede{font-size:clamp(16px,1.35vw,19px);color:var(--mute);max-width:470px;line-height:1.6}
+.lede strong{color:var(--ink);font-weight:400}
+.cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin-top:38px}
+
+.level-card{margin-top:40px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;max-width:470px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.level-card .lv{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:6px;padding-right:18px;border-right:1px solid var(--line)}
+.level-card .lv span{font-family:var(--sans);font-size:34px;letter-spacing:-.04em;line-height:1;font-weight:300;color:var(--ink);transition:color .6s}
+.level-card h3{font-size:15px;font-weight:400;display:flex;align-items:center;gap:10px}
+.level-card h3 i{width:7px;height:7px;border-radius:50%;background:var(--c,#2f6bff);box-shadow:0 0 12px var(--c,#2f6bff);transition:background .6s,box-shadow .6s}
+.level-card p{color:var(--mute);font-size:14px;margin-top:4px;min-height:42px}
+.level-card .swap{transition:opacity .35s,transform .35s var(--ease-out)}
+.level-card.out .swap{opacity:0;transform:translateY(6px)}
+.lvl-dots{display:flex;gap:6px;margin-top:12px}
+.lvl-dots button{height:3px;flex:1;border:0;border-radius:3px;background:rgba(255,255,255,.1);cursor:pointer;position:relative;overflow:hidden;padding:0}
+.lvl-dots button.on{background:var(--c)}
+.lvl-dots button::before{content:"";position:absolute;inset:-8px 0}
+
+.hero-stats{position:absolute;left:0;right:0;bottom:28px;z-index:3}
+.hero-stats .wrap{display:flex;gap:clamp(24px,5vw,72px);align-items:flex-end}
+.stat .mono{color:var(--dim);font-size:10px}
+.stat b{display:block;font-weight:300;font-size:22px;letter-spacing:-.02em;margin-top:6px}
+.stat b small{font-size:12px;color:var(--mute);margin-left:4px;letter-spacing:0}
+.scroll-cue{margin-left:auto;display:flex;align-items:center;gap:12px;color:var(--dim)}
+.scroll-cue i{display:block;width:1px;height:38px;background:linear-gradient(var(--ink),transparent);animation:cue 2.2s var(--ease) infinite;transform-origin:top}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+
+/* ---------- DIAL ---------- */
+.dial{position:relative;width:100%;height:100%;container-type:inline-size}
+.dial>svg,.dial>.ring,.dial>.core{position:absolute}
+.dial>svg{inset:0;width:100%;height:100%;overflow:visible}
+.ring{left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%)}
+.core{left:50%;top:50%;width:58%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle at 50% 18%,rgba(106,43,255,.42),transparent 52%),radial-gradient(circle at 86% 58%,rgba(255,31,107,.22),transparent 45%),radial-gradient(circle at 24% 40%,rgba(47,107,255,.16),transparent 45%);opacity:0;transition:opacity 2s 1s}
+.ring-heat,.ring-heat-glow{width:58.6%;aspect-ratio:1;
+  background:conic-gradient(from 0deg,#5a22ff 0deg,#b01cff 22deg,#ff1f6b 52deg,#ff3a1a 92deg,#ff4a12 150deg,#ff5a1a 190deg,rgba(255,74,18,0) 238deg,rgba(0,0,0,0) 300deg,rgba(80,40,255,0) 318deg,#3a1cff 344deg,#5a22ff 360deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 84%,rgba(0,0,0,.35) 92%,#000 97.6%,transparent 98.6%);
+          mask:radial-gradient(closest-side,transparent 84%,rgba(0,0,0,.35) 92%,#000 97.6%,transparent 98.6%);
+  opacity:0;transition:opacity 1.8s .6s}
+.ring-heat-glow{width:64%;filter:blur(30px);-webkit-mask:radial-gradient(closest-side,transparent 60%,#000 86%,transparent 100%);mask:radial-gradient(closest-side,transparent 60%,#000 86%,transparent 100%)}
+.ring-prog{width:56.6%;aspect-ratio:1;
+  background:
+    repeating-conic-gradient(from 0deg,rgba(0,0,0,.5) 0deg .32deg,transparent .32deg 1.15deg),
+    conic-gradient(from -135deg,rgba(18,40,140,0) 0deg,rgba(30,80,255,.5) calc(var(--span)*.5),#2f6bff calc(var(--span)*.86),#46e1ff var(--span),transparent var(--span));
+  -webkit-mask:radial-gradient(closest-side,transparent 83.6%,#000 84.2%,#000 99%,transparent 99.6%);
+          mask:radial-gradient(closest-side,transparent 83.6%,#000 84.2%,#000 99%,transparent 99.6%);
+  transition:--span 1.5s var(--ease)}
+.ring-prog-glow{width:60%;aspect-ratio:1;filter:blur(22px);opacity:.55;
+  background:conic-gradient(from -135deg,transparent 0deg,rgba(47,107,255,.6) calc(var(--span)*.8),#46e1ff var(--span),transparent var(--span));
+  -webkit-mask:radial-gradient(closest-side,transparent 70%,#000 88%,transparent 100%);mask:radial-gradient(closest-side,transparent 70%,#000 88%,transparent 100%);
+  transition:--span 1.5s var(--ease)}
+.dial.live .ring-heat{opacity:1}.dial.live .ring-heat-glow{opacity:.55}.dial.live .core{opacity:1}
+
+.dial .rot{transform-box:fill-box;transform-origin:center;transition:transform 1.5s var(--ease)}
+.dial .spin{transform-box:fill-box;transform-origin:center;animation:spin 90s linear infinite}
+.dial .spin.rev{animation-duration:140s;animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dial .tk{opacity:0}
+.dial.live .tk{animation:tkIn .9s var(--ease-out) forwards}
+@keyframes tkIn{from{opacity:0}to{opacity:1}}
+.dial .scan{opacity:0;transition:opacity 1.4s 1.2s}
+.dial.live .scan{opacity:1}
+.dial .scan-glint{stroke-dashoffset:436;opacity:0;animation:glint 4.8s 2.4s var(--ease) infinite}
+@keyframes glint{0%{stroke-dashoffset:436;opacity:0}12%{opacity:1}70%{opacity:1}100%{stroke-dashoffset:-36;opacity:0}}
+.dial .seg{cursor:pointer;transition:fill .8s var(--ease),opacity .4s}
+.dial .seg:hover{opacity:.82}
+.dial .seg-label{font-family:var(--mono);font-size:12.5px;letter-spacing:.2em;fill:#5d5c66;pointer-events:none;transition:fill .6s}
+.dial .seg-label.on{fill:#fff}
+.dial .seg-label.done{fill:#a9a8b4}
+.dial .pod{cursor:pointer}
+.dial .pod circle.bg{fill:#09090c;stroke:rgba(255,255,255,.06);transition:stroke .6s}
+.dial .pod .lock{fill:none;stroke:#5d5c66;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .6s}
+.dial .pod .shackle{transition:transform .6s var(--ease-out);transform-box:fill-box;transform-origin:100% 100%}
+.dial .pod.open .shackle{transform:translateY(-3px) rotate(-28deg)}
+.dial .pod.open circle.bg{stroke:var(--pc)}
+.dial .pod.open .lock{stroke:var(--pc)}
+.dial .pod .halo{fill:var(--pc);opacity:0;transition:opacity .8s}
+.dial .pod.open .halo{opacity:.14}
+.dial .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 3.2s var(--ease-out) infinite}
+.dial .pulse.b{animation-delay:1.6s}
+@keyframes pulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.55);opacity:0}}
+.dial-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:0;transition:opacity 1.2s 1.4s}
+.dial.live .dial-center{opacity:1}
+.dial-center .mono{font-size:max(9px,1cqw);color:#9a99a6;letter-spacing:.3em}
+.dial-center .num{font-size:11.5cqw;line-height:.9;letter-spacing:-.06em;font-weight:200;margin:.7cqw 0 .9cqw;font-variant-numeric:tabular-nums;
+  background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,.35));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dial-center .name{font-family:var(--mono);font-size:max(9px,1cqw);letter-spacing:.24em;text-transform:uppercase;color:var(--c,#2f6bff);transition:color .6s}
+
+/* ---------- SECTIONS ---------- */
+section{position:relative}
+.sec{padding:clamp(100px,14vw,180px) 0}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:clamp(48px,6vw,84px)}
+.kicker{display:flex;align-items:center;gap:14px;color:var(--mute);margin-bottom:24px}
+.kicker::before{content:"";width:28px;height:1px;background:var(--spectrum)}
+h2{font-size:clamp(38px,5.2vw,76px);line-height:1;letter-spacing:-.04em;font-weight:300}
+.sec-head p{color:var(--mute);font-size:17px;max-width:440px;justify-self:end}
+
+[data-reveal]{opacity:0;transform:translateY(28px);transition:opacity 1.2s var(--ease-out),transform 1.2s var(--ease-out)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* marquee */
+.ticker{border-block:1px solid var(--line);overflow:hidden;padding:20px 0;position:relative;background:var(--bg)}
+.ticker-track{display:flex;gap:64px;width:max-content;animation:tick 48s linear infinite;color:var(--dim)}
+.ticker-track span{display:flex;align-items:center;gap:64px}
+.ticker-track span::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--line-2)}
+.ticker-track b{color:var(--ink);font-weight:400;margin-left:10px}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* levels */
+.track{position:relative}
+.track-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:28px}
+.track-bar i{height:6px;border-radius:2px;background:#131317;position:relative;overflow:hidden}
+.track-bar i::after{content:"";position:absolute;inset:0;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
+.track-bar i.on::after{transform:scaleX(1)}
+.track-bar i.on{box-shadow:0 0 24px -2px var(--c)}
+.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.lvl{position:relative;padding:26px 22px 28px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent 60%);overflow:hidden;min-height:330px;display:flex;flex-direction:column;transition:border-color .8s,background .8s}
+.lvl::before{content:"";position:absolute;left:50%;top:-40%;width:140%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,var(--c),transparent);opacity:0;transition:opacity 1.2s;filter:blur(10px)}
+.lvl.on{border-color:color-mix(in srgb,var(--c) 40%,transparent)}
+.lvl.on::before{opacity:.18}
+.lvl-top{display:flex;justify-content:space-between;align-items:center;position:relative}
+.lvl-top .mono{color:var(--dim);transition:color .6s}
+.lvl.on .lvl-top .mono{color:var(--ink)}
+.lockpod{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;background:#09090c;transition:border-color .6s,box-shadow .6s}
+.lockpod svg{width:18px;height:18px;fill:none;stroke:#5d5c66;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .6s}
+.lockpod .shackle{transition:transform .7s var(--ease-out);transform-box:fill-box;transform-origin:100% 100%}
+.lvl.on .lockpod{border-color:var(--c);box-shadow:0 0 22px -4px var(--c)}
+.lvl.on .lockpod svg{stroke:var(--c)}
+.lvl.on .lockpod .shackle{transform:translateY(-2px) rotate(-30deg)}
+.lvl h4{font-size:26px;font-weight:300;letter-spacing:-.03em;margin-top:auto;position:relative}
+.lvl p{color:var(--mute);font-size:14px;margin-top:10px;position:relative}
+.lvl .meta{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--dim);position:relative;font-size:10px}
+.lvl .meta b{color:var(--ink);font-weight:400}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.card{position:relative;border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,#0b0b0f,#060608);overflow:hidden;padding:30px;min-height:340px;display:flex;flex-direction:column;isolation:isolate}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(500px circle at var(--mx,50%) var(--my,-20%),rgba(255,255,255,.06),transparent 45%);opacity:0;transition:opacity .5s}
+.card:hover::after{opacity:1}
+.card .mono{color:var(--mute)}
+.card h3{font-size:clamp(24px,2.3vw,32px);font-weight:300;letter-spacing:-.03em;line-height:1.1;margin-top:14px}
+.card p{color:var(--mute);font-size:15px;margin-top:12px;max-width:380px}
+.card .big{font-size:clamp(44px,5vw,72px);font-weight:200;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.card .big small{font-size:.3em;letter-spacing:0;color:var(--mute);margin-left:8px;font-weight:300}
+.c-percep{grid-column:span 4;grid-row:span 2;min-height:700px}
+.c-neural,.c-energy{grid-column:span 2}
+.c-thermal{grid-column:span 3}
+.c-ota{grid-column:span 3}
+.radar{position:absolute;right:-12%;bottom:-24%;width:88%;aspect-ratio:1;z-index:-1}
+.radar svg{width:100%;height:100%;overflow:visible}
+.radar .sweep{position:absolute;inset:6%;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,transparent 300deg,rgba(63,224,255,.05) 320deg,rgba(63,224,255,.35) 359deg,transparent 360deg);animation:spin 5.5s linear infinite;-webkit-mask:radial-gradient(closest-side,#000 99%,transparent 100%);mask:radial-gradient(closest-side,#000 99%,transparent 100%)}
+.radar .blip{position:absolute;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--bc);box-shadow:0 0 14px var(--bc);animation:blip 5.5s linear infinite;animation-delay:var(--d)}
+.radar .blip::after{content:attr(data-l);position:absolute;left:14px;top:-4px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--mute);white-space:nowrap}
+@keyframes blip{0%,100%{opacity:.25}4%{opacity:1}40%{opacity:.4}}
+.sensor-list{display:flex;gap:28px;margin-top:auto;flex-wrap:wrap}
+.sensor-list div{display:flex;flex-direction:column;gap:4px}
+.sensor-list b{font-weight:300;font-size:28px;letter-spacing:-.03em}
+.bars{display:flex;align-items:flex-end;gap:3px;height:110px;margin:24px 0 8px}
+.bars i{flex:1;border-radius:1px;background:linear-gradient(180deg,var(--top),rgba(255,255,255,.03));height:20%;transition:height .25s linear}
+.gauge{position:relative;width:180px;aspect-ratio:1;margin:18px 0 6px -6px}
+.gauge svg{width:100%;height:100%;transform:rotate(135deg)}
+.gauge .val{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.gauge .val b{font-size:42px;font-weight:200;letter-spacing:-.04em;display:block;line-height:1}
+.flame{display:flex;align-items:flex-end;gap:4px;height:120px;margin-top:auto}
+.flame i{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(0deg,#ff4a12,#ff1f6b 55%,#6a2bff 100%);transform-origin:bottom;opacity:.85}
+.split{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-top:auto;flex-wrap:wrap}
+.ota{margin-top:auto;display:flex;flex-direction:column}
+.ota-row{display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:center;padding:13px 0;border-top:1px solid var(--line);font-size:14px}
+.ota-row .mono{font-size:10px}
+.ota-row .pill{font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:4px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--mute)}
+.ota-row .pill.new{border-color:rgba(63,224,255,.4);color:var(--cyan)}
+
+/* specs */
+.specs{display:grid;grid-template-columns:5fr 7fr;gap:clamp(40px,6vw,96px)}
+.spec-visual{position:sticky;top:120px;align-self:start;aspect-ratio:1;border-radius:28px;border:1px solid var(--line);overflow:hidden;background:radial-gradient(circle at 50% 120%,rgba(255,74,18,.35),transparent 55%),radial-gradient(circle at 50% 100%,rgba(106,43,255,.35),transparent 70%),#050507}
+.spec-visual svg{position:absolute;inset:0;width:100%;height:100%}
+.spec-visual .mono{position:absolute;color:var(--mute);font-size:10px}
+.spec-table{border-top:1px solid var(--line)}
+.spec-row{display:grid;grid-template-columns:1fr auto;gap:24px;padding:24px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.spec-row .mono{color:var(--dim)}
+.spec-row b{font-weight:300;font-size:clamp(22px,2.4vw,32px);letter-spacing:-.03em;text-align:right}
+.spec-row b small{font-size:.45em;color:var(--mute);letter-spacing:0;margin-left:6px}
+
+/* manifesto */
+.manifesto{text-align:center;padding:clamp(120px,16vw,220px) 0;overflow:clip}
+.manifesto h2{font-size:clamp(40px,7vw,112px);line-height:.98;max-width:1100px;margin:0 auto}
+.manifesto h2 .w{display:inline-block;opacity:.12;transition:opacity .6s}
+.manifesto h2 .w.lit{opacity:1}
+.manifesto .sig{margin-top:44px;color:var(--mute)}
+
+/* reserve */
+.reserve{padding:clamp(120px,14vw,200px) 0 0;overflow:clip;text-align:center}
+.reserve h2{max-width:900px;margin:0 auto}
+.reserve p.lede{margin:26px auto 0;max-width:520px}
+.form{display:flex;gap:8px;max-width:520px;margin:44px auto 0;padding:6px;border:1px solid var(--line-2);border-radius:999px;background:rgba(255,255,255,.02);backdrop-filter:blur(10px)}
+.form input{flex:1;min-width:0;background:none;border:0;outline:0;padding:0 18px;font-size:15px}
+.form input::placeholder{color:var(--dim)}
+.form-note{margin-top:18px;color:var(--dim);font-size:10px}
+.form-note.ok{color:var(--cyan)}
+.horizon{position:relative;height:clamp(200px,24vw,360px);margin-top:clamp(56px,7vw,96px)}
+.horizon .sun{position:absolute;left:50%;top:0;width:min(1500px,150vw);aspect-ratio:1;transform:translateX(-50%);border-radius:50%}
+.horizon .sun.a{background:conic-gradient(from -90deg,#3fe0ff,#2f6bff 18%,#6a2bff 36%,#ff1f6b 50%,#6a2bff 64%,#2f6bff 82%,#3fe0ff);-webkit-mask:radial-gradient(closest-side,transparent 97%,#000 98.5%,transparent 100%);mask:radial-gradient(closest-side,transparent 97%,#000 98.5%,transparent 100%)}
+.horizon .sun.b{background:conic-gradient(from -90deg,#3fe0ff,#2f6bff 18%,#6a2bff 36%,#ff4a12 50%,#6a2bff 64%,#2f6bff 82%,#3fe0ff);filter:blur(60px);opacity:.55;-webkit-mask:radial-gradient(closest-side,transparent 80%,#000 97%,transparent 100%);mask:radial-gradient(closest-side,transparent 80%,#000 97%,transparent 100%)}
+.horizon .sun.c{background:radial-gradient(closest-side,rgba(106,43,255,.22),transparent 70%)}
+.horizon svg{position:absolute;left:50%;top:0;width:min(1500px,150vw);aspect-ratio:1;transform:translateX(-50%);overflow:visible}
+.horizon::after{content:"";position:absolute;inset:auto 0 0 0;height:70%;background:linear-gradient(rgba(2,2,3,0),rgba(2,2,3,.7) 50%,var(--bg) 96%)}
+
+footer{position:relative;z-index:2;background:var(--bg);color:var(--mute);padding:8px 0 36px;overflow:clip}
+.foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;padding:48px 0 48px;border-top:1px solid var(--line)}
+.foot-brand .brand{margin-bottom:18px;color:var(--ink)}
+.foot-brand p{font-size:14px;max-width:300px;line-height:1.6}
+.foot-col h5{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:400;color:var(--dim);margin-bottom:18px}
+.foot-col a{display:block;font-size:14px;padding:5px 0;width:max-content;transition:color .3s}
+.foot-col a:hover{color:var(--ink)}
+.wordmark{display:block;width:100%;height:auto;margin:8px 0 28px}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px 28px;flex-wrap:wrap;padding-top:22px;border-top:1px solid var(--line);color:var(--dim);font-size:10px}
+.foot-bottom nav{display:flex;gap:24px;flex-wrap:wrap}
+.foot-bottom a:hover{color:var(--ink)}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1080px){
+  .hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .nav-links{display:none}
+  .levels{grid-template-columns:repeat(2,1fr)}
+  .levels .lvl:last-child{grid-column:span 2}
+  .c-percep{grid-column:span 6;min-height:600px}
+  .c-neural,.c-energy,.c-thermal,.c-ota{grid-column:span 3}
+  .specs{grid-template-columns:1fr}
+  .spec-visual{position:relative;top:0;max-width:520px}
+}
+@media (max-width:820px){
+  .nav .status{display:none}
+  .foot-top{grid-template-columns:1fr 1fr;gap:36px 24px}
+  .foot-brand{grid-column:1/-1}
+  .hero{padding:84px 0 48px;min-height:auto}
+  .hero-grid{grid-template-columns:1fr;gap:8px}
+  .hero-dial{grid-column:1;grid-row:1;justify-self:center;width:min(100vw,640px);min-width:0;margin:0 calc(-1*var(--gutter))}
+  .hero-copy{grid-row:2}
+  .hide-sm{display:none}
+  .sec-head{grid-template-columns:1fr}
+  .sec-head p{justify-self:start}
+  .bento{grid-template-columns:1fr}
+  .c-percep,.c-neural,.c-energy,.c-thermal,.c-ota{grid-column:auto}
+  .c-percep{min-height:560px}
+  .radar{width:120%;right:-30%;bottom:-30%}
+  .card{padding:24px;min-height:300px}
+  .track-bar{display:none}
+}
+@media (max-width:560px){
+  .levels{grid-template-columns:1fr}
+  .levels .lvl:last-child{grid-column:auto}
+  .lvl{min-height:250px}
+  .nav .btn{display:none}
+  .form{flex-direction:column;border-radius:22px}
+  .form input{height:48px}
+  .form .btn{justify-content:center}
+  .ota-row{grid-template-columns:72px 1fr auto;gap:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  [data-reveal]{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav" data-section="nav">
+  <div class="wrap nav-in">
+    <a href="#" class="brand" aria-label="ORVYN home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3fe0ff"/><stop offset=".45" stop-color="#6a2bff"/><stop offset="1" stop-color="#ff4a12"/></linearGradient></defs><circle cx="16" cy="16" r="14.5" fill="none" stroke="url(#lg)" stroke-width="1.4" stroke-dasharray="70 8"/><path d="M9 11.5h14l-7 10z" fill="url(#lg)"/></svg>
+      ORVYN
+    </a>
+    <nav class="nav-links mono">
+      <a href="#autonomy">Autonomy</a>
+      <a href="#systems">Systems</a>
+      <a href="#specs">Specs</a>
+      <a href="#reserve">Reserve</a>
+    </nav>
+    <div class="nav-right">
+      <span class="status mono"><i></i>Fleet online · 41,208</span>
+      <a href="#reserve" class="btn btn-primary">Reserve <span class="arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<main>
+<section class="hero" id="top" data-section="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-dial"><div class="dial" id="dial" role="group" aria-label="Autonomy level dial" data-component="autonomy-dial"></div></div>
+    <div class="hero-copy">
+      <span class="eyebrow mono"><b>NEW</b><span>ORVYN ONE<span class="hide-sm"> — Autonomous Grand Tourer</span></span></span>
+      <h1><span class="nw">It already knows</span><br><span class="nw">the road <em class="serif grad-text">ahead.</em></span></h1>
+      <p class="lede">A <strong>2,000-TOPS neural driver</strong> wrapped in a 360° perception halo. ORVYN ONE earns its autonomy in five verified stages, from assisted cruise to a car that needs no driver.</p>
+      <div class="cta-row">
+        <a href="#reserve" class="btn btn-primary">Reserve ORVYN ONE <span class="arrow">→</span></a>
+        <a href="#systems" class="btn btn-ghost"><span class="play"><svg width="10" height="12" viewBox="0 0 10 12"><path d="M0 0l10 6-10 6z" fill="currentColor"/></svg></span>Watch it drive</a>
+      </div>
+
+      <div class="level-card" id="levelCard">
+        <div class="lv">LVL<span id="lcNum">01</span></div>
+        <div>
+          <h3 class="swap"><i></i><span id="lcName">Assisted</span></h3>
+          <p class="swap" id="lcDesc">Adaptive cruise and lane centering with predictive braking.</p>
+          <div class="lvl-dots" id="lvlDots" aria-label="Choose autonomy level"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ TICKER ============ -->
+<div class="ticker mono" aria-hidden="true" data-section="ticker">
+  <div class="ticker-track">
+    <span>Autonomous km<b>4.12B</b></span><span>Disengagements / 10k km<b>0.003</b></span><span>Perception range<b>300 m</b></span><span>Model build<b>N-7.4</b></span><span>Sensors fused<b>22</b></span><span>Latency<b>8 ms</b></span><span>Cities mapped<b>148</b></span>
+    <span>Autonomous km<b>4.12B</b></span><span>Disengagements / 10k km<b>0.003</b></span><span>Perception range<b>300 m</b></span><span>Model build<b>N-7.4</b></span><span>Sensors fused<b>22</b></span><span>Latency<b>8 ms</b></span><span>Cities mapped<b>148</b></span>
+  </div>
+</div>
+
+<!-- ============ AUTONOMY LEVELS ============ -->
+<section class="sec" id="autonomy" data-section="autonomy">
+  <div class="wrap">
+    <div class="sec-head">
+      <div data-reveal>
+        <div class="kicker mono">01 — Autonomy stack</div>
+        <h2>Autonomy, unlocked<br>in <em class="serif grad-text">five stages.</em></h2>
+      </div>
+      <p data-reveal>Each level unlocks over the air only after the fleet has proven it, with billions of kilometres verified in simulation and on the road. Your car gets more capable while it sits in the garage.</p>
+    </div>
+    <div class="track" id="track">
+      <div class="track-bar" id="trackBar"></div>
+      <div class="levels" id="levels"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SYSTEMS BENTO ============ -->
+<section class="sec" id="systems" style="padding-top:0" data-section="systems">
+  <div class="wrap">
+    <div class="sec-head">
+      <div data-reveal>
+        <div class="kicker mono">02 — Systems</div>
+        <h2>Engineered to<br><em class="serif grad-text">perceive,</em> not react.</h2>
+      </div>
+      <p data-reveal>Every system aboard ORVYN ONE reports to a single neural core. It weighs 22 sensor streams 120 times a second and plans eight seconds ahead.</p>
+    </div>
+
+    <div class="bento">
+      <article class="card c-percep" data-reveal>
+        <span class="mono">Perception halo</span>
+        <h3>Sees 300 metres<br>in every direction.</h3>
+        <p>Solid-state lidar, imaging radar and 12 HDR cameras are fused into one live 3D world model. It keeps working through rain, glare and total dark.</p>
+        <div class="sensor-list">
+          <div><span class="mono">Lidar</span><b>4×</b></div>
+          <div><span class="mono">Radar</span><b>6×</b></div>
+          <div><span class="mono">Vision</span><b>12×</b></div>
+          <div><span class="mono">Refresh</span><b>120 Hz</b></div>
+        </div>
+        <div class="radar" aria-hidden="true">
+          <svg viewBox="-500 -500 1000 1000" id="radarSvg"></svg>
+          <div class="sweep"></div>
+          <i class="blip" style="left:38%;top:30%;--bc:#3fe0ff;--d:-4.1s" data-l="CYCLIST · 42 M"></i>
+          <i class="blip" style="left:66%;top:42%;--bc:#ff1f6b;--d:-1.9s" data-l="VEHICLE · 88 M"></i>
+          <i class="blip" style="left:30%;top:62%;--bc:#6a2bff;--d:-3.0s" data-l="PEDESTRIAN · 17 M"></i>
+          <i class="blip" style="left:58%;top:18%;--bc:#ff4a12;--d:-0.6s" data-l="SIGNAL · AMBER"></i>
+        </div>
+      </article>
+
+      <article class="card c-neural" data-reveal>
+        <span class="mono">Neural driver</span>
+        <div class="bars" id="bars"></div>
+        <div class="big" data-count="2000" data-format="comma">0<small>TOPS</small></div>
+        <p>A purpose-built inference core that runs the full driving model locally, in 8 ms.</p>
+      </article>
+
+      <article class="card c-energy" data-reveal>
+        <span class="mono">Energy core</span>
+        <div class="gauge">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <defs><linearGradient id="gg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#3fe0ff"/><stop offset=".5" stop-color="#2f6bff"/><stop offset="1" stop-color="#6a2bff"/></linearGradient></defs>
+            <circle cx="100" cy="100" r="86" fill="none" stroke="#141418" stroke-width="10" stroke-dasharray="405.3 540.4"/>
+            <circle cx="100" cy="100" r="86" fill="none" stroke="#000" stroke-width="10" stroke-dasharray="1 6.8" opacity=".9"/>
+            <circle id="gaugeArc" cx="100" cy="100" r="86" fill="none" stroke="url(#gg)" stroke-width="10" stroke-dasharray="0 540.4" style="transition:stroke-dasharray 2.2s var(--ease)"/>
+            <circle cx="100" cy="100" r="86" fill="none" stroke="#000" stroke-width="11" stroke-dasharray="1.2 6.6" opacity=".55"/>
+          </svg>
+          <div class="val"><div><b data-count="86">0</b><span class="mono">% charged</span></div></div>
+        </div>
+        <p><span style="color:var(--ink)">812 km</span> of range. 10–80% in 14 minutes on 1,000 V charging.</p>
+      </article>
+
+      <article class="card c-thermal" data-reveal>
+        <span class="mono">Dual-motor drive</span>
+        <h3>1,020 hp, delivered<br>with total composure.</h3>
+        <div class="split">
+          <div class="flame" id="flame" style="flex:1;min-width:200px"></div>
+          <div><span class="mono">0–100 km/h</span><div class="big">2.9<small>s</small></div></div>
+        </div>
+      </article>
+
+      <article class="card c-ota" data-reveal>
+        <span class="mono">Continuous learning</span>
+        <h3>Gets better overnight.</h3>
+        <div class="ota">
+          <div class="ota-row"><span class="mono">N-7.4</span><span>Unprotected left turns, refined</span><span class="pill new">Tonight</span></div>
+          <div class="ota-row"><span class="mono">N-7.3</span><span>Snow-lane inference</span><span class="pill">Oct 02</span></div>
+          <div class="ota-row"><span class="mono">N-7.2</span><span>City Pilot · 12 new metros</span><span class="pill">Sep 14</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto" data-section="manifesto">
+  <div class="wrap">
+    <div class="kicker mono" style="justify-content:center">03 — Manifesto</div>
+    <h2 id="manifesto">The road is a conversation. Most cars only listen. <em class="serif grad-text">ORVYN understands.</em></h2>
+    <p class="sig mono">— Design principle Nº 1</p>
+  </div>
+</section>
+
+<!-- ============ SPECS ============ -->
+<section class="sec" id="specs" style="padding-top:0" data-section="specs">
+  <div class="wrap">
+    <div class="sec-head">
+      <div data-reveal>
+        <div class="kicker mono">04 — Specification</div>
+        <h2>The numbers,<br><em class="serif grad-text">unfiltered.</em></h2>
+      </div>
+      <p data-reveal>Preliminary figures for the ORVYN ONE Launch Edition. Final homologation is pending.</p>
+    </div>
+    <div class="specs">
+      <div class="spec-visual" data-reveal aria-hidden="true">
+        <svg viewBox="-500 -500 1000 1000" id="specSvg"></svg>
+        <span class="mono" style="left:24px;top:22px">Telemetry · live</span>
+        <span class="mono" style="right:24px;top:22px" id="specClock">00:00:00</span>
+        <span class="mono" style="left:24px;bottom:22px">Lat 34.0522 · Lon −118.2437</span>
+        <span class="mono" style="right:24px;bottom:22px">LVL 05 ready</span>
+      </div>
+      <div class="spec-table" id="specTable"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESERVE ============ -->
+<section class="reserve" id="reserve" data-section="reserve">
+  <div class="wrap">
+    <div class="kicker mono" style="justify-content:center" data-reveal>05 — Reserve</div>
+    <h2 data-reveal>Your first drive<br>is <em class="serif grad-text">its thousandth.</em></h2>
+    <p class="lede" data-reveal>Launch Edition allocations open now. The $1,500 deposit is fully refundable. Deliveries begin Q3 2027.</p>
+    <form class="form" id="form" data-reveal>
+      <input type="email" required placeholder="you@domain.com" aria-label="Email address">
+      <button class="btn btn-primary" type="submit">Reserve allocation <span class="arrow">→</span></button>
+    </form>
+    <div class="form-note mono" id="formNote">No payment taken today</div>
+  </div>
+  <div class="horizon" aria-hidden="true">
+    <div class="sun c"></div><div class="sun b"></div><div class="sun a"></div>
+    <svg viewBox="-500 -500 1000 1000" id="horizonSvg"></svg>
+  </div>
+</section>
+
+</main>
+
+<footer data-section="footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="#top" class="brand" aria-label="ORVYN home">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="none" stroke="url(#lg)" stroke-width="1.4" stroke-dasharray="70 8"/><path d="M9 11.5h14l-7 10z" fill="url(#lg)"/></svg>
+          ORVYN
+        </a>
+        <p>An AI-native grand tourer that earns its autonomy one verified stage at a time.</p>
+      </div>
+      <div class="foot-col"><h5>Vehicle</h5><a href="#autonomy">Autonomy</a><a href="#systems">Systems</a><a href="#specs">Specification</a></div>
+      <div class="foot-col"><h5>Ownership</h5><a href="#reserve">Reserve</a><a href="#reserve">Delivery timeline</a><a href="#reserve">Charging</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="#top">Safety report</a><a href="#top">Press</a><a href="#top">Careers</a></div>
+    </div>
+    <svg class="wordmark" viewBox="0 0 1000 170" aria-hidden="true">
+      <defs>
+        <linearGradient id="wmG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3fe0ff"/><stop offset=".25" stop-color="#2f6bff"/><stop offset=".5" stop-color="#6a2bff"/><stop offset=".75" stop-color="#ff1f6b"/><stop offset="1" stop-color="#ff4a12"/></linearGradient>
+        <linearGradient id="wmF" x1="0" y1="0" x2="0" y2="1"><stop offset=".1" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient>
+        <mask id="wmM" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="170"><rect width="1000" height="170" fill="url(#wmF)"/></mask>
+      </defs>
+      <text x="500" y="152" text-anchor="middle" textLength="980" lengthAdjust="spacingAndGlyphs" font-family="Geist, sans-serif" font-weight="200" font-size="200" fill="none" stroke="url(#wmG)" stroke-width="1.2" mask="url(#wmM)">ORVYN</text>
+    </svg>
+    <div class="foot-bottom mono">
+      <span>© 2026 ORVYN Mobility · Concept vehicle</span>
+      <span class="status"><i></i>All systems nominal</span>
+      <nav><a href="#top">Privacy</a><a href="#top">Terms</a><a href="#top">Back to top ↑</a></nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+const NS = 'http://www.w3.org/2000/svg';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (s, r = document) => r.querySelector(s);
+const svgEl = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+const rad = a => (a * Math.PI) / 180;
+const pt = (r, a) => [r * Math.sin(rad(a)), -r * Math.cos(rad(a))];
+const f = n => n.toFixed(2);
+const sector = (r1, r2, a0, a1) => {
+  const L = a1 - a0 > 180 ? 1 : 0;
+  const [x0, y0] = pt(r2, a0), [x1, y1] = pt(r2, a1), [x2, y2] = pt(r1, a1), [x3, y3] = pt(r1, a0);
+  return `M${f(x0)} ${f(y0)}A${r2} ${r2} 0 ${L} 1 ${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}A${r1} ${r1} 0 ${L} 0 ${f(x3)} ${f(y3)}Z`;
+};
+const arcPath = (r, a0, a1) => {
+  const L = a1 - a0 > 180 ? 1 : 0;
+  const [x0, y0] = pt(r, a0), [x1, y1] = pt(r, a1);
+  return `M${f(x0)} ${f(y0)}A${r} ${r} 0 ${L} 1 ${f(x1)} ${f(y1)}`;
+};
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, t) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`; };
+const ramp = (stops, a) => { // stops: [[deg,color],...] sorted, wraps
+  a = ((a % 360) + 360) % 360;
+  for (let i = 0; i < stops.length - 1; i++) {
+    const [d0, c0] = stops[i], [d1, c1] = stops[i + 1];
+    if (a >= d0 && a <= d1) return mix(c0, c1, (a - d0) / (d1 - d0 || 1));
+  }
+  return stops[0][1];
+};
+
+/* ---------- Data ---------- */
+const LEVELS = [
+  { n: 1, name: 'Assisted',    color: '#2f6bff', desc: 'Adaptive cruise and lane centering with predictive braking.', km: '1.9B km', state: 'Standard' },
+  { n: 2, name: 'Partial',     color: '#5a3bff', desc: 'Hands-on co-pilot for lane changes, merges and traffic-jam assist.', km: '1.2B km', state: 'Standard' },
+  { n: 3, name: 'Conditional', color: '#a62bff', desc: 'Highway Pilot: hands off and eyes off on 480,000 km of mapped roads.', km: '640M km', state: 'Unlocked' },
+  { n: 4, name: 'High',        color: '#ff1f6b', desc: 'City Pilot: door to door within geofenced metros, with no supervision.', km: '310M km', state: '148 cities' },
+  { n: 5, name: 'Full',        color: '#ff4a12', desc: 'No wheel required. Any road, any weather, any hour.', km: '72M km', state: 'Rolling out' }
+];
+const pad = n => String(n).padStart(2, '0');
+
+/* ---------- DIAL ---------- */
+const dial = $('#dial');
+const SEG_W = 30, SEG0 = -15; // segments centered at 0,30,60,90,120
+const segAngle = i => i * SEG_W;
+
+dial.innerHTML = `
+  <svg class="back" viewBox="-500 -500 1000 1000" aria-hidden="false"></svg>
+  <div class="core"></div>
+  <div class="ring ring-heat-glow"></div>
+  <div class="ring ring-heat"></div>
+  <div class="ring ring-prog-glow"></div>
+  <div class="ring ring-prog"></div>
+  <svg class="front" viewBox="-500 -500 1000 1000" aria-hidden="true"></svg>
+  <div class="dial-center"><div class="mono">Autonomy</div><div class="num" id="dNum">01</div><div class="name" id="dName">Assisted</div></div>`;
+const back = $('.back', dial), front = $('.front', dial);
+
+// defs
+const defs = svgEl('defs', {}, back);
+const wg = svgEl('radialGradient', { id: 'wedgeG', cx: 0, cy: 0, r: 500, gradientUnits: 'userSpaceOnUse' }, defs);
+svgEl('stop', { offset: '.6', 'stop-color': '#6a2bff', 'stop-opacity': 0 }, wg);
+const wStop1 = svgEl('stop', { offset: '.66', 'stop-color': '#6a2bff', 'stop-opacity': '.6' }, wg);
+const wStop2 = svgEl('stop', { offset: '.8', 'stop-color': '#6a2bff', 'stop-opacity': '.16' }, wg);
+svgEl('stop', { offset: '.98', 'stop-color': '#000', 'stop-opacity': 0 }, wg);
+const lf = svgEl('linearGradient', { id: 'leftFade', x1: -380, y1: 0, x2: -120, y2: -200, gradientUnits: 'userSpaceOnUse' }, defs);
+svgEl('stop', { offset: 0, 'stop-color': '#131316', 'stop-opacity': 0 }, lf);
+svgEl('stop', { offset: 1, 'stop-color': '#131316', 'stop-opacity': 1 }, lf);
+const pg = svgEl('radialGradient', { id: 'podGlow' }, defs);
+svgEl('stop', { offset: 0, 'stop-color': '#fff', 'stop-opacity': '.08' }, pg);
+svgEl('stop', { offset: 1, 'stop-color': '#fff', 'stop-opacity': 0 }, pg);
+
+// active wedge glow
+const wedge = svgEl('g', { class: 'rot' }, back);
+svgEl('circle', { r: 500, fill: 'none' }, wedge);
+svgEl('path', { d: sector(310, 490, -14, 14), fill: 'url(#wedgeG)', style: 'filter:blur(16px)' }, wedge);
+
+// outline rings
+svgEl('circle', { r: 304, fill: 'none', stroke: 'rgba(255,255,255,.06)', 'stroke-width': 1 }, back);
+const spinG = svgEl('g', { class: 'spin' }, back);
+svgEl('circle', { r: 313, fill: 'none', stroke: 'rgba(255,255,255,.16)', 'stroke-width': 1, 'stroke-dasharray': '1.5 9' }, spinG);
+svgEl('path', { d: arcPath(313, 200, 260), fill: 'none', stroke: 'rgba(255,255,255,.35)', 'stroke-width': 1.5 }, spinG);
+
+// scanner line: enters from the left and stops at the outer ring (never crosses the core)
+const sl = svgEl('linearGradient', { id: 'scanG', x1: -520, y1: 0, x2: -306, y2: 0, gradientUnits: 'userSpaceOnUse' }, defs);
+svgEl('stop', { offset: 0, 'stop-color': '#ff4a12', 'stop-opacity': 0 }, sl);
+svgEl('stop', { offset: .7, 'stop-color': '#ff4a12', 'stop-opacity': .55 }, sl);
+svgEl('stop', { offset: 1, 'stop-color': '#ffffff', 'stop-opacity': .8 }, sl);
+svgEl('line', { x1: -520, y1: 0, x2: -306, y2: 0, stroke: 'url(#scanG)', 'stroke-width': 1.2, class: 'scan' }, back);
+svgEl('circle', { cx: -306, cy: 0, r: 2.6, fill: '#fff', class: 'scan' }, back);
+// left trailing arc
+svgEl('path', { d: sector(322, 352, -80, -16), fill: 'url(#leftFade)' }, back);
+
+// segments
+const segG = svgEl('g', {}, back);
+const segs = [], labels = [], pods = [];
+LEVELS.forEach((L, i) => {
+  const c = segAngle(i);
+  const p = svgEl('path', { d: sector(322, 352, c - 14.4, c + 14.4), class: 'seg', fill: '#121215', role: 'button', tabindex: 0, 'aria-label': `Autonomy level ${L.n}: ${L.name}` }, segG);
+  p.addEventListener('click', () => userSet(L.n));
+  p.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); userSet(L.n); } });
+  segs.push(p);
+  const t = svgEl('text', { class: 'seg-label', transform: `rotate(${c}) translate(0,-337)`, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, segG);
+  t.textContent = `LVL ${pad(L.n)}`;
+  labels.push(t);
+  // pods
+  const [x, y] = pt(432, c);
+  const g = svgEl('g', { class: 'pod', transform: `translate(${f(x)},${f(y)})`, style: `--pc:${L.color}` }, back);
+  g.addEventListener('click', () => userSet(L.n));
+  svgEl('circle', { r: 64, fill: 'url(#podGlow)' }, g);
+  svgEl('circle', { r: 40, class: 'halo' }, g);
+  svgEl('circle', { r: 38, class: 'bg' }, g);
+  const lk = svgEl('g', { class: 'lock', transform: 'scale(1.25)' }, g);
+  svgEl('rect', { x: -8, y: -2, width: 16, height: 12, rx: 2.2 }, lk);
+  svgEl('path', { class: 'shackle', d: 'M-5 -2V-6a5 5 0 0 1 10 0V-2' }, lk);
+  svgEl('path', { d: 'M0 3v2.5' }, lk);
+  pods.push(g);
+});
+
+// front: tick rings
+let tkDelay = 0;
+const outerT = svgEl('g', {}, front);
+for (let i = 0; i < 150; i++) {
+  const a = (i / 150) * 360, [x1, y1] = pt(212, a), [x2, y2] = pt(264, a);
+  svgEl('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: '#fff', 'stroke-opacity': .085, 'stroke-width': 2.2, class: 'tk', style: `animation-delay:${400 + i * 5}ms` }, outerT);
+}
+svgEl('circle', { r: 284, fill: 'none', stroke: '#3b4bff', 'stroke-opacity': .4, 'stroke-width': 1 }, front);
+svgEl('circle', { r: 192, fill: 'none', stroke: '#2b3cff', 'stroke-opacity': .55, 'stroke-width': 1.2 }, front);
+const dotStops = [[0, '#7a3cff'], [90, '#a42bff'], [180, '#3b3bff'], [270, '#5b2bff'], [360, '#7a3cff']];
+const dotsG = svgEl('g', { class: 'spin rev' }, front);
+for (let i = 0; i < 180; i++) {
+  const a = (i / 180) * 360, [x1, y1] = pt(199, a), [x2, y2] = pt(206, a);
+  svgEl('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: ramp(dotStops, a), 'stroke-width': 2.4, class: 'tk', style: `animation-delay:${600 + i * 4}ms` }, dotsG);
+}
+const innerStops = [[0, '#b21f8f'], [50, '#ff2a6d'], [130, '#ff2a5a'], [185, '#5a1032'], [240, '#3a0f4a'], [300, '#6a22c8'], [360, '#b21f8f']];
+const innerT = [];
+const innerG = svgEl('g', {}, front);
+for (let i = 0; i < 96; i++) {
+  const a = (i / 96) * 360, [x1, y1] = pt(124, a), [x2, y2] = pt(174, a);
+  innerT.push({ a, el: svgEl('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: ramp(innerStops, a), 'stroke-width': 4.2, class: 'tk', style: `animation-delay:${800 + i * 9}ms` }, innerG) });
+}
+// core disc
+const cg = svgEl('radialGradient', { id: 'coreG', cx: 0, cy: -80, r: 200, gradientUnits: 'userSpaceOnUse' }, svgEl('defs', {}, front));
+svgEl('stop', { offset: 0, 'stop-color': '#2c1258' }, cg);
+svgEl('stop', { offset: .55, 'stop-color': '#0c0518' }, cg);
+svgEl('stop', { offset: 1, 'stop-color': '#020203' }, cg);
+svgEl('circle', { r: 118, fill: 'url(#coreG)' }, front);
+svgEl('circle', { r: 118, fill: 'none', stroke: '#6a2bff', 'stroke-width': 1.5, class: 'pulse' }, front);
+svgEl('circle', { r: 118, fill: 'none', stroke: '#ff1f6b', 'stroke-width': 1, class: 'pulse b' }, front);
+[[-48, 18], [26, 138]].forEach(([a, b]) => svgEl('path', { d: arcPath(100, a, b), fill: 'none', stroke: '#34343c', 'stroke-width': 6 }, front));
+svgEl('path', { d: arcPath(90, 150, 214), fill: 'none', stroke: '#26262c', 'stroke-width': 2 }, front);
+const coreArc = svgEl('path', { d: arcPath(100, -48, 18), fill: 'none', stroke: '#fff', 'stroke-width': 6, 'stroke-opacity': .0, style: 'transition:stroke-opacity .6s' }, front);
+// horizon: darker lower half
+const hg = svgEl('linearGradient', { id: 'horizG', x1: 0, y1: 0, x2: 0, y2: 296, gradientUnits: 'userSpaceOnUse' }, svgEl('defs', {}, front));
+svgEl('stop', { offset: 0, 'stop-color': '#000', 'stop-opacity': 0 }, hg);
+svgEl('stop', { offset: .35, 'stop-color': '#000', 'stop-opacity': .32 }, hg);
+svgEl('stop', { offset: 1, 'stop-color': '#000', 'stop-opacity': .5 }, hg);
+svgEl('circle', { r: 300, fill: 'url(#horizG)' }, front);
+// needle
+const needle = svgEl('g', { class: 'rot' }, front);
+svgEl('circle', { r: 300, fill: 'none' }, needle);
+svgEl('line', { x1: 0, y1: -232, x2: 0, y2: -296, stroke: '#46e1ff', 'stroke-width': 10, 'stroke-opacity': .3, 'stroke-linecap': 'round', style: 'filter:blur(4px)' }, needle);
+svgEl('line', { x1: 0, y1: -232, x2: 0, y2: -296, stroke: '#fff', 'stroke-width': 2.6 }, needle);
+
+/* ---------- Level state ---------- */
+let level = 0, autoTimer = null, idleTimer = null;
+const lcCard = $('#levelCard'), dotsWrap = $('#lvlDots');
+const dotBtns = LEVELS.map(L => {
+  const b = document.createElement('button');
+  b.style.setProperty('--c', L.color);
+  b.setAttribute('aria-label', `Level ${L.n} ${L.name}`);
+  b.addEventListener('click', () => userSet(L.n));
+  dotsWrap.appendChild(b);
+  return b;
+});
+
+function setLevel(n) {
+  if (n === level) return;
+  level = n;
+  const L = LEVELS[n - 1];
+  const span = 70 + n * 43; // degrees of progress sweep from -135
+  dial.style.setProperty('--span', span + 'deg');
+  needle.style.transform = `rotate(${-135 + span}deg)`;
+  wedge.style.transform = `rotate(${segAngle(n - 1)}deg)`;
+  [wStop1, wStop2].forEach(s => s.setAttribute('stop-color', L.color));
+  dial.style.setProperty('--c', L.color);
+  segs.forEach((s, i) => {
+    const C = LEVELS[i].color;
+    s.setAttribute('fill', i + 1 === n ? C : i + 1 < n ? mix(C, '#0a0a0c', .72) : '#121215');
+  });
+  labels.forEach((t, i) => t.setAttribute('class', 'seg-label' + (i + 1 === n ? ' on' : i + 1 < n ? ' done' : '')));
+  pods.forEach((p, i) => p.classList.toggle('open', i + 1 <= n));
+  coreArc.setAttribute('stroke', L.color); coreArc.setAttribute('stroke-opacity', .6);
+  $('#dNum').textContent = pad(n); $('#dName').textContent = L.name;
+  dotBtns.forEach((b, i) => b.classList.toggle('on', i + 1 <= n));
+  // card swap
+  lcCard.classList.add('out');
+  setTimeout(() => {
+    $('#lcNum').textContent = pad(n);
+    $('#lcName').textContent = L.name;
+    $('#lcDesc').textContent = L.desc;
+    lcCard.style.setProperty('--c', L.color);
+    lcCard.classList.remove('out');
+  }, 300);
+}
+function startAuto() {
+  clearInterval(autoTimer);
+  if (reduce) return;
+  autoTimer = setInterval(() => setLevel(level >= 5 ? 1 : level + 1), 3400);
+}
+function userSet(n) {
+  setLevel(n);
+  clearInterval(autoTimer); clearTimeout(idleTimer);
+  idleTimer = setTimeout(startAuto, 9000);
+}
+
+// boot
+requestAnimationFrame(() => {
+  dial.classList.add('live');
+  setTimeout(() => { setLevel(1); startAuto(); }, reduce ? 0 : 900);
+});
+
+// shimmer on inner ticks (sweeping light), only while visible
+let dialVisible = true;
+new IntersectionObserver(([e]) => { dialVisible = e.isIntersecting; }).observe(dial);
+let t0 = performance.now();
+function shimmer(now) {
+  if (dialVisible && !reduce) {
+    const head = ((now - t0) / 1000 * 70) % 360;
+    for (const t of innerT) {
+      let d = ((t.a - head) % 360 + 360) % 360; // distance behind head
+      const glow = d > 300 ? (360 - d) / 60 : 0;
+      const tail = d < 300 ? Math.max(0, 1 - (300 - d) / 300) : 0;
+      t.el.setAttribute('stroke-opacity', (0.55 + glow * 0.45 + tail * 0.2).toFixed(2));
+    }
+  }
+  requestAnimationFrame(shimmer);
+}
+requestAnimationFrame(shimmer);
+
+/* ---------- NAV ---------- */
+const nav = $('#nav');
+const onScroll = () => nav.classList.toggle('scrolled', scrollY > 20);
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+/* ---------- Reveal ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .14 });
+document.querySelectorAll('[data-reveal]').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 90 + 'ms'; io.observe(el); });
+
+/* ---------- Levels track ---------- */
+const lvWrap = $('#levels'), bar = $('#trackBar');
+const lockSvg = '<svg viewBox="-10 -12 20 24"><rect x="-8" y="-2" width="16" height="12" rx="2.2"/><path class="shackle" d="M-5 -2V-6a5 5 0 0 1 10 0V-2"/><path d="M0 3v2.5"/></svg>';
+const lvEls = LEVELS.map(L => {
+  const i = document.createElement('i'); i.style.setProperty('--c', L.color); bar.appendChild(i);
+  const a = document.createElement('article');
+  a.className = 'lvl'; a.style.setProperty('--c', L.color);
+  a.innerHTML = `<div class="lvl-top"><span class="mono">LVL ${pad(L.n)}</span><span class="lockpod">${lockSvg}</span></div>
+    <h4>${L.name}</h4><p>${L.desc}</p>
+    <div class="meta mono"><span>Verified <b>${L.km}</b></span><span>${L.state}</span></div>`;
+  lvWrap.appendChild(a);
+  return [i, a];
+});
+new IntersectionObserver(([e], obs) => {
+  if (!e.isIntersecting) return;
+  lvEls.forEach(([i, a], k) => setTimeout(() => { i.classList.add('on'); a.classList.add('on'); }, reduce ? 0 : 250 + k * 480));
+  obs.disconnect();
+}, { threshold: .3 }).observe($('#track'));
+
+/* ---------- Radar ---------- */
+const radar = $('#radarSvg');
+[480, 380, 280, 180, 80].forEach((r, i) => svgEl('circle', { r, fill: 'none', stroke: i === 0 ? 'rgba(63,224,255,.25)' : 'rgba(255,255,255,.07)', 'stroke-width': 1, 'stroke-dasharray': i % 2 ? '2 8' : 'none' }, radar));
+for (let i = 0; i < 120; i++) {
+  const a = i * 3, long = i % 10 === 0, [x1, y1] = pt(long ? 448 : 462, a), [x2, y2] = pt(478, a);
+  svgEl('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: long ? 'rgba(255,255,255,.35)' : 'rgba(255,255,255,.12)', 'stroke-width': long ? 2 : 1.2 }, radar);
+}
+svgEl('line', { x1: -480, y1: 0, x2: 480, y2: 0, stroke: 'rgba(255,255,255,.06)' }, radar);
+svgEl('line', { x1: 0, y1: -480, x2: 0, y2: 480, stroke: 'rgba(255,255,255,.06)' }, radar);
+// vehicle glyph at center
+const car = svgEl('g', {}, radar);
+svgEl('rect', { x: -18, y: -38, width: 36, height: 76, rx: 14, fill: '#0b0b0f', stroke: '#fff', 'stroke-opacity': .55, 'stroke-width': 1.5 }, car);
+svgEl('path', { d: 'M-12 -18h24l-3 12h-18z', fill: 'rgba(63,224,255,.35)' }, car);
+svgEl('path', { d: sector(40, 110, -24, 24), fill: 'rgba(63,224,255,.08)' }, car);
+
+/* ---------- Neural bars ---------- */
+const barsEl = $('#bars'), barI = [];
+for (let i = 0; i < 36; i++) {
+  const b = document.createElement('i');
+  b.style.setProperty('--top', ramp([[0, '#3fe0ff'], [120, '#2f6bff'], [240, '#6a2bff'], [360, '#ff1f6b']], (i / 35) * 360));
+  barsEl.appendChild(b); barI.push(b);
+}
+/* ---------- Flame ---------- */
+const flameEl = $('#flame'), flameI = [];
+for (let i = 0; i < 28; i++) { const b = document.createElement('i'); flameEl.appendChild(b); flameI.push(b); }
+
+let barsOn = false, flameOn = false;
+new IntersectionObserver(([e]) => barsOn = e.isIntersecting).observe(barsEl);
+new IntersectionObserver(([e]) => flameOn = e.isIntersecting).observe(flameEl);
+let last = 0;
+function loop(now) {
+  if (now - last > 90 && !reduce) {
+    last = now; const t = now / 1000;
+    if (barsOn) barI.forEach((b, i) => {
+      const v = 0.18 + 0.5 * Math.abs(Math.sin(t * 1.7 + i * 0.42)) * (0.6 + 0.4 * Math.sin(t * 0.7 + i * 0.13)) + Math.random() * 0.18;
+      b.style.height = Math.min(100, v * 100) + '%';
+    });
+    if (flameOn) flameI.forEach((b, i) => {
+      const c = 1 - Math.abs(i - 13.5) / 14;
+      const v = 0.25 + 0.65 * c * (0.75 + 0.25 * Math.sin(t * 6 + i * 1.3)) + Math.random() * 0.08;
+      b.style.height = (v * 100) + '%';
+    });
+  }
+  requestAnimationFrame(loop);
+}
+if (reduce) { barI.forEach((b, i) => b.style.height = 30 + (i * 37 % 60) + '%'); flameI.forEach((b, i) => b.style.height = 30 + 60 * (1 - Math.abs(i - 13.5) / 14) + '%'); }
+requestAnimationFrame(loop);
+
+/* ---------- Counters + gauge ---------- */
+const countIO = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const el = e.target, to = +el.dataset.count, small = el.querySelector('small');
+  const suffix = small ? small.outerHTML : '';
+  const fmt = v => el.dataset.format === 'comma' ? Math.round(v).toLocaleString('en-US') : Math.round(v);
+  const dur = reduce ? 1 : 2000, s = performance.now();
+  (function step(n) {
+    const p = Math.min(1, (n - s) / dur), k = 1 - Math.pow(1 - p, 4);
+    el.innerHTML = fmt(to * k) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  })(s);
+  if (to === 86) { const C = 540.4, arc = 405.3; $('#gaugeArc').setAttribute('stroke-dasharray', `${arc * 0.86} ${C}`); }
+  countIO.unobserve(el);
+}), { threshold: .5 });
+document.querySelectorAll('[data-count]').forEach(el => countIO.observe(el));
+
+/* ---------- Card spotlight ---------- */
+document.querySelectorAll('.card').forEach(c => c.addEventListener('pointermove', e => {
+  const r = c.getBoundingClientRect();
+  c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+  c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+}));
+
+/* ---------- Manifesto word lighting ---------- */
+const man = $('#manifesto');
+const wrapWords = node => {
+  [...node.childNodes].forEach(ch => {
+    if (ch.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      ch.textContent.split(/(\s+)/).forEach(w => {
+        if (!w.trim()) { frag.appendChild(document.createTextNode(w)); return; }
+        const s = document.createElement('span'); s.className = 'w'; s.textContent = w; frag.appendChild(s);
+      });
+      node.replaceChild(frag, ch);
+    } else if (ch.nodeType === 1 && ch.tagName === 'EM') {
+      ch.classList.add('w');
+    }
+  });
+};
+wrapWords(man);
+const words = [...man.querySelectorAll('.w')];
+const lightWords = () => {
+  const r = man.getBoundingClientRect(), vh = innerHeight;
+  const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.35)));
+  const n = Math.round(p * words.length);
+  words.forEach((w, i) => w.classList.toggle('lit', i < n));
+};
+addEventListener('scroll', lightWords, { passive: true }); lightWords();
+if (reduce) words.forEach(w => w.classList.add('lit'));
+
+/* ---------- Specs ---------- */
+const SPECS = [
+  ['Autonomy', 'Level 5', 'ready'], ['Peak output', '1,020', 'hp'], ['0–100 km/h', '2.9', 's'],
+  ['Top speed', '305', 'km/h'], ['Range (WLTP)', '812', 'km'], ['Charge 10–80%', '14', 'min'],
+  ['Neural compute', '2,000', 'TOPS'], ['Sensor suite', '22', 'units'], ['Drag coefficient', '0.198', 'Cd'],
+  ['Starting at', '$148,000', '']
+];
+$('#specTable').innerHTML = SPECS.map(([k, v, u]) => `<div class="spec-row" data-reveal><span class="mono">${k}</span><b>${v}${u ? `<small>${u}</small>` : ''}</b></div>`).join('');
+$('#specTable').querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+// spec visual: compact HUD
+const sv = $('#specSvg');
+const sd = svgEl('defs', {}, sv);
+const sg = svgEl('linearGradient', { id: 'specG', x1: 0, y1: 0, x2: 1, y2: 1 }, sd);
+[['0', '#3fe0ff'], ['.35', '#2f6bff'], ['.6', '#6a2bff'], ['.85', '#ff1f6b'], ['1', '#ff4a12']].forEach(([o, c]) => svgEl('stop', { offset: o, 'stop-color': c }, sg));
+for (let i = 0; i < 120; i++) {
+  const a = i * 3, [x1, y1] = pt(300, a), [x2, y2] = pt(i % 5 ? 320 : 336, a);
+  svgEl('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: '#fff', 'stroke-opacity': i % 5 ? .12 : .32, 'stroke-width': 2 }, sv);
+}
+svgEl('circle', { r: 270, fill: 'none', stroke: 'rgba(255,255,255,.06)', 'stroke-width': 26 }, sv);
+const specArc = svgEl('circle', { r: 270, fill: 'none', stroke: 'url(#specG)', 'stroke-width': 26, 'stroke-dasharray': `0 ${2 * Math.PI * 270}`, transform: 'rotate(-90)', style: 'transition:stroke-dasharray 2.6s var(--ease)' }, sv);
+svgEl('circle', { r: 270, fill: 'none', stroke: '#050507', 'stroke-width': 28, 'stroke-dasharray': '1.6 7', transform: 'rotate(-90)' }, sv);
+for (let i = 0; i < 72; i++) {
+  const a = i * 5, [x1, y1] = pt(160, a), [x2, y2] = pt(220, a);
+  svgEl('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: ramp(innerStops, a), 'stroke-width': 4, 'stroke-opacity': .7 }, sv);
+}
+const st = svgEl('text', { y: 18, 'text-anchor': 'middle', fill: '#fff', 'font-family': 'Geist, sans-serif', 'font-weight': 200, 'font-size': 120, 'letter-spacing': -6 }, sv); st.textContent = '305';
+const st2 = svgEl('text', { y: 70, 'text-anchor': 'middle', fill: '#8b8a96', 'font-family': 'Geist Mono, monospace', 'font-size': 18, 'letter-spacing': 5 }, sv); st2.textContent = 'KM/H · VMAX';
+new IntersectionObserver(([e], o) => { if (e.isIntersecting) { specArc.setAttribute('stroke-dasharray', `${2 * Math.PI * 270 * .82} ${2 * Math.PI * 270}`); o.disconnect(); } }, { threshold: .4 }).observe(sv);
+const clock = $('#specClock');
+setInterval(() => { const d = new Date(); clock.textContent = [d.getHours(), d.getMinutes(), d.getSeconds()].map(pad).join(':'); }, 1000);
+
+/* ---------- Horizon ticks ---------- */
+const hz = $('#horizonSvg');
+for (let i = 0; i < 180; i++) {
+  const a = i * 2, [x1, y1] = pt(462, a), [x2, y2] = pt(i % 5 ? 474 : 486, a);
+  svgEl('line', { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: '#fff', 'stroke-opacity': i % 5 ? .1 : .3, 'stroke-width': 1.2 }, hz);
+}
+for (let i = 0; i < 5; i++) {
+  const c = -60 + i * 30, L = LEVELS[i];
+  svgEl('path', { d: sector(500, 512, c - 14, c + 14), fill: L.color, 'fill-opacity': .9 }, hz);
+}
+
+/* ---------- Form ---------- */
+$('#form').addEventListener('submit', e => {
+  e.preventDefault();
+  const note = $('#formNote');
+  note.textContent = 'Allocation request received · We will be in touch';
+  note.classList.add('ok');
+  e.target.reset();
+});
+})();
+</script>
+</body>
+</html>
+```
+

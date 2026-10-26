@@ -6,7 +6,7 @@ An autumn lake painted in pure CSS, die-cut sticker type, and a live agent run t
 
 **Open it:** [`index.html`](index.html) runs straight from disk — one file, every asset inlined, no build step. [Live demo](https://instalanding.ai/demos/grain-motion-system.html) · [Page on InstaLanding](https://instalanding.ai/prompt/grain-motion-system-page)
 
-**Build it yourself:** [`PROMPT.md`](PROMPT.md) is the one-shot brief this file was built from. Paste it into any AI builder or coding agent.
+**The prompt:** [`PROMPT.md`](PROMPT.md) is this same file with a short instruction on top: keep the design, replace the brand and copy, convert to your stack. Paste it into Claude Code, Cursor, ChatGPT or any builder and it builds this page.
 
 | | |
 | --- | --- |
@@ -16,7 +16,7 @@ An autumn lake painted in pure CSS, die-cut sticker type, and a live agent run t
 | Libraries | none — plain HTML, CSS and JS |
 | Fonts | Cherry Bomb One, Geist, Geist Mono (Google Fonts) |
 | Uses | inline-svg, inlined-images, reduced-motion |
-| Size | 172 KB · brief ~2,854 tokens |
+| Size | 172 KB · prompt ~44,191 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 

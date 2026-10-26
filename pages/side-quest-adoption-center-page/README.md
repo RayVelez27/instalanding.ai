@@ -6,7 +6,7 @@ A butter-yellow adoption center for ideas you have no time for: a waving page ma
 
 **Open it:** [`index.html`](index.html) runs straight from disk — one file, every asset inlined, no build step. [Live demo](https://instalanding.ai/demos/side-quest-adoption.html) · [Page on InstaLanding](https://instalanding.ai/prompt/side-quest-adoption-center-page)
 
-**Build it yourself:** [`PROMPT.md`](PROMPT.md) is the one-shot brief this file was built from. Paste it into any AI builder or coding agent.
+**The prompt:** [`PROMPT.md`](PROMPT.md) is this same file with a short instruction on top: keep the design, replace the brand and copy, convert to your stack. Paste it into Claude Code, Cursor, ChatGPT or any builder and it builds this page.
 
 | | |
 | --- | --- |
@@ -16,7 +16,7 @@ A butter-yellow adoption center for ideas you have no time for: a waving page ma
 | Libraries | none — plain HTML, CSS and JS |
 | Fonts | Gloock, Schibsted Grotesk (Google Fonts) |
 | Uses | inline-svg, inlined-images, reduced-motion |
-| Size | 99 KB · brief ~1,579 tokens |
+| Size | 99 KB · prompt ~25,523 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 

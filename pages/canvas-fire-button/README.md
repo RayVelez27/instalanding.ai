@@ -6,7 +6,7 @@ Procedural canvas flame toggle with embers, hold-to-supercharge and a live playg
 
 **Open it:** [`index.html`](index.html) runs straight from disk — one file, every asset inlined, no build step. [Live demo](https://instalanding.ai/demos/fire-button.html) · [Page on InstaLanding](https://instalanding.ai/prompt/canvas-fire-button)
 
-**Build it yourself:** [`PROMPT.md`](PROMPT.md) is the one-shot brief this file was built from. Paste it into any AI builder or coding agent.
+**The prompt:** [`PROMPT.md`](PROMPT.md) is this same file with a short instruction on top: keep the design, replace the brand and copy, convert to your stack. Paste it into Claude Code, Cursor, ChatGPT or any builder and it builds this page.
 
 | | |
 | --- | --- |
@@ -16,7 +16,7 @@ Procedural canvas flame toggle with embers, hold-to-supercharge and a live playg
 | Libraries | none — plain HTML, CSS and JS |
 | Fonts | Bricolage Grotesque, Instrument Serif, JetBrains Mono (Google Fonts) |
 | Uses | canvas-2d, inline-svg, reduced-motion |
-| Size | 73 KB · brief ~1,168 tokens |
+| Size | 73 KB · prompt ~18,803 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 
