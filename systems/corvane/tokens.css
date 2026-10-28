@@ -1,0 +1,80 @@
+/* InstaLanding design system · Corvane · corvane@1.0.0
+   Extracted from https://instalanding.ai/demos/corvane-capital.html
+   Fonts (Google Fonts): Instrument Serif 400 + italic (display), Inter Tight 300-600 (text), JetBrains Mono 400-500 (labels)
+   Tones: every data-cv-tone (dark, ivory, bone, gold) re-points the four "Color · tone" tokens; these are the dark defaults */
+:root {
+  /* Color · core */
+  --cv-ink: #0A0B0D;
+  --cv-ink-2: #111317;
+  --cv-ivory: #EEEAE1;
+  --cv-bone: #E3DDD1;
+  --cv-gold: #C6A15B;
+  --cv-gold-hi: #E6CC93;
+  --cv-champ: #BFA06A;
+  --cv-bronze: #8E6B2B;
+  --cv-muted: #7F838A;
+
+  /* Color · status */
+  --cv-live: #3C8C5A;
+
+  /* Color · tone */
+  --cv-rule: rgba(238,234,225,.09);
+  --cv-soft: rgba(238,234,225,.56);
+  --cv-acc: var(--cv-gold);
+  --cv-chip: rgba(238,234,225,.06);
+
+  /* Type · families */
+  --cv-font-display: "Instrument Serif", Georgia, serif;
+  --cv-font-text: "Inter Tight", system-ui, sans-serif;
+  --cv-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Type · scale */
+  --cv-index: clamp(3rem, 8vw, 8.4rem);
+  --cv-figure: clamp(3.8rem, 7.4vw, 7rem);
+  --cv-closing: clamp(2.7rem, 5.8vw, 5.6rem);
+  --cv-display: clamp(2.5rem, 5.2vw, 4.8rem);
+  --cv-statement: clamp(2.2rem, 4.6vw, 4.4rem);
+  --cv-stat: clamp(2.6rem, 4.2vw, 4rem);
+  --cv-quote: clamp(2.1rem, 3.9vw, 3.8rem);
+  --cv-aim: clamp(2.6rem, 3.6vw, 3.6rem);
+  --cv-title: clamp(2rem, 3.3vw, 3.2rem);
+  --cv-step: clamp(1.9rem, 3vw, 2.8rem);
+  --cv-ledger: clamp(1.5rem, 2.2vw, 2rem);
+  --cv-h3: clamp(1.4rem, 2vw, 1.8rem);
+  --cv-lead: clamp(1.08rem, 1.3vw, 1.26rem);
+  --cv-body: 16px;
+  --cv-label: .7rem;
+  --cv-label-sm: .66rem;
+  --cv-micro: .62rem;
+
+  /* Shape · radii */
+  --cv-r: 2px;
+
+  /* Shape · borders */
+  --cv-hairline: 1px;
+  --cv-bar: 2px;
+
+  /* Depth · grain and shade */
+  --cv-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --cv-shade: linear-gradient(to top, rgba(10,11,13,.85), transparent);
+  --cv-shadow-card: 0 1px 0 rgba(10,11,13,.04);
+
+  /* Motion · easing */
+  --cv-ease: cubic-bezier(.7,0,.2,1);
+
+  /* Motion · durations */
+  --cv-dur-quick: .35s;
+  --cv-dur: .4s;
+  --cv-dur-fill: .45s;
+  --cv-dur-tone: .5s;
+  --cv-dur-wipe: .55s;
+  --cv-dur-sheet: .6s;
+  --cv-dur-pass: .7s;
+  --cv-dur-slow: 1.4s;
+
+  /* Space · layout */
+  --cv-pad: clamp(16px, 2.5vw, 32px);
+  --cv-cell: clamp(12px, 1.3vw, 18px);
+  --cv-hdr: 72px;
+  --cv-sp: clamp(104px, 12vw, 192px);
+}

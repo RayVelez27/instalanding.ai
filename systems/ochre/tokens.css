@@ -1,0 +1,73 @@
+/* InstaLanding design system · Ochre · ochre@1.0.0
+   Extracted from https://instalanding.ai/demos/ochre-meditation.html
+   Fonts (Google Fonts): Reddit Sans 200-900 (everything; display set at 100-300) */
+:root {
+  /* Color · core */
+  --oh-ink: #01262D;
+  --oh-paper: #F5C279;
+  --oh-sun: #EE8903;
+  --oh-sage: #586354;
+  --oh-khaki: #8C7D5A;
+  --oh-rust: #9A4703;
+
+  /* Color · derived */
+  --oh-dim-on-ink: color-mix(in oklab, var(--oh-paper) 26%, var(--oh-ink));
+  --oh-soft-on-ink: color-mix(in oklab, var(--oh-paper) 72%, var(--oh-ink));
+  --oh-soft-on-paper: color-mix(in oklab, var(--oh-ink) 78%, var(--oh-paper));
+
+  /* Type · families */
+  --oh-font-display: "Reddit Sans", system-ui, sans-serif;
+  --oh-font-text: "Reddit Sans", system-ui, sans-serif;
+
+  /* Type · scale */
+  --oh-numeral: clamp(110px, 14vw, 230px);
+  --oh-date: clamp(96px, 12vw, 210px);
+  --oh-call: clamp(60px, 10.2vw, 184px);
+  --oh-display: clamp(46px, 7.4vw, 124px);
+  --oh-statement: clamp(34px, 4.7vw, 78px);
+  --oh-row: clamp(38px, 4.6vw, 76px);
+  --oh-ticker: clamp(30px, 3.6vw, 58px);
+  --oh-h3: clamp(24px, 2.3vw, 36px);
+  --oh-quote: clamp(21px, 1.7vw, 27px);
+  --oh-lead: clamp(18px, 1.1vw + 10px, 23px);
+  --oh-text: clamp(16px, .45vw + 12px, 18px);
+  --oh-button: 15px;
+  --oh-meta: 13px;
+  --oh-label: 12.5px;
+  --oh-micro: 12px;
+
+  /* Shape · radii */
+  --oh-pill: 999px;
+  --oh-r-glass: 24px;
+
+  /* Shape · borders */
+  --oh-rule: 1px;
+  --oh-rule-double: 5px;
+
+  /* Depth · grain, glass and shadow */
+  --oh-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --oh-glass: blur(14px) saturate(1.5);
+  --oh-shadow-card: 0 34px 60px -30px color-mix(in oklab, var(--oh-ink) 70%, transparent);
+  --oh-shadow-shot: 0 34px 60px -34px color-mix(in oklab, var(--oh-ink) 75%, transparent);
+
+  /* Motion · easing */
+  --oh-ease: cubic-bezier(.2, .7, .1, 1);
+  --oh-ease-breath: cubic-bezier(.45,0,.55,1);
+
+  /* Motion · durations */
+  --oh-dur-quick: .35s;
+  --oh-dur: .45s;
+  --oh-dur-fill: .5s;
+  --oh-dur-wipe: .55s;
+  --oh-dur-row: .6s;
+  --oh-dur-line: .8s;
+  --oh-dur-image: 1.4s;
+  --oh-breath: 10s;
+  --oh-tick: 46s;
+
+  /* Space · layout */
+  --oh-gut: clamp(16px, 3.4vw, 48px);
+  --oh-maxw: 1520px;
+  --oh-head-h: 64px;
+  --oh-sec: clamp(96px, 12vw, 180px);
+}

@@ -1,0 +1,99 @@
+/* InstaLanding design system · Lemegeton · lemegeton@1.0.0
+   Extracted from https://instalanding.ai/demos/lemegeton-antivirus.html
+   Fonts: system stacks led by Roboto Condensed (UI, labels), Hiragino / Yu Mincho / Noto Serif JP (display and kanji) and ui-monospace (readouts) */
+:root {
+  /* Color · core */
+  --lm-black: #000000;
+  --lm-amber: #FFAA00;
+  --lm-glow: #FF6600;
+  --lm-danger: #FF3300;
+  --lm-ok: #33FF66;
+
+  /* Color · danger */
+  --lm-danger-fill: #FF2233;
+  --lm-danger-glow: #FF0000;
+
+  /* Color · text and surfaces */
+  --lm-white: #F4EFE6;
+  --lm-text: #E2D9CB;
+  --lm-dim: #D9902A;
+  --lm-muted: #C08A4E;
+  --lm-track: #1D0B02;
+  --lm-cell-off: #2A0D03;
+  --lm-term-time: #B0A796;
+  --lm-term-file: #D6CDBF;
+
+  /* Color · ranks */
+  --lm-king: #FFAA00;
+  --lm-duke: #FF6A2B;
+  --lm-prince: #D59BFF;
+  --lm-marquis: #4FD6FF;
+  --lm-president: #57FF7A;
+  --lm-earl: #FFE14D;
+  --lm-knight: #F2F2F2;
+  --lm-blood: #FF3B30;
+
+  /* Color · alert mode */
+  --lm-alert-glow: #FF1428;
+  --lm-alert-amber: #FF3B30;
+  --lm-alert-dim: #FF5A4F;
+  --lm-alert-muted: #E06A5F;
+
+  /* Color · derived */
+  --lm-line: color-mix(in srgb, var(--lm-glow) 45%, transparent);
+  --lm-line-soft: color-mix(in srgb, var(--lm-glow) 18%, transparent);
+  --lm-accent: var(--lm-amber);
+  --lm-accent-glow: var(--lm-glow);
+
+  /* Type · families */
+  --lm-font-cond: "Roboto Condensed", "Arial Narrow", "Helvetica Neue Condensed", "Liberation Sans Narrow", "Nimbus Sans Narrow", "Avenir Next Condensed", "Helvetica Neue", Arial, sans-serif;
+  --lm-font-serif: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", "Noto Serif CJK JP", "Source Han Serif", "Times New Roman", Times, serif;
+  --lm-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Type · scale */
+  --lm-fs: 14px;
+  --lm-lh: 23px;
+  --lm-hero: clamp(44px, 6vw, 104px);
+  --lm-final: clamp(44px, 7vw, 120px);
+  --lm-summon: clamp(44px, 5.4vw, 86px);
+  --lm-h2: calc(var(--lm-fs) * 3.6);
+  --lm-figure: calc(var(--lm-fs) * 3.4);
+  --lm-label-lg: calc(var(--lm-fs) * 2.3);
+  --lm-small: calc(var(--lm-fs) * .93);
+  --lm-micro: calc(var(--lm-fs) * .86);
+  --lm-term: 12.5px;
+
+  /* Shape · radii */
+  --lm-r-card: 10px;
+  --lm-r-panel: 8px;
+  --lm-r-btn: 6px;
+  --lm-r-chip: 5px;
+
+  /* Shape · borders */
+  --lm-border: 2px;
+  --lm-border-heavy: 3px;
+
+  /* Depth · glow, stripes and scanlines */
+  --lm-scanlines: repeating-linear-gradient(to bottom, rgba(0,0,0,.28) 0 1px, transparent 1px 3px);
+  --lm-grid-size: 36px;
+  --lm-stripe: 15px;
+
+  /* Motion · easing */
+  --lm-ease: cubic-bezier(.2,.7,.2,1);
+  --lm-step: steps(2, jump-none);
+
+  /* Motion · durations */
+  --lm-dur: .45s;
+  --lm-dur-lift: .5s;
+  --lm-dur-pulse: 1.6s;
+  --lm-dur-blink: 3s;
+  --lm-dur-ward: 90s;
+  --lm-dur-ward-inner: 24s;
+  --lm-dur-seal: 300s;
+  --lm-dur-seal-inner: 120s;
+
+  /* Space · layout */
+  --lm-gutter: 8px;
+  --lm-pad: min(5vw, 110px);
+  --lm-sec: clamp(60px, 8vw, 120px);
+}
