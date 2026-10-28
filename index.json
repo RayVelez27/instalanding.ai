@@ -2,8 +2,517 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 71,
+  "count": 80,
   "pages": [
+    {
+      "slug": "linework-ai-architect-assistant-page",
+      "title": "Linework AI Architect Assistant Page",
+      "description": "A quiet, paper-white page for an AI architect assistant where everything is drawn line by line in code: an amphitheatre in ink with a roaming blue blueprint lens, a skyline of nine procedural buildings you filter and open into a drawing-versus-render slider, a house that draws itself stage by stage as you scroll, and a harbour city footer",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 28, 2026",
+      "bestFor": [
+        "architecture and AEC software",
+        "design and CAD tools",
+        "AI assistants for professionals",
+        "studios with a portfolio"
+      ],
+      "style": [
+        "light",
+        "minimal",
+        "line-drawing",
+        "svg-illustration",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "mobile-nav",
+        "hero",
+        "services",
+        "projects",
+        "process",
+        "studio",
+        "quotes",
+        "footer",
+        "dialogs"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "IBM Plex Mono",
+          "Instrument Sans",
+          "Urbanist"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/linework-ai-architect-assistant-page/index.html",
+        "prompt": "pages/linework-ai-architect-assistant-page/PROMPT.md",
+        "preview": "pages/linework-ai-architect-assistant-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/linework-architect-assistant.html",
+      "page": "https://instalanding.ai/prompt/linework-ai-architect-assistant-page"
+    },
+    {
+      "slug": "ai-conf-frontier-ai-conference-page",
+      "title": "AI/CONF Frontier AI Conference Page",
+      "description": "A pink-and-cobalt bento page for a frontier AI conference: a huge outlined headline over slow orbit rings and a typed prompt, a sticky sidebar with a morphing glass orb agenda and a live countdown ticket, and navy scenes in liquid glass (a gooey neural net, a compute chip, an attention heatmap, test-tube benchmarks and server racks)",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 28, 2026",
+      "bestFor": [
+        "AI conferences and events",
+        "developer and research summits",
+        "ticketed launches with tiers",
+        "community meetups"
+      ],
+      "style": [
+        "light",
+        "bento",
+        "liquid-glass",
+        "svg-illustration",
+        "brutalist-type"
+      ],
+      "sections": [
+        "hero",
+        "nav",
+        "marquee",
+        "about",
+        "partners",
+        "program",
+        "tickets",
+        "testimonials",
+        "faq",
+        "journal",
+        "archive",
+        "sidebar",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Space Grotesk",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "Morphing orb by andrew-manzyk on Uiverse.io",
+          "href": "https://uiverse.io/",
+          "note": "The agenda card's morphing glass orb (MIT)"
+        }
+      ],
+      "files": {
+        "html": "pages/ai-conf-frontier-ai-conference-page/index.html",
+        "prompt": "pages/ai-conf-frontier-ai-conference-page/PROMPT.md",
+        "preview": "pages/ai-conf-frontier-ai-conference-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/ai-conf-frontier.html",
+      "page": "https://instalanding.ai/prompt/ai-conf-frontier-ai-conference-page"
+    },
+    {
+      "slug": "synthra-ai-workspace-page",
+      "title": "Synthra AI Workspace Page",
+      "description": "A bright lime SaaS page for an AI workspace of specialist agents: a phone running a live chat stands over a ticker of generative art tiles, then dark grainy cards with mesh gradients and glass panels carry the features, six sticky customer stories, pricing, six glowing agent orbs and a rotating 3D ring of product tiles",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 27, 2026",
+      "bestFor": [
+        "AI SaaS and agent platforms",
+        "productivity and workspace tools",
+        "B2B startups with pricing tiers",
+        "AI assistant launches"
+      ],
+      "style": [
+        "light",
+        "glassmorphism",
+        "mesh-gradient",
+        "generative-art",
+        "3d-css"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "partners",
+        "features",
+        "customer-stories",
+        "pricing",
+        "agents",
+        "testimonials",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Plus Jakarta Sans",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/synthra-ai-workspace-page/index.html",
+        "prompt": "pages/synthra-ai-workspace-page/PROMPT.md",
+        "preview": "pages/synthra-ai-workspace-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/synthra-ai-workspace.html",
+      "page": "https://instalanding.ai/prompt/synthra-ai-workspace-page"
+    },
+    {
+      "slug": "quillo-ai-tutor-page",
+      "title": "Quillo AI Tutor Page",
+      "description": "A bright, hand-made page for an AI tutor on a graph-paper grid: a giant QUILLO in a selection box with handles, sticky notes, cursor tags and owl avatars, a statement that lights word by word, draggable polaroids, four feature cards with folder tabs that stack as you scroll, and a googly-eyed blob that follows your cursor",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 27, 2026",
+      "bestFor": [
+        "edtech and AI tutoring",
+        "consumer AI products",
+        "school and classroom software",
+        "playful startup launches"
+      ],
+      "style": [
+        "light",
+        "playful",
+        "brutalist",
+        "svg-illustration",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "how-it-works",
+        "features",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Archivo",
+          "DM Mono",
+          "Inter Tight",
+          "Just Me Again Down Here"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/quillo-ai-tutor-page/index.html",
+        "prompt": "pages/quillo-ai-tutor-page/PROMPT.md",
+        "preview": "pages/quillo-ai-tutor-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/quillo-ai-tutor.html",
+      "page": "https://instalanding.ai/prompt/quillo-ai-tutor-page"
+    },
+    {
+      "slug": "auren-ai-meditation-guide-page",
+      "title": "Auren AI Meditation Guide Page",
+      "description": "A hushed, near-black page for an AI meditation guide: a counting intro splits open on a full-width AUREN wordmark over three living tiles (misty dawn ridges, the app mid-session, a breathing glass orb), a WebGL aurora band, sticky stacked cards of paired art, marquee rows of seventeen generative scenes and a stories carousel",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 27, 2026",
+      "bestFor": [
+        "wellness and meditation apps",
+        "consumer AI products",
+        "audio and sleep apps",
+        "calm, premium brand launches"
+      ],
+      "style": [
+        "dark",
+        "minimal",
+        "generative-art",
+        "webgl",
+        "scroll-driven"
+      ],
+      "sections": [
+        "intro",
+        "nav",
+        "hero",
+        "method",
+        "practices",
+        "how-it-works",
+        "explore",
+        "stories",
+        "journal",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "DM Sans",
+          "Instrument Serif"
+        ],
+        "features": [
+          "webgl",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/auren-ai-meditation-guide-page/index.html",
+        "prompt": "pages/auren-ai-meditation-guide-page/PROMPT.md",
+        "preview": "pages/auren-ai-meditation-guide-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/auren-ai-meditation.html",
+      "page": "https://instalanding.ai/prompt/auren-ai-meditation-guide-page"
+    },
+    {
+      "slug": "lumora-ai-home-solar-page",
+      "title": "Lumora AI Home Solar Page",
+      "description": "A warm, sunlit page for an AI that runs a home's solar and battery: a 3D modernist villa built from CSS boxes sits in a golden landscape and turns to evening with one switch, a manifesto lights word by word, a working energy dashboard tilts up into view, and Forecast, Store and Save slide past on a pinned horizontal track",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 26, 2026",
+      "bestFor": [
+        "climate tech and home energy",
+        "smart home and IoT apps",
+        "consumer AI products",
+        "subscription apps with a dashboard"
+      ],
+      "style": [
+        "light",
+        "3d-css",
+        "svg-illustration",
+        "scroll-driven",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "partners",
+        "manifesto",
+        "product",
+        "solutions",
+        "results",
+        "how-it-works",
+        "about",
+        "faq",
+        "estimate",
+        "early-access",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Inter",
+          "Inter Tight",
+          "Newsreader",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/lumora-ai-home-solar-page/index.html",
+        "prompt": "pages/lumora-ai-home-solar-page/PROMPT.md",
+        "preview": "pages/lumora-ai-home-solar-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/lumora-home-solar.html",
+      "page": "https://instalanding.ai/prompt/lumora-ai-home-solar-page"
+    },
+    {
+      "slug": "orrery-ai-services-ring-page",
+      "title": "Orrery AI Services Ring Page",
+      "description": "A single-screen carousel for an AI platform of nine services: nine glass lenses with refracting edges turn on a ticked ring, each opening a full-screen world painted live in canvas (a neon city in rain, an aurora over a frozen lake, a synthwave horizon, a reef, Earth from orbit, cherry blossom, a circuit canyon, a crystal cave, a Mars base) as the accent colour drifts to match",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 26, 2026",
+      "bestFor": [
+        "AI platforms with many products",
+        "multi-product SaaS",
+        "AI agencies and studios",
+        "immersive brand launches"
+      ],
+      "style": [
+        "dark",
+        "canvas-art",
+        "glassmorphism",
+        "carousel",
+        "immersive"
+      ],
+      "sections": [
+        "nav",
+        "ring",
+        "hud",
+        "about",
+        "contact"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Instrument Serif",
+          "Geist",
+          "Geist Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/orrery-ai-services-ring-page/index.html",
+        "prompt": "pages/orrery-ai-services-ring-page/PROMPT.md",
+        "preview": "pages/orrery-ai-services-ring-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/orrery-services-ring.html",
+      "page": "https://instalanding.ai/prompt/orrery-ai-services-ring-page"
+    },
+    {
+      "slug": "orvane-ai-lidar-drone-page",
+      "title": "Orvane AI LiDAR Drone Page",
+      "description": "A pale survey-instrument page for an AI LiDAR drone: a point-cloud preloader splits open on a shaded 3D drone sweeping a laser line across scanned terrain, sticky scenes flag a sagging bridge, morph point clouds between industries and draw a mountain range line by line, and a working controller lets you fly the drone",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 26, 2026",
+      "bestFor": [
+        "drones and robotics",
+        "industrial inspection and infrastructure AI",
+        "geospatial and mapping",
+        "hardware product launches"
+      ],
+      "style": [
+        "light",
+        "minimal",
+        "canvas-art",
+        "3d-canvas",
+        "scroll-driven",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "promise",
+        "gear",
+        "numbers",
+        "solutions",
+        "capabilities",
+        "controller",
+        "software",
+        "terrain",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Inter Tight",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/orvane-ai-lidar-drone-page/index.html",
+        "prompt": "pages/orvane-ai-lidar-drone-page/PROMPT.md",
+        "preview": "pages/orvane-ai-lidar-drone-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/orvane-lidar-drone.html",
+      "page": "https://instalanding.ai/prompt/orvane-ai-lidar-drone-page"
+    },
+    {
+      "slug": "kairo-ai-time-assistant-page",
+      "title": "Kairo AI Time Assistant Page",
+      "description": "A near-black product page for an AI assistant that tracks your time: a huge glowing \"Meet Kairo.\" splits in letter by letter beside a tilting 3D phone whose live app types out the assistant's messages, bento cards draw timelines, focus rings and charts, integrations orbit a second phone, and a dark / light switch re-skins the app",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 26, 2026",
+      "bestFor": [
+        "AI assistants and productivity apps",
+        "time tracking and invoicing SaaS",
+        "mobile app launches",
+        "freelancer and agency tools"
+      ],
+      "style": [
+        "dark",
+        "bento",
+        "css-device-mockup",
+        "glow",
+        "micro-interactions"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "experience",
+        "integration",
+        "stats",
+        "download",
+        "sign-up",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Inter",
+          "Inter Tight",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/kairo-ai-time-assistant-page/index.html",
+        "prompt": "pages/kairo-ai-time-assistant-page/PROMPT.md",
+        "preview": "pages/kairo-ai-time-assistant-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/kairo-time-assistant.html",
+      "page": "https://instalanding.ai/prompt/kairo-ai-time-assistant-page"
+    },
     {
       "slug": "plinth-ai-merchant-agents-page",
       "title": "Plinth AI Merchant Agents Page",

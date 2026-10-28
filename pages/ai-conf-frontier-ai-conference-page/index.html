@@ -1,0 +1,1094 @@
+<!doctype html>
+<!--
+  INSTALANDING.AI · AI/CONF Frontier AI Conference Page
+  slug     ai-conf-frontier-ai-conference-page
+  prompt   https://instalanding.ai/p/ai-conf-frontier-ai-conference-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/ai-conf-frontier-ai-conference-page
+  license  Fictional event ("AI/CONF"); every speaker, attendee, quote, price, stat and date is invented.
+           Replace names and copy before shipping. Every picture is CSS or inline SVG drawn in code; no image files.
+           The agenda orb's morphing mask is adapted from Uiverse.io by andrew-manzyk (credited inline).
+
+  MAP
+  tokens    one :root block at the top of the <style>: --pink / --pink2 with alpha steps, --blue / --blue-d with
+            alpha steps, --gray, --white, --navy, --r (12px radius), --mono; Space Grotesk and JetBrains Mono
+  sections  nav, hero, marquee, about, partners, program, tickets, testimonials, faq, journal, archive, sidebar,
+            contact, footer (each carries data-section)
+  scripts   one plain script, no libraries: mobile menu, FAQ toggles, fake form submits, a mobile bottom bar shown
+            after the hero, scroll reveal, marquee duplication, partner tile spotlight, a typed prompt line, a
+            regenerating attention heatmap, data-centre rack LEDs and a live countdown to 14 Apr 2027
+  assets    no image files; an SVG <defs> block at the top of <body> holds the icons, two portrait figures, the
+            "liquid glass" gradients and the goo filters every scene shares
+
+  ADAPTING
+  - Layout is an 8-column grid: six columns of stacked rounded boxes and a two-column sticky sidebar (agenda orb
+    and ticket with countdown). Under 1160px the sidebar drops out and a fixed bottom ticket bar takes over.
+  - Scenes reuse .depth (navy field), .floor (moving perspective grid), .halo and the #goo / #liquidR defs.
+  - prefers-reduced-motion: every animation and transition is off and revealed content shows at once.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI/CONF – The Frontier AI Conference 04/2027</title>
+<meta name="description" content="AI/CONF 2027 — two days of frontier research, hands-on agent labs and live model demos for the people building AI. San Francisco, April 2027.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#ffb3c1; --pink2:#fdc0cb; --pink60:#ffb3c199; --pink30:#ffb3c14d;
+  --blue:#0027ba; --blue-d:#002099; --blue60:#0027ba99; --blue40:#0027ba66; --blue15:#0027ba26; --blue7:#0027ba12;
+  --gray:#e8eaf1; --white:#f4f4f4; --white60:#f4f4f499; --white40:#f4f4f466; --white25:#f4f4f440; --white10:#f4f4f41a;
+  --navy:#000a32; --navy2:#00113f;
+  --r:12px;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--blue);font-family:"Space Grotesk",Arial,sans-serif;font-size:14px;line-height:1.2;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+svg{display:block}
+::selection{background:var(--blue);color:var(--pink)}
+
+/* grain overlay for a premium print feel */
+.grain{position:relative}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;mix-blend-mode:overlay;border-radius:inherit;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ---------- type ---------- */
+.label{font-size:14px;font-weight:500;line-height:1.04;text-transform:uppercase}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase}
+.body{font-size:14px;line-height:1.3}
+.t20{font-size:20px;font-weight:500;line-height:1.04;letter-spacing:-.2px;text-transform:uppercase}
+.h1{font-size:min(128px,11.5vh);font-weight:400;line-height:.88;letter-spacing:-6.4px;text-transform:uppercase;text-align:center}
+.h1 em{font-style:normal;-webkit-text-stroke:2px var(--blue);color:transparent}
+.h2{font-size:64px;font-weight:400;line-height:.88;letter-spacing:-3.2px;text-transform:uppercase}
+.h3{font-size:36px;font-weight:400;line-height:1.04;letter-spacing:-1.8px;text-transform:uppercase}
+.h4{font-size:24px;font-weight:400;line-height:1.04;letter-spacing:-.72px;text-transform:uppercase}
+.stat{font-size:64px;line-height:.88;letter-spacing:-3.2px;text-transform:uppercase}
+.quote{font-size:20px;font-weight:500;line-height:1.08;letter-spacing:-.2px}
+
+/* ---------- layout ---------- */
+.container{max-width:1920px;margin:0 auto;padding:0 8px}
+.layout{display:grid;grid-template-columns:repeat(8,minmax(1px,1fr));gap:8px}
+.content{grid-column:span 6;display:flex;flex-direction:column}
+.sidebar{grid-column:span 2;position:sticky;top:0;height:100vh;padding:8px 0;display:flex;flex-direction:column;gap:8px;z-index:1}
+section{display:flex;flex-direction:column;gap:8px;padding-bottom:8px}
+.box{border-radius:var(--r);padding:56px 32px 64px;overflow:hidden;position:relative}
+.bg-pink{background:var(--pink)}.bg-pink2{background:var(--pink2)}.bg-blue{background:var(--blue)}.bg-gray{background:var(--gray)}.bg-navy{background:var(--navy)}
+.grid{display:grid;gap:8px}
+.g2{grid-template-columns:repeat(2,minmax(1px,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(1px,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(1px,1fr))}
+
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;position:relative;z-index:1}
+.sh-left{display:flex;flex-direction:column;gap:20px;max-width:440px;flex:1}
+.sh-left .label{padding-left:4px}
+.sh p.body{max-width:300px;flex:1}
+.on-blue{color:var(--pink)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:16px 20px;border-radius:1000px;border:1px solid var(--blue);background:var(--blue);color:var(--pink);font-size:14px;font-weight:500;text-transform:uppercase;line-height:1.04;transition:background .3s,color .3s,box-shadow .3s;white-space:nowrap}
+.btn .ar{width:16px;height:16px;transition:transform .35s}
+.btn:hover{background:var(--pink);color:var(--blue);box-shadow:0 8px 30px -10px var(--blue60)}
+.btn:hover .ar{transform:translate(3px,-3px)}
+.btn.ghost{background:transparent;border-color:var(--white);color:var(--white)}
+.btn.ghost:hover{background:var(--white);color:var(--blue)}
+.btn.pinkb{background:var(--pink);border-color:var(--pink);color:var(--blue)}
+.btn.pinkb:hover{background:transparent;color:var(--pink)}
+.btn.full{width:100%;justify-content:center}
+.ar{fill:currentColor}
+
+/* ---------- nav ---------- */
+.nav{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:10}
+.logo{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:500;letter-spacing:-.2px;text-transform:uppercase;padding:0 2px}
+.logo svg{width:22px;height:22px}
+.menu{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;border:1px solid var(--blue);border-radius:1000px;padding:8px;backdrop-filter:blur(8px);background:#ffb3c133}
+.menu a{padding:8px 12px;border-radius:1000px;transition:background .25s,color .25s}
+.menu a:hover{background:var(--blue);color:var(--pink)}
+.burger{display:none;width:46px;height:46px;border-radius:50%;background:var(--blue);position:relative}
+.burger i{position:absolute;left:16px;width:14px;height:1px;background:var(--pink);border-radius:9px;transition:.3s}
+.burger i:nth-child(1){top:18px}.burger i:nth-child(2){top:23px}.burger i:nth-child(3){top:28px}
+.mobile-menu{display:none}
+
+/* ---------- hero ---------- */
+.hero{height:100vh;min-height:768px;padding:8px 0;display:flex;flex-direction:column;gap:8px}
+.hero-main{flex:1;border-radius:var(--r);background:radial-gradient(ellipse 80% 70% at 50% 55%,#ffc5d0 0%,var(--pink) 60%);padding:24px 32px 32px;display:flex;flex-direction:column;gap:32px;position:relative;overflow:hidden}
+.hero-orbit{position:absolute;left:50%;top:54%;width:min(78vh,720px);aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none}
+.hero-orbit svg{width:100%;height:100%;animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-center{flex:1;max-width:860px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:24px;position:relative;z-index:1}
+.badge{display:inline-flex;align-items:center;gap:10px;padding:8px 14px 8px 10px;border-radius:1000px;border:1px solid var(--blue40);background:#ffffff40;backdrop-filter:blur(6px)}
+.badge .live{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 0 var(--blue60);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px #0027ba00}100%{box-shadow:0 0 0 0 #0027ba00}}
+.hero-sub{max-width:520px;text-align:center;font-size:16px;line-height:1.35}
+.hero-cta{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.btn.outline{background:transparent;color:var(--blue)}
+.btn.outline:hover{background:var(--blue);color:var(--pink)}
+.prompt{font-family:var(--mono);font-size:13px;color:var(--blue);display:flex;gap:8px;align-items:center;opacity:.85}
+.prompt .caret{width:8px;height:15px;background:var(--blue);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.info{background:var(--blue);border-radius:var(--r);padding:32px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.info .label{color:var(--pink60)}
+.info .t20{color:var(--pink);white-space:pre-line}
+.info .ico{position:absolute;right:24px;top:24px;width:28px;height:28px;stroke:var(--pink30);fill:none;stroke-width:1.4}
+
+/* marquee */
+.marquee{background:var(--navy);border-radius:var(--r);overflow:hidden;padding:18px 0;position:relative}
+.marquee::before,.marquee::after{content:"";position:absolute;top:0;bottom:0;width:80px;z-index:1}
+.marquee::before{left:0;background:linear-gradient(90deg,var(--navy),transparent)}
+.marquee::after{right:0;background:linear-gradient(-90deg,var(--navy),transparent)}
+.mtrack{display:flex;gap:40px;width:max-content;animation:scroll 40s linear infinite;color:var(--pink)}
+.mtrack span{display:flex;align-items:center;gap:40px;white-space:nowrap}
+.mtrack span::after{content:"✦";color:var(--pink60)}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* ---------- speakers ---------- */
+.speaker{position:relative;aspect-ratio:.673;border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.speaker .portrait{position:absolute;inset:0}
+.speaker .portrait svg{width:100%;height:100%;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.speaker:hover .portrait svg{transform:scale(1.05)}
+.speaker .tag{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;z-index:1}
+.speaker .tag span{padding:6px 10px;border-radius:1000px;background:#000a3266;backdrop-filter:blur(8px);color:var(--pink)}
+.pinfo{position:relative;background:var(--blue);border-radius:var(--r);padding:28px 32px 32px;display:flex;flex-direction:column;gap:6px}
+.pinfo .t20{color:var(--pink)}
+.pinfo .label{color:var(--pink60)}
+.pinfo .talk{margin-top:12px;padding-top:12px;border-top:1px solid var(--pink30);color:var(--pink);font-size:13px;line-height:1.3}
+
+/* ---------- about ---------- */
+.acard{background:var(--gray);border-radius:var(--r);padding:40px 32px;display:flex;flex-direction:column;gap:136px}
+.acard .top{display:flex;justify-content:space-between;align-items:flex-start}
+.acard .top svg{width:80px;height:80px}
+.acard .num{color:var(--blue40)}
+.acard .txt{display:flex;flex-direction:column;gap:12px;max-width:420px}
+.acard .txt .h3{max-width:300px}
+.scene{border-radius:var(--r);overflow:hidden;position:relative;min-height:433px}
+
+/* scene: neural core */
+/* shared "depth" look: navy radial field, perspective grid floor, soft halo */
+.depth,.core{background:radial-gradient(ellipse at 50% 42%,#0b2a9e 0%,var(--navy) 68%)}
+.halo{position:absolute;left:50%;top:44%;width:72%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#ffb3c166 0%,#0027ba55 42%,transparent 70%);animation:breathe 6s ease-in-out infinite}
+.halo.b{background:radial-gradient(circle,#5d7bff88 0%,#0027ba55 42%,transparent 70%)}
+.floor{position:absolute;left:-50%;right:-50%;bottom:-10%;height:55%;transform:perspective(300px) rotateX(62deg);transform-origin:bottom;
+  background:linear-gradient(var(--pink30) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,var(--pink30) 1px,transparent 1px) 0 0/48px 48px;
+  mask:linear-gradient(0deg,#000 10%,transparent 90%);-webkit-mask:linear-gradient(0deg,#000 10%,transparent 90%);animation:grid 3s linear infinite}
+@keyframes grid{to{background-position:0 48px,0 0}}
+.core .orb{position:absolute;left:50%;top:42%;width:42%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff 0%,var(--pink) 22%,#ff8fa8 45%,var(--blue) 80%);box-shadow:0 0 80px 10px #ffb3c180,0 0 200px 40px #0027ba90;animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{50%{transform:translate(-50%,-50%) scale(1.06)}}
+.core .rings{position:absolute;left:50%;top:42%;width:80%;aspect-ratio:1;transform:translate(-50%,-50%)}
+.core .rings svg{width:100%;height:100%;animation:spin 30s linear infinite}
+.hud{position:absolute;left:20px;bottom:20px;right:20px;display:flex;justify-content:space-between;color:var(--pink);z-index:2}
+
+/* scene: chip */
+.chip svg.die{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.chip .halo{top:46%;width:90%}
+.chip .trace{stroke-dasharray:6 10;animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-32}}
+
+/* scene: attention heatmap */
+.attn{padding:32px;display:flex;flex-direction:column;gap:16px}
+.attn>*:not(.floor):not(.halo){position:relative;z-index:1}
+.attn .hgrid{flex:1;display:grid;gap:3px;padding:12px;border-radius:12px;border:1px solid #ffb3c133;background:#ffffff08;backdrop-filter:blur(6px);
+  box-shadow:0 30px 60px -20px #000,inset 0 1px 0 #ffffff1a;transform:perspective(900px) rotateX(14deg);transform-origin:bottom}
+.attn .hgrid i{border-radius:3px;background:var(--pink);box-shadow:0 0 8px #ffb3c1aa;transition:opacity 1.2s}
+.attn .row{display:flex;justify-content:space-between;color:var(--pink60)}
+.attn .halo{top:55%}
+
+/* scene: data center */
+.dc .racks{position:absolute;inset:16% 8% 22%;z-index:1;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;perspective:600px}
+.dc .rack{background:linear-gradient(180deg,#0a1a5c,#04103d);border:1px solid #ffb3c12e;border-radius:6px;box-shadow:0 24px 40px -10px #000,0 0 30px -8px #5d7bff66;-webkit-box-reflect:below 6px linear-gradient(transparent 55%,#ffffff26);position:relative;overflow:hidden;
+  background-image:repeating-linear-gradient(180deg,transparent 0 16px,#0027ba55 16px 17px)}
+.dc .rack i{position:absolute;left:12%;width:4px;height:4px;border-radius:50%;background:var(--pink);box-shadow:0 0 6px var(--pink);animation:blink 1.4s steps(1) infinite}
+.dc .glow{position:absolute;left:0;right:0;top:0;height:50%;background:radial-gradient(ellipse at 50% 0,#ffb3c155,transparent 70%)}
+.dc .halo{top:40%;width:60%}
+
+
+/* agenda morphing orb (adapted from Uiverse.io by andrew-manzyk) */
+.orb-wrap{position:absolute;left:50%;top:32%;transform:translate(-50%,-50%) scale(var(--orb-scale,1.5));z-index:1}
+.morph{--c1:#ffb3c1;--c2:#0027ba;--c3:#ffb3c180;--c4:#2f52e880;--c5:#ffb3c140;--t:2.4s;
+  position:relative;width:100px;height:100px;border-radius:50%;
+  box-shadow:0 0 25px 0 var(--c3),0 20px 50px 0 var(--c4);animation:colorize calc(var(--t)*3) ease-in-out infinite}
+.morph::before{content:"";position:absolute;inset:0;border-radius:50%;border-top:1px solid var(--c1);border-bottom:1px solid var(--c2);
+  background:linear-gradient(180deg,var(--c5),var(--c4));box-shadow:inset 0 10px 10px 0 var(--c3),inset 0 -10px 10px 0 var(--c4)}
+.morph .box{position:relative;width:100px;height:100px;background:linear-gradient(180deg,#fff 0%,var(--c1) 30%,#5d7bff 70%,var(--c2) 100%);mask:url(#agendaClip);-webkit-mask:url(#agendaClip)}
+.morph svg{position:absolute;inset:0}
+.morph svg #agendaClip{filter:contrast(15);animation:roundness calc(var(--t)/2) linear infinite}
+.morph svg #agendaClip polygon{filter:blur(7px)}
+.morph svg #agendaClip polygon:nth-child(1){transform-origin:75% 25%;transform:rotate(90deg)}
+.morph svg #agendaClip polygon:nth-child(2){transform-origin:50% 50%;animation:rotation var(--t) linear infinite reverse}
+.morph svg #agendaClip polygon:nth-child(3){transform-origin:50% 60%;animation:rotation var(--t) linear infinite;animation-delay:calc(var(--t)/-3)}
+.morph svg #agendaClip polygon:nth-child(4){transform-origin:40% 40%;animation:rotation var(--t) linear infinite reverse}
+.morph svg #agendaClip polygon:nth-child(5){transform-origin:40% 40%;animation:rotation var(--t) linear infinite reverse;animation-delay:calc(var(--t)/-2)}
+.morph svg #agendaClip polygon:nth-child(6){transform-origin:60% 40%;animation:rotation var(--t) linear infinite}
+.morph svg #agendaClip polygon:nth-child(7){transform-origin:60% 40%;animation:rotation var(--t) linear infinite;animation-delay:calc(var(--t)/-1.5)}
+@keyframes rotation{to{transform:rotate(360deg)}}
+@keyframes roundness{0%{filter:contrast(15)}20%,40%{filter:contrast(3)}60%,100%{filter:contrast(15)}}
+/* subtle hue drift that stays inside the pink/blue palette */
+@keyframes colorize{0%,100%{filter:hue-rotate(0deg)}33%{filter:hue-rotate(-12deg)}66%{filter:hue-rotate(10deg)}}
+@media (max-height:820px){.orb-wrap{--orb-scale:1.15;top:28%}}
+
+
+/* ===== liquid-glass DNA (shared with the agenda orb) ===== */
+.glass{background:linear-gradient(180deg,#ffb3c126,#2f52e840);border-top:1px solid #ffb3c1;border-bottom:1px solid #0027ba;
+  box-shadow:inset 0 10px 14px -6px #ffb3c170,inset 0 -10px 14px -6px #2f52e890,0 0 25px 0 #ffb3c140,0 20px 50px -10px #0027ba90}
+@keyframes rise{0%{transform:translateY(0) scale(.5)}70%{opacity:1}100%{transform:translateY(-86px) scale(1);opacity:0}}
+@keyframes drip{0%{transform:translateY(0) scale(.5)}20%{transform:translateY(6px) scale(1)}100%{transform:translateY(56px) scale(.9)}}
+@keyframes send{0%,100%{transform:translate(0,0) scale(.7)}50%{transform:translate(var(--dx),var(--dy)) scale(1)}}
+@keyframes pulseN{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes roam{0%,100%{transform:translate(0,0)}12%{transform:translate(-44px,-44px)}25%{transform:translate(0,-44px)}37%{transform:translate(44px,-44px)}50%{transform:translate(44px,0)}62%{transform:translate(44px,44px)}75%{transform:translate(0,44px)}87%{transform:translate(-44px,44px)}}
+@keyframes pulse-trace{to{stroke-dashoffset:-476}}
+@keyframes stream{from{transform:translateX(0)}to{transform:translateX(640px)}}
+@keyframes wave{to{transform:translateX(-24px)}}
+@keyframes bubbles{to{background-position:0 -120px,0 -80px}}
+@keyframes shine{0%{transform:translateX(-120%) skewX(-18deg)}60%,100%{transform:translateX(320%) skewX(-18deg)}}
+
+/* about: glass icon tokens */
+.token{width:88px;height:88px;border-radius:26px;display:grid;place-items:center;position:relative;
+  background:radial-gradient(circle at 30% 22%,#2f52e8 0%,#000a32 72%)}
+.token svg{width:44px!important;height:44px!important;filter:drop-shadow(0 0 8px #ffb3c180)}
+.token::after{content:"";position:absolute;left:14%;right:40%;top:8%;height:18%;border-radius:50%;background:linear-gradient(180deg,#ffffff55,transparent)}
+
+/* about: liquid neural net */
+.core .net{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.net .drop{animation:send 3.2s cubic-bezier(.6,0,.4,1) infinite}
+.net .node{transform-box:fill-box;transform-origin:center;animation:pulseN 3.2s ease-in-out infinite}
+
+/* about: liquid compute chip */
+.chip .pulse{stroke-dasharray:46 192;animation:pulse-trace 2.6s linear infinite}
+.chip .blob{animation:roam 9s cubic-bezier(.65,0,.35,1) infinite}
+
+/* about: glass attention panel */
+.attn .hgrid{background:linear-gradient(180deg,#ffb3c11c,#2f52e838)!important;border:1px solid #ffffff12!important;border-top-color:#ffb3c1!important;border-bottom-color:#0027ba!important;
+  box-shadow:inset 0 12px 18px -8px #ffb3c170,inset 0 -12px 18px -8px #2f52e8a0,0 0 25px #ffb3c140,0 30px 60px -20px #000!important;overflow:hidden;position:relative}
+.attn .hgrid i{background:linear-gradient(180deg,#fff,#ffb3c1 40%,#8fa4ff)!important;border-radius:4px!important;box-shadow:inset 0 1px 0 #ffffffaa,0 0 10px #ffb3c180!important}
+.attn .hgrid::after{content:"";position:absolute;top:-10%;bottom:-10%;left:0;width:30%;background:linear-gradient(90deg,transparent,#ffffff30,transparent);animation:shine 4.5s ease-in-out infinite;pointer-events:none}
+
+/* program: glass feature icons + liquid sparks */
+.feat .ic{width:34px!important;height:34px!important;border-radius:10px!important;background:radial-gradient(circle at 30% 25%,#2f52e8,#000a32 75%)!important;border-top:1px solid #ffb3c1;box-shadow:inset 0 4px 6px -2px #ffb3c180,0 8px 16px -6px #0027baaa}
+.scard .spark{filter:drop-shadow(0 4px 8px #0027ba55)}
+
+/* journal: agent thinking droplets */
+.term{border:1px solid #ffffff14!important;border-top-color:#ffb3c1!important;border-bottom-color:#0027ba!important;
+  box-shadow:inset 0 10px 16px -8px #ffb3c160,inset 0 -10px 16px -8px #2f52e880,0 0 25px #ffb3c140,0 30px 60px -18px #000!important}
+.think{position:absolute;left:10%;top:3%;height:30%;z-index:1;width:80%;overflow:visible}
+.think .b{animation:rise 3.6s ease-in infinite;transform-box:fill-box;transform-origin:center}
+
+/* journal: liquid test tubes */
+.tubes{position:absolute;inset:20% 12% 26%;display:flex;align-items:flex-end;gap:5%;z-index:1;-webkit-box-reflect:below 2px linear-gradient(transparent 55%,#ffffff26)}
+.tube{flex:1;height:100%;position:relative;border-radius:999px 999px 10px 10px;overflow:hidden;
+  background:linear-gradient(180deg,#ffb3c114,#2f52e838);border-top:1px solid #ffb3c1;border-bottom:1px solid #2f52e8;
+  box-shadow:inset 0 10px 12px -6px #ffb3c160,inset 0 -8px 12px -4px #2f52e890,0 0 22px -6px #ffb3c180}
+.tube::after{content:"";position:absolute;left:18%;width:16%;top:6%;bottom:8%;border-radius:99px;background:linear-gradient(180deg,#ffffff70,#ffffff10);z-index:2}
+.tube i{position:absolute;left:0;right:0;bottom:0;height:var(--h);background:linear-gradient(180deg,#ffd6de,#ffb3c1 35%,#ff8fa8);box-shadow:0 0 24px #ffb3c1aa}
+.tube i::before{content:"";position:absolute;left:0;top:-7px;width:calc(100% + 48px);height:8px;animation:wave 1.4s linear infinite;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8'%3E%3Cpath d='M0 8V4q6-5 12 0t12 0v4Z' fill='%23ffd6de'/%3E%3C/svg%3E") repeat-x 0 0/24px 8px}
+.tube i::after{content:"";position:absolute;inset:0;opacity:.6;animation:bubbles 3s linear infinite;
+  background:radial-gradient(circle,#fff 1.4px,transparent 2px) 0 0/14px 40px,radial-gradient(circle,#ffffffaa 1px,transparent 1.6px) 7px 20px/18px 40px}
+.tube.b i{background:linear-gradient(180deg,#d6deff,#8fa4ff 35%,#2f52e8);box-shadow:0 0 24px #5d7bffaa}
+.tube.b i::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8'%3E%3Cpath d='M0 8V4q6-5 12 0t12 0v4Z' fill='%23d6deff'/%3E%3C/svg%3E")}
+.tube:nth-child(2) i::before{animation-delay:-.4s}.tube:nth-child(3) i::before{animation-delay:-.8s}.tube:nth-child(4) i::before{animation-delay:-.2s}.tube:nth-child(5) i::before{animation-delay:-1s}
+
+/* journal: liquid retrieval pipeline */
+.cov-rag .drop{animation:drip 1.8s cubic-bezier(.55,0,.8,.6) infinite;transform-box:fill-box;transform-origin:center top}
+
+/* testimonials: glass lens is in the SVG */
+
+/* archive: glass racks + liquid cooling loop */
+.dc .rack{background:linear-gradient(180deg,#ffb3c11c,#2f52e830),repeating-linear-gradient(180deg,transparent 0 16px,#ffb3c11a 16px 17px)!important;
+  border:1px solid #ffffff10!important;border-top-color:#ffb3c1aa!important;border-bottom-color:#2f52e8!important;
+  box-shadow:inset 0 12px 16px -8px #ffb3c160,inset 0 -12px 16px -8px #2f52e890,0 24px 40px -10px #000,0 0 30px -8px #5d7bff66!important}
+.dc .loop{position:absolute;left:4%;right:4%;bottom:6%;height:15%;z-index:2;width:92%}
+.dc .loop .flow{animation:stream linear infinite}
+
+/* sidebar countdown: glass */
+.ticket .count div{background:linear-gradient(180deg,#ffb3c11f,#00000018)!important;border-top:1px solid #ffb3c166;box-shadow:inset 0 6px 10px -6px #ffb3c180}
+
+/* ---------- partners ---------- */
+.ptile{background:var(--blue);border-radius:var(--r);padding:48px 32px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;position:relative;overflow:hidden;transition:background .3s}
+.ptile::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),#ffb3c133,transparent 60%);opacity:0;transition:opacity .3s}
+.ptile:hover::before{opacity:1}
+.ptile .lg{width:96px;height:48px;transition:transform .3s}
+.ptile:hover .lg{transform:scale(1.08)}
+.ptile .mono{color:var(--pink60)}
+.ptile .ar{position:absolute;top:16px;right:16px;width:16px;height:16px;fill:var(--pink);transition:transform .3s}
+.ptile:hover .ar{transform:translate(3px,-3px)}
+
+/* ---------- program ---------- */
+.moments{display:flex;flex-direction:column;gap:40px;padding:56px 32px 32px}
+.kf{grid-column:1/-1;background:var(--pink2);border-radius:var(--r);padding:40px 32px;display:flex;flex-direction:column;gap:40px}
+.feat{display:flex;flex-direction:column;gap:16px}
+.feat .ic{width:30px;height:30px;border-radius:8px;background:var(--blue);display:grid;place-items:center}
+.feat .ic svg{width:16px;height:16px;stroke:var(--pink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.feat div:last-child{display:flex;flex-direction:column;gap:8px;max-width:260px}
+.scard{background:var(--pink2);border-radius:var(--r);padding:40px 32px;display:flex;flex-direction:column;gap:120px;position:relative;overflow:hidden}
+.scard .h4{max-width:200px}
+.scard .spark{position:absolute;right:24px;top:40px;width:90px;height:40px}
+.tracks{display:flex;flex-wrap:wrap;gap:8px}
+.tracks span{padding:10px 14px;border:1px solid var(--blue40);border-radius:1000px}
+
+/* ---------- tickets ---------- */
+.tiers{align-items:stretch}
+.tier{border-radius:var(--r);padding:32px;display:flex;flex-direction:column;gap:28px;position:relative;overflow:hidden}
+.tier .price{font-size:56px;letter-spacing:-2.8px;line-height:.9}
+.tier .price small{font-size:14px;letter-spacing:0;text-transform:uppercase;font-weight:500;opacity:.7}
+.tier ul{list-style:none;display:flex;flex-direction:column;gap:12px;flex:1}
+.tier li{display:flex;gap:10px;align-items:flex-start;line-height:1.3}
+.tier li::before{content:"";flex:none;width:14px;height:14px;margin-top:1px;border-radius:4px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7.5 6 10l5-6' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7.5 6 10l5-6' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.tier.t1{background:var(--gray);color:var(--blue)}
+.tier.t2{background:var(--blue);color:var(--pink)}
+.tier.t3{background:var(--navy);color:var(--white)}
+.tier .head{display:flex;justify-content:space-between;align-items:center}
+.tier .pop{padding:6px 10px;border-radius:1000px;background:var(--pink);color:var(--blue)}
+.tier.t2::after{content:"";position:absolute;right:-80px;top:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,#ffb3c150,transparent 70%)}
+.tier .note{opacity:.7}
+
+/* ---------- testimonials ---------- */
+.trow{display:flex;gap:8px;align-items:stretch}
+.tphoto{flex:1;max-width:320px;aspect-ratio:1;position:relative}
+.tphoto svg{width:100%;height:100%}
+.tcard{flex:1;border-radius:var(--r);padding:32px;display:flex;flex-direction:column;justify-content:space-between;min-height:320px;gap:24px;position:relative;overflow:hidden}
+.tcard .qm{position:absolute;right:28px;top:20px;font-size:120px;line-height:1;opacity:.15}
+.tcard .quote{max-width:480px}
+.tcard .who{display:flex;flex-direction:column;gap:4px}
+.tcard.bg-blue{color:var(--pink)}
+.tcard.bg-blue .sub{color:var(--pink60)}
+.tcard.bg-pink .sub{color:var(--blue60)}
+
+/* ---------- faq ---------- */
+.faq{display:flex;flex-direction:column;gap:40px;padding:56px 32px 32px}
+.faq-col{display:flex;flex-direction:column;gap:8px}
+.qa{background:var(--blue7);border-radius:var(--r);padding:24px;cursor:pointer;transition:background .25s}
+.qa:hover{background:#0027ba1f}
+.qa .q{display:flex;gap:16px;align-items:flex-start;justify-content:space-between}
+.qa .plus{width:14px;height:14px;flex:none;position:relative;transition:transform .3s}
+.qa .plus::before,.qa .plus::after{content:"";position:absolute;background:var(--blue);border-radius:2px}
+.qa .plus::before{left:0;right:0;top:6px;height:2px}
+.qa .plus::after{top:0;bottom:0;left:6px;width:2px}
+.qa.open .plus{transform:rotate(45deg)}
+.qa .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s}
+.qa .a>div{overflow:hidden}
+.qa .a p{padding-top:20px;max-width:720px}
+.qa.open .a{grid-template-rows:1fr}
+
+/* ---------- blog ---------- */
+.post{display:flex;flex-direction:column;height:540px}
+.post .cover{height:400px;border-radius:var(--r);overflow:hidden;position:relative;flex:none}
+.post .cover>div{position:absolute;inset:0;transition:transform .6s cubic-bezier(.2,.8,.2,1);transform:scale(1.02)}
+.post:hover .cover>div{transform:scale(1.08)}
+.post .meta{flex:1;background:var(--blue);border-radius:var(--r);padding:28px 32px;display:flex;flex-direction:column;gap:8px}
+.post .meta .row{display:flex;justify-content:space-between;color:var(--pink60)}
+.post .meta .t20{color:var(--pink);max-width:280px}
+/* cover: agent terminal */
+.cov-agent{display:grid;place-items:center}
+.cover .floor{height:45%}
+.term{position:relative;z-index:1;width:80%;background:#000a32b8;backdrop-filter:blur(10px);border:1px solid #ffb3c140;border-radius:12px;box-shadow:0 40px 80px -24px #000,0 0 60px -10px #ffb3c155,inset 0 1px 0 #ffffff1f;overflow:hidden;transform:perspective(900px) rotateX(8deg)}
+.term .bar{display:flex;gap:6px;padding:10px 12px;background:#ffffff0d;border-bottom:1px solid #ffb3c11f}
+.term .bar i{width:8px;height:8px;border-radius:50%;background:var(--pink60)}
+.term pre{font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--white60);padding:14px 16px;white-space:pre-wrap}
+.term pre b{color:var(--pink);font-weight:500}
+.term pre u{text-decoration:none;color:#8fa4ff}
+/* cover: evals */
+.cov-evals .bars,.cov-evals .axis,.cov-evals .lbl{z-index:1}
+.cov-evals .bars{position:absolute;inset:20% 12% 26%;display:flex;align-items:flex-end;gap:6%;-webkit-box-reflect:below 2px linear-gradient(transparent 50%,#ffffff30)}
+.cov-evals .bars i{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#fff 0%,var(--pink) 18%,#ff8fa8);position:relative;box-shadow:0 0 24px -2px #ffb3c1aa}
+.cov-evals .bars i:nth-child(odd){background:linear-gradient(180deg,#c9d3ff 0%,#5d7bff 18%,#2f52e8);box-shadow:0 0 24px -2px #5d7bffaa}
+.cov-evals .axis{position:absolute;left:12%;right:12%;bottom:26%;height:1px;background:var(--white40)}
+.cov-evals .lbl{position:absolute;left:10%;top:9%;color:var(--pink)}
+/* cover: rag pipeline */
+.cov-rag svg.pipe{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.cov-rag .flow{stroke-dasharray:4 8;animation:flow 1.4s linear infinite}
+
+/* ---------- resources ---------- */
+.res{background:var(--gray);border-radius:var(--r);overflow:hidden}
+.res-inner{padding:56px 32px 32px;display:flex;flex-direction:column;gap:48px}
+.res-head{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;max-width:600px;margin:0 auto}
+.rblock{background:var(--blue7);border-radius:var(--r);padding:32px;display:flex;flex-direction:column;gap:24px}
+.rblock .mono{color:var(--blue60)}
+.res .scene{border-radius:0;aspect-ratio:1.5677;min-height:0}
+
+/* ---------- sidebar ---------- */
+.agenda{flex:1;min-height:192px;border-radius:var(--r);overflow:hidden;position:relative;padding:24px 16px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;color:var(--white)}
+.agenda .scene{position:absolute;inset:0;min-height:0;border-radius:0}
+.agenda .scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,10,50,.85))}
+.agenda>*:not(.scene){position:relative;z-index:1}
+.agenda .h3{max-width:200px}
+.agenda .sched{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.agenda .sched div{display:flex;gap:10px;color:var(--white60)}
+.agenda .sched b{color:var(--pink);font-weight:500}
+.ticket{background:var(--blue);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.ticket .tc{padding:16px 16px 40px;display:flex;flex-direction:column;gap:24px}
+.ticket .tc .scene{height:190px;min-height:0;border-radius:6px}
+.ticket .tc .txt{display:flex;flex-direction:column;gap:8px;max-width:280px;color:var(--pink)}
+.ticket .count{display:flex;gap:6px}
+.ticket .count div{flex:1;background:#ffffff14;border-radius:8px;padding:10px 6px;text-align:center;color:var(--pink)}
+.ticket .count b{display:block;font-size:22px;font-weight:400;letter-spacing:-.8px}
+.ticket .count span{font-family:var(--mono);font-size:10px;color:var(--pink60)}
+.tbtn{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;height:120px;padding:24px 32px;background:var(--blue-d);color:var(--pink);border-top:1px dashed var(--white);font-size:28px;letter-spacing:-1.4px;line-height:1.04;text-transform:uppercase;transition:background .3s}
+.tbtn::before,.tbtn::after{content:"";position:absolute;top:-8px;width:12px;height:16px;background:var(--white)}
+.tbtn::before{left:0;border-radius:0 1000px 1000px 0}
+.tbtn::after{right:0;border-radius:1000px 0 0 1000px}
+.tbtn svg{width:32px;height:32px;fill:var(--pink);transition:transform .35s}
+.tbtn:hover{background:#001a80}
+.tbtn:hover svg{transform:translate(4px,-4px)}
+
+/* ---------- contact ---------- */
+.contact{background:var(--pink);border-radius:var(--r);padding:56px 32px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ch{position:sticky;top:56px;align-self:start;display:flex;flex-direction:column;gap:40px}
+.ch .head{display:flex;flex-direction:column;gap:20px;max-width:420px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;max-width:520px}
+.pill{display:inline-block;padding:20px 28px;border-radius:1000px;background:var(--blue);border:1px solid var(--blue);color:var(--pink);font-size:36px;letter-spacing:-1.8px;line-height:1.04;text-transform:uppercase;transition:background .3s,color .3s}
+.pill:hover{background:transparent;color:var(--blue)}
+.formcard{background:var(--blue);border-radius:var(--r);padding:40px 32px;display:flex;flex-direction:column;gap:40px}
+.formcard .h3{color:var(--pink);max-width:340px}
+form{display:flex;flex-direction:column;gap:24px}
+.field{display:flex;flex-direction:column;gap:12px}
+.field .label{color:var(--white60)}
+.field input,.field select,.field textarea{width:100%;background:transparent;border:1px solid var(--white25);border-radius:var(--r);padding:24px 32px;color:var(--white);font:500 20px/1.04 "Space Grotesk",sans-serif;letter-spacing:-.2px;outline:none;transition:border-color .2s,background .2s;appearance:none}
+.field input::placeholder,.field textarea::placeholder{color:var(--white40)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--white);background:#ffffff0a}
+.field textarea{height:180px;resize:vertical}
+.field select{color:var(--white);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M3.5 6 8 10.5 12.5 6' fill='none' stroke='%23f4f4f466' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 24px center}
+.field select:invalid{color:var(--white40)}
+.field select option{color:#000}
+.send{border:1px solid var(--white);border-radius:1000px;padding:28px 32px;color:var(--white);font-size:20px;font-weight:500;letter-spacing:-.2px;text-transform:uppercase;transition:background .3s,color .3s}
+.send:hover{background:var(--white);color:var(--blue)}
+.formok{display:none;color:var(--pink);text-align:center;padding:40px 0}
+
+/* ---------- footer ---------- */
+footer{padding-bottom:8px}
+.fwrap{background:var(--navy);border-radius:var(--r);padding:56px 32px 32px;display:flex;flex-direction:column;gap:160px;color:var(--white);position:relative;overflow:hidden}
+.fwrap .bigmark{position:absolute;right:-60px;top:-60px;width:420px;opacity:.12;pointer-events:none}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative}
+.fleft{position:sticky;top:56px;height:262px;display:flex;flex-direction:column;justify-content:space-between}
+.fleft .lt{display:flex;flex-direction:column;gap:20px}
+.fleft .label{color:var(--white60);max-width:340px}
+.fright{display:flex;flex-direction:column;gap:32px}
+.fright .h2{max-width:600px}
+.flinks{display:flex;flex-wrap:wrap}
+.flinks a{padding:20px 28px;border:1px solid var(--white25);border-radius:1000px;font-size:20px;font-weight:500;text-transform:uppercase;color:var(--white40);transition:color .25s,border-color .25s}
+.flinks a:hover{color:var(--white);border-color:var(--white)}
+.news{display:flex;gap:8px;max-width:520px}
+.news input{flex:1;background:transparent;border:1px solid var(--white25);border-radius:1000px;padding:18px 24px;color:var(--white);font:500 16px "Space Grotesk";outline:none}
+.news input::placeholder{color:var(--white40)}
+.news input:focus{border-color:var(--white)}
+.fticket{display:flex;justify-content:center;align-items:center;gap:8px;background:var(--white);color:var(--navy);border-radius:var(--r);padding:32px;transition:background .3s,color .3s;position:relative}
+.fticket svg{width:40px;height:40px;fill:currentColor;transition:transform .35s}
+.fticket:hover{background:var(--pink)}
+.fticket:hover svg{transform:translate(5px,-5px)}
+
+/* ---------- mobile bottom bar ---------- */
+.bottombar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--white);padding:8px;transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.bottombar.show{transform:none}
+.bottombar .inner{display:flex;background:var(--blue);border-radius:var(--r);overflow:hidden}
+.bottombar .h3{flex:1;color:var(--pink);padding:24px 32px;align-self:center}
+.bottombar .tbtn{height:auto;min-width:50%;border-top:0;border-left:1px dashed var(--white)}
+.bottombar .tbtn::before,.bottombar .tbtn::after{display:none}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- tablet ---------- */
+@media (max-width:1159.98px){
+  .layout{grid-template-columns:repeat(4,minmax(1px,1fr))}
+  .content{grid-column:span 4}
+  .sidebar{display:none}
+  .bottombar{display:block}
+  body{padding-bottom:120px}
+  .h1{font-size:104px;letter-spacing:-5.2px}
+  .h2{font-size:56px;letter-spacing:-2.8px}
+  .h3{font-size:32px;letter-spacing:-1.6px}
+  .stat{font-size:54px;letter-spacing:-2.7px}
+  .hero{min-height:740px}
+  .speakers.g3,.partners.g4,.res .g4{grid-template-columns:repeat(2,minmax(1px,1fr))}
+  .tiers.g3{grid-template-columns:1fr}
+  .acard .top svg{width:64px;height:64px}
+  .tphoto{max-width:280px}
+  .blog.g3{grid-template-columns:1fr}
+  .post{height:auto}
+  .post .cover{height:auto;aspect-ratio:1.446}
+  .contact{grid-template-columns:1fr;gap:56px}
+  .ch{position:relative;top:0}
+  .pill{font-size:32px;letter-spacing:-1.6px}
+  .fgrid{grid-template-columns:1fr;gap:56px}
+  .fleft{position:relative;top:0;height:auto;gap:56px;order:1}
+}
+/* ---------- mobile ---------- */
+@media (max-width:767.98px){
+  .h1{font-size:clamp(38px,12.2vw,52px);letter-spacing:-.05em;text-align:left}
+  .h1 em{-webkit-text-stroke:1.2px var(--blue)}
+  .h2{font-size:40px;letter-spacing:-2px}
+  .h3{font-size:28px;letter-spacing:-1.4px}
+  .hero{height:auto;min-height:0}
+  .hero-main{flex:none;min-height:calc(100svh - 16px);padding:110px 24px 40px;gap:24px}
+  .hero-cta{flex-direction:column;align-items:stretch;width:100%}
+  .hero-cta .btn{justify-content:center}
+  .hero-center{align-items:flex-start;max-width:400px;margin:0}
+  .hero-sub{text-align:left}
+  .hero-cta{justify-content:flex-start}
+  .menu,.nav>.btn{display:none}
+  .burger{display:block}
+  .nav{position:absolute;top:0;left:0;right:0;padding:24px;align-items:flex-start;flex-direction:column}
+  .nav .bar{display:flex;justify-content:space-between;align-items:center;width:100%}
+  .mobile-menu{display:flex;flex-direction:column;gap:40px;width:100%;max-height:0;overflow:hidden;transition:max-height .5s,padding .5s}
+  .nav.open{background:var(--pink);height:100vh;position:fixed;padding:32px 32px 0}
+  .nav.open .mobile-menu{max-height:80vh;padding-top:40px}
+  .nav.open .burger i:nth-child(1){top:23px;transform:rotate(45deg)}
+  .nav.open .burger i:nth-child(2){opacity:0}
+  .nav.open .burger i:nth-child(3){top:23px;transform:rotate(-45deg)}
+  .mobile-menu .links{display:flex;flex-direction:column}
+  .mobile-menu .links a{font-size:40px;letter-spacing:-2px;text-transform:uppercase;line-height:.92;padding:16px 0;border-bottom:1px solid var(--blue40)}
+  .g2,.g3,.g4,.speakers.g3,.partners.g4,.res .g4{grid-template-columns:1fr}
+  .info{padding:24px}
+  .box{padding:40px 24px}
+  .sh{flex-direction:column;align-items:flex-start}
+  .speaker{aspect-ratio:.62}
+  .pinfo{padding:24px}
+  .acard{gap:80px;padding:40px 24px}
+  .acard .top svg{width:48px;height:48px}
+  .about .scene{min-height:440px}
+  .about .grid>:nth-child(3){order:3}.about .grid>:nth-child(4){order:2}
+  .about .grid>:nth-child(5){order:4}.about .grid>:nth-child(6){order:5}
+  .moments{padding:40px 24px 24px}.kf{padding:32px 24px}
+  .scard{gap:90px;padding:32px 24px}
+  .tier{padding:28px 24px}
+  .trow{flex-direction:column}
+  .tphoto{max-width:none;width:100%}
+  .trow.rev .tphoto{order:-1}
+  .tcard{padding:32px 24px;min-height:0;gap:48px}
+  .faq{padding:40px 24px 24px}
+  .post .cover{aspect-ratio:.86}
+  .post .meta{padding:24px}
+  .res-inner{padding:40px 24px 24px;gap:40px}
+  .res-head{text-align:left;align-items:flex-start}
+  .res-head .h2{text-align:left!important}
+  .rblock{padding:32px 24px}
+  .res .scene{aspect-ratio:.86}
+  .contact{padding:0;gap:0}
+  .ch{padding:40px 24px 56px}
+  .pill{font-size:24px;letter-spacing:-1.2px;padding:16px 20px}
+  .formcard{padding:40px 24px}
+  .field input,.field select,.field textarea{padding:24px}
+  .fwrap{padding:40px 24px 24px;gap:96px}
+  .news{flex-direction:column}
+  .fticket{padding:28px 24px}
+  .bottombar .h3{display:none}
+  .bottombar .tbtn{width:100%;padding:24px;font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- ======= shared SVG symbols ======= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="arrow" viewBox="0 0 16 16"><path d="M12.5 4v6.5a.5.5 0 0 1-1 0V5.21l-7.15 7.14a.5.5 0 0 1-.7-.7L10.79 4.5H5.5a.5.5 0 0 1 0-1H12a.5.5 0 0 1 .5.5Z"/></symbol>
+    <symbol id="mark" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="3" r="2"/><circle cx="12" cy="21" r="2"/><circle cx="3.5" cy="7.5" r="2"/><circle cx="20.5" cy="7.5" r="2"/><circle cx="3.5" cy="16.5" r="2"/><circle cx="20.5" cy="16.5" r="2"/><path d="M12 5v4M12 15v4M5.3 8.5l3.9 2M18.7 8.5l-3.9 2M5.3 15.5l3.9-2M18.7 15.5l-3.9-2" stroke="currentColor" stroke-width="1.4" fill="none"/></symbol>
+    <symbol id="person" viewBox="0 0 200 300">
+      <path d="M8 300c4-62 36-96 92-96s88 34 92 96Z" fill="var(--shirt)"/>
+      <path d="M82 178h36v34c0 10-36 10-36 0Z" fill="var(--skin2)"/>
+      <ellipse cx="100" cy="132" rx="40" ry="48" fill="var(--skin)"/>
+      <path d="M58 128c-6-46 22-70 46-70 30 0 50 22 42 66-6-20-16-30-34-34-12 10-34 18-54 38Z" fill="var(--hair)"/>
+      <path d="M72 226c10 14 46 14 56 0l-4 74H76Z" fill="var(--collar)"/>
+    </symbol>
+    <symbol id="person-long" viewBox="0 0 200 300">
+      <path d="M50 120c-6-60 30-72 50-72s58 12 50 72l6 96H44Z" fill="var(--hair)"/>
+      <path d="M8 300c4-62 36-96 92-96s88 34 92 96Z" fill="var(--shirt)"/>
+      <path d="M82 178h36v34c0 10-36 10-36 0Z" fill="var(--skin2)"/>
+      <ellipse cx="100" cy="132" rx="38" ry="46" fill="var(--skin)"/>
+      <path d="M60 126c2-38 22-56 44-56 26 0 40 18 38 52-14-22-40-30-82 4Z" fill="var(--hair)"/>
+      <path d="M72 226c10 14 46 14 56 0l-4 74H76Z" fill="var(--collar)"/>
+    </symbol>
+    <!-- premium portrait backdrop -->
+    <pattern id="pgrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0v20" fill="none" stroke="#0027ba" stroke-opacity=".12"/></pattern>
+    <pattern id="pgridw" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0v20" fill="none" stroke="#ffb3c1" stroke-opacity=".14"/></pattern>
+    <radialGradient id="glowP" cx="50%" cy="40%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#ffb3c1" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowB" cx="50%" cy="40%" r="50%"><stop offset="0" stop-color="#ffb3c1" stop-opacity=".55"/><stop offset="1" stop-color="#0027ba" stop-opacity="0"/></radialGradient>
+    <radialGradient id="deepBg" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#0b2a9e"/><stop offset=".7" stop-color="#000a32"/></radialGradient>
+    <radialGradient id="haloP" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffb3c1" stop-opacity=".8"/><stop offset=".45" stop-color="#ff8fa8" stop-opacity=".28"/><stop offset="1" stop-color="#0027ba" stop-opacity="0"/></radialGradient>
+    <radialGradient id="haloB" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#8fa4ff" stop-opacity=".85"/><stop offset=".45" stop-color="#5d7bff" stop-opacity=".3"/><stop offset="1" stop-color="#0027ba" stop-opacity="0"/></radialGradient>
+    <linearGradient id="vig" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#000a32" stop-opacity="0"/><stop offset="1" stop-color="#000a32" stop-opacity=".75"/></linearGradient>
+    <linearGradient id="floorFade" gradientUnits="userSpaceOnUse" x1="0" y1="230" x2="0" y2="300"><stop offset="0" stop-color="#ffb3c1" stop-opacity="0"/><stop offset="1" stop-color="#ffb3c1" stop-opacity=".5"/></linearGradient>
+    <filter id="rim" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="0" stdDeviation="2.4" flood-color="#ffb3c1" flood-opacity=".75"/><feDropShadow dx="0" dy="-1" stdDeviation="8" flood-color="#5d7bff" flood-opacity=".45"/></filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+    <filter id="glowF" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <symbol id="floorGrid" viewBox="0 0 200 300" overflow="visible"><g fill="none" stroke="url(#floorFade)" stroke-width=".8"><path d="M-200 232H400"/><path d="M-200 240H400"/><path d="M-200 251H400"/><path d="M-200 266H400"/><path d="M-200 286H400"/><path d="M-20.0 230L-300 300"/><path d="M-5.0 230L-250 300"/><path d="M10.0 230L-200 300"/><path d="M25.0 230L-150 300"/><path d="M40.0 230L-100 300"/><path d="M55.0 230L-50 300"/><path d="M70.0 230L0 300"/><path d="M85.0 230L50 300"/><path d="M100.0 230L100 300"/><path d="M115.0 230L150 300"/><path d="M130.0 230L200 300"/><path d="M145.0 230L250 300"/><path d="M160.0 230L300 300"/><path d="M175.0 230L350 300"/><path d="M190.0 230L400 300"/><path d="M205.0 230L450 300"/><path d="M220.0 230L500 300"/></g></symbol>
+    <!-- ===== liquid-glass DNA: shared gradients + goo filters ===== -->
+    <linearGradient id="liquidG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#ffb3c1"/><stop offset=".7" stop-color="#5d7bff"/><stop offset="1" stop-color="#0027ba"/></linearGradient>
+    <linearGradient id="liquidH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3e9"/><stop offset=".55" stop-color="#ffb3c1"/><stop offset="1" stop-color="#ff8fa8"/></linearGradient>
+    <radialGradient id="liquidR" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#ffb3c1"/><stop offset=".72" stop-color="#5d7bff"/><stop offset="1" stop-color="#0027ba"/></radialGradient>
+    <linearGradient id="rimG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3c1"/><stop offset="1" stop-color="#2f52e8"/></linearGradient>
+    <linearGradient id="glassFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3c1" stop-opacity=".22"/><stop offset="1" stop-color="#2f52e8" stop-opacity=".45"/></linearGradient>
+    <radialGradient id="lensFill" cx="50%" cy="30%" r="75%"><stop offset="0" stop-color="#ffb3c1" stop-opacity=".45"/><stop offset=".6" stop-color="#5d7bff" stop-opacity=".28"/><stop offset="1" stop-color="#0027ba" stop-opacity=".55"/></radialGradient>
+    <linearGradient id="iconG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#ffb3c1"/><stop offset="1" stop-color="#8fa4ff"/></linearGradient>
+    <linearGradient id="sparkG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff8fa8"/><stop offset="1" stop-color="#0027ba"/></linearGradient>
+    <linearGradient id="deepPill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f52e8"/><stop offset="1" stop-color="#0027ba"/></linearGradient>
+    <linearGradient id="cellG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d5ff0"/><stop offset="1" stop-color="#0027ba"/></linearGradient>
+    <filter id="gooS" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/><feColorMatrix in="b" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter>
+    <filter id="goo" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feColorMatrix in="b" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 20 -8" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter>
+    <filter id="gooL" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/><feColorMatrix in="b" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -9" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter>
+  </defs>
+</svg>
+
+<div class="container">
+<div class="layout">
+<div class="content">
+
+  <!-- ================= HERO ================= -->
+  <main class="hero" id="hero" data-section="hero">
+    <div class="hero-main grain">
+      <div class="hero-orbit"><svg viewBox="0 0 400 400" fill="none" stroke="#0027ba">
+        <circle cx="200" cy="200" r="198" stroke-opacity=".25"/>
+        <circle cx="200" cy="200" r="150" stroke-opacity=".2" stroke-dasharray="2 6"/>
+        <circle cx="200" cy="200" r="100" stroke-opacity=".15"/>
+      </svg></div>
+      <nav class="nav" id="nav" data-section="nav">
+        <div class="bar">
+          <a href="#hero" class="logo"><svg fill="currentColor"><use href="#mark"/></svg>AI/conf</a>
+          <button class="burger" id="burger" aria-label="Menu"><i></i><i></i><i></i></button>
+        </div>
+        <div class="menu label">
+          <a href="#about">About</a><a href="#program">Program</a><a href="#tickets">Tickets</a><a href="#blog">Journal</a>
+        </div>
+        <a class="btn" href="#tickets">Get a Pass <svg class="ar"><use href="#arrow"/></svg></a>
+        <div class="mobile-menu">
+          <div class="links"><a href="#about">About</a><a href="#program">Program</a><a href="#tickets">Tickets</a><a href="#blog">Journal</a></div>
+          <a class="btn full" href="#tickets">Get a Pass <svg class="ar"><use href="#arrow"/></svg></a>
+        </div>
+      </nav>
+      <div class="hero-center">
+        <span class="badge mono"><span class="live"></span>Early access passes · 38% claimed</span>
+        <h1 class="h1">The Frontier <em>AI</em> Conference 04/2027</h1>
+        <p class="hero-sub">Two days with the people training, shipping and aligning the next generation of models. Research talks, agent build labs and live demos — no fluff, all signal.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#tickets">Reserve Your Pass <svg class="ar"><use href="#arrow"/></svg></a>
+          <a class="btn outline" href="#program">Explore the Program</a>
+        </div>
+        <div class="prompt"><span>&gt;</span><span id="typed"></span><span class="caret"></span></div>
+      </div>
+    </div>
+    <div class="grid g3">
+      <div class="info"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><p class="label">When?</p><p class="t20">14–15 Apr 2027
+9:00 AM – 6:00 PM</p></div>
+      <div class="info"><svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><p class="label">Where?</p><p class="t20">San Francisco, CA
+Pier 48</p></div>
+      <div class="info"><svg class="ico" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg><p class="label">For Who?</p><p class="t20">ML Engineers &amp;
+AI Builders</p></div>
+    </div>
+  </main>
+
+  <!-- marquee -->
+  <section data-section="marquee">
+    <div class="marquee"><div class="mtrack t20" id="mtrack">
+      <span>Autonomous Agents</span><span>Multimodal Models</span><span>Evals &amp; Benchmarks</span><span>Inference at Scale</span><span>Alignment &amp; Safety</span><span>Retrieval Systems</span><span>On-Device AI</span><span>Fine-Tuning</span>
+    </div></div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about" class="about" data-section="about">
+    <div class="box bg-gray reveal">
+      <div class="sh">
+        <div class="sh-left"><p class="label">[Why AI/Conf]</p><h2 class="h2">Built for People Who Build</h2></div>
+        <a class="btn" href="#program">See the Program <svg class="ar"><use href="#arrow"/></svg></a>
+      </div>
+    </div>
+    <div class="grid g2">
+      <div class="acard reveal">
+        <div class="top"><span class="token glass"><svg viewBox="0 0 80 80" fill="url(#iconG)"><circle cx="40" cy="40" r="12"/><circle cx="40" cy="8" r="7"/><circle cx="40" cy="72" r="7"/><circle cx="12" cy="24" r="7"/><circle cx="68" cy="24" r="7"/><circle cx="12" cy="56" r="7"/><circle cx="68" cy="56" r="7"/><path d="M40 15v13M40 52v13M18 28l12 7M62 28l-12 7M18 52l12-7M62 52l-12-7" stroke="url(#iconG)" stroke-width="3"/></svg></span><p class="t20 num">01</p></div>
+        <div class="txt"><h3 class="h3">Research Meets Production</h3><p class="body">Every talk is chosen for what you can take back to your team on Monday. Frontier ideas, explained by the people who shipped them — with the trade-offs left in.</p></div>
+      </div>
+      <div class="scene core reveal"><div class="floor"></div>
+        <div class="rings"><svg viewBox="0 0 400 400" fill="none" stroke="#ffb3c1"><ellipse cx="200" cy="200" rx="196" ry="70" stroke-opacity=".5"/><ellipse cx="200" cy="200" rx="196" ry="70" transform="rotate(60 200 200)" stroke-opacity=".35"/><ellipse cx="200" cy="200" rx="196" ry="70" transform="rotate(120 200 200)" stroke-opacity=".35"/><circle cx="396" cy="200" r="5" fill="#ffb3c1"/><circle cx="102" cy="31" r="4" fill="#ffb3c1"/></svg></div>
+        <svg class="net" viewBox="0 0 400 433" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <polygon points="200.0,78.0 302.2,137.0 302.2,255.0 200.0,314.0 97.8,255.0 97.8,137.0" fill="url(#glassFill)" stroke="url(#rimG)" stroke-opacity=".7"/>
+          <g stroke="#ffb3c1" stroke-opacity=".28" stroke-dasharray="2 5"><path d="M200 196L200.0 78.0"/><path d="M200 196L302.2 137.0"/><path d="M200 196L302.2 255.0"/><path d="M200 196L200.0 314.0"/><path d="M200 196L97.8 255.0"/><path d="M200 196L97.8 137.0"/></g>
+          <g filter="url(#goo)" fill="url(#liquidR)">
+            <circle cx="200" cy="196" r="40"/><circle class="drop" cx="200" cy="196" r="11" style="--dx:0.0px;--dy:-118.0px;animation-delay:0.00s"/><circle class="drop" cx="200" cy="196" r="11" style="--dx:102.2px;--dy:-59.0px;animation-delay:-0.53s"/><circle class="drop" cx="200" cy="196" r="11" style="--dx:102.2px;--dy:59.0px;animation-delay:-1.06s"/><circle class="drop" cx="200" cy="196" r="11" style="--dx:0.0px;--dy:118.0px;animation-delay:-1.59s"/><circle class="drop" cx="200" cy="196" r="11" style="--dx:-102.2px;--dy:59.0px;animation-delay:-2.12s"/><circle class="drop" cx="200" cy="196" r="11" style="--dx:-102.2px;--dy:-59.0px;animation-delay:-2.65s"/><circle class="node" cx="200.0" cy="78.0" r="17" style="animation-delay:1.60s"/><circle class="node" cx="302.2" cy="137.0" r="17" style="animation-delay:1.07s"/><circle class="node" cx="302.2" cy="255.0" r="17" style="animation-delay:0.54s"/><circle class="node" cx="200.0" cy="314.0" r="17" style="animation-delay:0.01s"/><circle class="node" cx="97.8" cy="255.0" r="17" style="animation-delay:-0.52s"/><circle class="node" cx="97.8" cy="137.0" r="17" style="animation-delay:-1.05s"/>
+          </g>
+          <ellipse cx="188" cy="176" rx="16" ry="8" fill="#fff" opacity=".6"/><ellipse cx="195.0" cy="71.0" rx="6" ry="3.5" fill="#fff" opacity=".55"/><ellipse cx="297.2" cy="130.0" rx="6" ry="3.5" fill="#fff" opacity=".55"/><ellipse cx="297.2" cy="248.0" rx="6" ry="3.5" fill="#fff" opacity=".55"/><ellipse cx="195.0" cy="307.0" rx="6" ry="3.5" fill="#fff" opacity=".55"/><ellipse cx="92.8" cy="248.0" rx="6" ry="3.5" fill="#fff" opacity=".55"/><ellipse cx="92.8" cy="130.0" rx="6" ry="3.5" fill="#fff" opacity=".55"/>
+        </svg>
+        <div class="hud mono"><span>Model · v7.2</span><span>Params · 1.8T</span><span>Status · Live</span></div>
+      </div>
+      <div class="scene chip depth reveal"><div class="floor"></div><div class="halo"></div>
+        <svg class="die" viewBox="0 0 400 433" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect x="110" y="116" width="180" height="200" rx="22" fill="#ffb3c1" opacity=".3" filter="url(#soft)"/>
+          <path d="M0 120h90l20 20h20M0 200h130M0 280h90l20-20h20M400 120h-90l-20 20h-20M400 200H270M400 280h-90l-20-20h-20M150 0v90l20 20v20M200 0v130M250 0v90l-20 20v20M150 433v-90l20-20v-20M200 433V303M250 433v-90l-20-20v-20" fill="none" stroke="#ffb3c1" stroke-opacity=".18" stroke-width="1.5"/>
+          <g fill="none" stroke="#ffc9d4" stroke-opacity=".9" stroke-width="2.6" stroke-linecap="round" filter="url(#glowF)"><path class="pulse" d="M0 120h90l20 20h20" style="animation-delay:0.00s"/><path class="pulse" d="M0 200h130" style="animation-delay:-0.37s"/><path class="pulse" d="M0 280h90l20-20h20" style="animation-delay:-0.74s"/><path class="pulse" d="M400 120h-90l-20 20h-20" style="animation-delay:-1.11s"/><path class="pulse" d="M400 200H270" style="animation-delay:-1.48s"/><path class="pulse" d="M400 280h-90l-20-20h-20" style="animation-delay:-1.85s"/><path class="pulse" d="M150 0v90l20 20v20" style="animation-delay:-2.22s"/><path class="pulse" d="M200 0v130" style="animation-delay:-2.59s"/><path class="pulse" d="M250 0v90l-20 20v20" style="animation-delay:-2.96s"/><path class="pulse" d="M150 433v-90l20-20v-20" style="animation-delay:-3.33s"/><path class="pulse" d="M200 433V303" style="animation-delay:-3.70s"/><path class="pulse" d="M250 433v-90l-20-20v-20" style="animation-delay:-4.07s"/></g>
+          <rect x="120" y="126" width="160" height="180" rx="20" fill="#000a32" opacity=".55"/>
+          <rect x="120" y="126" width="160" height="180" rx="20" fill="url(#glassFill)" stroke="url(#rimG)" stroke-width="1.4"/>
+          <path d="M140 127h120" stroke="#fff" stroke-opacity=".5"/>
+          <g filter="url(#gooS)">
+            <g fill="url(#cellG)"><rect x="141" y="147" width="34" height="34" rx="9"/><rect x="185" y="147" width="34" height="34" rx="9"/><rect x="229" y="147" width="34" height="34" rx="9"/><rect x="141" y="191" width="34" height="34" rx="9"/><rect x="185" y="191" width="34" height="34" rx="9"/><rect x="229" y="191" width="34" height="34" rx="9"/><rect x="141" y="235" width="34" height="34" rx="9"/><rect x="185" y="235" width="34" height="34" rx="9"/><rect x="229" y="235" width="34" height="34" rx="9"/></g>
+            <circle class="blob" cx="202" cy="208" r="20" fill="url(#liquidR)"/>
+          </g>
+          <ellipse cx="160" cy="140" rx="34" ry="6" fill="#fff" opacity=".12"/>
+          <text x="200" y="293" text-anchor="middle" fill="#ffb3c1" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="2">AI/CONF · TPX-27</text>
+        </svg>
+      </div>
+      <div class="acard reveal">
+        <div class="top"><span class="token glass"><svg viewBox="0 0 80 80" fill="url(#iconG)"><rect x="16" y="16" width="48" height="48" rx="8"/><rect x="28" y="28" width="24" height="24" rx="3" fill="#000a32"/><path d="M26 4v10M40 4v10M54 4v10M26 66v10M40 66v10M54 66v10M4 26h10M4 40h10M4 54h10M66 26h10M66 40h10M66 54h10" stroke="url(#iconG)" stroke-width="4" stroke-linecap="round"/></svg></span><p class="t20 num">02</p></div>
+        <div class="txt"><h3 class="h3">Hands-On, Not Hand-Wavy</h3><p class="body">Forty build labs with real GPUs, real APIs and real problems. Leave with a working agent, an eval suite or a fine-tuned model — not just a notebook full of slogans.</p></div>
+      </div>
+      <div class="acard reveal">
+        <div class="top"><span class="token glass"><svg viewBox="0 0 80 80" fill="none" stroke="url(#iconG)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 56 28 32l16 14 28-32"/><path d="M52 14h20v20"/></svg></span><p class="t20 num">03</p></div>
+        <div class="txt"><h3 class="h3">A Community That Ships</h3><p class="body">Now in its fifth year, AI/CONF has grown from a meetup of 200 into the room where builders, researchers and founders compare notes — and start what comes next.</p></div>
+      </div>
+      <div class="scene attn depth reveal">
+        <div class="floor"></div><div class="halo b"></div>
+        <div class="row mono"><span>Attention · Layer 24 · Head 7</span><span>tokens: 12</span></div>
+        <div class="hgrid" data-n="12"></div>
+        <div class="row mono"><span>the</span><span>model</span><span>learns</span><span>to</span><span>attend</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PARTNERS ================= -->
+  <section id="partners" data-section="partners">
+    <div class="box bg-blue on-blue reveal grain">
+      <div class="sh">
+        <div class="sh-left"><p class="label">[Partners]</p><h2 class="h2">Powered by the AI Stack</h2></div>
+        <p class="body">From compute to models to tooling — the companies making AI/CONF possible, with live demos at every booth.</p>
+      </div>
+    </div>
+    <div class="grid g4 partners">
+      <a class="ptile reveal" href="#partners"><svg class="lg" viewBox="0 0 96 48" fill="#ffb3c1"><rect x="6" y="10" width="28" height="28" rx="6"/><rect x="14" y="18" width="12" height="12" rx="2" fill="#0027ba"/><rect x="42" y="16" width="48" height="6" rx="3"/><rect x="42" y="26" width="30" height="6" rx="3" fill-opacity=".55"/></svg><span class="mono">Compute</span><svg class="ar"><use href="#arrow"/></svg></a>
+      <a class="ptile reveal" href="#partners"><svg class="lg" viewBox="0 0 96 48" fill="#ffb3c1"><circle cx="20" cy="24" r="14" fill="none" stroke="#ffb3c1" stroke-width="4"/><circle cx="20" cy="24" r="5"/><rect x="42" y="16" width="48" height="6" rx="3"/><rect x="42" y="26" width="36" height="6" rx="3" fill-opacity=".55"/></svg><span class="mono">Foundation Models</span><svg class="ar"><use href="#arrow"/></svg></a>
+      <a class="ptile reveal" href="#partners"><svg class="lg" viewBox="0 0 96 48" fill="none" stroke="#ffb3c1" stroke-width="4" stroke-linecap="round"><path d="M8 32 18 16l10 16 10-16"/><path d="M48 24h40M48 34h26" /><path d="M48 14h34" stroke-opacity=".55"/></svg><span class="mono">Vector Data</span><svg class="ar"><use href="#arrow"/></svg></a>
+      <a class="ptile reveal" href="#partners"><svg class="lg" viewBox="0 0 96 48" fill="#ffb3c1"><path d="M20 8 34 16v16L20 40 6 32V16Z"/><path d="M20 18 26 21v6l-6 3-6-3v-6Z" fill="#0027ba"/><rect x="42" y="16" width="44" height="6" rx="3"/><rect x="42" y="26" width="26" height="6" rx="3" fill-opacity=".55"/></svg><span class="mono">Observability</span><svg class="ar"><use href="#arrow"/></svg></a>
+    </div>
+  </section>
+
+  <!-- ================= PROGRAM ================= -->
+  <section id="program" data-section="program">
+    <div class="box bg-pink moments reveal grain">
+      <div class="sh">
+        <div class="sh-left"><p class="label">[Program]</p><h2 class="h2">Two Days. Five Tracks.</h2></div>
+        <a class="btn" href="#tickets">Get a Pass <svg class="ar"><use href="#arrow"/></svg></a>
+      </div>
+      <div class="tracks mono">
+        <span>01 · Agents &amp; Tool Use</span><span>02 · Multimodal</span><span>03 · Evals &amp; Safety</span><span>04 · Infra &amp; Inference</span><span>05 · AI Product</span>
+      </div>
+      <div class="grid g3">
+        <div class="kf">
+          <h3 class="h3">Signature Experiences</h3>
+          <div class="grid g3" style="gap:32px">
+            <div class="feat"><div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12v1M15 12v1M9 16h6"/></svg></div><div><p class="label">Agent Build Lab</p><p class="body">Pair with mentors to build, test and deploy a tool-using agent in one afternoon.</p></div></div>
+            <div class="feat"><div class="ic"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9Z"/></svg></div><div><p class="label">Live Model Demos</p><p class="body">Unreleased capabilities shown on stage, then opened up for you to try on the floor.</p></div></div>
+            <div class="feat"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4ZM8 9h8M8 12h5"/></svg></div><div><p class="label">Research Salons</p><p class="body">Small-room conversations with paper authors. Twenty seats, no slides, all questions.</p></div></div>
+          </div>
+        </div>
+        <div class="scard"><svg class="spark" viewBox="0 0 90 40" fill="none"><path d="M2 36 18 28l14 4 16-14 14 6L88 4V40H2Z" fill="url(#sparkG)" fill-opacity=".18"/><path d="M2 36 18 28l14 4 16-14 14 6L88 4" stroke="url(#sparkG)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="88" cy="4" r="3.5" fill="#0027ba"/></svg><p class="stat">12K+</p><h4 class="h4">Builders in the Room</h4></div>
+        <div class="scard"><svg class="spark" viewBox="0 0 90 40" fill="url(#sparkG)"><rect x="2" y="24" width="10" height="16" rx="2"/><rect x="18" y="16" width="10" height="24" rx="2"/><rect x="34" y="20" width="10" height="20" rx="2"/><rect x="50" y="8" width="10" height="32" rx="2"/><rect x="66" y="2" width="10" height="38" rx="2"/></svg><p class="stat">120+</p><h4 class="h4">Talks &amp; Sessions</h4></div>
+        <div class="scard"><svg class="spark" viewBox="0 0 90 40" fill="none" stroke="url(#sparkG)" stroke-width="2.4"><circle cx="20" cy="20" r="16"/><circle cx="45" cy="20" r="16"/><circle cx="70" cy="20" r="16"/></svg><p class="stat">40+</p><h4 class="h4">Hands-On GPU Labs</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TICKETS ================= -->
+  <section id="tickets" data-section="tickets">
+    <div class="box bg-gray reveal">
+      <div class="sh">
+        <div class="sh-left"><p class="label">[Passes]</p><h2 class="h2">Choose Your Access</h2></div>
+        <p class="body">Early access pricing ends 31 Jan 2027. Team discounts available for groups of five or more.</p>
+      </div>
+    </div>
+    <div class="grid g3 tiers">
+      <div class="tier t1 reveal">
+        <div class="head"><p class="t20">Builder</p><span class="mono note">Day pass</span></div>
+        <p class="price">$499 <small>/ 1 day</small></p>
+        <ul class="body"><li>Access to all keynotes &amp; talks for one day</li><li>Expo floor &amp; live demo stations</li><li>Networking lounges &amp; lunch</li><li>Talk recordings after the event</li></ul>
+        <a class="btn full" href="#contact-us">Choose Builder <svg class="ar"><use href="#arrow"/></svg></a>
+      </div>
+      <div class="tier t2 reveal">
+        <div class="head"><p class="t20">Pro</p><span class="pop mono">Most popular</span></div>
+        <p class="price">$1,199 <small>/ 2 days</small></p>
+        <ul class="body"><li>Everything in Builder, both days</li><li>Reserved seat at 4 build labs with GPU credits</li><li>Research salon sign-ups</li><li>Evening reception at the pier</li><li>Certificate of completion</li></ul>
+        <a class="btn pinkb full" href="#contact-us">Choose Pro <svg class="ar"><use href="#arrow"/></svg></a>
+      </div>
+      <div class="tier t3 reveal">
+        <div class="head"><p class="t20">Founders Circle</p><span class="mono note">Limited · 150</span></div>
+        <p class="price">$3,900 <small>/ 2 days</small></p>
+        <ul class="body"><li>Everything in Pro</li><li>Private speaker dinner &amp; office hours</li><li>Investor &amp; partner matchmaking</li><li>VIP lounge with priority seating</li></ul>
+        <a class="btn ghost full" href="#contact-us">Apply to Join <svg class="ar"><use href="#arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TESTIMONIALS ================= -->
+  <section id="testimonials" data-section="testimonials">
+    <div class="box bg-gray reveal">
+      <div class="sh">
+        <div class="sh-left"><p class="label">[Testimonials]</p><h2 class="h2">Heard at Last Year’s Edition</h2></div>
+        <p class="body">What builders, founders and researchers took home from AI/CONF 2026.</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="trow reveal">
+        <div class="tphoto"><svg viewBox="0 0 200 200"><defs><clipPath id="m1"><path d="M100 0c18 30 30 42 60 40-2 30 10 42 40 60-30 18-42 30-40 60-30-2-42 10-60 40-18-30-30-42-60-40 2-30-10-42-40-60 30-18 42-30 40-60 30 2 42-10 60-40Z"/></clipPath></defs><g clip-path="url(#m1)"><rect width="200" height="200" fill="url(#deepBg)"/><use href="#floorGrid" y="-100" width="200" height="300"/><circle cx="100" cy="92" r="90" fill="url(#haloP)"/><circle cx="100" cy="86" r="66" fill="url(#lensFill)" stroke="url(#rimG)" stroke-width="1.2"/><ellipse cx="82" cy="36" rx="28" ry="8" fill="#fff" opacity=".22"/><g filter="url(#rim)" style="--shirt:#0027ba;--collar:#f4f4f4;--skin:#e7b691;--skin2:#cf9c78;--hair:#3a2a1f"><use href="#person" x="20" y="10" width="160" height="240"/></g></g></svg></div>
+        <div class="tcard bg-blue"><span class="qm">”</span><p class="quote">“We walked into the Agent Build Lab with a prototype and walked out with an eval harness and a plan to ship. It changed our roadmap for the whole quarter.”</p><div class="who"><p class="label">Michael Johnson</p><p class="label sub">Staff ML Engineer</p></div></div>
+      </div>
+      <div class="trow rev reveal">
+        <div class="tcard bg-pink"><span class="qm">”</span><p class="quote">“The most technical AI event I’ve attended. Speakers showed failure cases, not just highlights — and the research salons were worth the ticket alone.”</p><div class="who"><p class="label">Sarah Lee</p><p class="label sub">Founder, AI Startup</p></div></div>
+        <div class="tphoto"><svg viewBox="0 0 200 200"><defs><clipPath id="m2"><path d="M100 0a100 100 0 0 1 100 100v100H100A100 100 0 0 1 100 0Z"/></clipPath></defs><g clip-path="url(#m2)"><rect width="200" height="200" fill="url(#deepBg)"/><use href="#floorGrid" y="-100" width="200" height="300"/><circle cx="100" cy="92" r="90" fill="url(#haloB)"/><circle cx="100" cy="86" r="66" fill="url(#lensFill)" stroke="url(#rimG)" stroke-width="1.2"/><ellipse cx="82" cy="36" rx="28" ry="8" fill="#fff" opacity=".22"/><g filter="url(#rim)" style="--shirt:#ffb3c1;--collar:#0027ba;--skin:#f0c8aa;--skin2:#dbab8b;--hair:#14100d"><use href="#person-long" x="20" y="10" width="160" height="240"/></g></g></svg></div>
+      </div>
+      <div class="trow reveal">
+        <div class="tphoto"><svg viewBox="0 0 200 200"><defs><clipPath id="m3"><path d="M0 0h140a60 60 0 0 1 60 60v140H60A60 60 0 0 1 0 140Z"/></clipPath></defs><g clip-path="url(#m3)"><rect width="200" height="200" fill="url(#deepBg)"/><use href="#floorGrid" y="-100" width="200" height="300"/><circle cx="100" cy="92" r="90" fill="url(#haloP)"/><circle cx="100" cy="86" r="66" fill="url(#lensFill)" stroke="url(#rimG)" stroke-width="1.2"/><ellipse cx="82" cy="36" rx="28" ry="8" fill="#fff" opacity=".22"/><g filter="url(#rim)" style="--shirt:#2f52e8;--collar:#ffb3c1;--skin:#d6a47f;--skin2:#bd8b67;--hair:#1c1c1c"><use href="#person" x="20" y="10" width="160" height="240"/></g></g></svg></div>
+        <div class="tcard bg-blue"><span class="qm">”</span><p class="quote">“I met our first two hires and our inference partner in the same afternoon. AI/CONF is where the people actually building this stuff show up.”</p><div class="who"><p class="label">Richard Kim</p><p class="label sub">Head of AI Product</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq" data-section="faq">
+    <div class="box bg-gray faq reveal">
+      <div class="sh">
+        <div class="sh-left"><p class="label">[FAQ]</p><h2 class="h2">Questions, Answered</h2></div>
+        <p class="body">Everything you need to plan your two days at AI/CONF.</p>
+      </div>
+      <div class="grid g2">
+        <div class="faq-col">
+          <div class="qa"><div class="q"><p class="label">Do I need a machine learning background?</p><span class="plus"></span></div><div class="a"><div><p class="body">Not for every session. Each talk is tagged Intro, Practitioner or Deep Dive, so product leaders and seasoned researchers can both build a schedule that fits.</p></div></div></div>
+          <div class="qa"><div class="q"><p class="label">What do I need for the build labs?</p><span class="plus"></span></div><div class="a"><div><p class="body">Just a laptop. Pro and Founders Circle passes include cloud GPU credits and pre-configured environments, so you can start building in minutes.</p></div></div></div>
+          <div class="qa"><div class="q"><p class="label">Will sessions be recorded?</p><span class="plus"></span></div><div class="a"><div><p class="body">All main-stage talks are recorded and available to every pass holder within two weeks. Research salons are off the record.</p></div></div></div>
+        </div>
+        <div class="faq-col">
+          <div class="qa"><div class="q"><p class="label">Can I submit a talk or poster?</p><span class="plus"></span></div><div class="a"><div><p class="body">Yes — the call for proposals is open until 15 Dec 2026. Use the contact form below and choose “Speaking &amp; Research Posters”.</p></div></div></div>
+          <div class="qa"><div class="q"><p class="label">Are there student or academic discounts?</p><span class="plus"></span></div><div class="a"><div><p class="body">We reserve discounted passes for students and university researchers. Reach out with your institutional email to request one.</p></div></div></div>
+          <div class="qa"><div class="q"><p class="label">What is the refund policy?</p><span class="plus"></span></div><div class="a"><div><p class="body">Full refunds up to 30 days before the event. After that, passes can be transferred to a teammate at no cost.</p></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BLOG ================= -->
+  <section id="blog" data-section="journal">
+    <div class="box bg-pink reveal grain">
+      <div class="sh">
+        <div class="sh-left"><p class="label">[Journal]</p><h2 class="h2">Field Notes from the Frontier</h2></div>
+        <a class="btn" href="#blog">View All <svg class="ar"><use href="#arrow"/></svg></a>
+      </div>
+    </div>
+    <div class="grid g3 blog">
+      <a class="post reveal" href="#blog">
+        <div class="cover"><div class="cov-agent depth"><div class="floor"></div><div class="halo"></div><svg class="think" viewBox="0 0 200 120" aria-hidden="true"><g filter="url(#goo)" fill="url(#liquidR)">
+          <ellipse cx="100" cy="118" rx="54" ry="8"/>
+          <circle class="b" cx="84" cy="114" r="14" style="animation-delay:0s"/><circle class="b" cx="112" cy="114" r="11" style="animation-delay:-1.2s"/>
+          <circle class="b" cx="98" cy="114" r="16" style="animation-delay:-2.4s"/><circle class="b" cx="126" cy="114" r="9" style="animation-delay:-.6s"/>
+        </g></svg><div class="term"><div class="bar"><i></i><i></i><i></i></div><pre><b>agent</b> ▸ plan: book venue for 40
+<u>tool</u>  search_venues(city="SF")
+<u>tool</u>  check_calendar(dates=2)
+<b>agent</b> ▸ 3 options found
+<u>eval</u>  task_success: <b>0.94</b> ✓</pre></div></div></div>
+        <div class="meta"><div class="row mono"><span>Oct 21, 2026</span><span>6 min read</span></div><p class="t20">Inside the Agent Build Lab</p></div>
+      </a>
+      <a class="post reveal" href="#blog">
+        <div class="cover"><div class="cov-evals depth"><div class="floor"></div><div class="halo b" style="top:40%"></div><span class="lbl mono">Benchmark · Pass@1</span><div class="tubes"><span class="tube b"><i style="--h:38%"></i></span><span class="tube"><i style="--h:52%"></i></span><span class="tube b"><i style="--h:47%"></i></span><span class="tube"><i style="--h:70%"></i></span><span class="tube b"><i style="--h:64%"></i></span><span class="tube"><i style="--h:88%"></i></span></div><div class="axis"></div></div></div>
+        <div class="meta"><div class="row mono"><span>Oct 09, 2026</span><span>9 min read</span></div><p class="t20">Writing Evals That Actually Predict Production</p></div>
+      </a>
+      <a class="post reveal" href="#blog">
+        <div class="cover"><div class="cov-rag depth"><div class="floor"></div><div class="halo" style="top:50%;width:90%"></div><svg class="pipe" viewBox="0 30 300 360" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <g stroke="#ffb3c1" stroke-opacity=".2"><path d="M150 92v54M150 186v54M150 280v54" stroke-width="10" stroke-linecap="round"/></g>
+          <g filter="url(#goo)">
+            <rect x="80" y="52" width="140" height="40" rx="20" fill="url(#liquidH)"/>
+            <rect x="80" y="146" width="140" height="40" rx="20" fill="url(#deepPill)"/>
+            <rect x="80" y="240" width="140" height="40" rx="20" fill="url(#deepPill)"/>
+            <rect x="80" y="334" width="140" height="40" rx="20" fill="url(#liquidH)"/>
+            <g fill="#ffc9d4"><circle class="drop" cx="150" cy="92" r="8" style="animation-delay:-0.29s"/><circle class="drop" cx="150" cy="92" r="8" style="animation-delay:-1.19s"/><circle class="drop" cx="150" cy="186" r="8" style="animation-delay:-0.59s"/><circle class="drop" cx="150" cy="186" r="8" style="animation-delay:-1.49s"/><circle class="drop" cx="150" cy="280" r="8" style="animation-delay:-0.89s"/><circle class="drop" cx="150" cy="280" r="8" style="animation-delay:-1.79s"/></g>
+          </g>
+          <g fill="none" stroke="url(#rimG)" stroke-width="1.2"><rect x="80" y="146" width="140" height="40" rx="20"/><rect x="80" y="240" width="140" height="40" rx="20"/></g>
+          <g fill="#fff" opacity=".35"><rect x="96" y="56" width="70" height="5" rx="2.5"/><rect x="96" y="150" width="70" height="4" rx="2"/><rect x="96" y="244" width="70" height="4" rx="2"/><rect x="96" y="338" width="70" height="5" rx="2.5"/></g>
+          <g font-family="JetBrains Mono,monospace" font-size="11" text-anchor="middle" letter-spacing="1">
+            <text x="150" y="76" fill="#0027ba">DOCUMENTS</text><text x="150" y="170" fill="#ffb3c1">EMBED</text>
+            <text x="150" y="264" fill="#ffb3c1">RETRIEVE</text><text x="150" y="358" fill="#0027ba">LLM ANSWER</text>
+          </g>
+          <g fill="url(#liquidR)"><circle cx="40" cy="170" r="5"/><circle cx="58" cy="148" r="3.5"/><circle cx="32" cy="200" r="3"/><circle cx="262" cy="160" r="5"/><circle cx="246" cy="190" r="3.5"/><circle cx="272" cy="210" r="3"/></g>
+        </svg></div></div>
+        <div class="meta"><div class="row mono"><span>Sep 30, 2026</span><span>7 min read</span></div><p class="t20">Retrieval in 2027: What Changed and What Didn’t</p></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= RESOURCES ================= -->
+  <section id="resources" data-section="archive">
+    <div class="res reveal">
+      <div class="res-inner">
+        <div class="res-head"><p class="label">[Archive]</p><h2 class="h2" style="text-align:center">Past Editions &amp; Talk Library</h2></div>
+        <div class="grid g4">
+          <div class="rblock"><p class="mono">86 talks</p><h4 class="h4">AI/Conf 2026</h4><a class="btn full" href="https://www.youtube.com/" target="_blank" rel="noopener">Watch Now <svg class="ar"><use href="#arrow"/></svg></a></div>
+          <div class="rblock"><p class="mono">64 talks</p><h4 class="h4">AI/Conf 2025</h4><a class="btn full" href="https://www.youtube.com/" target="_blank" rel="noopener">Watch Now <svg class="ar"><use href="#arrow"/></svg></a></div>
+          <div class="rblock"><p class="mono">41 talks</p><h4 class="h4">AI/Conf 2024</h4><a class="btn full" href="https://www.youtube.com/" target="_blank" rel="noopener">Watch Now <svg class="ar"><use href="#arrow"/></svg></a></div>
+          <div class="rblock"><p class="mono">120 papers</p><h4 class="h4">Poster Library</h4><a class="btn full" href="#resources">Browse <svg class="ar"><use href="#arrow"/></svg></a></div>
+        </div>
+      </div>
+      <div class="scene dc depth"><div class="floor"></div><div class="glow"></div><div class="halo b"></div><div class="racks" id="racks"></div><svg class="loop" viewBox="0 0 600 60" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <rect x="6" y="14" width="588" height="32" rx="16" fill="#000a32" opacity=".5"/>
+        <rect x="6" y="14" width="588" height="32" rx="16" fill="url(#glassFill)" stroke="url(#rimG)"/>
+        <g filter="url(#goo)" fill="url(#liquidH)"><rect x="14" y="27" width="572" height="6" rx="3" opacity=".6"/><circle cx="58" cy="30" r="9"/><circle cx="155" cy="30" r="9"/><circle cx="252" cy="30" r="9"/><circle cx="349" cy="30" r="9"/><circle cx="446" cy="30" r="9"/><circle cx="543" cy="30" r="9"/><circle class="flow" cx="-30" cy="30" r="9" style="animation-duration:8.8s;animation-delay:-3.6s"/><circle class="flow" cx="-30" cy="30" r="7" style="animation-duration:5.3s;animation-delay:-4.8s"/><circle class="flow" cx="-30" cy="30" r="9" style="animation-duration:7.3s;animation-delay:-8.2s"/><circle class="flow" cx="-30" cy="30" r="7" style="animation-duration:5.1s;animation-delay:-3.9s"/><circle class="flow" cx="-30" cy="30" r="7" style="animation-duration:6.0s;animation-delay:-5.0s"/><circle class="flow" cx="-30" cy="30" r="7" style="animation-duration:8.3s;animation-delay:-1.1s"/><circle class="flow" cx="-30" cy="30" r="7" style="animation-duration:7.5s;animation-delay:-5.2s"/><circle class="flow" cx="-30" cy="30" r="7" style="animation-duration:7.3s;animation-delay:-3.6s"/><circle class="flow" cx="-30" cy="30" r="7" style="animation-duration:5.2s;animation-delay:-7.7s"/></g>
+        <path d="M24 17h552" stroke="#fff" stroke-opacity=".35"/>
+      </svg></div>
+    </div>
+  </section>
+</div><!-- /content -->
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" data-section="sidebar">
+  <div class="agenda">
+    <div class="scene core"><div class="floor"></div><div class="halo" style="top:32%;width:90%"></div>
+      <!-- Morphing orb adapted from Uiverse.io by andrew-manzyk -->
+      <div class="orb-wrap">
+        <div class="morph">
+          <svg width="100" height="100" viewBox="0 0 100 100" aria-hidden="true">
+            <defs>
+              <mask id="agendaClip">
+                <polygon points="0,0 100,0 100,100 0,100" fill="black"></polygon>
+                <polygon points="25,25 75,25 50,75" fill="white"></polygon>
+                <polygon points="50,25 75,75 25,75" fill="white"></polygon>
+                <polygon points="35,35 65,35 50,65" fill="white"></polygon>
+                <polygon points="35,35 65,35 50,65" fill="white"></polygon>
+                <polygon points="35,35 65,35 50,65" fill="white"></polygon>
+                <polygon points="35,35 65,35 50,65" fill="white"></polygon>
+              </mask>
+            </defs>
+          </svg>
+          <div class="box"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sched mono">
+      <div><b>09:00</b>Opening keynote</div>
+      <div><b>11:30</b>Agent Build Lab</div>
+      <div><b>16:00</b>Live model demos</div>
+    </div>
+    <h3 class="h3">Agenda at a Glance</h3>
+    <a class="btn ghost" href="#program" style="align-self:flex-start">View Agenda</a>
+  </div>
+  <div class="ticket">
+    <div class="tc">
+      <div class="count" id="count">
+        <div><b id="cd-d">--</b><span>Days</span></div><div><b id="cd-h">--</b><span>Hrs</span></div><div><b id="cd-m">--</b><span>Min</span></div><div><b id="cd-s">--</b><span>Sec</span></div>
+      </div>
+      <div class="txt"><h3 class="h3">Claim Your Seat</h3><p class="body">Early access passes are limited. Join 12,000 builders in San Francisco this April.</p></div>
+    </div>
+    <a class="tbtn" href="#tickets">Get a Pass <svg viewBox="0 0 16 16"><use href="#arrow"/></svg></a>
+  </div>
+</aside>
+</div><!-- /layout -->
+
+<!-- ================= CONTACT ================= -->
+<section id="contact-us" data-section="contact">
+  <div class="contact grain">
+    <div class="ch">
+      <div class="head"><p class="label" style="padding-left:4px">[Contact]</p><h2 class="h2">Talk to the Team</h2></div>
+      <div class="pills">
+        <a class="pill" href="mailto:hello@aiconf.example">hello@aiconf</a>
+        <a class="pill" href="https://www.x.com" target="_blank" rel="noopener">Twitter (X)</a>
+        <a class="pill" href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="formcard">
+      <h3 class="h3">Speaking, Sponsoring or Just Curious?</h3>
+      <form id="form">
+        <label class="field"><span class="label">Name</span><input type="text" name="Name" placeholder="Ada Morgan" required></label>
+        <label class="field"><span class="label">Work Email</span><input type="email" name="Email" placeholder="ada@company.com" required></label>
+        <label class="field"><span class="label">Inquiry Type</span>
+          <select name="Inquiry Type" required>
+            <option value="" disabled selected>Select the topic</option>
+            <option>Passes &amp; Team Discounts</option><option>Speaking &amp; Research Posters</option><option>Sponsorship &amp; Booths</option>
+            <option>Build Lab Mentoring</option><option>Press &amp; Media</option><option>Accessibility Services</option><option>General Information</option>
+          </select></label>
+        <label class="field"><span class="label">Message</span><textarea name="Message" placeholder="Tell us what you’re building…" required></textarea></label>
+        <button type="submit" class="send">Send a Message</button>
+      </form>
+      <p class="formok t20" id="formok">Thanks! Our team will reply within one business day.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="footer" data-section="footer">
+  <div class="fwrap">
+    <svg class="bigmark" viewBox="0 0 24 24" fill="#ffb3c1" color="#ffb3c1"><use href="#mark"/></svg>
+    <div class="fgrid">
+      <div class="fleft">
+        <div class="lt"><a href="#hero" class="logo"><svg fill="currentColor"><use href="#mark"/></svg>AI/conf</a><p class="label">The conference for people training, shipping and aligning the next generation of AI.</p></div>
+        <p class="label" style="color:var(--white60)">© 2026 AI/CONF. All Rights Reserved</p>
+      </div>
+      <div class="fright">
+        <h2 class="h2">The Future Is Trained Here. See You in April.</h2>
+        <div class="flinks"><a href="#about">About</a><a href="#program">Program</a><a href="#tickets">Passes</a><a href="#blog">Journal</a></div>
+        <form class="news" id="news"><input type="email" placeholder="Get program updates — your@email.com" required><button class="btn pinkb" type="submit">Subscribe</button></form>
+      </div>
+    </div>
+    <a class="fticket" href="#tickets"><span class="h3">Get Your Pass</span><svg viewBox="0 0 16 16"><use href="#arrow"/></svg></a>
+  </div>
+</footer>
+</div><!-- /container -->
+
+<div class="bottombar" id="bottombar">
+  <div class="inner"><h3 class="h3">Claim Your Seat</h3><a class="tbtn" href="#tickets">Get a Pass <svg viewBox="0 0 16 16"><use href="#arrow"/></svg></a></div>
+</div>
+
+<script>
+// mobile menu
+const nav=document.getElementById('nav');
+document.getElementById('burger').addEventListener('click',()=>nav.classList.toggle('open'));
+nav.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+
+// FAQ
+document.querySelectorAll('.qa').forEach(q=>q.addEventListener('click',()=>q.classList.toggle('open')));
+
+// forms
+document.getElementById('form').addEventListener('submit',e=>{e.preventDefault();e.target.style.display='none';document.getElementById('formok').style.display='block'});
+document.getElementById('news').addEventListener('submit',e=>{e.preventDefault();const b=e.target.querySelector('button');b.textContent='Subscribed ✓';e.target.querySelector('input').value=''});
+
+// bottom bar
+const bar=document.getElementById('bottombar'),hero=document.getElementById('hero');
+const onScroll=()=>bar.classList.toggle('show',window.scrollY>hero.offsetHeight*.6);
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// marquee duplicate
+const mt=document.getElementById('mtrack');mt.innerHTML+=mt.innerHTML;
+
+// partner tile spotlight
+document.querySelectorAll('.ptile').forEach(t=>t.addEventListener('mousemove',e=>{const r=t.getBoundingClientRect();t.style.setProperty('--mx',(e.clientX-r.left)+'px');t.style.setProperty('--my',(e.clientY-r.top)+'px')}));
+
+// typed prompt
+(function(){
+  const lines=['train(model, data="the world")','eval(agent, tasks=1200) → 0.94','deploy(to="production", latency="<200ms")','align(model, values="human")'];
+  const el=document.getElementById('typed');let li=0,ci=0,del=false;
+  (function tick(){const s=lines[li];el.textContent=s.slice(0,ci);
+    if(!del&&ci<s.length){ci++;setTimeout(tick,55)}else if(!del){del=true;setTimeout(tick,1600)}
+    else if(ci>0){ci--;setTimeout(tick,22)}else{del=false;li=(li+1)%lines.length;setTimeout(tick,300)}})();
+})();
+
+// attention heatmap
+document.querySelectorAll('.hgrid').forEach(g=>{
+  const n=+g.dataset.n;g.style.gridTemplateColumns=`repeat(${n},1fr)`;const cells=[];
+  for(let i=0;i<n*n;i++){const c=document.createElement('i');g.appendChild(c);cells.push(c)}
+  const paint=()=>cells.forEach((c,k)=>{const r=Math.floor(k/n),col=k%n;
+    let v=col>r?0.04:Math.exp(-Math.abs(r-col)/2.5)*.85+Math.random()*.25;if(col===0&&col<=r)v=Math.max(v,.5);c.style.opacity=Math.min(1,v).toFixed(2)});
+  paint();setInterval(paint,2600);
+});
+
+// data center racks
+(function(){const r=document.getElementById('racks');for(let i=0;i<6;i++){const k=document.createElement('div');k.className='rack';
+  for(let j=0;j<10;j++){const l=document.createElement('i');l.style.top=(8+j*17)+'px';l.style.left=(12+Math.random()*60)+'%';l.style.animationDelay=(Math.random()*1.4)+'s';k.appendChild(l)}
+  r.appendChild(k)}})();
+
+// countdown to 14 Apr 2027 9:00 PT
+(function(){const t=new Date('2027-04-14T09:00:00-07:00').getTime();const p=n=>String(n).padStart(2,'0');
+  function u(){let d=Math.max(0,t-Date.now())/1000;
+    document.getElementById('cd-d').textContent=Math.floor(d/86400);document.getElementById('cd-h').textContent=p(Math.floor(d%86400/3600));
+    document.getElementById('cd-m').textContent=p(Math.floor(d%3600/60));document.getElementById('cd-s').textContent=p(Math.floor(d%60))}
+  u();setInterval(u,1000)})();
+</script>
+</body>
+</html>
