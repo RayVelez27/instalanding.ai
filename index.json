@@ -1000,8 +1000,8 @@
       "page": "https://instalanding.ai/prompt/ostler-ai-hotel-concierge-page"
     },
     {
-      "slug": "wayfind-ai-travel-companion-page",
-      "title": "Wayfind AI Travel Companion Page",
+      "slug": "wayfind-ai-travel-companion-page-v2",
+      "title": "Wayfind AI Travel Companion Page V2",
       "description": "A sand-and-sea expedition poster of a page for an AI travel companion: \"wayfind\" is cut out of a desert photo that opens to full bleed as you scroll, mode posters stack and tilt, a nine-day route draws itself sideways, and every photo is raymarched live in WebGL",
       "category": "web",
       "theme": "light",
@@ -1064,12 +1064,12 @@
       },
       "credits": [],
       "files": {
-        "html": "pages/wayfind-ai-travel-companion-page/index.html",
-        "prompt": "pages/wayfind-ai-travel-companion-page/PROMPT.md",
-        "preview": "pages/wayfind-ai-travel-companion-page/preview.jpg"
+        "html": "pages/wayfind-ai-travel-companion-page-v2/index.html",
+        "prompt": "pages/wayfind-ai-travel-companion-page-v2/PROMPT.md",
+        "preview": "pages/wayfind-ai-travel-companion-page-v2/preview.jpg"
       },
-      "liveDemo": "https://instalanding.ai/demos/wayfind-ai-travel.html",
-      "page": "https://instalanding.ai/prompt/wayfind-ai-travel-companion-page"
+      "liveDemo": "https://instalanding.ai/demos/wayfind-ai-travel-v2.html",
+      "page": "https://instalanding.ai/prompt/wayfind-ai-travel-companion-page-v2"
     },
     {
       "slug": "tarn-file-transfer-page",

@@ -1,9 +1,24 @@
+INSTALANDING.AI · Wayfind AI Travel Companion Page V2
+
+The page below is the build. Use it as the starting point, not as inspiration:
+- Keep its layout, design values (colours, type, spacing, radii) and motion exactly as they are.
+- Replace the fictional brand, copy, names and numbers with mine.
+- If I name a stack (React, Next.js, Vue, Svelte, Astro...), convert it faithfully to that stack;
+  otherwise ship it as this one HTML file.
+- Read the MAP and ADAPTING notes in its header comment before you edit.
+- Check it in a real browser: no console errors, no horizontal scroll at 390px, reduced motion respected.
+
+Credit: keep this line as a comment at the top of the file you produce:
+Wayfind AI Travel Companion Page V2 · INSTALANDING.AI (MIT) · https://instalanding.ai/prompt/wayfind-ai-travel-companion-page-v2
+
+wayfind-ai-travel-v2.html:
+```html
 <!doctype html>
 <!--
-  INSTALANDING.AI · Wayfind AI Travel Companion Page
-  slug     wayfind-ai-travel-companion-page
-  prompt   https://instalanding.ai/p/wayfind-ai-travel-companion-page.txt   (the one-shot brief this file was built from)
-  page     https://instalanding.ai/prompt/wayfind-ai-travel-companion-page
+  INSTALANDING.AI · Wayfind AI Travel Companion Page V2
+  slug     wayfind-ai-travel-companion-page-v2
+  prompt   https://instalanding.ai/p/wayfind-ai-travel-companion-page-v2.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/wayfind-ai-travel-companion-page-v2
   license  Fictional brand ("Wayfind", Barcelona); every agent, trip, figure, person and quote is invented.
            Replace names, numbers and copy before shipping. Every picture is rendered in code; no image files.
 
@@ -19,7 +34,16 @@
             2. Scene renderer (WebGL): one fragment shader raymarches dunes, ridges, canyons, a volcano, salt flats,
                lakes with reflections, night skies with the Milky Way, a globe and a studio still life; 2D overlays
                add the 4x4s, tents, camels, campfire and backlit portraits; each result becomes the img's src.
-               Hero and contact render first, then whatever is near the viewport. ?scenescale=0.5 renders smaller.
+               V2 loading: every img shows its SVG illustration on first paint; WebGL boots after load and
+               compiles the shader in the background (KHR_parallel_shader_compile; without it the illustrations
+               stay); a picture is rendered only once it is within a screen of the viewport, one at a time, drawn
+               in strips across frames, sized to its on-screen size (x1.5 density at most, capped at 1280px for the
+               hero/contact, 900px for the rest) and encoded with toBlob. ?scenescale=0.5 renders smaller still.
+               Why V1 was slow: it compiled this long shader on the main thread (on Windows the Direct3D compile
+               alone froze the page for minutes on integrated graphics), then rendered all 26 pictures at up to
+               1400px straight away, each in one blocking draw, read-back and synchronous toDataURL.
+               Keep the V2 rules if you add scenes: compile in the background, never render what is not near the
+               screen, and never draw a whole picture in one call.
             3. UI that works without motion: the star menu (a diamond clip-path opening), photo knockout type (the
                hero and contact words are filled with their photo), sticky poster offsets, bar chart heights, the
                monthly/yearly switch
@@ -1083,20 +1107,34 @@ void main(){
  gl_FragColor=vec4(col,1.);
 }`;
 
-/* ---------- GL boot ---------- */
-let gl,prog,cv;
+/* ---------- GL boot (V2): after first paint, and compiled OFF the main thread ----------
+   This shader is long (raymarch loops of up to 300 steps over 9-octave noise). On Windows, ANGLE hands it to the
+   Direct3D compiler, which can take minutes, and a plain compile + LINK_STATUS check blocks the page for all of it.
+   KHR_parallel_shader_compile lets the browser compile in the background while we poll COMPLETION_STATUS_KHR.
+   Without that extension the page keeps its SVG illustrations rather than risk the freeze. */
+let gl,prog,cv,lost=false,booted=null;
+function boot(){if(booted)return booted;return booted=new Promise(res=>{
 try{
   cv=document.createElement('canvas');
   gl=cv.getContext('webgl',{preserveDrawingBuffer:true,antialias:false,alpha:false,powerPreference:'high-performance'});
   if(!gl)throw new Error('no webgl');
-  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(o));return o};
-  prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);
-  if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(prog));
-  gl.useProgram(prog);
-  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
-  const al=gl.getAttribLocation(prog,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
-}catch(e){console.warn('Scene renderer unavailable, using illustrations.',e);imgs.forEach(svgOne);return}
-let lost=false;cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lost=true});
+  const par=gl.getExtension('KHR_parallel_shader_compile');
+  if(!par)throw new Error('no KHR_parallel_shader_compile: a blocking compile could freeze the page');
+  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o};
+  const vs=sh(gl.VERTEX_SHADER,VS),fs=sh(gl.FRAGMENT_SHADER,FS);
+  prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
+  const ready=()=>{
+    if(gl.isContextLost())return res(false);
+    if(!gl.getProgramParameter(prog,par.COMPLETION_STATUS_KHR))return setTimeout(ready,100);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){console.warn('Scene renderer unavailable, keeping the illustrations.',gl.getShaderInfoLog(fs)||gl.getProgramInfoLog(prog));return res(false)}
+    gl.useProgram(prog);
+    const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    const al=gl.getAttribLocation(prog,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
+    cv.addEventListener('webglcontextlost',e=>{e.preventDefault();lost=true});
+    res(true)};
+  ready();
+}catch(e){console.warn('Scene renderer unavailable, keeping the illustrations.',e);res(false)}
+})}
 
 const L={};const loc=n=>(n in L)?L[n]:(L[n]=gl.getUniformLocation(prog,n));
 const set=(n,v)=>{const l=loc(n);if(l==null)return;if(typeof v==='number')gl.uniform1f(l,v);else if(v.length===2)gl.uniform2fv(l,v);else if(v.length===3)gl.uniform3fv(l,v);else gl.uniform4fv(l,v)};
@@ -1404,15 +1442,24 @@ brownMtn:{T:1,seed:13,cam:[0,25,.02],fl:1.25,sun:[.55,.45,.5],sunCol:'#ffeacc',s
 
 /* ---------- render one image ---------- */
 function camVecs(P){const p=P._cam[2],y=P.yaw;const fw=[Math.sin(y)*Math.cos(p),Math.sin(p),Math.cos(y)*Math.cos(p)];let rt=[fw[2],0,-fw[0]];const l=Math.hypot(...rt);rt=rt.map(v=>v/l);const up=[fw[1]*rt[2]-fw[2]*rt[1],fw[2]*rt[0]-fw[0]*rt[2],fw[0]*rt[1]-fw[1]*rt[0]];return{fw,rt,up}}
-function render(img){
+async function render(img){
   const name=img.dataset.scene,s=S[name];if(!s)return svgOne(img);
   const aw=+img.getAttribute('width')||1600,ah=+img.getAttribute('height')||1067;
-  const cap=(innerWidth<700?1000:1400)*QS;const k=Math.min(1,cap/Math.max(aw,ah));
+  // Size to what is on screen (at up to 1.5x density), never to the 1600px attribute: the pixel count is the cost.
+  // Full-bleed knockout photos (hero, contact) get a higher cap than the cards.
+  const big=prio(img)<2,shown=img.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.5);
+  const need=Math.max(shown.width/aw,shown.height/ah)*Math.max(aw,ah)*dpr||0;
+  const cap=(innerWidth<700?(big?900:640):(big?1280:900))*QS;
+  const k=Math.min(1,Math.max(360,Math.min(cap,need||cap))/Math.max(aw,ah));
   const W=Math.round(aw*k),H=Math.round(ah*k);
   const bg=s.bg||1;const RW=Math.round(W*bg),RH=Math.round(H*bg);
   cv.width=RW;cv.height=RH;gl.viewport(0,0,RW,RH);
   const P=apply(s,RW,RH);
-  gl.drawArrays(gl.TRIANGLES,0,3);
+  // Draw in horizontal strips, one per frame: each GPU job stays short (no 2s Windows GPU watchdog reset on
+  // integrated graphics) and the page keeps scrolling between them. The read-back below then has nothing left to wait for.
+  const band=Math.max(16,Math.round(RH/24));gl.enable(gl.SCISSOR_TEST);
+  for(let y=0;y<RH;y+=band){gl.scissor(0,y,RW,Math.min(band,RH-y));gl.drawArrays(gl.TRIANGLES,0,3);gl.flush();await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));if(lost)throw new Error('context lost')}
+  gl.disable(gl.SCISSOR_TEST);
   const out=document.createElement('canvas');out.width=W;out.height=H;const c=out.getContext('2d');
   if(bg<1){c.filter=`blur(${Math.round(W*.006)}px)`;c.drawImage(cv,-W*.02,-H*.02,W*1.04,H*1.04);c.filter='none'}else c.drawImage(cv,0,0,W,H);
   seedR=(P.seed*7919|0)%2147483647||1;
@@ -1426,26 +1473,37 @@ function render(img){
     try{s.ov(c,A)}catch(e){console.error(name,e)}
   }
   grain(c,W,H,.07);
-  img.src=out.toDataURL('image/jpeg',.9);img.dataset.rendered='gl';
+  // Async encode (toBlob) instead of toDataURL, so the JPEG encode happens off the main thread
+  return new Promise(res=>{const done=src=>{img.src=src;img.dataset.rendered='gl';res()};
+    if(out.toBlob)out.toBlob(b=>done(b?URL.createObjectURL(b):out.toDataURL('image/jpeg',.88)),'image/jpeg',.88);else done(out.toDataURL('image/jpeg',.88))});
 }
 
-/* ---------- schedule: knockout images first, then whatever is nearest the viewport ---------- */
-const queue=[...imgs];
+/* ---------- schedule (V2) ----------
+   1. Every picture shows its SVG illustration at once, so the page is complete on first paint.
+   2. WebGL boots only after the page has loaded and painted.
+   3. A picture is rendered only when it comes within one screen of the viewport, one at a time, in idle time,
+      and its photo replaces the illustration. Pictures nobody scrolls to are never rendered. */
+imgs.forEach(svgOne);
 const prio=i=>i.closest('.hero')?0:i.closest('.contact')?1:2;
-queue.sort((a,b)=>prio(a)-prio(b));
+const queue=[...imgs];
 const near=new Set();
-if('IntersectionObserver'in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)near.add(e.target);else near.delete(e.target)}),{rootMargin:'150% 0px'});imgs.forEach(i=>io.observe(i))}
-let first=true;
+const idle=fn=>window.requestIdleCallback?requestIdleCallback(fn,{timeout:400}):setTimeout(fn,60);
+let busy=false,started=false;
 function step(){
-  if(!queue.length)return;
-  if(lost){queue.splice(0).forEach(svgOne);return}
-  let idx=queue.findIndex(i=>prio(i)<2);if(idx<0)idx=queue.findIndex(i=>near.has(i));if(idx<0)idx=0;
-  const img=queue.splice(idx,1)[0];
-  try{render(img)}catch(e){console.error('scene',img.dataset.scene,e);svgOne(img)}
-  if(first&&!queue.some(i=>prio(i)<2)){first=false;setTimeout(()=>dispatchEvent(new Event('resize')),50)}
-  setTimeout(step,16);
+  if(busy||!started||!queue.length)return;
+  if(lost){queue.length=0;return}
+  // the hero first, then whatever is nearest the viewport; nothing that is still far away
+  let idx=queue.findIndex(i=>prio(i)===0&&near.has(i));if(idx<0)idx=queue.findIndex(i=>near.has(i));if(idx<0)return;
+  const img=queue.splice(idx,1)[0];busy=true;
+  let p;try{p=render(img)}catch(e){console.error('scene',img.dataset.scene,e);p=Promise.resolve()}
+  p.catch(e=>console.error('scene',img.dataset.scene,e)).then(()=>{busy=false;
+    if(prio(img)<2)setTimeout(()=>dispatchEvent(new Event('resize')),50); // knockout words re-measure from the new photo
+    idle(step)});
 }
-setTimeout(step,0);
+if('IntersectionObserver'in window){const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)near.add(e.target);else near.delete(e.target)});idle(step)},{rootMargin:'100% 0px'});imgs.forEach(i=>io.observe(i))}
+else imgs.forEach(i=>near.add(i));
+const start=()=>requestAnimationFrame(()=>setTimeout(()=>boot().then(ok=>{if(!ok){queue.length=0;return}started=true;idle(step)}),120));
+if(document.readyState==='complete')start();else addEventListener('load',start,{once:true});
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
@@ -1455,3 +1513,5 @@ setTimeout(step,0);
 <script>(()=>{const root=document.documentElement;const $$=(s,r=document)=>[...r.querySelectorAll(s)];const init=(sel,fn)=>$$(sel).forEach(el=>{try{fn(el)}catch(e){console.error(e)}});const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let lenis=null;init('.menu-btn',btn=>{const menu=document.getElementById(btn.getAttribute('aria-controls'));if(!menu)return;const set=open=>{btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',(open?btn.dataset.closeLabel:btn.dataset.openLabel)||'');menu.classList.toggle('is-open',open);open?menu.removeAttribute('inert'):menu.setAttribute('inert','');root.classList.toggle('menu-open',open);if(lenis)open?lenis.stop():lenis.start()};btn.addEventListener('click',()=>set(btn.getAttribute('aria-expanded')!=='true'));menu.addEventListener('click',e=>{if(e.target.closest('a'))set(false)});addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.classList.contains('is-open')){set(false);btn.focus()}})});init('.menu-btn',btn=>{const dark=$$('[data-tone="dark"]');if(!dark.length||!('IntersectionObserver'in window))return;const on=new Set;const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?on.add(e.target):on.delete(e.target));btn.classList.toggle('on-dark',on.size>0)},{rootMargin:'-40px 0px -95% 0px'});dark.forEach(s=>io.observe(s))});document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href');if(id.length<2)return;let t=null;try{t=document.querySelector(id)}catch(_){return}if(!t)return;e.preventDefault();if(lenis)lenis.scrollTo(t,{offset:0});else t.scrollIntoView({behavior:reduce?'auto':'smooth'})});init('[data-knock]',word=>{const sec=word.closest('main > *');const frame=sec&&sec.querySelector('[data-frame]');const img=frame&&frame.querySelector('img');if(!img)return;const mark=document.createElement('span');mark.setAttribute('aria-hidden','true');mark.style.cssText='display:inline-block;width:0;height:0;vertical-align:baseline';word.append(mark);const apply=()=>{const src=img.currentSrc||img.src;if(!src||!img.naturalWidth)return;const iw=img.offsetWidth,ih=img.offsetHeight;const s=Math.max(iw/img.naturalWidth,ih/img.naturalHeight);const dw=img.naturalWidth*s,dh=img.naturalHeight*s;const pos=getComputedStyle(img).objectPosition.split(' ').map(v=>(parseFloat(v)||50)/100);const ix=frame.offsetLeft+img.offsetLeft+(iw-dw)*pos[0],iy=frame.offsetTop+img.offsetTop+(ih-dh)*(pos[1]??.5);word.style.setProperty('--kx',ix-word.offsetLeft+'px');word.style.setProperty('--ky',iy-word.offsetTop+'px');word.style.setProperty('--kw',dw+'px');word.style.setProperty('--kh',dh+'px');word.style.setProperty('--photo','url("'+src.replace(/"/g,'%22')+'")');word.classList.add('is-knock');frame.style.setProperty('--ft',Math.round(word.offsetTop+mark.offsetTop-frame.offsetTop)+'px')};if(img.complete&&img.naturalWidth)apply();else img.addEventListener('load',apply,{once:true});if('ResizeObserver'in window)new ResizeObserver(()=>apply()).observe(word);addEventListener('resize',apply);if(document.fonts)document.fonts.ready.then(apply)});init('.exp-stack',stack=>{const cards=$$(':scope > *',stack);if(!cards.length)return;const place=()=>cards.forEach((c,i)=>{const want=Math.round(Math.min(innerHeight*.1,96)+i*14);c.style.top=Math.min(want,innerHeight-c.offsetHeight-12)+'px'});place();addEventListener('resize',place);if(document.fonts)document.fonts.ready.then(place);stack._place=place});init('.route-track',track=>{const lazy=$$('img[loading="lazy"]',track);if(!lazy.length)return;const go=()=>lazy.forEach(i=>{i.loading='eager'});if(!('IntersectionObserver'in window))return go();const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){go();io.disconnect()}},{rootMargin:'150% 0px'});io.observe(track)});init('[data-chart]',chart=>{const bars=$$('.bar',chart);if(!bars.length)return;const num=b=>{const v=b.querySelector('.bar-v');const t=(b.dataset.value||v&&v.textContent||'0').replace(/,/g,'').replace(/[^0-9.-]/g,'');return Math.max(0,parseFloat(t)||0)};const vals=bars.map(num),max=Math.max(...vals,1);(chart.querySelector('.bars')||chart).style.setProperty('--max',(max*1.1).toFixed(2));bars.forEach((b,i)=>b.style.setProperty('--v',vals[i]))});init('.pricing',sec=>{const btns=$$('[data-plan-set]',sec);if(!btns.length)return;btns.forEach(b=>b.addEventListener('click',()=>{sec.setAttribute('data-plan-now',b.dataset.planSet);btns.forEach(x=>x.setAttribute('aria-pressed',String(x===b)))}))});if(!root.classList.contains('motion')||!window.gsap||!window.ScrollTrigger)return;gsap.registerPlugin(ScrollTrigger);if(window.SplitText)gsap.registerPlugin(SplitText);ScrollTrigger.config({autoRefreshEvents:'visibilitychange,resize'});if(window.Lenis){lenis=new Lenis({lerp:.1});lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)}const mm=gsap.matchMedia();const below=el=>el.getBoundingClientRect().top>innerHeight*.92;const queue=[];const scene=(sel,fn)=>queue.push({sel,fn});const near='IntersectionObserver'in window?new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;near.unobserve(e.target);(e.target._fx||[]).forEach(fn=>{try{fn(e.target)}catch(err){console.error(err)}})}),{rootMargin:'0px 0px 100% 0px'}):null;const lazy=(sel,fn)=>queue.push({sel,fn,lazy:true});scene('.hero',sec=>{const spin=gsap.to('.site-head .star, .menu-btn .star',{rotation:360,duration:28,ease:'none',repeat:-1,transformOrigin:'50% 50%'});sec.classList.add('is-live');ScrollTrigger.create({trigger:sec,start:'top bottom',end:'bottom top',onToggle:self=>{sec.classList.toggle('is-live',self.isActive);self.isActive?spin.play():spin.pause()}})});scene('.hero',sec=>{const frame=sec.querySelector('[data-frame]');if(!frame)return;const img=frame.querySelector('img'),word=sec.querySelector('.hero-word'),spec=sec.querySelector('.hero-spec'),cap=sec.querySelector('.hero-cap');const ft=()=>parseFloat(getComputedStyle(frame).getPropertyValue('--ft'))||sec.offsetHeight*.5;const mx=()=>word?word.offsetLeft:0;const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:sec,start:'top top',end:()=>'+='+Math.round(innerHeight*1.15),pin:true,scrub:true,invalidateOnRefresh:true}});tl.fromTo(frame,{clipPath:()=>`inset(${ft()}px ${mx()}px 0px ${mx()}px)`},{clipPath:'inset(0px 0px 0px 0px)',duration:1},0);if(img)tl.fromTo(img,{scale:1},{scale:1.12,duration:1},0);if(word)tl.to(word,{yPercent:38,duration:.75},0);if(spec)tl.to(spec,{yPercent:-70,autoAlpha:0,duration:.45},0);if(cap)tl.to(cap,{y:()=>-innerHeight*.05,duration:1},0)});lazy('[data-reveal]',el=>{if(!below(el))return;gsap.set(el,{y:36,autoAlpha:0});ScrollTrigger.create({trigger:el,start:'top 90%',once:true,onEnter:()=>gsap.to(el,{y:0,autoAlpha:1,duration:1.1,ease:'expo.out',clearProps:'transform'})})});lazy('[data-lines]',el=>{if(!window.SplitText||!below(el))return;SplitText.create(el,{type:'lines',mask:'lines',linesClass:'ln',autoSplit:true,onSplit:self=>gsap.from(self.lines,{yPercent:105,duration:1.2,ease:'expo.out',stagger:.09,scrollTrigger:{trigger:el,start:'top 88%',once:true}})})});lazy('[data-rule]',el=>{if(!below(el))return;gsap.fromTo(el,{'--rule':0},{'--rule':1,ease:'none',scrollTrigger:{trigger:el,start:'top 95%',end:'top 55%',scrub:true}})});lazy('[data-parallax]',box=>{const img=box.querySelector('img');if(!img)return;gsap.fromTo(img,{yPercent:-7,scale:1.16},{yPercent:7,scale:1.16,ease:'none',scrollTrigger:{trigger:box,start:'top bottom',end:'bottom top',scrub:true}})});lazy('[data-spin]',el=>{gsap.fromTo(el,{rotation:-90},{rotation:90,ease:'none',scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:true}})});lazy('[data-stretch]',el=>{if(!window.SplitText)return;SplitText.create(el,{type:'lines',linesClass:'ln',autoSplit:true,onSplit:self=>gsap.timeline({defaults:{ease:'none',duration:1},scrollTrigger:{trigger:el,start:'top 90%',end:'bottom 58%',scrub:true}}).fromTo(self.lines,{fontStretch:'75%',opacity:.15},{fontStretch:'125%',opacity:1,stagger:.45})})});scene('.exp-stack',stack=>{const cards=$$(':scope > *',stack);if(stack._place)ScrollTrigger.addEventListener('refreshInit',stack._place);cards.forEach((card,i)=>{const ph=card.querySelector('.poster-ph'),img=ph&&ph.querySelector('img');if(ph){const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:card,start:'top bottom',end:'top 25%',scrub:true}});tl.fromTo(ph,{clipPath:'inset(18% 10% 0% 10%)'},{clipPath:'inset(0% 0% 0% 0%)'},0);if(img)tl.fromTo(img,{scale:1.25},{scale:1},0)}const next=cards[i+1];if(!next)return;gsap.to(card,{scale:.9,rotation:i%2?1.8:-1.8,'--shade':.38,ease:'none',scrollTrigger:{trigger:next,start:'top bottom',end:()=>'top '+(parseFloat(next.style.top)||0)+'px',scrub:true,invalidateOnRefresh:true}})})});lazy('.rig',rig=>{const ph=rig.querySelector('.rig-ph'),img=ph&&ph.querySelector('img'),name=rig.querySelector('.rig-name');const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:rig,start:'top 94%',end:'top 40%',scrub:true}});if(ph)tl.fromTo(ph,{clipPath:'inset(49.5% 0% 49.5% 0%)'},{clipPath:'inset(0% 0% 0% 0%)'},0);if(img)tl.fromTo(img,{scale:1.35},{scale:1},0);if(name)tl.fromTo(name,{xPercent:-6,autoAlpha:.2},{xPercent:0,autoAlpha:1,duration:.7},0)});scene('.route',sec=>{const track=sec.querySelector('.route-track'),rail=sec.querySelector('.route-rail');if(!track||!rail)return;const stops=$$('.stop',rail);if(!stops.length)return;const path=rail.querySelector('.route-line path'),svg=path&&path.ownerSVGElement;let D=0,total=0,table=[],marks=[];const within=s=>{const box=s.querySelector('.stop-day')||s;let x=0,y=0,n=box;while(n&&n!==rail){x+=n.offsetLeft;y+=n.offsetTop;n=n.offsetParent}return[x+parseFloat(getComputedStyle(box).fontSize)*.31,y+box.offsetHeight/2]};const build=()=>{D=Math.max(0,rail.offsetWidth-track.clientWidth);if(!path)return;const pts=stops.map(within),W=rail.offsetWidth,H=rail.offsetHeight;if(pts.some(p=>!isFinite(p[0])||!isFinite(p[1])))return;marks=pts.map(p=>p[0]);const segs=[[[0,pts[0][1]],[pts[0][0],pts[0][1]]]];for(let i=1;i<pts.length;i++){const[xp,yp]=pts[i-1],[x,y]=pts[i],mid=xp+(x-xp)/2;segs.push([[xp,yp],[mid,yp],[mid,y],[x,y]])}segs.push([pts[pts.length-1],[W,pts[pts.length-1][1]]]);let d=`M0 ${pts[0][1]}`,len=0,prev=[0,pts[0][1]];table=[[0,0]];segs.forEach(sg=>{if(sg.length===2)d+=` L${sg[1][0]} ${sg[1][1]}`;else d+=` C${sg[1][0]} ${sg[1][1]} ${sg[2][0]} ${sg[2][1]} ${sg[3][0]} ${sg[3][1]}`;const n=sg.length===2?1:24;for(let k=1;k<=n;k++){const t=k/n,u=1-t;const p=sg.length===2?sg[1]:[0,1].map(j=>u*u*u*sg[0][j]+3*u*u*t*sg[1][j]+3*u*t*t*sg[2][j]+t*t*t*sg[3][j]);len+=Math.hypot(p[0]-prev[0],p[1]-prev[1]);prev=p;table.push([p[0],len])}});total=len;svg.setAttribute('width',W);svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);path.setAttribute('d',d);path.style.strokeDasharray=total+1};const draw=p=>{const tip=D*p+track.clientWidth*.62;if(path&&table.length){let lo=0,hi=table.length-1;while(lo<hi){const mid=lo+hi>>1;if(table[mid][0]<tip)lo=mid+1;else hi=mid}path.style.strokeDashoffset=total+1-table[lo][1]}stops.forEach((s,i)=>s.classList.toggle('is-on',tip>=(marks[i]??Infinity)-4))};build();gsap.to(rail,{x:()=>-D,ease:'none',scrollTrigger:{trigger:sec,start:'top top',end:()=>'+='+D,pin:true,scrub:true,invalidateOnRefresh:true,onRefreshInit:build,onRefresh:self=>draw(self.progress),onUpdate:self=>draw(self.progress)}});draw(0)});lazy('[data-chart]',chart=>{const bars=$$('.bar',chart);if(!bars.length)return;mm.add({wide:'(min-width: 600px)',narrow:'(max-width: 599px)'},ctx=>{const wide=ctx.conditions.wide;const tl=gsap.timeline({defaults:{ease:'none',duration:1},scrollTrigger:{trigger:chart,start:'top 88%',end:wide?'bottom 75%':'bottom 80%',scrub:true,invalidateOnRefresh:true}});bars.forEach((b,i)=>{const col=b.querySelector('.bar-col'),v=b.querySelector('.bar-v');if(!col)return;tl.fromTo(col,wide?{scaleY:0}:{scaleX:0},wide?{scaleY:1}:{scaleX:1},i*.14);if(v)tl.fromTo(v,wide?{yPercent:120,autoAlpha:0}:{xPercent:-60,autoAlpha:0},{yPercent:0,xPercent:0,autoAlpha:1},i*.14)})})});lazy('.crew',crew=>{const people=$$(':scope > *',crew);if(people.length<2)return;let amps=[];const measure=()=>{const lefts=[...new Set(people.map(p=>p.offsetLeft))].sort((a,b)=>a-b);amps=people.map(p=>lefts.indexOf(p.offsetLeft)%2?130:30)};measure();gsap.fromTo(people,{y:i=>amps[i]*.5},{y:i=>-amps[i]*.5,ease:'none',scrollTrigger:{trigger:crew,start:'top bottom',end:'bottom top',scrub:true,invalidateOnRefresh:true,onRefreshInit:measure}})});lazy('[data-marquee]',box=>{const row=box.firstElementChild;const items=row?[...row.children]:[];if(!items.length)return;items.forEach(it=>{const c=it.cloneNode(true);c.setAttribute('aria-hidden','true');c.querySelectorAll('a, button').forEach(x=>x.setAttribute('tabindex','-1'));row.append(c)});const tw=gsap.to(row,{xPercent:-50,duration:items.length*8,ease:'none',repeat:-1,paused:true});let hover=false,seen=false;const upd=()=>seen&&!hover?tw.play():tw.pause();box.addEventListener('mouseenter',()=>{hover=true;upd()});box.addEventListener('mouseleave',()=>{hover=false;upd()});box.addEventListener('focusin',()=>{hover=true;upd()});box.addEventListener('focusout',()=>{hover=false;upd()});ScrollTrigger.create({trigger:box,start:'top bottom',end:'bottom top',onToggle:self=>{seen=self.isActive;upd()}})});lazy('[data-open]',ph=>{const from={left:'inset(0% 100% 0% 0%)',right:'inset(0% 0% 0% 100%)',top:'inset(0% 0% 100% 0%)',bottom:'inset(100% 0% 0% 0%)'};const shift={left:[14,0],right:[-14,0],top:[0,14],bottom:[0,-14]};const dir=from[ph.dataset.open]?ph.dataset.open:'bottom',img=ph.querySelector('img');const tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:ph,start:'top 92%',end:'top 40%',scrub:true}});tl.fromTo(ph,{clipPath:from[dir]},{clipPath:'inset(0% 0% 0% 0%)'},0);if(img)tl.fromTo(img,{xPercent:shift[dir][0],yPercent:shift[dir][1],scale:1.2},{xPercent:0,yPercent:0,scale:1.04},0)});lazy('.plans',list=>{const plans=$$(':scope > *',list);if(!plans.length||!below(list))return;gsap.set(plans,{yPercent:12,autoAlpha:0});ScrollTrigger.create({trigger:list,start:'top 85%',once:true,onEnter:()=>gsap.to(plans,{yPercent:0,autoAlpha:1,duration:1.2,ease:'expo.out',stagger:.12,clearProps:'transform'})})});lazy('.contact-art',art=>{gsap.fromTo(art,{'--shift':'-60px'},{'--shift':'60px',ease:'none',scrollTrigger:{trigger:art,start:'top bottom',end:'bottom top',scrub:true}})});const run=()=>{const t0=performance.now();while(queue.length&&performance.now()-t0<10){const job=queue.shift();if(job.el){try{job.fn(job.el)}catch(e){console.error(e)}continue}const els=$$(job.sel);if(job.lazy&&near)els.forEach(el=>{(el._fx=el._fx||[]).push(job.fn);near.observe(el)});else queue.unshift(...els.map(el=>({el,fn:job.fn})))}if(queue.length)setTimeout(run,0)};const go=()=>{queue.sort((a,b)=>(a.lazy?1:0)-(b.lazy?1:0));requestAnimationFrame(()=>setTimeout(run,0))};if(document.fonts&&document.fonts.status!=='loaded')document.fonts.ready.then(go);else go()})();</script>
 </body>
 </html>
+```
+
