@@ -1,0 +1,95 @@
+/* InstaLanding design system · Kairo · kairo@1.0.0
+   Extracted from https://instalanding.ai/demos/kairo-time-assistant.html
+   Fonts (Google Fonts): Inter 400-600 (text), Inter Tight 500-800 (display), JetBrains Mono 500-600 (labels, figures) */
+:root {
+  /* Color · core */
+  --kr-bg: #050506;
+  --kr-bg2: #0A0A0C;
+  --kr-card: #0D0D10;
+  --kr-card2: #121216;
+  --kr-text: #F4F4F6;
+  --kr-muted: #8D8D96;
+  --kr-dim: #5B5B64;
+  --kr-accent: #FF6B2C;
+  --kr-accent-hi: #FF8549;
+  --kr-accent2: #FFB36B;
+
+  /* Color · signals */
+  --kr-violet: #8B7BFF;
+  --kr-mint: #4FE3B1;
+  --kr-sky: #5CC8FF;
+  --kr-rose: #FF5C8A;
+  --kr-lime: #C6FF6B;
+
+  /* Color · light sheet */
+  --kr-paper: #F2F0EC;
+  --kr-paper-ink: #0B0B0C;
+  --kr-paper-muted: #64646B;
+  --kr-mint-deep: #3FBF93;
+  --kr-sky-deep: #3AA7E0;
+  --kr-rose-deep: #E0457A;
+
+  /* Color · lines */
+  --kr-line: rgba(255,255,255,.07);
+  --kr-line2: rgba(255,255,255,.13);
+  --kr-spot: rgba(255,140,80,.55);
+
+  /* Type · families */
+  --kr-font-display: "Inter Tight", Inter, system-ui, sans-serif;
+  --kr-font-text: Inter, system-ui, sans-serif;
+  --kr-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Type · scale */
+  --kr-wordmark: clamp(80px, 19vw, 280px);
+  --kr-hero: clamp(64px, 9.5vw, 148px);
+  --kr-stat: 76px;
+  --kr-title: clamp(40px, 6vw, 76px);
+  --kr-h2: clamp(38px, 4.6vw, 60px);
+  --kr-cta: clamp(34px, 4.4vw, 56px);
+  --kr-h3: clamp(28px, 3.4vw, 40px);
+  --kr-card-title: 26px;
+  --kr-lead: 18px;
+  --kr-small: 13px;
+  --kr-label: 12px;
+
+  /* Shape · radii */
+  --kr-pill: 99px;
+  --kr-r-sheet: 48px;
+  --kr-r-stage: 40px;
+  --kr-r-cta: 36px;
+  --kr-r-card: 28px;
+  --kr-r-panel: 22px;
+  --kr-r-tile: 20px;
+  --kr-r-chip: 16px;
+
+  /* Shape · borders */
+  --kr-hair: 1px;
+  --kr-key: 3px;
+
+  /* Depth · grain, glass and glow */
+  --kr-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --kr-glass: blur(18px) saturate(1.4);
+  --kr-shadow-pop: 0 30px 80px -20px #000;
+  --kr-shadow-lift: 0 1px 2px rgba(0,0,0,.03), 0 30px 60px -40px rgba(0,0,0,.25);
+  --kr-glow-accent: 0 10px 30px -10px var(--kr-accent);
+
+  /* Motion · easing */
+  --kr-ease: cubic-bezier(.2,.7,.1,1);
+
+  /* Motion · durations */
+  --kr-dur-quick: .3s;
+  --kr-dur-knob: .55s;
+  --kr-dur-fill: 1.4s;
+  --kr-dur-ring: 2s;
+  --kr-float: 7s;
+  --kr-shine: 7s;
+  --kr-marquee: 40s;
+  --kr-orbit: 60s;
+
+  /* Space · layout */
+  --kr-maxw: 1240px;
+  --kr-gut: 24px;
+  --kr-sec: 140px;
+  --kr-gap: 18px;
+  --kr-nav-h: 76px;
+}

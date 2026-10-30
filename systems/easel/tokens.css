@@ -1,0 +1,69 @@
+/* InstaLanding design system · Easel · easel@1.0.0
+   Extracted from https://instalanding.ai/demos/easel-artist-assistant.html
+   Fonts (Google Fonts): Gabarito 700-900 (display), Rethink Sans 400-700 (text) */
+:root {
+  /* Color · inks */
+  --ea-blue: #11138D;
+  --ea-pink: #ED008E;
+  --ea-paper: #F3F3FA;
+  --ea-ink: #07061F;
+
+  /* Color · rules */
+  --ea-rule-on-blue: color-mix(in srgb, var(--ea-paper) 30%, transparent);
+  --ea-rule-on-paper: color-mix(in srgb, var(--ea-blue) 25%, transparent);
+  --ea-rule-on-pink: color-mix(in srgb, var(--ea-ink) 40%, transparent);
+
+  /* Type · families */
+  --ea-font-display: "Gabarito", "Gabarito Fallback", Arial, sans-serif;
+  --ea-font-text: "Rethink Sans", "Rethink Sans Fallback", Arial, sans-serif;
+
+  /* Type · scale */
+  --ea-poster: 120px;
+  --ea-display: clamp(40px, 5.6vw, 84px);
+  --ea-sum: clamp(44px, 4.4vw, 64px);
+  --ea-client: clamp(30px, 4.4vw, 64px);
+  --ea-statement: clamp(36px, 4.3vw, 60px);
+  --ea-title: clamp(22px, 0.9vw + 15px, 28px);
+  --ea-lead: clamp(19px, 0.8vw + 13px, 24px);
+  --ea-price: 24px;
+  --ea-input: 18px;
+  --ea-text: clamp(16px, 0.35vw + 14px, 18px);
+  --ea-button: 16px;
+  --ea-label: 13px;
+
+  /* Shape · radii */
+  --ea-pill: 999px;
+
+  /* Shape · borders */
+  --ea-hair: 1px;
+  --ea-rule: 2px;
+  --ea-focus: 3px;
+
+  /* Depth · halftone and misregistration */
+  --ea-dot: 9px;
+  --ea-dot-pink: 11px;
+  --ea-scallop: 6px;
+  --ea-misregister: 0.05em;
+
+  /* Motion · easing */
+  --ea-ease: cubic-bezier(0.3, 0.7, 0.2, 1);
+  --ea-ease-rise: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ea-ease-print: cubic-bezier(0.35, 0.6, 0.2, 1);
+  --ea-ease-drop: cubic-bezier(0.3, 1.35, 0.5, 1);
+
+  /* Motion · durations */
+  --ea-dur-quick: 0.3s;
+  --ea-dur-dot: 0.4s;
+  --ea-dur-icon: 0.45s;
+  --ea-dur-fill: 0.55s;
+  --ea-dur-drop: 0.7s;
+  --ea-dur-rise: 0.75s;
+  --ea-dur-print: 0.95s;
+  --ea-bob: 2.6s;
+
+  /* Space · layout */
+  --ea-gut: clamp(16px, 3.2vw, 40px);
+  --ea-sec: clamp(88px, 11vw, 160px);
+  --ea-maxw: 1200px;
+  --ea-nav-h: 76px;
+}

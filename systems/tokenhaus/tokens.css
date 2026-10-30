@@ -1,0 +1,63 @@
+/* InstaLanding design system · Tokenhaus · tokenhaus@1.0.0
+   Extracted from https://instalanding.ai/demos/tokenhaus-design-academy.html
+   Fonts (Google Fonts): Gabarito 600-900 (display, set 800-900 and uppercase), Instrument Sans 400-600 (text) */
+:root {
+  /* Color · core */
+  --tk-ink: #212445;
+  --tk-paper: #E7ECF0;
+  --tk-amber: #FFA802;
+  --tk-sky: #00A9FF;
+  --tk-pink: #FF73A5;
+  --tk-light: #FDFEFD;
+
+  /* Color · derived */
+  --tk-soft-on-paper: color-mix(in oklab, var(--tk-ink) 78%, var(--tk-paper));
+  --tk-faint-on-paper: color-mix(in oklab, var(--tk-ink) 65%, var(--tk-paper));
+  --tk-track: color-mix(in oklab, var(--tk-ink) 10%, var(--tk-paper));
+  --tk-soft-on-ink: color-mix(in oklab, var(--tk-light) 80%, var(--tk-ink));
+  --tk-dim-on-ink: color-mix(in oklab, var(--tk-light) 60%, var(--tk-ink));
+
+  /* Type · families */
+  --tk-font-display: "Gabarito", system-ui, sans-serif;
+  --tk-font-text: "Instrument Sans", system-ui, sans-serif;
+
+  /* Type · scale */
+  --tk-display: clamp(42px, 7.4vw, 112px);
+  --tk-say: clamp(28px, 4.3vw, 66px);
+  --tk-quote: clamp(26px, 3.3vw, 50px);
+  --tk-step: clamp(30px, 3.4vw, 52px);
+  --tk-row: clamp(24px, 3vw, 44px);
+  --tk-statement: clamp(21px, 2.3vw, 34px);
+  --tk-h3: clamp(22px, 2.1vw, 30px);
+  --tk-question: clamp(20px, 1.9vw, 27px);
+  --tk-lead: clamp(17px, 1.35vw, 19px);
+  --tk-text: 17px;
+  --tk-button: 16px;
+  --tk-small: 15px;
+  --tk-k: .7;
+
+  /* Shape · radii */
+  --tk-pill: 999px;
+  --tk-rq: clamp(96px, 18vw, 280px);
+
+  /* Shape · borders */
+  --tk-rule: 3px;
+  --tk-focus: 3px;
+
+  /* Motion · easing */
+  --tk-ease: cubic-bezier(.7, 0, .2, 1);
+
+  /* Motion · durations */
+  --tk-dur: .45s;
+  --tk-dur-turn: .5s;
+  --tk-dur-wipe: .55s;
+  --tk-dur-run: .7s;
+
+  /* Space · layout */
+  --tk-gut: clamp(10px, 1.6vw, 22px);
+  --tk-side: clamp(16px, 4vw, 56px);
+  --tk-wrap: 1320px;
+  --tk-pad: clamp(80px, 11vw, 168px);
+  --tk-gap: clamp(14px, 1.8vw, 24px);
+  --tk-hh: 64px;
+}
