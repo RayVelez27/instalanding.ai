@@ -1,0 +1,699 @@
+INSTALANDING.AI · Noctua AI Night Owl Page
+
+The page below is the build. Use it as the starting point, not as inspiration:
+- Keep its layout, design values (colours, type, spacing, radii) and motion exactly as they are.
+- Replace the fictional brand, copy, names and numbers with mine.
+- If I name a stack (React, Next.js, Vue, Svelte, Astro...), convert it faithfully to that stack;
+  otherwise ship it as this one HTML file.
+- Read the MAP and ADAPTING notes in its header comment before you edit.
+- Check it in a real browser: no console errors, no horizontal scroll at 390px, reduced motion respected.
+
+Credit: keep this line as a comment at the top of the file you produce:
+Noctua AI Night Owl Page · INSTALANDING.AI (MIT) · https://instalanding.ai/prompt/noctua-ai-night-owl-page
+
+noctua-night-owl.html:
+```html
+<!doctype html>
+<!--
+  INSTALANDING.AI · Noctua AI Night Owl Page
+  slug     noctua-ai-night-owl-page
+  prompt   https://instalanding.ai/p/noctua-ai-night-owl-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/noctua-ai-night-owl-page
+  license  Fictional brand ("Noctua"); every customer, figure and logo is invented. Replace names and copy
+           before shipping. Every picture is inline SVG or a CSS gradient drawn in code; no image files.
+
+  MAP
+  tokens    one :root block at the top of the <style>: --fg #000, --bg #fff, --muted, --line, --pill, --hover,
+            --ease; Inter for everything, Space Grotesk for the logo and loader digits
+  sections  loader, nav, hero, features, how-it-works, arrows, night-owls, footer (each carries data-section)
+  scripts   one classic IIFE: the Midnight Draft starfield, a 2.2s quartered loader (counter, bars, service list),
+            the viewer's local clock and a time-of-day greeting, the visualiser toggle, the mobile menu,
+            IntersectionObserver reveals, the four-slide slideshow and a newsletter form that sends nothing
+  assets    no image files; fonts from Google Fonts
+
+  ADAPTING
+  - Breakpoints at 1200px (tablet) and 810px (phone, where the nav becomes a Menu panel).
+  - The four feature cards are self-contained SVG scenes; swap one without touching the others.
+  - prefers-reduced-motion: every transition and animation is cut to near zero.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noctua™ — The AI that works the night shift</title>
+<meta name="description" content="Noctua is an AI service for night owls: it thinks, drafts, codes and plans with you after dark, and finishes the job while you sleep.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fg:#000;--bg:#fff;--muted:rgba(0,0,0,.64);--line:rgba(0,0,0,.24);
+  --pill:rgba(0,0,0,.08);--hover:#ccc;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:"Inter",system-ui,sans-serif;
+  font-feature-settings:"cv09","cv03","cv04","cv11";-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.loading{overflow:hidden}
+::selection{background:#000;color:#fff}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.xs{font-size:12px;font-weight:500;letter-spacing:-.02em;line-height:1.4}
+.muted{color:var(--muted)}
+
+/* ---------- Loader ---------- */
+#loader{position:fixed;inset:0;z-index:100;pointer-events:none}
+#loader .q{position:absolute;width:50%;height:50%;background:var(--bg);transition:transform 1.1s var(--ease)}
+#loader .q1{left:0;top:0}#loader .q2{right:0;top:0}
+#loader .q3{left:0;bottom:0}#loader .q4{right:0;bottom:0}
+#loader .q1::after,#loader .q4::after{content:"";position:absolute;width:48px;height:48px;background:var(--pill)}
+#loader .q1::after{right:0;bottom:0}#loader .q4::after{left:0;top:0}
+#loader.done .q1{transform:translate(-100%,-100%)}
+#loader.done .q2{transform:translate(100%,-100%)}
+#loader.done .q3{transform:translate(-100%,100%)}
+#loader.done .q4{transform:translate(100%,100%)}
+#loader .ui{position:absolute;transition:opacity .4s}
+#loader.done .ui{opacity:0}
+.ld-num{left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:10px}
+.ld-eyes{display:flex;gap:10px}
+.ld-eyes i{width:26px;height:26px;border-radius:50%;border:3px solid #000;position:relative;animation:lidblink 2.4s infinite}
+.ld-eyes i::after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:#000;left:50%;top:50%;transform:translate(-50%,-50%)}
+@keyframes lidblink{0%,44%,52%,100%{transform:scaleY(1)}48%{transform:scaleY(.1)}}
+.ld-digits{display:grid;grid-template-columns:repeat(4,1fr);gap:0 6px;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:24px;text-align:center;width:72px}
+.ld-copy{top:64px;left:64px}
+.ld-copy .bars{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.ld-copy .bars i{display:block;height:1px;background:var(--line);transition:width .5s var(--ease)}
+.ld-about{top:64px;right:64px;width:240px;text-indent:40%}
+.ld-serv{bottom:64px;left:64px;width:240px}
+.ld-serv p{opacity:0;transform:translateX(-20px);transition:all .5s var(--ease)}
+.ld-serv p.on{opacity:1;transform:none}
+.ld-load{bottom:64px;right:64px;width:160px;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.ld-load .lines{display:flex;align-items:flex-end;gap:2px;height:26px;width:100%}
+.ld-load .lines i{flex:1;width:1px;background:var(--muted);height:1px;transition:height .25s}
+
+/* ---------- Nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--bg)}
+.nav-in{display:flex;gap:12px;padding:6px 16px;align-items:flex-start}
+.nav-l{flex:1;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:24px;letter-spacing:-.02em;line-height:1.4;display:flex;align-items:center;gap:8px}
+.logo svg{width:28px;height:20px}
+.contact-row{display:flex;align-items:center;gap:24px}
+.hl{position:relative;transition:color .3s}
+.hl:hover{color:var(--hover)}
+.pill-btn{background:#000;color:#fff;border:1px solid #000;border-radius:100px;padding:8px 16px;transition:all .3s}
+.pill-btn:hover{background:#fff;color:#000}
+.nav-r{flex:1;display:flex;gap:24px;padding-top:8px;justify-content:flex-end}
+.nav-links{flex:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.nav-soc{display:flex;flex-direction:column;gap:12px}
+.nav-meta{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:24px;padding-top:4px}
+.tz{display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:#000;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.eq{display:flex;align-items:center;gap:4px;height:24px;cursor:pointer}
+.eq i{width:1px;background:#000;height:12px;animation:eq 1.1s ease-in-out infinite alternate}
+.eq i:nth-child(2){animation-delay:-.3s}.eq i:nth-child(3){animation-delay:-.6s}
+.eq i:nth-child(4){animation-delay:-.9s}.eq i:nth-child(5){animation-delay:-.2s}.eq i:nth-child(6){animation-delay:-.7s}
+@keyframes eq{0%{height:4px}100%{height:22px}}
+.eq.off i{animation:none;height:1px}
+.menu-btn{display:none;border:1px solid #000;border-radius:100px;padding:6px 12px;width:60px}
+.mobile-menu{display:none}
+
+/* ---------- Layout ---------- */
+main{display:flex;justify-content:center}
+.wrap{width:100%;max-width:1800px;padding:140px 16px 16px}
+.hero-h{display:flex;align-items:center;gap:24px;overflow:hidden}
+.hero-h h1{font-weight:700;font-size:160px;letter-spacing:-.06em;line-height:1;transform:translateY(160px);
+  transition:transform 1.1s var(--ease) .1s}
+.hero-h .line{flex:1;height:24px;background:#000;opacity:0;transform:scale(.8);transition:all .9s var(--ease) .7s;position:relative}
+.hero-h .line .moon{position:absolute;right:0;top:50%;width:64px;height:64px;transform:translate(0,-50%);border-radius:50%;
+  background:#fff;border:3px solid #000;overflow:hidden}
+.hero-h .line .moon::after{content:"";position:absolute;inset:-3px;border-radius:50%;background:#000;transform:translateX(38%);animation:phase 8s ease-in-out infinite alternate}
+@keyframes phase{to{transform:translateX(-38%)}}
+body.ready .hero-h h1{transform:none}
+body.ready .hero-h .line{opacity:1;transform:none}
+.hero-meta{display:flex;justify-content:space-between;margin-top:12px}
+.body{padding:48px 0;display:flex;flex-direction:column;gap:24px}
+.lead{font-size:32px;font-weight:600;letter-spacing:-.04em;line-height:1.4;text-indent:25%}
+.fade-in{opacity:0;transition:opacity 1s ease .4s}
+body.ready .fade-in{opacity:1}
+.work-head{display:flex;align-items:flex-end;justify-content:space-between}
+.arrow{width:64px;height:64px}
+.peek{display:flex;gap:4px;padding:0 24px;flex:none}
+.work-head .sel{flex:1;text-align:right}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(200px,1fr));gap:12px;margin-top:12px}
+.card{position:relative;height:600px;overflow:hidden;display:block;cursor:pointer}
+.card .art{position:absolute;inset:0;transition:transform 1.2s var(--ease)}
+.card:hover .art{transform:scale(1.05)}
+.card .cap{position:absolute;left:12px;bottom:12px;color:#fff;mix-blend-mode:difference;display:flex;gap:8px;
+  font-size:24px;font-weight:700;letter-spacing:-.04em;line-height:1.4}
+.card .cap span:first-child::after{content:",";font-weight:500}
+.card .cap span:last-child{font-weight:500}
+.card .hrs{position:absolute;right:12px;top:12px;color:#fff;mix-blend-mode:difference}
+.card .view{position:absolute;top:50%;left:50%;width:96px;height:96px;border-radius:50%;background:#fff;color:#000;
+  display:grid;place-items:center;font-size:12px;font-weight:600;transform:translate(-50%,-50%) scale(0);
+  transition:transform .5s var(--ease)}
+.card:hover .view{transform:translate(-50%,-50%) scale(1)}
+
+.big-link{display:inline-flex;position:relative;font-size:48px;font-weight:500;letter-spacing:-.04em;line-height:1.4;margin-top:12px;align-self:flex-start}
+.big-link::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:#000;transform:scaleX(0);
+  transform-origin:right;transition:transform .5s var(--ease)}
+.big-link:hover::after{transform:scaleX(1);transform-origin:left}
+
+.split{display:flex;gap:12px;padding:96px 0;align-items:flex-start}
+.split>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:48px}
+.stat{font-weight:700;font-size:140px;letter-spacing:-.06em;line-height:.8;overflow:hidden;padding-top:.1em}
+.stat span{display:inline-block}
+.sub{font-size:64px;font-weight:500;letter-spacing:-.04em;line-height:1;color:var(--muted)}
+.lbl-row{position:relative}
+.lbl-row .tag{position:absolute;left:0;top:0}
+.slideshow{position:relative;aspect-ratio:16/9;overflow:hidden}
+.slideshow .slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease}
+.slideshow .slide.on{opacity:1}
+.pills{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
+.pills span{background:var(--pill);border-radius:100px;padding:12px 24px;font-size:24px;font-weight:500;letter-spacing:-.04em;line-height:1.4}
+
+/* night schedule */
+.sched{border-top:1px solid var(--line)}
+.sched-row{display:grid;grid-template-columns:120px 1fr auto;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.sched-row b{font-size:24px;font-weight:700;letter-spacing:-.04em}
+.sched-row p{font-size:20px;font-weight:500;letter-spacing:-.03em;line-height:1.3}
+.sched-row.now b::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#000;margin-right:8px;vertical-align:middle;animation:blink 1s steps(2) infinite}
+
+.arrows{display:grid;grid-template-columns:1fr 1fr}
+.arrows>div{display:flex;align-items:center}
+.arrows .f1{justify-content:flex-end;padding-right:12px}
+.arrows .f2{padding-left:12px}
+.arrows .a2{justify-content:flex-end}
+.arrows .word{font-size:80px;font-weight:700;letter-spacing:-.05em;line-height:1}
+.arrows svg{width:96px;height:96px}
+
+.logos{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.logo-tile{position:relative;aspect-ratio:16/9;overflow:hidden;display:grid;place-items:center}
+.logo-tile .bg{position:absolute;inset:0;opacity:0;transition:opacity .5s}
+.logo-tile:hover .bg{opacity:1}
+.logo-tile::before{content:"";position:absolute;inset:0;background:radial-gradient(50% 50% at 50% 50%,rgba(0,0,0,.24),transparent);z-index:0}
+.logo-tile .mark{position:relative;z-index:2;width:64%;height:auto;transition:filter .5s}
+.logo-tile:hover .mark{filter:invert(1)}
+.right{align-items:flex-end}
+.right .sub,.right .stat{text-align:right}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.pop{opacity:0;transform:scale(.5);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.pop.in{opacity:1;transform:none}
+.up span{display:inline-block;transform:translateY(113%);transition:transform 1s var(--ease)}
+.up.in span{transform:none}
+.arrow-pop{opacity:0;transition:all .9s var(--ease)}
+.arrow-pop.in{opacity:1;transform:none!important}
+
+/* ---------- Footer ---------- */
+footer{padding:16px}
+.f-top{border-top:1px solid var(--line);padding-top:96px;display:flex;gap:12px}
+.news{flex:1}
+.news form{width:50%;display:flex;flex-direction:column;gap:12px}
+.news input{border:0;border-bottom:1px solid var(--line);height:48px;font:500 20px/1.2 Inter,sans-serif;letter-spacing:-.04em;outline:none;background:none}
+.news input:focus{border-color:var(--muted)}
+.news input::placeholder{color:var(--muted)}
+.sub-btn{width:100%;padding:12px 0;border:1px solid #000;border-radius:100px;background:#000;color:#fff;font-size:16px;font-weight:500;transition:all .3s}
+.sub-btn:hover{background:#fff;color:#000}
+.f-soc{flex:1;display:flex;gap:4px;align-items:flex-start}
+.f-soc .col{flex:1}
+.f-soc a.s{display:block;font-size:32px;font-weight:600;letter-spacing:-.04em;line-height:1.4;overflow:hidden}
+.f-soc a.s span{display:inline-block;transition:color .3s}
+.f-soc a.s:hover span{color:var(--hover)}
+.f-bot{display:flex;gap:12px;align-items:flex-end;margin-top:192px}
+.f-bot>div{flex:1;display:flex;justify-content:space-between;align-items:flex-end}
+.f-bot a{transition:color .4s}
+.f-bot a:hover{color:var(--hover)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,80px);background:#000;color:#fff;padding:10px 18px;border-radius:100px;transition:transform .5s var(--ease);z-index:60}
+.toast.on{transform:translate(-50%,0)}
+
+/* ---------- Tablet ---------- */
+@media (max-width:1199.98px){
+  .contact-row .tel,.contact-row .mail,.nav-soc,.tz .city,.tz .dot{display:none}
+  .nav-l{justify-content:flex-start}
+  .nav-links{flex-direction:row;justify-content:flex-start}
+  .nav-meta{flex:none}
+  .hero-h h1{font-size:120px}.hero-h .line{height:18px}
+  .hero-h .line .moon{width:48px;height:48px}
+  .lead{font-size:24px}.body{padding:36px 0}
+  .split{flex-direction:column;gap:36px;padding:72px 0}
+  .split>div{width:100%;gap:36px}
+  .stat{font-size:120px}.sub{font-size:48px}
+  .big-link{font-size:36px}
+  .pills span{font-size:20px}
+  .clients{gap:0}
+  .clients .right{display:flex;flex-direction:column}
+  .clients .right .txt{order:1;margin-top:36px}
+  .clients .right .logos{order:0;width:100%}
+  .clients .right .big-link{order:2}
+  .f-top{padding-top:72px}.news form{width:64%}.f-bot{margin-top:144px}
+}
+/* ---------- Mobile ---------- */
+@media (max-width:809.98px){
+  .nav-in{display:none}
+  .mobile-menu{display:block}
+  .mm-bar{display:flex;justify-content:space-between;align-items:center;padding:6px 16px}
+  .menu-btn{display:block}
+  .mm-panel{position:fixed;inset:0;background:var(--bg);padding:6px 16px 24px;display:flex;flex-direction:column;
+    transform:translateY(-100%);transition:transform .7s var(--ease);z-index:-1}
+  .mm-open .mm-panel{transform:none}
+  .mm-panel .mm-links{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+  .mm-panel .mm-links a{font-size:32px;font-weight:600;letter-spacing:-.04em}
+  .mm-panel .mm-foot{margin-top:48px;display:flex;justify-content:space-between}
+  .wrap{padding-top:96px}
+  .hero-h{gap:12px}
+  .hero-h h1{font-size:min(72px,15vw);transform:none}.hero-h .line{height:10px;min-width:40px;opacity:1;transform:none}
+  .hero-h .line .moon{width:32px;height:32px;border-width:2px}
+  .lead{font-size:16px}.body{padding:24px 0}
+  .peek{display:none}
+  .grid{grid-template-columns:1fr}
+  .card{height:480px}
+  .split{gap:24px;padding:48px 0}.split>div{gap:24px}
+  .stat{font-size:100px}.sub{font-size:40px}
+  .big-link{font-size:24px}
+  .pills span{font-size:16px;padding:10px 18px}
+  .sched-row{grid-template-columns:72px 1fr}.sched-row .xs{display:none}
+  .sched-row b{font-size:18px}.sched-row p{font-size:16px}
+  .arrows .word{display:none}
+  .ld-copy,.ld-about,.ld-serv{display:none}
+  .ld-load{bottom:24px;right:24px}
+  .news form{width:100%}
+  .f-top{flex-direction:column;gap:96px;padding-top:48px}
+  .f-bot{margin-top:96px;flex-direction:column;align-items:stretch}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation:none!important}}
+</style>
+</head>
+<body class="loading">
+
+<!-- ================= LOADER ================= -->
+<div id="loader" aria-hidden="true" data-section="loader">
+  <div class="q q1"></div><div class="q q2"></div><div class="q q3"></div><div class="q q4"></div>
+  <div class="ui ld-num">
+    <div class="ld-eyes"><i></i><i></i></div>
+    <div class="ld-digits" id="ldNum"><span>0</span><span>0</span><span>0</span><span>0</span></div>
+  </div>
+  <div class="ui ld-copy xs"><p>© 2026 Noctua™.</p><p>Open from dusk to dawn.</p>
+    <div class="bars" id="ldBars"></div></div>
+  <div class="ui ld-about xs">Hoo's there? Noctua is the AI that keeps your hours: it thinks, drafts and builds alongside you after dark, then finishes the job while you sleep.</div>
+  <div class="ui ld-serv xs" id="ldServ"><p>Late-night Drafting</p><p>Overnight Agents</p><p>Insomnia Coding</p><p>Dawn Briefings</p></div>
+  <div class="ui ld-load xs"><div class="lines" id="ldLines"></div><p id="ldPct">Waking up 000%</p></div>
+</div>
+
+<!-- ================= NAV ================= -->
+<nav id="nav" data-section="nav">
+  <div class="nav-in">
+    <div class="nav-l">
+      <a href="#top" class="logo"><svg viewBox="0 0 28 20" aria-hidden="true"><circle cx="7" cy="10" r="6" fill="none" stroke="#000" stroke-width="2.4"/><circle cx="21" cy="10" r="6" fill="none" stroke="#000" stroke-width="2.4"/><circle cx="7" cy="10" r="2.2"/><circle cx="21" cy="10" r="2.2"/></svg>NOCTUA™</a>
+      <div class="contact-row xs">
+        <span class="tel muted">Peak hours 9PM – 5AM</span>
+        <a class="hl mail" href="mailto:hoot@noctua.ai">hoot@noctua.ai</a>
+        <a class="pill-btn" href="#contact">Start a night shift</a>
+      </div>
+    </div>
+    <div class="nav-r">
+      <div class="nav-links xs">
+        <a class="hl" href="#work">Features (17)</a>
+        <a class="hl" href="#services">How it works</a>
+        <a class="hl" href="#clients">Night owls</a>
+        <a class="hl" href="#contact">Join</a>
+      </div>
+      <div class="nav-soc xs">
+        <a class="hl" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="hl" href="https://x.com/" target="_blank" rel="noopener">Twitter (X)</a>
+        <a class="hl" href="https://discord.com/" target="_blank" rel="noopener">Discord</a>
+      </div>
+      <div class="nav-meta xs">
+        <div class="tz"><span class="city">Your night</span><i class="dot"></i><span id="clock">--:-- --</span></div>
+        <div class="eq" id="eq" title="Toggle lo-fi visualiser" role="button" tabindex="0"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mm">
+    <div class="mm-bar"><a href="#top" class="logo"><svg viewBox="0 0 28 20" aria-hidden="true"><circle cx="7" cy="10" r="6" fill="none" stroke="#000" stroke-width="2.4"/><circle cx="21" cy="10" r="6" fill="none" stroke="#000" stroke-width="2.4"/><circle cx="7" cy="10" r="2.2"/><circle cx="21" cy="10" r="2.2"/></svg>NOCTUA™</a><button class="menu-btn xs" id="menuBtn">Menu</button></div>
+    <div class="mm-panel">
+      <div style="height:48px"></div>
+      <div class="mm-links">
+        <a href="#work">Features (17)</a><a href="#services">How it works</a><a href="#clients">Night owls</a><a href="#contact">Join</a>
+      </div>
+      <div class="mm-foot xs"><a href="mailto:hoot@noctua.ai">hoot@noctua.ai</a><span id="clock2"></span></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= MAIN ================= -->
+<main id="top">
+<div class="wrap">
+
+  <section class="hero" data-section="hero">
+    <div class="hero-h"><h1>NIGHT</h1><div class="line"><span class="moon"></span></div><h1>OWL</h1></div>
+    <div class="hero-meta xs muted fade-in"><span>AI for the after-hours mind</span><span id="greet">Good evening</span></div>
+  </section>
+
+  <section class="body" id="work" data-section="features">
+    <p class="lead fade-in">Your best ideas don't keep office hours, so neither do we. Noctua is an AI companion built for the quiet hours: it writes with you at 1AM, untangles your code at 3AM, runs your to-do list while you sleep, and greets you at dawn with everything done and a short summary of how it went.</p>
+
+    <div class="work-head">
+      <div class="arrow-pop" style="transform:translate(-28px,-28px) scale(.1)">
+        <svg class="arrow" viewBox="0 0 63.945 63.897"><path d="M63.942 63.897 0 63.894.01 50.295l40.694.003L.07 9.659 9.687.042l40.656 40.655L50.34.003 63.945 0Z"/></svg>
+      </div>
+      <div class="peek xs muted fade-in"><span>Writing,</span><span>Coding,</span><span>Agents,</span><span>Briefings</span></div>
+      <p class="sel xs fade-in">Core features (4)</p>
+    </div>
+
+    <div class="grid">
+      <!-- Midnight Draft: starfield + crescent + glowing text lines -->
+      <a class="card rv" href="#work">
+        <div class="art" style="background:radial-gradient(120% 90% at 70% 10%,#1c2546 0%,#0b1024 55%,#05060d 100%)">
+          <svg width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice" id="stars"></svg>
+        </div>
+        <span class="hrs xs">11:48 PM</span>
+        <div class="view">Open</div>
+        <div class="cap"><span>Midnight Draft</span><span>Writing</span></div>
+      </a>
+      <!-- Night Shift: overnight agent checklist -->
+      <a class="card rv" href="#work">
+        <div class="art" style="background:linear-gradient(180deg,#120f2b 0%,#2a1f5c 60%,#4b3a8f 100%)">
+          <svg width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+            <defs><filter id="soft"><feGaussianBlur stdDeviation="10"/></filter></defs>
+            <g fill="#8f7cff" opacity=".35" filter="url(#soft)">
+              <g class="drift1"><ellipse cx="140" cy="140" rx="140" ry="36"/></g>
+              <g class="drift2"><ellipse cx="470" cy="500" rx="170" ry="40"/></g>
+            </g>
+            <g transform="translate(150 150)">
+              <rect width="300" height="300" rx="20" fill="#fff" opacity=".96"/>
+              <text x="28" y="48" font-family="Inter" font-weight="700" font-size="18" fill="#000">Tonight's queue</text>
+              <text x="272" y="48" font-family="Inter" font-size="12" fill="#888" text-anchor="end">while you sleep</text>
+              <g font-family="Inter" font-size="15" fill="#111">
+                <g class="tick t1"><rect x="28" y="80" width="20" height="20" rx="6" fill="#000"/><path d="M33 90l4 4 7-8" stroke="#fff" stroke-width="2.4" fill="none"/><text x="60" y="96">Reply to 14 emails</text></g>
+                <g class="tick t2"><rect x="28" y="124" width="20" height="20" rx="6" fill="#000"/><path d="M33 134l4 4 7-8" stroke="#fff" stroke-width="2.4" fill="none"/><text x="60" y="140">Refactor auth module</text></g>
+                <g class="tick t3"><rect x="28" y="168" width="20" height="20" rx="6" fill="#000"/><path d="M33 178l4 4 7-8" stroke="#fff" stroke-width="2.4" fill="none"/><text x="60" y="184">Research Q4 competitors</text></g>
+                <g><rect x="28" y="212" width="20" height="20" rx="6" fill="none" stroke="#000" stroke-width="2"/><text x="60" y="228" fill="#888">Draft Monday's deck…</text></g>
+              </g>
+              <rect x="28" y="258" width="244" height="6" rx="3" fill="#eee"/><rect class="prog" x="28" y="258" width="180" height="6" rx="3" fill="#000"/>
+            </g>
+          </svg>
+        </div>
+        <span class="hrs xs">2:17 AM</span>
+        <div class="view">Open</div>
+        <div class="cap"><span>Night Shift</span><span>Agents</span></div>
+      </a>
+      <!-- Hoot: owl eyes in the dark (voice) -->
+      <a class="card rv" href="#work">
+        <div class="art" style="background:#07080a">
+          <svg width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="iris" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3c2"/><stop offset=".45" stop-color="#ffb627"/><stop offset="1" stop-color="#b85c00"/></radialGradient>
+              <filter id="glow"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <g opacity=".14" fill="#3a2a18">
+              <path d="M300 120 C170 120 110 230 120 360 C130 480 220 560 300 560 C380 560 470 480 480 360 C490 230 430 120 300 120Z"/>
+              <path d="M170 160 L150 70 L235 130Z"/><path d="M430 160 L450 70 L365 130Z"/>
+            </g>
+            <g class="owl-eyes" filter="url(#glow)">
+              <circle cx="225" cy="290" r="62" fill="url(#iris)"/><circle cx="375" cy="290" r="62" fill="url(#iris)"/>
+              <circle class="pupil" cx="225" cy="290" r="26" fill="#000"/><circle class="pupil" cx="375" cy="290" r="26" fill="#000"/>
+              <circle cx="212" cy="276" r="7" fill="#fff"/><circle cx="362" cy="276" r="7" fill="#fff"/>
+            </g>
+            <path d="M300 335 L284 365 L300 392 L316 365Z" fill="#c98a2b" opacity=".85"/>
+            <g stroke="#ffb627" stroke-width="3" stroke-linecap="round" opacity=".8" class="voice">
+              <line x1="246" y1="470" x2="246" y2="490"/><line x1="262" y1="460" x2="262" y2="500"/><line x1="278" y1="452" x2="278" y2="508"/>
+              <line x1="294" y1="440" x2="294" y2="520"/><line x1="310" y1="452" x2="310" y2="508"/><line x1="326" y1="460" x2="326" y2="500"/><line x1="342" y1="470" x2="342" y2="490"/>
+            </g>
+          </svg>
+        </div>
+        <span class="hrs xs">3:03 AM</span>
+        <div class="view">Open</div>
+        <div class="cap"><span>Hoot</span><span>Voice</span></div>
+      </a>
+      <!-- Dawn Digest: sunrise -->
+      <a class="card rv" href="#work">
+        <div class="art" style="background:linear-gradient(180deg,#1b1f4a 0%,#6b4e8f 35%,#e88a7a 70%,#ffd59e 100%)">
+          <svg width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+            <defs><radialGradient id="sun"><stop offset="0" stop-color="#fff8e1"/><stop offset=".4" stop-color="#ffd27a" stop-opacity=".9"/><stop offset="1" stop-color="#ffb04a" stop-opacity="0"/></radialGradient></defs>
+            <g fill="#fff" opacity=".7"><circle cx="80" cy="60" r="1.6"/><circle cx="190" cy="40" r="1.2"/><circle cx="420" cy="70" r="1.4"/><circle cx="530" cy="30" r="1.1"/><circle cx="330" cy="110" r="1"/></g>
+            <circle class="rise" cx="300" cy="470" r="220" fill="url(#sun)"/>
+            <path d="M0 470 Q150 430 300 455 T600 440 V600 H0Z" fill="#2b1d3a"/>
+            <path d="M0 520 Q200 480 380 505 T600 495 V600 H0Z" fill="#160f22"/>
+            <g transform="translate(330 140)">
+              <rect width="210" height="150" rx="16" fill="#fff" opacity=".95"/>
+              <text x="20" y="34" font-family="Inter" font-weight="700" font-size="15" fill="#000">Good morning ☼</text>
+              <g font-family="Inter" font-size="12" fill="#444">
+                <text x="20" y="62">✓ 3 tasks done overnight</text>
+                <text x="20" y="84">✓ Deck draft ready to review</text>
+                <text x="20" y="106">• 2 things need you</text>
+                <text x="20" y="128" fill="#999">Read in 90 seconds</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <span class="hrs xs">6:30 AM</span>
+        <div class="view">Open</div>
+        <div class="cap"><span>Dawn Digest</span><span>Briefings</span></div>
+      </a>
+    </div>
+
+    <a class="big-link rv" href="#work">Explore all features (17)</a>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section class="split" id="services" data-section="how-it-works">
+    <div>
+      <div>
+        <div class="stat up"><span>3AM</span></div>
+        <h2 class="sub rv" style="margin-top:12px">Peak brilliance hour</h2>
+      </div>
+      <div class="slideshow pop" id="slides">
+        <!-- slide 1: late-night desk -->
+        <div class="slide on" style="background:linear-gradient(135deg,#141a33,#0a0d1c)">
+          <svg width="100%" height="100%" viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice">
+            <rect x="290" y="20" width="90" height="70" fill="#1f2a52"/><circle cx="350" cy="44" r="13" fill="#f4f1de"/><circle cx="356" cy="40" r="11" fill="#1f2a52"/>
+            <g fill="#fff" opacity=".8"><circle cx="305" cy="35" r="1"/><circle cx="325" cy="70" r="1"/><circle cx="370" cy="78" r="1"/></g>
+            <rect x="0" y="150" width="400" height="75" fill="#2a1e17"/>
+            <rect x="110" y="40" width="180" height="104" rx="6" fill="#000"/>
+            <rect x="118" y="48" width="164" height="88" rx="2" fill="#fafafa"/>
+            <rect x="128" y="58" width="80" height="6" rx="3" fill="#000"/>
+            <rect x="128" y="74" width="120" height="14" rx="7" fill="#eee"/>
+            <rect x="160" y="94" width="112" height="14" rx="7" fill="#000"/>
+            <rect x="128" y="114" width="96" height="14" rx="7" fill="#eee"/>
+            <rect x="190" y="144" width="20" height="8" fill="#000"/><rect x="160" y="150" width="80" height="4" rx="2" fill="#000"/>
+            <rect x="318" y="126" width="26" height="24" rx="4" fill="#fff"/><path d="M344 132q10 0 10 7t-10 7" stroke="#fff" stroke-width="3" fill="none"/>
+            <path class="steam" d="M326 120q-4-8 0-14t0-14" stroke="#fff" stroke-width="1.5" fill="none" opacity=".5"/>
+            <path d="M60 150l-14-50h28z" fill="#3a2a1e"/><circle cx="60" cy="96" r="22" fill="#ffd27a" opacity=".25"/>
+          </svg>
+        </div>
+        <!-- slide 2: type specimen -->
+        <div class="slide" style="background:#111">
+          <svg width="100%" height="100%" viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice">
+            <text x="24" y="150" font-family="Inter" font-weight="800" font-size="150" letter-spacing="-10" fill="#fff">Zz</text>
+            <g font-family="Inter" font-size="10" fill="#888"><text x="250" y="60">You rest.</text><text x="250" y="78">Noctua works.</text><text x="250" y="96">Avg. 6h 40m saved / week</text></g>
+            <g fill="none" stroke="#ffb627" stroke-width="1"><line x1="0" y1="150" x2="400" y2="150"/><line x1="0" y1="45" x2="400" y2="45"/><line x1="0" y1="80" x2="400" y2="80" stroke-dasharray="3 3"/></g>
+          </svg>
+        </div>
+        <!-- slide 3: moon phases on grid -->
+        <div class="slide" style="background:#f2f2f2">
+          <svg width="100%" height="100%" viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice">
+            <g fill="none" stroke="#d6d6d6"><path d="M0 0h400M0 25h400M0 50h400M0 75h400M0 100h400M0 125h400M0 150h400M0 175h400M0 200h400M0 225h400"/>
+            <path d="M0 0v225M25 0v225M50 0v225M75 0v225M100 0v225M125 0v225M150 0v225M175 0v225M200 0v225M225 0v225M250 0v225M275 0v225M300 0v225M325 0v225M350 0v225M375 0v225M400 0v225"/></g>
+            <g stroke="#000" stroke-width="2">
+              <circle cx="75" cy="112" r="28" fill="#fff"/><circle cx="150" cy="112" r="28" fill="#fff"/><circle cx="225" cy="112" r="28" fill="#000"/><circle cx="300" cy="112" r="28" fill="#fff"/>
+            </g>
+            <path d="M75 84a28 28 0 0 1 0 56z" fill="#000"/>
+            <path d="M150 84a28 28 0 0 1 0 56a12 28 0 0 0 0-56z" fill="#000"/>
+            <path d="M300 84a28 28 0 0 0 0 56z" fill="#000"/>
+            <g font-family="Inter" font-size="9" fill="#666" text-anchor="middle"><text x="75" y="160">Think</text><text x="150" y="160">Draft</text><text x="225" y="160">Delegate</text><text x="300" y="160">Wake</text></g>
+          </svg>
+        </div>
+        <!-- slide 4: aurora gradient -->
+        <div class="slide" style="background:radial-gradient(60% 80% at 20% 30%,#3ad1a0,transparent),radial-gradient(60% 80% at 80% 70%,#6b5bff,transparent),radial-gradient(50% 60% at 60% 20%,#1fa2ff,transparent),#070b1f"></div>
+      </div>
+    </div>
+    <div>
+      <div class="lbl-row rv">
+        <p class="tag xs muted">How it works</p>
+        <p class="lead">Talk to Noctua when the house is quiet and your head is loud. It remembers where you left off, matches your late-night flow without judgement, and when you finally log off, it keeps going: researching, drafting and shipping until morning.</p>
+      </div>
+      <div class="sched rv">
+        <div class="sched-row"><b>9 PM</b><p>Brain-dump the day. Noctua sorts it into plans.</p><span class="xs muted">Dusk</span></div>
+        <div class="sched-row"><b>12 AM</b><p>Deep-work mode: drafts, code and rubber-ducking.</p><span class="xs muted">Midnight</span></div>
+        <div class="sched-row now"><b>3 AM</b><p>You sleep. Overnight agents take the queue.</p><span class="xs muted">Witching hour</span></div>
+        <div class="sched-row"><b>6 AM</b><p>Dawn Digest lands: what's done, what needs you.</p><span class="xs muted">Dawn</span></div>
+      </div>
+      <div class="pills" id="pills">
+        <span>Late-night Writing</span><span>Code Companion</span><span>Overnight Agents</span><span>Inbox Triage</span>
+        <span>Research Runs</span><span>Voice Chat (Hoot)</span><span>Idea Capture</span><span>Deck Drafting</span>
+        <span>Sleep-safe Reminders</span><span>Long Memory</span><span>Dawn Digest</span>
+        <span>Calendar Planning</span><span>Low-light Mode</span><span>Integrations (Mail / Docs / Git)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ARROWS ================= -->
+  <section class="arrows" data-section="arrows">
+    <div class="f1"><p class="word up"><span>NIGHT</span></p></div>
+    <div class="a1"><div class="arrow-pop" style="transform:translate(28px,-28px) scale(.1)">
+      <svg viewBox="0 0 95.917 95.845"><path d="M.005 95.845l95.912-.004-.014-20.399-61.041.005 60.95-60.959L81.386.062 20.403 61.046 20.408.005 0 0Z"/></svg></div></div>
+    <div class="a2"><div class="arrow-pop" style="transform:translate(-28px,28px) scale(.1)">
+      <svg viewBox="0 0 96.117 96.189"><path d="M96.117.005l-.005 96.184-20.456-.014.005-61.214-61.132 61.122L.063 81.617 61.219 20.461l-61.214.005L0 0Z"/></svg></div></div>
+    <div class="f2"><p class="word up"><span>OWL</span></p></div>
+  </section>
+
+  <!-- ================= NIGHT OWLS ================= -->
+  <section class="split clients" id="clients" data-section="night-owls">
+    <div>
+      <div class="lbl-row rv">
+        <p class="tag xs muted">Night owls</p>
+        <p class="lead">Writers finishing chapters by lamplight, founders shipping before the market opens, students racing deadlines, nurses and shift workers living on a different clock. Teams who come alive after dark trust Noctua to keep pace and keep the lights on.</p>
+      </div>
+      <div class="logos">
+        <div class="logo-tile pop"><div class="bg" style="background:linear-gradient(160deg,#1b1f3b,#4a4f8a)"></div>
+          <svg class="mark" viewBox="0 0 360 80"><path d="M40 12a28 28 0 1 0 22 46a22 22 0 1 1-22-46z"/><text x="84" y="54" font-family="Inter" font-weight="700" font-size="40" letter-spacing="-2">Lanternworks</text></svg></div>
+        <div class="logo-tile pop"><div class="bg" style="background:linear-gradient(160deg,#3b1f4a,#a05a8f)"></div>
+          <svg class="mark" viewBox="0 0 330 80"><path d="M40 40 10 14v52Zm0 0 30-26v52Z"/><text x="84" y="54" font-family="Inter" font-weight="700" font-size="40" letter-spacing="-2">Moth &amp; Co</text></svg></div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="txt" style="display:flex;flex-direction:column;align-items:flex-end;width:100%">
+        <div class="stat up"><span>2M+</span></div>
+        <h2 class="sub rv" style="margin-top:12px">Night owls served</h2>
+      </div>
+      <div class="logos" style="width:100%">
+        <div class="logo-tile pop"><div class="bg" style="background:linear-gradient(160deg,#0f2027,#2c5364)"></div>
+          <svg class="mark" viewBox="0 0 330 80"><path d="M40 8l7 22h23l-19 13 7 22-18-13-18 13 7-22-19-13h23z"/><text x="84" y="54" font-family="Inter" font-weight="700" font-size="40" letter-spacing="-2">Afterhours</text></svg></div>
+        <div class="logo-tile pop"><div class="bg" style="background:linear-gradient(160deg,#141e30,#5b4a7a)"></div>
+          <svg class="mark" viewBox="0 0 330 80"><rect x="10" y="22" width="60" height="44" rx="4"/><rect x="18" y="12" width="44" height="10" rx="2"/><text x="84" y="54" font-family="Inter" font-weight="700" font-size="40" letter-spacing="-2">Late Shift</text></svg></div>
+      </div>
+      <a class="big-link rv" href="#contact" style="align-self:flex-end">Start your first night</a>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer id="contact" data-section="footer">
+  <div class="f-top">
+    <div class="news">
+      <form id="newsForm">
+        <p class="xs muted">Get early access and the weekly Night Notes</p>
+        <input type="email" required name="email" placeholder="Email *" aria-label="Email">
+        <button class="sub-btn" type="submit">Join the flock</button>
+      </form>
+    </div>
+    <div class="f-soc">
+      <div class="col">
+        <p class="xs muted">Find us after dark</p>
+        <a class="s" href="mailto:hoot@noctua.ai"><span>Email</span></a>
+        <a class="s" href="https://linkedin.com/" target="_blank" rel="noopener"><span>LinkedIn</span></a>
+        <a class="s" href="https://x.com/" target="_blank" rel="noopener"><span>Twitter (X)</span></a>
+        <a class="s" href="https://discord.com/" target="_blank" rel="noopener"><span>Discord</span></a>
+      </div>
+      <a class="xs hl" href="#top">Back to the moon ↑</a>
+    </div>
+  </div>
+  <div class="f-bot xs">
+    <div><div><p>©2026 Noctua™.</p><p>Built by night owls, for night owls.</p></div></div>
+    <div><div><a href="#" style="display:block">Privacy</a><a href="#" style="display:block">Terms</a></div>
+      <div style="text-align:right"><p>Noctua AI</p><p>Open dusk → dawn</p></div></div>
+  </div>
+</footer>
+
+<div class="toast xs" id="toast">Welcome to the flock 🦉 Check your inbox tonight.</div>
+
+<style>
+.drift1{animation:drift 18s ease-in-out infinite alternate}
+.drift2{animation:drift 24s ease-in-out infinite alternate-reverse}
+@keyframes drift{to{transform:translateX(40px)}}
+.tick{opacity:0;animation:tick 6s infinite}
+.t2{animation-delay:.6s}.t3{animation-delay:1.2s}
+@keyframes tick{0%,8%{opacity:0;transform:translateX(-8px)}16%,85%{opacity:1;transform:none}100%{opacity:0}}
+.prog{transform-origin:28px 0;animation:prog 6s infinite}
+@keyframes prog{0%{transform:scaleX(.1)}80%,100%{transform:scaleX(1)}}
+.owl-eyes{transform-origin:300px 290px;animation:owlblink 5s infinite}
+@keyframes owlblink{0%,90%,96%,100%{transform:scaleY(1)}93%{transform:scaleY(.05)}}
+.pupil{animation:look 7s ease-in-out infinite}
+@keyframes look{0%,30%{transform:translateX(0)}40%,60%{transform:translateX(10px)}70%,100%{transform:translateX(0)}}
+.voice line{transform-box:fill-box;transform-origin:center;animation:vo 1s ease-in-out infinite alternate}
+.voice line:nth-child(2n){animation-delay:-.4s}.voice line:nth-child(3n){animation-delay:-.7s}
+@keyframes vo{to{transform:scaleY(.35)}}
+.rise{animation:rise 9s ease-in-out infinite alternate}
+@keyframes rise{from{transform:translateY(40px)}to{transform:translateY(-10px)}}
+.twinkle{animation:tw 3s ease-in-out infinite alternate}
+@keyframes tw{to{opacity:.15}}
+.steam{animation:tw 2s ease-in-out infinite alternate}
+.typing{animation:type 4s steps(1) infinite}
+</style>
+
+<script>
+(function(){
+  /* --- Midnight Draft: starfield, moon and drafting card --- */
+  const st=document.getElementById('stars');
+  let s='<defs><radialGradient id="mglow"><stop offset="0" stop-color="#fff6d8" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></radialGradient></defs>';
+  for(let i=0;i<120;i++){const x=Math.random()*600,y=Math.random()*600,r=(Math.random()*1.4+.3).toFixed(2);
+    s+=`<circle class="${i%3?'':'twinkle'}" style="animation-delay:${(Math.random()*3).toFixed(2)}s" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="#fff" opacity="${(Math.random()*.6+.3).toFixed(2)}"/>`;}
+  s+='<circle cx="440" cy="150" r="140" fill="url(#mglow)"/><circle cx="440" cy="150" r="62" fill="#f8f3dc"/><circle cx="468" cy="132" r="56" fill="#141c3a"/>';
+  s+='<g transform="translate(90 300)"><rect width="320" height="190" rx="18" fill="#fff" opacity=".97"/>'+
+     '<text x="24" y="40" font-family="Inter" font-weight="700" font-size="16" fill="#000">Chapter 12 — draft</text>'+
+     '<rect x="24" y="62" width="250" height="6" rx="3" fill="#ddd"/><rect x="24" y="80" width="272" height="6" rx="3" fill="#ddd"/>'+
+     '<rect x="24" y="98" width="210" height="6" rx="3" fill="#ddd"/><rect x="24" y="124" width="232" height="6" rx="3" fill="#000"/>'+
+     '<rect x="24" y="142" width="150" height="6" rx="3" fill="#000"/><rect class="dot-c" x="180" y="139" width="2" height="12" fill="#000"/>'+
+     '<text x="296" y="174" font-family="Inter" font-size="11" fill="#999" text-anchor="end">Noctua is writing…</text></g>';
+  st.innerHTML=s;
+  st.querySelector('.dot-c').animate([{opacity:1},{opacity:0}],{duration:700,iterations:Infinity,easing:'steps(2)'});
+
+  /* --- Loader --- */
+  const lines=document.getElementById('ldLines');for(let i=0;i<53;i++)lines.appendChild(document.createElement('i'));
+  const bars=document.getElementById('ldBars');[119,195,178,163,135,175,94,119,84,65,82,65,74,32].forEach(w=>{const b=document.createElement('i');b.style.width=w+'px';bars.appendChild(b)});
+  const serv=[...document.querySelectorAll('#ldServ p')],num=[...document.querySelectorAll('#ldNum span')],pct=document.getElementById('ldPct');
+  const loader=document.getElementById('loader');let p=0;const start=performance.now(),dur=2200;
+  function tick(t){p=Math.min(100,Math.round(Math.max(0,(t-start)/dur)**1.3*100));
+    pct.textContent='Waking up '+String(p).padStart(3,'0')+'%';
+    const d=String(p).padStart(4,'0');num.forEach((n,i)=>n.textContent=d[i]);
+    serv.forEach((e,i)=>e.classList.toggle('on',p>i*22));
+    [...lines.children].forEach((l,i)=>{l.style.height=(i/53*100<p?(4+Math.random()*22):1)+'px'});
+    [...bars.children].forEach(b=>b.style.width=(40+Math.random()*160)+'px');
+    if(p<100)requestAnimationFrame(tick);else setTimeout(finish,300);}
+  function finish(){loader.classList.add('done');document.body.classList.remove('loading');document.body.classList.add('ready');
+    setTimeout(()=>loader.remove(),1200);}
+  requestAnimationFrame(tick);
+
+  /* --- Clock (viewer's local time) + greeting --- */
+  const fmt=new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit'});
+  function clock(){const now=new Date(),t=fmt.format(now),h=now.getHours();
+    document.getElementById('clock').textContent=t;document.getElementById('clock2').textContent='Your night '+t;
+    const g=h>=21||h<1?'Good evening, night owl':h<5?'Still up? So are we':h<12?'Morning — your Dawn Digest is ready':'See you after dark';
+    document.getElementById('greet').textContent=g;}
+  clock();setInterval(clock,10000);
+
+  /* --- Visualiser toggle --- */
+  const eq=document.getElementById('eq');eq.addEventListener('click',()=>eq.classList.toggle('off'));
+  eq.addEventListener('keydown',e=>{if(e.key==='Enter')eq.classList.toggle('off')});
+
+  /* --- Mobile menu --- */
+  const mm=document.getElementById('mm'),mb=document.getElementById('menuBtn');
+  mb.addEventListener('click',()=>{mm.classList.toggle('mm-open');mb.textContent=mm.classList.contains('mm-open')?'Close':'Menu'});
+  mm.querySelectorAll('.mm-links a').forEach(a=>a.addEventListener('click',()=>{mm.classList.remove('mm-open');mb.textContent='Menu'}));
+
+  /* --- Reveal on scroll --- */
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+  document.querySelectorAll('.rv,.pop,.up,.arrow-pop').forEach(el=>io.observe(el));
+  document.querySelectorAll('#pills span').forEach((el,i)=>{el.classList.add('pop');el.style.transitionDelay=(i*40)+'ms';io.observe(el)});
+  document.querySelectorAll('.grid .card').forEach((el,i)=>el.style.transitionDelay=(i%2*120)+'ms');
+
+  /* --- Slideshow --- */
+  const slides=[...document.querySelectorAll('#slides .slide')];let si=0;
+  setInterval(()=>{slides[si].classList.remove('on');si=(si+1)%slides.length;slides[si].classList.add('on')},3000);
+
+  /* --- Newsletter --- */
+  document.getElementById('newsForm').addEventListener('submit',e=>{e.preventDefault();e.target.reset();
+    const t=document.getElementById('toast');t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600)});
+})();
+</script>
+</body>
+</html>
+```
+

@@ -16,7 +16,7 @@ A warm, sunlit page for an AI that runs a home's solar and battery: a 3D moderni
 | Libraries | none — plain HTML, CSS and JS |
 | Fonts | Inter, Inter Tight, Newsreader, JetBrains Mono (Google Fonts) |
 | Uses | inline-svg, inlined-images, reduced-motion |
-| Size | 209 KB · prompt ~53,749 tokens |
+| Size | 210 KB · prompt ~53,863 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 

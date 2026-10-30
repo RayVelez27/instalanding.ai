@@ -2,8 +2,130 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 80,
+  "count": 82,
   "pages": [
+    {
+      "slug": "noctua-ai-night-owl-page",
+      "title": "Noctua AI Night Owl Page",
+      "description": "A stark black-on-white page for an AI that works the night shift: a quartered loader with blinking owl eyes and a counter, a giant NIGHT ——◐ OWL headline whose moon slides through its phases, the viewer's own clock and a greeting for their hour, and four illustrated feature cards (a starlit draft, an overnight task queue, glowing owl eyes, a sunrise digest) drawn in SVG",
+      "category": "web",
+      "theme": "light",
+      "added": "Oct 30, 2026",
+      "bestFor": [
+        "AI assistants and agents",
+        "productivity tools",
+        "consumer AI launches",
+        "brands with a playful, editorial voice"
+      ],
+      "style": [
+        "light",
+        "minimal",
+        "brutalist",
+        "editorial",
+        "svg-illustration"
+      ],
+      "sections": [
+        "loader",
+        "nav",
+        "hero",
+        "features",
+        "how-it-works",
+        "arrows",
+        "night-owls",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Inter",
+          "Space Grotesk"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/noctua-ai-night-owl-page/index.html",
+        "prompt": "pages/noctua-ai-night-owl-page/PROMPT.md",
+        "preview": "pages/noctua-ai-night-owl-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/noctua-night-owl.html",
+      "page": "https://instalanding.ai/prompt/noctua-ai-night-owl-page"
+    },
+    {
+      "slug": "sidera-ai-astrology-page",
+      "title": "Sidera AI Astrology Page",
+      "description": "A midnight-and-gold page for an AI astrologer: a Three.js orb of gold and violet glass sits on an obsidian podium inside a turning zodiac wheel and gold astrolabe rings, wrapped in nebula smoke and bloom, while the headline and CTA are redrawn as refracting 3D glass; below, a live natal chart per sun sign, today's real moon phase and a stars-to-pricing landing page",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 29, 2026",
+      "bestFor": [
+        "astrology and wellness apps",
+        "consumer AI products",
+        "subscription apps with a waitlist",
+        "premium mystical brands"
+      ],
+      "style": [
+        "dark",
+        "webgl",
+        "three-js",
+        "glassmorphism",
+        "luxury"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "marquee",
+        "how-it-reads",
+        "daily-reading",
+        "features",
+        "moon",
+        "principles",
+        "pricing",
+        "journal",
+        "faq",
+        "waitlist",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "three",
+            "version": "0.169.0",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Inter",
+          "Cormorant Garamond"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "3D scene by Shakuro",
+          "href": "https://shakuro.com",
+          "note": "The hero's orb, podium and glass UI scene, credited in the page footer"
+        }
+      ],
+      "files": {
+        "html": "pages/sidera-ai-astrology-page/index.html",
+        "prompt": "pages/sidera-ai-astrology-page/PROMPT.md",
+        "preview": "pages/sidera-ai-astrology-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/sidera-ai-astrology.html",
+      "page": "https://instalanding.ai/prompt/sidera-ai-astrology-page"
+    },
     {
       "slug": "linework-ai-architect-assistant-page",
       "title": "Linework AI Architect Assistant Page",

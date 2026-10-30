@@ -161,8 +161,11 @@ body.hero-night .site-header:not(.scrolled) .nav-rule{background:rgba(255,255,25
 .section-head.center .lede{max-width:42rem;margin-left:auto;margin-right:auto}
 
 /* ================= HERO ================= */
-.hero{position:relative;height:175vh;height:175svh;background:#efdcc0}
-.hero-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.hero{position:relative;height:175vh;height:175svh;min-height:1085px;background:#efdcc0}
+/* min-height: a short viewport (a laptop with toolbars, or the scaled preview frame) scrolls the hero instead of
+   squeezing the stage under the header; 620px keeps the stage at a scale where the copy clears the header */
+.hero-sticky{position:sticky;top:0;height:100vh;height:100svh;min-height:620px;overflow:hidden}
+@media(max-width:899px){.hero{min-height:1295px}.hero-sticky{min-height:740px}}
 .hero-scene{position:absolute;inset:0;overflow:hidden;background:#f1dcbc}
 .scene-svg{position:absolute;inset:0;width:100%;height:100%;transform-origin:62% 70%}
 .night-only{opacity:0;transition:opacity 1.6s ease}
@@ -2169,7 +2172,8 @@ function layoutHero(){
   var W=heroSticky.clientWidth,H=heroSticky.clientHeight,svg=$('#sceneSvg'),s,vx=0,vy,vw=1780,vh;
   if(W>=900){
     s=W/1780;
-    if(H/s<700){s=H/700;vw=W/s;vx=1780-vw}
+    // Fit the whole 884px stage when the viewport is short; letting it overflow pushed the copy up under the header
+    if(H/s<884){s=H/884;vw=W/s;vx=1780-vw}
     vh=H/s;var ty=H-884*s;ty=ty>0?ty*.28:ty;vy=-ty/s;
     heroStage.style.transform='translate('+(-vx*s).toFixed(1)+'px,'+ty.toFixed(1)+'px) scale('+s.toFixed(5)+')';
   }else{
