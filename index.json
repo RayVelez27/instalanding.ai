@@ -2,8 +2,118 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 82,
+  "count": 84,
   "pages": [
+    {
+      "slug": "ditherform-ai-dither-generator-page",
+      "title": "Ditherform AI Dither Generator Page",
+      "description": "A near-black, grid-ruled page for an AI that turns a prompt into a live 3D dither element: every picture on it is a raymarched shape morphing between a cube, sphere, torus and more, Bayer-dithered in two muted inks with a crisp outline, under fitted condensed headlines, a scroll-driven marquee, a logo wall and a cream changelog whose rows slide a plate in on hover",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 30, 2026",
+      "bestFor": [
+        "AI creative and generative tools",
+        "design and dev tool launches",
+        "WebGL and shader showcases",
+        "studios with a print or retro-computing look"
+      ],
+      "style": [
+        "dark",
+        "webgl",
+        "dithered",
+        "bold-type",
+        "editorial"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "intro",
+        "gallery",
+        "marquee",
+        "clients",
+        "changelog",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Martian Mono",
+          "Sofia Sans Extra Condensed"
+        ],
+        "features": [
+          "webgl",
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/ditherform-ai-dither-generator-page/index.html",
+        "prompt": "pages/ditherform-ai-dither-generator-page/PROMPT.md",
+        "preview": "pages/ditherform-ai-dither-generator-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/ditherform-ai-dither.html",
+      "page": "https://instalanding.ai/prompt/ditherform-ai-dither-generator-page"
+    },
+    {
+      "slug": "peelo-ai-sticker-printer-page",
+      "title": "Peelo AI Sticker Printer Page",
+      "description": "A warm-black subscription page for an AI sticker printer: a condensed SAY IT. STICK IT. headline that blurs in letter by letter under an orange glow with four die-cut stickers popping around it, a gallery of sticker sheets with their prompts on hover, five how-it-works rows that stack as you scroll, the printer and its refills on tilted cards, three plans and a drag-to-scroll review slider, every picture drawn in SVG",
+      "category": "web",
+      "theme": "dark",
+      "added": "Oct 30, 2026",
+      "bestFor": [
+        "consumer hardware and gadgets",
+        "subscription products",
+        "AI creative tools",
+        "playful D2C launches"
+      ],
+      "style": [
+        "dark",
+        "bold-type",
+        "stickers",
+        "svg-illustration",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "press",
+        "gallery",
+        "how-it-works",
+        "printer",
+        "plans",
+        "reviews",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Bricolage Grotesque",
+          "Gloock"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/peelo-ai-sticker-printer-page/index.html",
+        "prompt": "pages/peelo-ai-sticker-printer-page/PROMPT.md",
+        "preview": "pages/peelo-ai-sticker-printer-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/peelo-sticker-printer.html",
+      "page": "https://instalanding.ai/prompt/peelo-ai-sticker-printer-page"
+    },
     {
       "slug": "noctua-ai-night-owl-page",
       "title": "Noctua AI Night Owl Page",
