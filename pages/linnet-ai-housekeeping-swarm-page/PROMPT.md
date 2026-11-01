@@ -1,0 +1,1159 @@
+INSTALANDING.AI · Linnet AI Housekeeping Swarm Page
+
+The page below is the build. Use it as the starting point, not as inspiration:
+- Keep its layout, design values (colours, type, spacing, radii) and motion exactly as they are.
+- Replace the fictional brand, copy, names and numbers with mine.
+- If I name a stack (React, Next.js, Vue, Svelte, Astro...), convert it faithfully to that stack;
+  otherwise ship it as this one HTML file.
+- Read the MAP and ADAPTING notes in its header comment before you edit.
+- Check it in a real browser: no console errors, no horizontal scroll at 390px, reduced motion respected.
+
+Credit: keep this line as a comment at the top of the file you produce:
+Linnet AI Housekeeping Swarm Page · INSTALANDING.AI (MIT) · https://instalanding.ai/prompt/linnet-ai-housekeeping-swarm-page
+
+linnet-ai-housekeeping.html:
+```html
+<!doctype html>
+<!--
+  INSTALANDING.AI · Linnet AI Housekeeping Swarm Page
+  slug     linnet-ai-housekeeping-swarm-page
+  prompt   https://instalanding.ai/p/linnet-ai-housekeeping-swarm-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/linnet-ai-housekeeping-swarm-page
+  license  Fictional brand ("Linnet"); every customer, quote, figure, address and phone number is invented. Replace
+           names and copy before shipping. Every picture is SVG drawn in script; no image files.
+
+  MAP
+  tokens    one :root block at the top of the <style>: --night #0e1311, --ink, --paper #f3efe6, --fog, --muted,
+            --pine #1e3a31, --brass #c9a064; Geist for UI, Geist Mono for labels, Instrument Serif italic for accents
+  sections  nav, hero, clients, manifesto, who, how-it-works, pricing, results, testimonials, about, insights, faq,
+            cta, footer (each carries data-section)
+  scripts   GSAP 3.13 + CustomEase + CustomWiggle drive the hero housekeeper character (pop-in, blink, face follows
+            the pointer, a dizzy wiggle on a very fast mouse flick); one classic IIFE draws every scene (ART: keeper,
+            bed, cart, swarm, phone, linen, corridor, check) into .art[data-art] boxes, rotates the hero quotes,
+            doubles the client ticker, lights the manifesto word by word, floats a picture beside the WHO rows,
+            builds the FAQ, runs the mobile menu, counters and reveals, and every scroll-driven stage in one rAF
+  assets    no image files; fonts from Google Fonts; GSAP from jsDelivr (without it the character simply shows)
+
+  ADAPTING
+  - Breakpoints at 1200px, 900px (the pinned method stage and WHO float picture) and 810px (phone).
+  - The manifesto (340vh), method (420vh) and about unmask (300vh) are tall sections with a sticky stage; their
+    progress is read from getBoundingClientRect in frame(), so keep the heights if you change their content.
+  - The character's GSAP selectors are scoped to #heroChar; its class names (.me, .head, .eye...) must stay.
+  - html and body use overflow-x: clip, not hidden, so the sticky stages survive.
+  - prefers-reduced-motion: transitions are cut, the character appears without animating, counters stay put.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linnet — AI Assistant Swarm for Housekeepers</title>
+<meta name="description" content="A swarm of AI assistants for housekeepers, cleaning crews and the supervisors behind them. Scheduling, supplies, guest messages and room checks, handled in the background.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0e1311;--ink:#151a18;--paper:#f3efe6;--fog:#dad6cb;--muted:#8e9189;--pine:#1e3a31;--brass:#c9a064;--white:#fff;
+  --sans:"Geist",Inter,system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,monospace;--serif:"Instrument Serif",Georgia,serif;
+  --ez:cubic-bezier(.2,.8,.2,1);--gut:56px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:96px;-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+h1,h2,h3,p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+em.acc,h1 em,h2 em,h3 em,.statement em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;color:var(--brass)}
+.mono{font:400 12px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.wrap{width:100%;max-width:1328px;margin:0 auto}
+.art{position:absolute;inset:0;overflow:hidden}
+.art svg{display:block;width:100%;height:100%}
+.gray{filter:grayscale(.9)}
+
+/* eyebrow */
+.eyebrow{display:flex;align-items:center;gap:10px;color:var(--muted)}
+.eyebrow::before{content:"";width:18px;height:1px;background:var(--brass)}
+.on-dark .eyebrow,.eyebrow.dk{color:rgba(243,239,230,.7)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:12px;height:48px;padding:6px 6px 6px 20px;border-radius:999px;font:500 14px/1.2 var(--sans);letter-spacing:-.02em;white-space:nowrap;transition:transform .4s var(--ez)}
+.btn .ar{width:36px;height:36px;border-radius:999px;display:grid;place-items:center;transition:transform .45s var(--ez)}
+.btn .ar svg{width:16px;height:16px}
+.btn:hover .ar{transform:translateX(3px)}
+.btn:hover{transform:translateY(-1px)}
+.btn-brass{background:var(--brass);color:var(--night)}.btn-brass .ar{background:var(--night);color:var(--brass)}
+.btn-ol{border:1px solid rgba(243,239,230,.35);color:var(--paper)}.btn-ol .ar{background:rgba(243,239,230,.12);color:var(--paper)}
+.btn-old{border:1px solid rgba(21,26,24,.3);color:var(--ink)}.btn-old .ar{background:rgba(21,26,24,.08)}
+.btn-dark{background:var(--night);color:#fff}.btn-dark .ar{background:var(--brass);color:var(--night)}
+
+/* ───────── HEADER ───────── */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:70;padding:10px 40px 0;transition:transform .55s var(--ez)}
+.hdr.hide:not(.open){transform:translateY(-120%)}
+.bar{max-width:1360px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;padding:8px 8px 8px 16px;border-radius:999px;border:1px solid transparent;color:var(--paper);transition:background-color .45s,border-color .45s,box-shadow .45s}
+.hdr.scr .bar{background:rgba(14,19,17,.78);border-color:rgba(243,239,230,.12);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 12px 34px -18px rgba(0,0,0,.45)}
+.logo{display:flex;align-items:center;gap:12px}
+.logo .mk{width:9px;height:9px;background:var(--brass);transform:rotate(45deg);transition:rotate .6s cubic-bezier(.34,1.56,.64,1)}
+.logo:hover .mk{rotate:-8deg}
+.logo b{font:600 17px/1 var(--sans);letter-spacing:-.02em}
+.logo .dv{width:1px;height:16px;background:rgba(243,239,230,.4)}
+.logo .sub{color:rgba(243,239,230,.55)}
+.nav{display:flex;gap:4px}
+.nav a{position:relative;padding:8px 12px;border-radius:999px;font:500 14px/1.2 var(--sans);letter-spacing:-.02em;transition:background-color .25s}
+.nav a:hover{background:rgba(243,239,230,.1)}
+.acts{display:flex;align-items:center;gap:10px}
+.hire{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 14px;border-radius:999px;background:var(--brass);color:var(--night);font:500 14px/1 var(--sans);letter-spacing:-.02em}
+.dot{position:relative;width:6px;height:6px;border-radius:50%;background:var(--night)}
+.dot::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px solid currentColor;opacity:0;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{opacity:.8;scale:.4}100%{opacity:0;scale:1.5}}
+.menub{display:none;align-items:center;gap:10px;height:40px;padding:0 14px 0 12px;border-radius:999px;border:1px solid rgba(243,239,230,.45)}
+.burger{width:18px;height:9px;display:flex;flex-direction:column;justify-content:space-between}
+.burger i{height:2px;background:currentColor;transition:transform .4s var(--ez)}
+.hdr.open .burger i:first-child{transform:translateY(3.5px) rotate(45deg)}
+.hdr.open .burger i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+.menu{position:fixed;inset:0;z-index:-1;background:var(--paper);color:var(--ink);padding:110px 24px 28px;display:flex;flex-direction:column;gap:26px;clip-path:inset(0 0 100% 0);transition:clip-path .7s cubic-bezier(.7,0,.2,1);overflow:auto}
+.hdr.open .menu{clip-path:inset(0 0 0 0)}
+.hdr.open .bar{color:var(--ink)}
+.hdr.open .bar .logo .dv{background:rgba(21,26,24,.3)}
+.menu a.ml{display:flex;align-items:center;gap:16px;padding:12px 0 10px;border-bottom:1px solid rgba(21,26,24,.12);font:500 44px/1 var(--sans);letter-spacing:-.04em}
+.menu a.ml span{width:28px;font:400 12px/1 var(--mono);color:var(--muted)}
+.menu a.ml:hover{color:var(--brass)}
+.menu .mf{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted)}
+@media (max-width:1099.98px){.nav,.hire{display:none}.menub{display:flex}.logo .sub,.logo .dv{display:none}.hdr{padding:8px 12px 0}}
+
+/* ───────── HERO ───────── */
+.hero{background:var(--paper)}
+.hcard{--sp:0;--mx:0;--my:0;--n:6;--k:1;--gap:4px;position:relative;min-height:100vh;padding:118px var(--gut) 44px;display:flex;align-items:center;justify-content:center;overflow:clip;color:var(--paper);
+  transform-origin:50% 100%;scale:calc(1 - var(--sp)*.075);border-radius:calc(min(var(--sp)*4,1)*44px);
+  background:radial-gradient(58% 70% at 78% 38%,rgba(30,58,49,.92) 0,transparent 68%),radial-gradient(40% 50% at 8% 100%,rgba(201,160,100,.13) 0,transparent 70%),var(--night)}
+.hgrid{width:100%;max-width:1328px;min-height:80vh;display:flex;align-items:flex-end;gap:64px}
+.hcopy{flex:1.22;display:flex;flex-direction:column;gap:34px;position:relative;z-index:4}
+.intake{display:flex;align-items:center;gap:12px;color:rgba(243,239,230,.78)}
+.intake .dot{width:7px;height:7px;background:var(--brass);color:var(--brass)}
+.hcopy h1{font:500 clamp(48px,6.2vw,88px)/.98 var(--sans);letter-spacing:-.045em;translate:0 calc(var(--sp)*-46px)}
+.hcopy p.lead{font:400 17px/1.6 var(--sans);letter-spacing:-.02em;color:rgba(243,239,230,.78);max-width:560px}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);max-width:620px;border-top:1px solid rgba(243,239,230,.16)}
+.stats>div{padding:20px 20px 0 22px;display:flex;flex-direction:column;gap:8px;border-left:1px solid rgba(243,239,230,.16)}
+.stats>div:first-child{padding-left:0;border-left:0}
+.stats b{font:500 40px/1 var(--sans);letter-spacing:-.04em}
+.stats span{color:rgba(243,239,230,.55)}
+.hmedia{flex:.9;position:relative;align-self:stretch;min-height:520px}
+.panels{position:absolute;inset:-118px 0 -44px;display:flex;gap:var(--gap);translate:0 calc(var(--sp)*70px)}
+.panels .p{position:relative;flex:1 1 0;margin-top:calc(var(--t)*1px*var(--k));margin-bottom:calc(var(--b)*1px*var(--k));overflow:hidden;border-radius:3px;clip-path:inset(100% 0 0 0);transition:clip-path 1.25s cubic-bezier(.7,0,.2,1);transition-delay:calc(var(--i)*90ms);background:#1a2a24}
+.hcard.in .panels .p{clip-path:inset(0)}
+.panels .im{position:absolute;left:calc(var(--i)*-1*(100% + var(--gap)));top:calc(var(--t)*-1px*var(--k));width:calc(var(--n)*100% + (var(--n) - 1)*var(--gap));height:calc(100% + (var(--t) + var(--b))*1px*var(--k));background-size:cover;background-position:50% 22%;scale:1.34;
+  translate:calc(var(--mx)*var(--d)*-16px) calc(var(--my)*var(--d)*-12px + var(--sp)*var(--d)*-54px);filter:grayscale(1) contrast(1.06) brightness(.9);transition:scale 1.9s cubic-bezier(.16,.84,.24,1),filter .7s ease}
+.hcard.in .panels .im{scale:1.1}
+.panels:hover .im{filter:grayscale(1) brightness(.6)}
+.panels .p:hover .im{filter:grayscale(.1) contrast(1.05) brightness(1.04)}
+.panels .p::before{content:"";position:absolute;inset:0;z-index:1;background:var(--pine);mix-blend-mode:color;opacity:.42;pointer-events:none;transition:opacity .7s}
+.panels .p:hover::before{opacity:0}
+.panels .p::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(14,19,17,.88) 0,transparent 26%,transparent 58%,rgba(14,19,17,.82) 100%)}
+.qcard{position:absolute;z-index:5;bottom:110px;left:clamp(-64px,-4vw,-24px);width:330px;padding:22px 22px 18px;border-radius:18px;border:1px solid rgba(243,239,230,.16);background:rgba(14,19,17,.55);backdrop-filter:blur(22px) saturate(1.2);-webkit-backdrop-filter:blur(22px) saturate(1.2);box-shadow:0 30px 70px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:14px}
+.qmark{font:italic 400 44px/1 var(--serif);color:var(--brass);height:24px}
+.quotes{display:grid}
+.quotes>div{grid-area:1/1;display:flex;flex-direction:column;gap:14px;opacity:0;visibility:hidden;translate:0 10px;filter:blur(6px);transition:opacity .4s,translate .4s,filter .4s,visibility 0s linear .4s}
+.quotes>div.on{opacity:1;visibility:visible;translate:0 0;filter:blur(0);transition:opacity .8s ease .4s,translate .8s var(--ez) .4s,filter .8s ease .4s,visibility 0s}
+.quotes p{font:400 15px/1.55 var(--sans);letter-spacing:-.02em}
+.quotes .mono{color:rgba(243,239,230,.55);letter-spacing:.04em;text-transform:none}
+.ticks{display:flex;gap:6px;height:2px}
+.ticks i{height:2px;flex:0 0 18px;border-radius:2px;background:rgba(243,239,230,.22);transition:flex-basis .6s var(--ez),background .6s}
+.ticks i.on{flex-basis:38px;background:var(--brass)}
+
+
+/* hero character (supplied art), scoped to the hero media column */
+.char{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.char svg{flex-shrink:0;width:600px;max-width:min(100%,90vw)}
+.hmedia .qcard{bottom:24px}
+@media (max-width:809.98px){.hmedia .qcard{bottom:-64px}.char{align-items:flex-start}}
+
+/* clients */
+.clients{display:flex;align-items:center;gap:40px;padding:64px var(--gut);overflow:hidden}
+.clients .lbl{flex:none;width:240px;color:var(--muted)}
+.ticker{flex:1;min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.track{display:flex;width:max-content;animation:tick 38s linear infinite}
+.ticker:hover .track{animation-play-state:paused}
+.names{display:flex;align-items:center;gap:40px;padding-right:40px}
+.names span{font:500 38px/1.3 var(--sans);letter-spacing:-.035em;white-space:nowrap}
+.names i{width:9px;height:9px;background:var(--brass);transform:rotate(45deg);flex:none}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ───────── MANIFESTO ───────── */
+.mani{height:340vh;position:relative}
+.mstage{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:0 var(--gut)}
+.mtext{position:relative;z-index:2;display:flex;flex-direction:column;gap:40px;width:100%;max-width:1328px}
+.statement{max-width:880px;font:500 clamp(30px,4.4vw,62px)/1.08 var(--sans);letter-spacing:-.04em}
+.statement .w{color:var(--muted);transition:color .3s linear}
+.statement .w.lit{color:var(--ink)}
+.statement em .w.lit{color:var(--brass)}
+.mnote{color:var(--muted)}
+.mphoto{position:absolute;top:0;z-index:1;overflow:hidden;filter:grayscale(.9)}
+.mphoto.one{right:7%;width:clamp(150px,15vw,250px);aspect-ratio:.8;border-radius:4px}
+.mphoto.two{right:23%;width:clamp(120px,11.5vw,200px);aspect-ratio:.75;border-radius:999px 999px 4px 4px}
+.wipe{--w:0;position:absolute;inset:0;z-index:5;background:var(--night);display:flex;align-items:center;justify-content:center;padding:0 var(--gut);clip-path:polygon(0 calc(100% - var(--w)*175%),100% calc(175% - var(--w)*175%),100% 101%,0 101%)}
+.wipe::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 70% at 80% 30%,rgba(30,58,49,.85) 0,transparent 70%)}
+.wipe .wc{position:relative;width:100%;max-width:1328px;display:flex;flex-direction:column;gap:26px;translate:0 calc((1 - var(--w))*90px)}
+.wipe h2{font:500 clamp(54px,8.6vw,124px)/.95 var(--sans);letter-spacing:-.045em;color:var(--paper)}
+
+/* ───────── WHO ───────── */
+.who{background:var(--night);color:var(--paper);padding:60px var(--gut) 200px;position:relative}
+.rows{border-top:1px solid rgba(243,239,230,.16)}
+.row{display:flex;align-items:center;gap:24px;padding:44px 0;border-bottom:1px solid rgba(243,239,230,.16);transition:padding .5s var(--ez)}
+.row:hover{padding-left:22px}
+.row .n{width:70px;flex:none;color:var(--muted)}
+.row h2{flex:1.1;font:500 clamp(40px,5.8vw,84px)/.95 var(--sans);letter-spacing:-.045em;transition:color .45s}
+.row p{flex:.8;font:400 17px/1.6 var(--sans);letter-spacing:-.02em;color:rgba(243,239,230,.78)}
+.row svg.go{width:26px;flex:none;color:var(--muted);transition:transform .45s var(--ez),color .3s}
+.row:hover svg.go{transform:rotate(45deg);color:var(--brass)}
+.rows.dim .row:not(.act) h2{color:var(--muted)}
+.wfoot{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:56px}
+.wfoot .mono{color:rgba(243,239,230,.55)}
+.float{position:fixed;left:0;top:0;z-index:20;width:clamp(220px,21vw,330px);aspect-ratio:4/5;margin:-14% 0 0 28px;pointer-events:none;overflow:hidden;border-radius:6px;clip-path:inset(50%);transition:clip-path .7s cubic-bezier(.7,0,.2,1);filter:grayscale(.85) contrast(1.05)}
+.float.show{clip-path:inset(0)}
+@media (max-width:899px){.float{display:none}.row{flex-wrap:wrap;gap:8px 12px;padding:26px 0}.row .n{width:34px}.row h2{flex:none;width:calc(100% - 46px)}.row p{flex:none;width:100%;padding-left:46px}.row svg.go{display:none}.wfoot{flex-direction:column;align-items:flex-start}}
+
+/* ───────── METHOD ───────── */
+.method{--mp:0;background:var(--paper);padding:0 var(--gut)}
+.mstage2{max-width:1328px;margin:0 auto;display:flex;align-items:center;gap:96px;padding:120px 0}
+.mleft{flex:1;display:flex;flex-direction:column;gap:28px;min-width:0}
+.mleft h2{font:500 clamp(34px,3.9vw,56px)/1 var(--sans);letter-spacing:-.04em}
+.steps{display:flex;flex-direction:column;gap:44px}
+.step{display:flex;flex-direction:column;gap:18px;max-width:560px}
+.step .big{font:500 clamp(96px,14.6vw,210px)/.86 var(--sans);letter-spacing:-.07em;color:var(--brass)}
+.step .sp{position:relative;aspect-ratio:1.33;border-radius:4px;overflow:hidden;filter:grayscale(.9)}
+.step .tr{display:flex;align-items:center;gap:12px}
+.step .tr .mono{color:var(--muted)}
+.step h3{font:500 26px/1.15 var(--sans);letter-spacing:-.025em}
+.step p{max-width:460px;font:400 15px/1.55 var(--sans);letter-spacing:-.02em;color:rgba(21,26,24,.7)}
+.progress{max-width:460px;height:2px;background:rgba(21,26,24,.12);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--brass);transform-origin:0 50%;transform:scaleX(var(--mp))}
+.mphotos{flex:.86;position:relative;display:none}
+@media (min-width:900px){
+  .method{height:420vh}
+  .mstage2{position:sticky;top:0;height:100vh;padding:0}
+  .steps{display:grid}
+  .steps .step{grid-area:1/1;opacity:0;translate:0 26px;transition:opacity .2s,translate .5s var(--ez);pointer-events:none}
+  .steps .step.on{opacity:1;translate:0 0;pointer-events:auto;transition:opacity .45s ease .15s,translate .7s var(--ez) .1s}
+  .step .sp{display:none}
+  .mphotos{display:block;height:72vh;rotate:calc((var(--mp) - .5)*-3deg)}
+  .mphotos .ph{position:absolute;inset:0;border-radius:6px;overflow:hidden;filter:grayscale(.9);clip-path:inset(100% 0 0 0);transition:clip-path 1.1s cubic-bezier(.7,0,.2,1)}
+  .mphotos .ph.in{clip-path:inset(0)}
+}
+@media (max-width:899.98px){.method{padding:80px 20px 100px}.mstage2{flex-direction:column;padding:0;gap:40px}.progress{display:none}}
+
+/* ───────── PROGRAMS ───────── */
+.programs{padding:140px var(--gut) 160px}
+.phead{display:flex;align-items:flex-end;gap:40px;margin-bottom:72px}
+.phead .t{flex:1;display:flex;flex-direction:column;gap:20px}
+.phead h2,.sec-h2{font:500 clamp(34px,3.9vw,56px)/1 var(--sans);letter-spacing:-.04em}
+.phead p{width:460px;font:400 17px/1.6 var(--sans);letter-spacing:-.02em;color:rgba(21,26,24,.78)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.pcard{position:relative;height:600px;border-radius:10px;overflow:hidden;background:#fff;border:1px solid rgba(21,26,24,.1);display:flex;flex-direction:column;cursor:pointer;opacity:0;transform:translateY(60px) rotateX(8deg);transition:opacity .8s,transform 1s var(--ez)}
+.pcard.vis{opacity:1;transform:none}
+.pcard .ph{position:relative;flex:1;filter:grayscale(.9)}
+.pcard .body{padding:26px 26px 22px;display:flex;flex-direction:column;gap:12px}
+.pcard .for{color:var(--brass)}
+.pcard h3{font:500 26px/1.15 var(--sans);letter-spacing:-.025em}
+.pcard .line{font:400 15px/1.55 var(--sans);letter-spacing:-.02em;color:rgba(21,26,24,.75)}
+.pcard .meta{display:flex;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(21,26,24,.12);color:var(--muted)}
+.pcard .back{position:absolute;inset:0;background:var(--night);color:var(--paper);padding:30px 28px 26px;display:flex;flex-direction:column;gap:18px;transform:translateY(100%);transition:transform .8s var(--ez)}
+.pcard:hover .back,.pcard:focus-within .back,.pcard.open .back{transform:none}
+.pcard .back .mono{color:var(--brass)}
+.pcard .back p{font:400 15px/1.55 var(--sans);letter-spacing:-.02em;color:rgba(243,239,230,.78)}
+.pcard ul{list-style:none;margin:0;padding:0}
+.pcard li{position:relative;padding:9px 0 9px 18px;border-top:1px solid rgba(243,239,230,.12);font:400 15px/1.4 var(--sans);color:rgba(243,239,230,.85)}
+.pcard li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;background:var(--brass);transform:rotate(45deg)}
+.pcard .bf{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.pcard .price{font:500 36px/1 var(--sans);letter-spacing:-.04em;color:var(--paper)}
+.pcard .bf .mono{color:rgba(243,239,230,.6)}
+
+/* ───────── RESULTS ───────── */
+.results{position:relative;z-index:2;background:var(--night);color:var(--paper);padding:calc(200px + 7vw) var(--gut) calc(220px + 7vw);margin:-7vw 0;clip-path:polygon(0 7vw,100% 0,100% calc(100% - 7vw),0 100%)}
+.rgrid{max-width:1328px;margin:0 auto;display:flex;gap:64px;align-items:flex-start}
+.rside{width:420px;flex:none;position:sticky;top:120px;display:flex;flex-direction:column;gap:24px}
+.rside h2{font:500 clamp(34px,3.9vw,56px)/1 var(--sans);letter-spacing:-.04em}
+.rside>p{font:400 17px/1.6 var(--sans);color:rgba(243,239,230,.78)}
+.nums>div{display:flex;align-items:center;gap:18px;padding:16px 0;border-top:1px solid rgba(243,239,230,.15)}
+.nums b{width:130px;font:500 36px/1 var(--sans);letter-spacing:-.04em;color:var(--brass)}
+.nums span{color:rgba(243,239,230,.55)}
+.cases{flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:56px;padding-bottom:140px}
+.cases .case:nth-child(even){translate:0 140px}
+.case{display:flex;flex-direction:column;gap:14px}
+.case .ph{position:relative;aspect-ratio:1.1;border-radius:4px;overflow:hidden;filter:grayscale(.9)}
+.case .mono{color:var(--brass)}
+.case h3{font:500 26px/1.15 var(--sans);letter-spacing:-.025em}
+.case p{font:400 15px/1.55 var(--sans);color:rgba(243,239,230,.78)}
+.metrics{display:flex;gap:28px;padding-top:16px;border-top:1px solid rgba(243,239,230,.15)}
+.metrics>div{flex:1;display:flex;flex-direction:column;gap:6px}
+.metrics b{font:500 36px/1 var(--sans);letter-spacing:-.04em}
+.metrics span{color:rgba(243,239,230,.55)}
+
+/* ───────── VOICES ───────── */
+.voices{padding:220px var(--gut) 140px}
+.vgrid{max-width:1328px;margin:0 auto;display:flex;gap:90px}
+.vside{flex:.8}
+.vsticky{position:sticky;top:140px;display:flex;flex-direction:column;gap:22px}
+.vsticky>p{font:400 15px/1.55 var(--sans);color:rgba(21,26,24,.78)}
+.vsticky .count{color:var(--brass)}
+.pile{flex:1.2;display:flex;flex-direction:column;gap:200px;padding-bottom:60px}
+.vslot{position:sticky;top:140px}
+.vcard{min-height:420px;padding:40px 40px 32px;border-radius:18px;background:#fff;box-shadow:0 30px 60px -30px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:22px;--q:var(--ink);--r:rgba(21,26,24,.6);--m:var(--brass)}
+.vcard .qm{font:italic 400 56px/1 var(--serif);color:var(--m);height:30px}
+.vcard blockquote{margin:0;flex:1;font:500 clamp(21px,2.1vw,30px)/1.2 var(--sans);letter-spacing:-.03em;color:var(--q)}
+.vcard .cap{padding-top:18px;border-top:1px solid color-mix(in srgb,var(--q) 16%,transparent);display:flex;flex-direction:column;gap:4px}
+.vcard .cap b{font:500 14px/1.2 var(--sans);color:var(--q)}
+.vcard .cap span{color:var(--r)}
+.vslot:nth-child(2) .vcard{background:var(--night);--q:var(--paper);--r:rgba(243,239,230,.6)}
+.vslot:nth-child(3) .vcard{background:var(--fog)}
+.vslot:nth-child(4) .vcard{background:var(--pine);--q:var(--paper);--r:rgba(243,239,230,.6)}
+.vslot:nth-child(5) .vcard{background:var(--brass);--q:var(--night);--r:rgba(14,19,17,.65);--m:var(--night)}
+
+/* ───────── ABOUT ───────── */
+.unmask{--u:0;--v:0;height:300vh;background:var(--night);position:relative;overflow-x:clip}
+.ustage{position:sticky;top:0;height:100vh;overflow:hidden}
+.uword{position:absolute;top:50%;z-index:3;white-space:nowrap;font:500 clamp(72px,13vw,190px)/1 var(--sans);letter-spacing:-.06em;color:var(--paper);opacity:max(0,calc(1 - var(--u)*12))}
+.uword.l{right:calc(50% + 15vw);translate:0 calc(-50% - var(--u)*14vh)}
+.uword.r{left:calc(50% + 15vw);translate:0 calc(-50% + var(--u)*14vh);font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.03em;color:var(--brass)}
+.uwin{position:absolute;inset:0;z-index:2;overflow:hidden;clip-path:inset(calc((1 - var(--u))*20%) calc((1 - var(--u))*37%) calc((1 - var(--u))*16%) calc((1 - var(--u))*37%) round calc((1 - var(--u))*48vw) calc((1 - var(--u))*48vw) calc((1 - var(--u))*6px) calc((1 - var(--u))*6px))}
+.uwin .art{scale:calc(1.32 - var(--u)*.3);filter:grayscale(1) contrast(1.06) brightness(calc(.92 - var(--v)*.5))}
+.uwin::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(14,19,17,.88) 100%);opacity:var(--v)}
+.acopy{position:relative;z-index:12;margin-top:-100vh;height:100vh;display:flex;align-items:flex-end;padding:0 var(--gut) 100px;color:var(--paper);pointer-events:none}
+.ainner{pointer-events:auto;width:100%;max-width:1520px;margin:0 auto;display:flex;align-items:flex-end;gap:90px}
+.ainner .t{flex:1;display:flex;flex-direction:column;gap:22px}
+.ainner h2{font:500 clamp(34px,3.9vw,56px)/1 var(--sans);letter-spacing:-.04em}
+.story{width:520px;display:flex;flex-direction:column;gap:22px}
+.story>p{font:400 17px/1.6 var(--sans);color:rgba(243,239,230,.84)}
+.cred{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(243,239,230,.18)}
+.cred i{width:6px;height:6px;background:var(--brass);transform:rotate(45deg);flex:none}
+.sign{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:6px}
+.sign .sig{font:italic 400 40px/1 var(--serif);color:var(--brass)}
+
+/* ───────── INSIGHTS ───────── */
+.insights{padding:130px 40px 140px}
+.iwrap{max-width:1520px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
+.ihead{display:flex;align-items:flex-end;justify-content:space-between;gap:22px}
+.ihead .t{display:flex;flex-direction:column;gap:20px}
+.igrid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.icard{display:flex;flex-direction:column;gap:14px}
+.icard .cv{position:relative;aspect-ratio:1.25;border-radius:4px;overflow:hidden;filter:grayscale(1)}
+.icard .cv .art{transition:transform 1.2s var(--ez)}
+.icard:hover .cv .art{transform:scale(1.06)}
+.chip{position:absolute;top:12px;left:12px;z-index:2;padding:4px 8px;border-radius:3px;background:var(--paper)}
+.icard .meta{display:flex;gap:10px;color:rgba(21,26,24,.55)}
+.icard h3{font:500 26px/1.15 var(--sans);letter-spacing:-.025em}
+.icard p{font:400 15px/1.55 var(--sans);color:rgba(21,26,24,.65)}
+.icard .rd{transition:letter-spacing .4s var(--ez)}
+.icard:hover .rd{letter-spacing:.2em}
+
+/* ───────── FAQ ───────── */
+.faq{padding:140px 40px}
+.fgrid{max-width:1520px;margin:0 auto;display:flex;gap:96px}
+.fside{flex:.8}
+.fsticky{position:sticky;top:140px;display:flex;flex-direction:column;gap:22px}
+.fsticky>p{max-width:380px;font:400 15px/1.55 var(--sans);color:rgba(21,26,24,.65)}
+.qs{flex:1.2;border-top:1px solid rgba(21,26,24,.14)}
+.qa{border-bottom:1px solid rgba(21,26,24,.14)}
+.qa button{width:100%;display:flex;align-items:center;gap:14px;padding:22px 0;text-align:left}
+.qa h3{flex:1;font:500 26px/1.15 var(--sans);letter-spacing:-.025em}
+.qa .tg{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(21,26,24,.22);display:grid;place-items:center;transition:transform .5s var(--ez),background-color .3s,color .3s}
+.qa .tg svg{width:16px}
+.qa.open .tg{transform:rotate(135deg);background:var(--night);color:var(--brass);border-color:var(--night)}
+.qa .an{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ez)}
+.qa.open .an{grid-template-rows:1fr}
+.qa .an>div{overflow:hidden}
+.qa .an p{padding:0 58px 26px 0;font:400 17px/1.6 var(--sans);letter-spacing:-.02em;color:rgba(21,26,24,.78)}
+
+/* ───────── CTA ───────── */
+.cta{position:relative;z-index:10;overflow:hidden;background:var(--pine);color:var(--paper);padding:calc(250px + 8vw) 40px 150px;margin-top:-8vw;clip-path:polygon(0 8vw,100% 0,100% 100%,0 100%)}
+.cta .bdp{position:absolute;inset:0;opacity:.34;filter:contrast(1.1) grayscale(1)}
+.cta .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,58,49,.55) 0%,rgba(30,58,49,.2) 45%,rgba(14,19,17,.85) 100%)}
+.cin{position:relative;z-index:2;max-width:1520px;margin:0 auto;display:flex;flex-direction:column;gap:36px}
+.cin h2{font:500 clamp(54px,11vw,160px)/.92 var(--sans);letter-spacing:-.05em}
+.crow{display:flex;align-items:center;justify-content:space-between;gap:36px}
+.crow p{max-width:520px;font:400 17px/1.6 var(--sans);color:rgba(243,239,230,.8)}
+.disc{position:relative;flex:none;width:210px;height:210px;border-radius:50%;background:var(--brass);color:var(--night);display:grid;place-items:center;transition:transform .6s var(--ez)}
+.disc:hover{transform:scale(1.05)}
+.disc>svg.ic{width:34px;transition:transform .5s var(--ez)}
+.disc:hover>svg.ic{transform:rotate(45deg)}
+.ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 16s linear infinite}
+.disc:hover .ring{animation-duration:6s}
+.ring text{font:500 12.5px var(--mono);letter-spacing:.16em;text-transform:uppercase;fill:currentColor}
+@keyframes spin{to{rotate:360deg}}
+
+/* ───────── FOOTER ───────── */
+.foot{background:var(--night);color:var(--paper);padding:96px 40px 32px;border-top:1px solid rgba(243,239,230,.14)}
+.fin{max-width:1520px;margin:0 auto}
+.fcols{display:flex;gap:48px}
+.fcols .tag{flex:1.2;font:400 15px/1.55 var(--sans);color:rgba(243,239,230,.72);max-width:340px}
+.fcols .pg{flex:.7;display:flex;flex-direction:column;gap:10px}
+.fcols .pg a{font:500 26px/1.15 var(--sans);letter-spacing:-.025em;transition:padding .35s var(--ez),color .3s}
+.fcols .pg a:hover{padding-left:8px;color:var(--brass)}
+.fcols .ct{flex:.8;display:flex;flex-direction:column;gap:12px;font:400 15px/1.55 var(--sans)}
+.fcols .ct .mono{color:rgba(243,239,230,.6)}
+.fcols .ct a:hover{color:var(--brass)}
+.wordmark{padding:56px 0 8px;font:500 clamp(64px,14.6vw,210px)/.85 var(--sans);letter-spacing:-.055em;white-space:nowrap;text-align:center}
+.fbot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:22px;border-top:1px solid rgba(243,239,230,.14);color:rgba(243,239,230,.6)}
+.fbot .lt{display:flex;align-items:center;gap:8px}
+.fbot .lt .dot{background:var(--brass);color:var(--brass)}
+.fbot .lt b{font-weight:400;color:var(--paper)}
+.fbot .lg{display:flex;gap:20px}
+.fbot a:hover{color:var(--paper)}
+
+/* reveal */
+.js .rv{opacity:0;translate:0 24px;transition:opacity .8s ease,translate 1s var(--ez)}
+.js .rv.in{opacity:1;translate:0 0}
+
+/* ───────── RESPONSIVE ───────── */
+@media (max-width:1199.98px){
+  :root{--gut:32px}
+  .hgrid{gap:28px}
+  .phead{flex-direction:column;align-items:flex-start;gap:22px}.phead p{width:100%;max-width:34em}
+  .cards{grid-template-columns:repeat(2,1fr)}.igrid{grid-template-columns:repeat(2,1fr)}
+  .rgrid{flex-direction:column;gap:48px}.rside{position:relative;top:auto;width:100%}
+  .ainner{flex-direction:column;align-items:flex-start;gap:26px}.story{width:100%}
+  .vgrid{gap:40px}.fgrid{gap:48px}
+  .fcols{flex-wrap:wrap;gap:36px}.fcols .tag{flex:1 1 100%;max-width:none}
+}
+@media (max-width:809.98px){
+  :root{--gut:20px}
+  .hcard{--n:4;--k:.5;--gap:3px;padding:96px 20px 28px}
+  .hgrid{flex-direction:column;align-items:flex-start;gap:30px;min-height:0}
+  .hcopy{display:contents}
+  .intake{order:1}.hcopy h1{order:2}.hmedia{order:3;width:100%;height:430px;min-height:0;flex:none;margin-bottom:64px}.hrow{order:4}.stats{order:5}
+  .panels{inset:0}
+  .qcard{left:10px;right:10px;width:auto;bottom:-64px}
+  .btns{flex-direction:column;width:100%}.btns .btn{justify-content:space-between}
+  .stats b{font-size:26px}.stats>div{padding:16px 10px 0 12px}
+  .clients{flex-direction:column;align-items:flex-start;gap:20px;padding:40px 20px}.clients .lbl{width:auto}.names span{font-size:24px}
+  .mphoto{display:none}
+  .programs{padding:88px 20px 100px}.cards{grid-template-columns:1fr}.pcard{height:560px}
+  .results{padding:calc(130px + 7vw) 20px calc(150px + 7vw)}.cases{grid-template-columns:1fr;padding-bottom:0}.cases .case:nth-child(even){translate:none}
+  .voices{padding:150px 20px 100px}.vgrid{flex-direction:column;gap:36px}.vsticky,.vslot{position:relative;top:auto}.pile{gap:20px}.vcard{min-height:0;padding:30px 24px 24px}
+  .uwin{clip-path:inset(calc((1 - var(--u))*24%) calc((1 - var(--u))*22%) calc((1 - var(--u))*22%) calc((1 - var(--u))*22%) round calc((1 - var(--u))*60vw) calc((1 - var(--u))*60vw) 0 0)}
+  .uword.l{right:auto;left:24px;top:12%;translate:0 0}.uword.r{left:auto;right:24px;top:auto;bottom:12%;translate:0 0}
+  .uword{opacity:max(0,calc(1 - var(--u)*7))}
+  .acopy{padding:0 20px 48px;height:auto;min-height:100vh}
+  .creds{display:none}
+  .insights{padding:88px 20px 96px}.ihead{flex-direction:column;align-items:flex-start}.igrid{grid-template-columns:1fr}
+  .faq{padding:88px 20px 96px}.fgrid{flex-direction:column;gap:40px}.fsticky{position:relative;top:auto}.qa h3{font-size:21px}.qa .an p{padding-right:0}
+  .cta{padding:calc(180px + 8vw) 20px 100px}.crow{flex-direction:column;align-items:flex-start}.disc{align-self:center;width:190px;height:190px}
+  .foot{padding:64px 20px 24px}.fcols .pg{flex:1 1 calc(50% - 18px)}.fcols .ct{flex:1 1 100%}
+  .fbot{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<!-- HEADER -->
+<header class="hdr" id="hdr" data-section="nav">
+  <div class="bar">
+    <a class="logo" href="#top"><span class="mk"></span><b>Linnet</b><span class="dv"></span><span class="sub mono">AI housekeeping swarm</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#method">Agents</a><a href="#programs">Plans</a><a href="#results">Results</a><a href="#about">About</a><a href="#insights">Field notes</a>
+    </nav>
+    <div class="acts">
+      <a class="hire" href="#book"><span class="dot"></span>Start free trial</a>
+      <button class="menub" id="menub" aria-label="Menu" aria-expanded="false"><span class="burger"><i></i><i></i></span><span class="mono">Menu</span></button>
+    </div>
+  </div>
+  <div class="menu" id="menu">
+    <div>
+      <a class="ml" href="#method"><span>01</span>Agents</a>
+      <a class="ml" href="#programs"><span>02</span>Plans</a>
+      <a class="ml" href="#results"><span>03</span>Results</a>
+      <a class="ml" href="#about"><span>04</span>About</a>
+      <a class="ml" href="#insights"><span>05</span>Field notes</a>
+    </div>
+    <a class="btn btn-dark" href="#book">Start free trial<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a>
+    <div class="mf mono"><a href="mailto:hello@linnet.example">hello@linnet.example</a><a href="tel:+14155550142">+1 (415) 555-0142</a></div>
+  </div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="hero" data-section="hero">
+  <div class="hcard" id="hcard">
+    <div class="hgrid">
+      <div class="hcopy">
+        <div class="intake mono"><span class="dot"></span>Onboarding 40 new teams — Q4 2026</div>
+        <h1>Every room ready. Before you ask.</h1>
+        <div class="hrow" style="display:flex;flex-direction:column;gap:30px">
+          <p class="lead">A swarm of AI assistants for housekeepers, cleaning crews and the supervisors behind them. Schedules, supplies, guest messages and room checks — handled in the background, so the shift is about the rooms.</p>
+          <div class="btns">
+            <a class="btn btn-brass" href="#book">Start free trial<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a>
+            <a class="btn btn-ol" href="#method">Meet the agents<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a>
+          </div>
+        </div>
+        <div class="stats">
+          <div><b>2.1M</b><span class="mono">Rooms turned</span></div>
+          <div><b data-count="640">640</b><span class="mono">Housekeeping teams</span></div>
+          <div><b>24/7</b><span class="mono">Agents on shift</span></div>
+        </div>
+      </div>
+      <div class="hmedia">
+        <div class="char" id="heroChar">
+<svg viewBox="0 10 211.73 180" role="img" aria-label="Illustrated housekeeper character" stroke-linecap="round" stroke-linejoin="round">
+  <defs>
+    <clipPath id="background-clip">
+      <path d="M39 153.73s31.57 19.71 77.26 15.21 90.18-37.23 90.36-72.33-8.82-80.28-33.59-86.29C136.84-6.57 114.13-5.82 88-2.82S34.73 11.45 16.71 48.24C-1.5 66.64-4.88 125.2 39 153.73z" fill="none" />
+    </clipPath>
+
+    <linearGradient id="linear-gradient" x1="102.94" y1="154.47" x2="102.94" y2="36.93" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff5cc" />
+      <stop offset="0.01" stop-color="#faf0c8" />
+      <stop offset="0.19" stop-color="#c2b599" />
+      <stop offset="0.35" stop-color="#998977" />
+      <stop offset="0.47" stop-color="#806f62" />
+      <stop offset="0.54" stop-color="#77655a" />
+      <stop offset="0.6" stop-color="#77655a" />
+      <stop offset="1" stop-color="#77655a" />
+    </linearGradient>
+  </defs>
+  <path class="bg" d="M39 153.73s31.57 19.71 77.26 15.21 90.18-37.23 90.36-72.33-10.51-57-35.28-63-50.22 17-76.31 20-60.12-15.88-78.32 2.51S-4.88 125.2 39 153.73z" fill="rgb(111, 220, 191)" />
+  <g clip-path="url(#background-clip)">
+    <g class="me" opacity="0">
+      <g class="body">
+        <path class="shadow" d="M129.86,48.47s6.76,4.91,10,12.07,7,29.06,11.71,39.82,9.06,22.5,9.91,26.42,1.57,5-2.52,10.2-14.63,12-14.63,12l-11.47,6.8s14.87,9.67,17.68,19.32a71.16,71.16,0,0,1,4.34,18.79l-21.39,4.54L113.2,164.85l-13-11.1L90.31,75.37Z" opacity="0.09" style="isolation: isolate" />
+        <path class="shadow" d="M69.44,54A23.64,23.64,0,0,0,58.91,64.27c-4.39,7.87-4.1,30.52-7.61,41.23S40.76,124.26,41.93,135s2.64,12.27,2.64,12.27a66.65,66.65,0,0,1,14.93,1.88c7,1.89,18.42,5.48,18.42,5.48S63.6,166.53,61.84,176a67.23,67.23,0,0,0-2.34,18.26l20.89,1.9,16.19-34,11.42-12L109.91,75Z" opacity="0.09" style="isolation: isolate" />
+        <path class="hair-back hair" d="M127.63,45.17c2.65,1.35,11.15,4.2,16.07,23.12,2.88,20.58,3.79,26.07,4.68,30.6s1.2,11.6,6.3,21.15.85,14.65.85,14.65l-7.63,7.08s3.45-12.65-2.63-18.13c0,0,2,14,0,17s-8.75,6.92-8.75,6.92-2.48-4.53-5.06-9.64,2.78,11,.08,12.09-18.82,6.25-30.6,3.86-21.53-5-24-5.79c0,0,2.75-1.37.77-7.62s-1-7.59-1.52-7-2.1,3-1,7.49a7.45,7.45,0,0,1-1.92,7.18s-7.11-4.65-12.77-5.21A51.35,51.35,0,0,1,51,141.14s-5-11.43-.4-23.56S58,104.1,58.32,88.87s2.41-34.66,20.41-45S116.87,35.4,127.63,45.17Z" fill="url(#linear-gradient)" />
+        <path class="neck" d="M114.26 143.16v-14a9.22 9.22 0 10-18.43 0v14c-15.27 2.84-24.74 15.08-24.74 27.33H139c0-12.24-9.5-24.49-24.74-27.33z" fill="#ede3d1" />
+        <path class="top" d="M105.61 167c-30.17 0-25.36-40-25.36 15.84h25.35l25-2.14c-.05-55.79 5.17-13.7-24.99-13.7z" fill="#fff" stroke="#404040" stroke-width=".5" />
+        <path class="shoulder" d="M95.82 142.87c-16 1.84-29.37 19.5-29.37 40h29.37z" fill="#404040" />
+        <path class="shoulder" d="M114.23 142.67c15.76 1.85 29 19.6 29 40.2h-29z" fill="#404040" />
+      </g>
+      <path class="shadow" d="M95.82 122.36h18.41v14.31s-10.5 5.54-18.41 0z" fill="#efceb9" />
+      <g class="head">
+        <g class="ear-left ear">
+          <path d="M63.52 105.14A8.21 8.21 0 0072 113.2a8.36 8.36 0 008.51-8.1A8.21 8.21 0 0072 97a8.36 8.36 0 00-8.48 8.14z" fill="#ede3d1" />
+          <path d="M68.54 104.48a17 17 0 014.14.41c1.07.31 1.94 1 3 1.31a.39.39 0 00.43-.57c-1.15-2.38-5.49-1.86-7.58-1.67a.26.26 0 000 .52z" fill="#b5aa9a" />
+        </g>
+        <g class="ear-right ear">
+          <path d="M144.37 105.24a8.2 8.2 0 01-8.37 8.06 8.35 8.35 0 01-8.51-8.1 8.21 8.21 0 018.42-8.06 8.35 8.35 0 018.46 8.1z" fill="#ede3d1" />
+          <path d="M139.6 104c-2.1-.19-6.43-.72-7.59 1.67a.39.39 0 00.44.57c1.07-.26 1.92-1 3-1.31a17.51 17.51 0 014.15-.41.26.26 0 000-.52z" fill="#b5aa9a" />
+        </g>
+        <g class="face">
+          <rect x="73.99" y="48.26" width="61.54" height="80.49" rx="26.08" transform="rotate(180 104.76 88.5)" fill="#ede3d1" />
+          <g class="inner-face">
+            <path class="eyebrow-right" d="M120.73 79a9 9 0 00-4-1.22 9.8 9.8 0 00-4.19.87" fill="none" stroke="#b5aa9a" stroke-width="1.04" />
+            <path class="eyebrow-left" d="M97.12 79.41a9.53 9.53 0 00-4-1.11 10.58 10.58 0 00-4.2.76" fill="none" stroke="#b5aa9a" stroke-width="1.04" />
+            <path class="mouth" d="M97 107.52s7.06 4.62 14 1.59" fill="none" stroke="#b5aa9a" stroke-width="1.04" />
+            <path class="oh" opacity="0" d="M105.56,117.06c4-.14,5-2.89,4.7-5.64s-1.88-6.7-4.84-6.62-4.73,4.36-4.9,6.72S101.57,117.19,105.56,117.06Z" fill="#262528" />
+            <g class="eyes">
+              <path class="eye-left eye" d="M89.48 87.37c-.07 2.08 1.25 3.8 2.94 3.85s3.1-1.59 3.16-3.67-1.25-3.8-2.94-3.85-3.1 1.59-3.16 3.67z" fill="#2b343b" />
+              <path class="eye-right eye" d="M113.67 87.37c-.07 2.08 1.25 3.8 2.94 3.85s3.1-1.59 3.16-3.67-1.25-3.8-2.94-3.85-3.1 1.59-3.16 3.67z" fill="#2b343b" />
+              <path class="eye-right-2 eye" d="M114.11 88a5.72 5.72 0 002.48.72 6.46 6.46 0 002.59-.45" opacity="0" fill="none" stroke="#282828" stroke-width="1.04" />
+              <path class="eye-left-2 eye" d="M89.85 88a5.77 5.77 0 002.56.3 6.48 6.48 0 002.49-.87" fill="none" opacity="0" stroke="#282828" stroke-width="1.04" />
+            </g>
+            <path class="dizzy dizzy-1" opacity="0" d="M113.61,87.6c.54-2.66,2.66-3.84,4.63-3.37A3.3,3.3,0,0,1,117,90.71a2.53,2.53,0,0,1-2-3,2.48,2.48,0,0,1,2.73-1.92A1.71,1.71,0,0,1,119.32,88a1.59,1.59,0,0,1-1.75,1.34c-.79-.1-1.41-.59-1-1.42s1-.72,1.22-.24" fill="none" stroke="#000" stroke-width="0.75" />
+            <path class="dizzy dizzy-2" opacity="0" d="M96.15,87.27c-.54-2.66-2.66-3.84-4.63-3.37s-2.89,1.9-2.46,4a3.11,3.11,0,0,0,3.68,2.45,2.53,2.53,0,0,0,2-3A2.49,2.49,0,0,0,92,85.49a1.71,1.71,0,0,0-1.57,2.13A1.57,1.57,0,0,0,92.19,89c.79-.11,1.41-.6,1-1.43s-1-.72-1.22-.23" fill="none" stroke="#000" stroke-width="0.75" />
+            <path class="nose" d="M102.39 98.13s3.09 1.55 5.78 0" fill="none" stroke="#e0d5c1" />
+            <path class="glasses" d="M133.54 81.76c-4.7-1.42-15.29-2.42-19.83-.45-5.82 2.17-3.18 1.57-8.55 1.17-5.36.4-2.74 1-8.55-1.18-7.3-2.55-15.58-.24-22.25.72v2.75c2.46.24 1.26 6.78 3.06 10.32 2.13 7.23 12.69 9.55 18.19 5.49 3.9-2 7.08-10.32 7.21-12.86 0-1.64 4.15-2.57 4.61.24.11 2.53 3.42 10.69 7.28 12.62 5.5 4 16 1.74 18.17-5.49 1.8-3.54 1.69-9.92 2.88-10.32s.74-2.67 0-2.75-1.02-.1-2.22-.26zM97.25 97.49C90.94 104.81 79 101.2 78 92.3c-.7-2.62-1-7.3 1.27-9.12s6.88-1.87 9.23-2c11.14-.26 16.62 5.6 8.75 16.31zm35.12-5.19c-3.71 17.2-27.26 7.42-22.09-7.36 1.87-3.11 9.09-3.84 11.55-3.73 8.07-.04 12.7 1.79 10.54 11.09z" fill="#c6c6c6" opacity=".48" />
+            <path class="blush-left eye" d="M89.9 98.17a2.66 2.66 0 01-1.55-.93 3.73 3.73 0 01-.76-3.12 3 3 0 011-1.56 2 2 0 011.4-.42 3 3 0 012.5 2.72.76.76 0 010 .21 3.19 3.19 0 01.11.91 2.1 2.1 0 01-1.77 2.21 2.07 2.07 0 01-.93-.02zM89.34 96v-.05s-.04.05 0 .05z" fill="#efceb9" fill-rule="evenodd" />
+            <path class="blush-right eye" d="M118.93 98.19a2.09 2.09 0 01-1.77-2.19 3.58 3.58 0 01.1-.91v-.21a3 3 0 012.51-2.72 2 2 0 011.4.42 3 3 0 011 1.56 3.73 3.73 0 01-.76 3.12 2.66 2.66 0 01-1.55.93 2.08 2.08 0 01-.93 0zm1.53-2.2v.05c0 .05.05-.04 0-.04z" fill="#efceb9" fill-rule="evenodd" />
+          </g>
+          <path class="hair-front" d="M134.1,57.61C129.22,51.79,118,45,115.33,44.84s-13-1.87-20.65,0-16,4.51-18.77,8.26-6.17,18-4.77,24.41c0,0,3-3.09,10.46-5.73h0s.74-6.33,1.45-7.18a32.29,32.29,0,0,0-.1,6.73,59.67,59.67,0,0,1,8.22-2,37,37,0,0,1,.25-8.11,67.11,67.11,0,0,0,.54,8c2-.32,4.18-.59,6.52-.78h0s.18-2.82.61-5.5c0,0,.28,3.33.6,5.42,1.78-.12,3.64-.19,5.62-.21a76.76,76.76,0,0,1,9.11.45c-.05-2.15,0-6.82-.22-7.36s1.07,2.06,1.54,7.52a51.14,51.14,0,0,1,8.84,1.92c.23-2.37.41-5.93-.3-7.88,0,0,2.1,5,1.9,8.42h0c8.36,3,11.06,7.25,11.06,7.25S139,63.43,134.1,57.61Z" fill="#77655a" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+        </div>
+        <div class="qcard">
+          <div class="qmark">“</div>
+          <div class="quotes" id="quotes">
+            <div class="on"><p>It tells me the linen count is short before the laundry van has left.</p><span class="mono">Head housekeeper — boutique hotel</span></div>
+            <div><p>Six weeks in, my phone stopped ringing at 6 a.m. The swarm had sorted the rota before I woke up.</p><span class="mono">Owner — 22-person cleaning company</span></div>
+            <div><p>I came for the scheduling. I stayed because clients get answers while my hands are in a sink.</p><span class="mono">Independent housekeeper — 14 homes</span></div>
+          </div>
+          <div class="ticks" id="ticks"><i class="on"></i><i></i><i></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section class="clients" data-section="clients">
+  <p class="lbl mono">Housekeeping teams on Linnet keep rooms at</p>
+  <div class="ticker"><div class="track" id="track"><div class="names">
+    <span>Harbourline Hotels</span><i></i><span>Saltmarsh Inn</span><i></i><span>Brightway Cleaning Co.</span><i></i><span>The Wren Residences</span><i></i><span>Cedar &amp; Pine Lodges</span><i></i><span>Northgate Health</span><i></i><span>Kestrel Suites</span><i></i><span>Meadowfield Homes</span><i></i>
+  </div></div></div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="mani" id="mani" data-section="manifesto">
+  <div class="mstage">
+    <div class="mtext">
+      <p class="eyebrow mono">What we believe</p>
+      <p class="statement" id="statement">Housekeepers do not need another <em>app.</em> They need a crew of helpers that never clocks off — and one that notices the thing everyone on shift has <em>stopped</em> noticing.</p>
+      <p class="mnote mono">The Linnet team — built in a linen room, 2023</p>
+    </div>
+    <div class="mphoto one" id="ph1"><div class="art" data-art="cart" data-v="0"></div></div>
+    <div class="mphoto two" id="ph2"><div class="art" data-art="bed" data-v="1"></div></div>
+    <div class="wipe" id="wipe">
+      <div class="wc"><p class="eyebrow dk mono">Who it's for</p><h2>Four kinds of crew.</h2></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section class="who" data-section="who">
+  <div class="wrap">
+    <div class="rows" id="rows">
+      <a class="row" href="#programs" data-art="keeper" data-v="1"><span class="n mono">01</span><h2>Independent housekeepers</h2><p>who are the whole business, and the whole back office</p><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17.9 13.1 10.9M8.25 6H18v9.75z"/></svg></a>
+      <a class="row" href="#programs" data-art="corridor" data-v="0"><span class="n mono">02</span><h2>Hotel teams</h2><p>turning two hundred rooms before the 3 p.m. check-in</p><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17.9 13.1 10.9M8.25 6H18v9.75z"/></svg></a>
+      <a class="row" href="#programs" data-art="cart" data-v="1"><span class="n mono">03</span><h2>Cleaning companies</h2><p>juggling crews, keys and clients across a whole city</p><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17.9 13.1 10.9M8.25 6H18v9.75z"/></svg></a>
+      <a class="row" href="#programs" data-art="bed" data-v="2"><span class="n mono">04</span><h2>Short-let hosts</h2><p>whose guests arrive whether the cleaner did or not</p><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17.9 13.1 10.9M8.25 6H18v9.75z"/></svg></a>
+    </div>
+    <div class="wfoot">
+      <p class="mono">Not a fit: anyone hoping to replace their housekeepers.</p>
+      <a class="btn btn-ol" href="#method">See how the swarm works<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a>
+    </div>
+  </div>
+  <div class="float" id="float"><div class="art"></div></div>
+</section>
+
+<!-- METHOD -->
+<section class="method" id="method" data-section="how-it-works">
+  <div class="mstage2">
+    <div class="mleft">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <p class="eyebrow mono">How the swarm works</p>
+        <h2>Four agents,<br>one shift.</h2>
+      </div>
+      <div class="steps" id="steps">
+        <div class="step on"><div class="big">01</div><div class="sp"><div class="art" data-art="phone" data-v="0"></div></div><div class="tr"><span class="mono">01</span><h3>Plan</h3></div><p>The Scheduler agent reads check-outs, bookings and who is on shift, then builds every route before the first coffee. Late check-out? It reshuffles in seconds.</p></div>
+        <div class="step"><div class="big">02</div><div class="sp"><div class="art" data-art="linen" data-v="0"></div></div><div class="tr"><span class="mono">02</span><h3>Stock</h3></div><p>The Supply agent counts what each room used and reorders linen, amenities and chemicals before the shelf runs bare. No forms. One tap to approve.</p></div>
+        <div class="step"><div class="big">03</div><div class="sp"><div class="art" data-art="phone" data-v="1"></div></div><div class="tr"><span class="mono">03</span><h3>Answer</h3></div><p>The Concierge agent replies to guests and clients — door codes, extra towels, "can you come Thursday?" — and only pings you when it truly needs a person.</p></div>
+        <div class="step"><div class="big">04</div><div class="sp"><div class="art" data-art="check" data-v="0"></div></div><div class="tr"><span class="mono">04</span><h3>Check</h3></div><p>The Inspector agent reviews a quick photo of each finished room against your standard. Housekeepers see what to fix; supervisors see the trend.</p></div>
+      </div>
+      <div class="progress"><i></i></div>
+    </div>
+    <div class="mphotos" id="mphotos">
+      <div class="ph in"><div class="art" data-art="phone" data-v="0"></div></div>
+      <div class="ph"><div class="art" data-art="linen" data-v="0"></div></div>
+      <div class="ph"><div class="art" data-art="phone" data-v="1"></div></div>
+      <div class="ph"><div class="art" data-art="check" data-v="0"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="programs" id="programs" data-section="pricing">
+  <div class="wrap">
+    <div class="phead">
+      <div class="t"><p class="eyebrow mono">Plans</p><h2>Three plans.<br>No seat traps.</h2></div>
+      <p>Every plan starts with the same fourteen-day trial and the same question: which part of your shift would you give away first?</p>
+    </div>
+    <div class="cards" id="cards">
+      <article class="pcard" tabindex="0">
+        <div class="ph"><div class="art" data-art="keeper" data-v="2"></div></div>
+        <div class="body"><p class="for mono">Independent housekeepers</p><h3>Solo</h3><p class="line">Your own back office, in your apron pocket.</p><div class="meta mono"><span>Monthly</span><span>$29 / month</span></div></div>
+        <div class="back"><p class="mono">Solo</p><p>Scheduling, client messages, invoices and reminders for one person running their own book of homes.</p>
+          <ul><li>Scheduler &amp; Concierge agents</li><li>Automatic invoices &amp; reminders</li><li>Client booking link</li><li>Works in 14 languages</li></ul>
+          <div class="bf"><b class="price">$29 / month</b><span class="mono">Cancel anytime</span><a class="btn btn-brass" href="#book" style="align-self:flex-start">Start with Solo<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a></div></div>
+      </article>
+      <article class="pcard" tabindex="0">
+        <div class="ph"><div class="art" data-art="corridor" data-v="1"></div></div>
+        <div class="body"><p class="for mono">Cleaning companies of 3–60</p><h3>Crew</h3><p class="line">Every route, key and client in one feed.</p><div class="meta mono"><span>Per seat</span><span>$12 / seat / month</span></div></div>
+        <div class="back"><p class="mono">Crew</p><p>The core plan. All four agents coordinate your crews, supplies and client messages, and show you what changed today.</p>
+          <ul><li>All four agents</li><li>Live route &amp; key tracking</li><li>Supply reordering</li><li>Photo room checks</li><li>Weekly team report</li></ul>
+          <div class="bf"><b class="price">$12 / seat / month</b><span class="mono">Billed monthly</span><a class="btn btn-brass" href="#book" style="align-self:flex-start">Start with Crew<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a></div></div>
+      </article>
+      <article class="pcard" tabindex="0">
+        <div class="ph"><div class="art" data-art="bed" data-v="0"></div></div>
+        <div class="body"><p class="for mono">Hotels, resorts &amp; hospitals</p><h3>Property</h3><p class="line">Housekeeping that keeps pace with the front desk.</p><div class="meta mono"><span>Annual</span><span>From $1,900 / month</span></div></div>
+        <div class="back"><p class="mono">Property</p><p>For properties of 40 to 1,000 rooms. Linnet connects to your property-management system and works alongside your supervisors.</p>
+          <ul><li>Room-status sync with the front desk</li><li>Inspector agent with your standards</li><li>On-site onboarding</li><li>Dedicated success manager</li></ul>
+          <div class="bf"><b class="price">From $1,900 / month</b><span class="mono">Annual agreement</span><a class="btn btn-brass" href="#book" style="align-self:flex-start">Book a demo<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="results" id="results" data-section="results">
+  <div class="rgrid">
+    <div class="rside">
+      <p class="eyebrow dk mono">Evidence</p>
+      <h2>Measured by the rooms that are ready.</h2>
+      <p>Every team is measured on its own numbers, before Linnet and after. These are their results, not ours.</p>
+      <div class="nums">
+        <div><b data-count="94" data-suf="%">94%</b><span class="mono">of teams renew after year one</span></div>
+        <div><b>3.1 hrs</b><span class="mono">saved per housekeeper, per week</span></div>
+        <div><b>99.2%</b><span class="mono">of rooms ready by check-in</span></div>
+      </div>
+      <a class="btn btn-ol" href="#voices" style="align-self:flex-start">Read the case notes<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a>
+    </div>
+    <div class="cases">
+      <div class="case rv"><div class="ph"><div class="art" data-art="bed" data-v="3"></div></div><p class="mono">Head housekeeper — boutique hotel</p><h3>From clipboard to the calmest floor in the building.</h3><p>Sixty-eight rooms run on paper and a radio. Now the swarm assigns rooms the moment guests check out and flags late check-outs before anyone walks a corridor.</p><div class="metrics"><div><b>41 min</b><span class="mono">earlier average room release</span></div><div><b>0</b><span class="mono">missed VIP rooms in 6 months</span></div></div></div>
+      <div class="case rv"><div class="ph"><div class="art" data-art="cart" data-v="2"></div></div><p class="mono">Owner — 22-person cleaning company</p><h3>An owner who stopped answering the phone at 6 a.m.</h3><p>Every change went through one person. Now crews get their routes overnight, and clients book, reschedule and pay without a single call.</p><div class="metrics"><div><b>62%</b><span class="mono">fewer admin calls</span></div><div><b>2.3×</b><span class="mono">clients, same office</span></div></div></div>
+      <div class="case rv"><div class="ph"><div class="art" data-art="phone" data-v="2"></div></div><p class="mono">Independent housekeeper — 14 homes</p><h3>Fully booked without a spreadsheet.</h3><p>Fourteen homes run from memory and a notebook. The Concierge now answers clients mid-shift, and invoices go out the minute a job ends.</p><div class="metrics"><div><b>+9 hrs</b><span class="mono">a week back</span></div><div><b>0</b><span class="mono">unpaid invoices</span></div></div></div>
+      <div class="case rv"><div class="ph"><div class="art" data-art="corridor" data-v="2"></div></div><p class="mono">Environmental services lead — hospital</p><h3>Turning beds faster through a winter surge.</h3><p>Discharges came in waves. The Scheduler sequenced bed cleans by ward priority, and the Inspector kept infection-control checks consistent.</p><div class="metrics"><div><b>11k</b><span class="mono">beds turned in one winter</span></div><div><b>−18%</b><span class="mono">average bed-turn time</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICES -->
+<section class="voices" id="voices" data-section="testimonials">
+  <div class="vgrid">
+    <div class="vside"><div class="vsticky">
+      <p class="eyebrow mono">In their words</p>
+      <h2 class="sec-h2">What housekeepers say when we are not in the room.</h2>
+      <p>Names are shortened at customers' request. References are available after a demo.</p>
+      <p class="count mono">05 voices</p>
+    </div></div>
+    <div class="pile">
+      <div class="vslot"><div class="vcard"><div class="qm">“</div><blockquote>It tells me the linen count is short before the laundry van has left.</blockquote><div class="cap"><b>Rosa M.</b><span class="mono">Head housekeeper — boutique hotel</span></div></div></div>
+      <div class="vslot"><div class="vcard"><div class="qm">“</div><blockquote>Six weeks in, my phone stopped ringing at 6 a.m. The swarm had sorted the rota before I woke up.</blockquote><div class="cap"><b>Tunde A.</b><span class="mono">Owner — 22-person cleaning company</span></div></div></div>
+      <div class="vslot"><div class="vcard"><div class="qm">“</div><blockquote>I came for the scheduling. I stayed because clients get answers while my hands are in a sink.</blockquote><div class="cap"><b>Dana K.</b><span class="mono">Independent housekeeper — 14 homes</span></div></div></div>
+      <div class="vslot"><div class="vcard"><div class="qm">“</div><blockquote>Linnet does not nag. It notices the room you forgot, then quietly moves it up the list.</blockquote><div class="cap"><b>Grace W.</b><span class="mono">Executive housekeeper — coastal resort</span></div></div></div>
+      <div class="vslot"><div class="vcard"><div class="qm">“</div><blockquote>The photo checks were strict and fair. My team's inspection scores rose before I had said a word.</blockquote><div class="cap"><b>Marguerite L.</b><span class="mono">Housekeeping manager — serviced apartments</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" data-section="about">
+  <div class="unmask" id="unmask">
+    <div class="ustage">
+      <p class="uword l">Meet</p>
+      <p class="uword r">Linnet</p>
+      <div class="uwin"><div class="art" data-art="swarm" data-v="0"></div></div>
+    </div>
+  </div>
+  <div class="acopy">
+    <div class="ainner">
+      <div class="t"><p class="eyebrow dk mono">About</p><h2>Built by people who have made the beds.</h2></div>
+      <div class="story">
+        <p>Linnet started in a hotel linen room. Our founder ran housekeeping for a 400-room property for twelve years before she wrote a line of code — so every agent was designed around a real shift, not a slide deck.</p>
+        <div class="creds">
+          <div class="cred"><i></i><span class="mono">SOC 2 Type II audited</span></div>
+          <div class="cred"><i></i><span class="mono">Your data is never used for training</span></div>
+          <div class="cred"><i></i><span class="mono">Works offline, syncs when back in range</span></div>
+          <div class="cred"><i></i><span class="mono">Designed with 300+ housekeepers</span></div>
+        </div>
+        <div class="sign"><span class="sig">The Linnet team</span><a class="btn btn-ol" href="#voices">Our story<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section class="insights" id="insights" data-section="insights">
+  <div class="iwrap">
+    <div class="ihead">
+      <div class="t"><p class="eyebrow mono">Field notes</p><h2 class="sec-h2">Notes from the linen room.</h2></div>
+      <a class="btn btn-old" href="#insights">All field notes<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a>
+    </div>
+    <div class="igrid">
+      <a class="icard rv" href="#insights"><div class="cv"><div class="art" data-art="corridor" data-v="3"></div><span class="chip mono">Operations</span></div><div class="meta mono"><span>September 2026</span><span>6 min</span></div><h3>The 3 p.m. cliff</h3><p>Why every room seems to finish at once, and how to spread the afternoon rush across the whole shift.</p><span class="rd mono">Read →</span></a>
+      <a class="icard rv" href="#insights"><div class="cv"><div class="art" data-art="linen" data-v="1"></div><span class="chip mono">Supplies</span></div><div class="meta mono"><span>August 2026</span><span>8 min</span></div><h3>Par levels are a guess. Make them a count.</h3><p>Linen and amenities drift between rooms, carts and laundry. A simple way to know what you really have.</p><span class="rd mono">Read →</span></a>
+      <a class="icard rv" href="#insights"><div class="cv"><div class="art" data-art="check" data-v="1"></div><span class="chip mono">Standards</span></div><div class="meta mono"><span>July 2026</span><span>5 min</span></div><h3>The best room checks take ten seconds</h3><p>A photo, a standard, a quick fix. How to inspect rooms without turning supervisors into police.</p><span class="rd mono">Read →</span></a>
+      <a class="icard rv" href="#insights"><div class="cv"><div class="art" data-art="swarm" data-v="1"></div><span class="chip mono">AI</span></div><div class="meta mono"><span>June 2026</span><span>7 min</span></div><h3>What an agent should never decide</h3><p>Swarms are fast. Some calls still belong to a person — here is exactly where we draw the line.</p><span class="rd mono">Read →</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq" data-section="faq">
+  <div class="fgrid">
+    <div class="fside"><div class="fsticky">
+      <p class="eyebrow mono">Before you ask</p>
+      <h2 class="sec-h2">Straight answers to the usual questions.</h2>
+      <p>Anything else, ask on a demo — that is what it is for.</p>
+      <a class="btn btn-dark" href="#book" style="align-self:flex-start">Book a demo<span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 12h9.75M13.5 5.25 20.25 12 13.5 18.75z"/></svg></span></a>
+    </div></div>
+    <div class="qs" id="qs"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="book" data-section="cta">
+  <div class="bdp"><div class="art" data-art="swarm" data-v="2"></div></div>
+  <div class="shade"></div>
+  <div class="cin">
+    <p class="eyebrow dk mono">Onboarding 40 new teams — Q4 2026</p>
+    <h2>Start with<br>fourteen days.</h2>
+    <div class="crow">
+      <p>No card, no contract. Connect one schedule, let the swarm run two weeks of shifts, and see whether your mornings get quieter.</p>
+      <a class="disc" href="mailto:hello@linnet.example?subject=Free%20trial" aria-label="Start your free trial">
+        <svg class="ring" viewBox="0 0 210 210" aria-hidden="true"><defs><path id="circ" d="M105,105 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs><text><textPath href="#circ">Start your free trial ◆ Start your free trial ◆ </textPath></text></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17.9 13.1 10.9M8.25 6H18v9.75z"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer class="foot" data-section="footer">
+  <div class="fin">
+    <div class="fcols">
+      <p class="tag">A swarm of AI assistants for housekeepers, cleaning crews and the people who run them.</p>
+      <div class="pg"><a href="#method">Agents</a><a href="#programs">Plans</a><a href="#about">About</a></div>
+      <div class="pg"><a href="#results">Results</a><a href="#insights">Field notes</a><a href="#book">Free trial</a></div>
+      <div class="ct">
+        <span class="mono">Contact</span>
+        <a href="mailto:hello@linnet.example">hello@linnet.example</a>
+        <a href="tel:+14155550142">+1 (415) 555-0142</a>
+        <span class="mono" style="margin-top:8px">Elsewhere</span>
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://youtube.com" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="wordmark" id="wordmark">Linnet</div>
+    <div class="fbot mono">
+      <span>© 2026 Linnet Labs, a fictional brand. Customers and figures are invented.</span>
+      <span class="lt"><span class="dot"></span>San Francisco <b id="clock">09:00</b></span>
+      <span class="lg"><a href="#">Privacy</a><a href="#">Terms</a><a href="#top">Back to top ↑</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomWiggle.min.js"></script>
+<script>
+(()=>{
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+
+/* ═══════ CODE-DRAWN HOUSEKEEPING SCENES ═══════
+   Every image on the page is an SVG drawn here. */
+let U=0;
+const rng=s=>()=>((s=(s*9301+49297)%233280)/233280);
+const noise=id=>`<filter id="${id}n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".13"/></feComponentTransfer></filter>`;
+const wrap=(w,h,id,defs,body)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice"><defs>${defs}${noise(id)}<filter id="${id}b"><feGaussianBlur stdDeviation="14"/></filter><filter id="${id}g"><feGaussianBlur stdDeviation="3"/></filter></defs>${body}<rect width="${w}" height="${h}" filter="url(#${id}n)"/></svg>`;
+/* a flock of little agents: chevron "linnets" joined by faint links */
+function flock(id,n,cx,cy,sx,sy,seed,col='#f3e6c8',op=1){
+  const r=rng(seed),pts=[];
+  for(let i=0;i<n;i++){const t=i/n,a=t*Math.PI*2.6+r()*.7,rad=.25+t*.75+r()*.15;pts.push([cx+Math.cos(a)*sx*rad,cy+Math.sin(a)*sy*rad,a,3+r()*5])}
+  let s=`<g opacity="${op}"><g stroke="${col}" stroke-opacity=".18" stroke-width="1">`;
+  pts.forEach((p,i)=>{const q=pts[(i+3)%n];if(Math.hypot(p[0]-q[0],p[1]-q[1])>Math.max(sx,sy)*.45)return;s+=`<path d="M${p[0].toFixed(1)} ${p[1].toFixed(1)}L${q[0].toFixed(1)} ${q[1].toFixed(1)}"/>`});
+  s+=`</g><g fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">`;
+  pts.forEach(p=>{const d=p[3];s+=`<path d="M${-d} ${d*.6}L0 0L${d} ${d*.6}" transform="translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) rotate(${(p[2]*57.3+90).toFixed(0)})"/>`});
+  return s+`</g></g>`;
+}
+
+const ART={
+/* housekeeper portrait: uniform, hair bun, earpiece — with the swarm overhead */
+keeper(v){const id='a'+(U++),fl=v%2?-1:1,lx=fl>0?.8:.2;
+ return wrap(600,800,id,`
+  <linearGradient id="${id}bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b3c35"/><stop offset="1" stop-color="#090d0b"/></linearGradient>
+  <radialGradient id="${id}l" cx="${lx}" cy=".22" r=".7"><stop offset="0" stop-color="#efe7d6" stop-opacity=".55"/><stop offset="1" stop-color="#efe7d6" stop-opacity="0"/></radialGradient>
+  <linearGradient id="${id}s" x1="${fl>0?0:1}" x2="${fl>0?1:0}"><stop offset="0" stop-color="#3a302b"/><stop offset=".55" stop-color="#8f7a68"/><stop offset="1" stop-color="#d9c3a7"/></linearGradient>
+  <linearGradient id="${id}c" x1="${fl>0?0:1}" x2="${fl>0?1:0}"><stop offset="0" stop-color="#1f2925"/><stop offset="1" stop-color="#7d8a84"/></linearGradient>
+  <radialGradient id="${id}h" cx=".5" cy=".3" r=".7"><stop offset="0" stop-color="#2a221d"/><stop offset="1" stop-color="#0e0b09"/></radialGradient>`,
+ `<rect width="600" height="800" fill="url(#${id}bg)"/>
+  <rect width="600" height="800" fill="url(#${id}l)"/>
+  ${flock(id,46,300,150,240,110,11+v*5)}
+  <g transform="translate(300 0) scale(${fl} 1) translate(-300 0)">
+   <path d="M60 800c20-150 120-212 240-224 120 12 220 74 240 224z" fill="url(#${id}c)"/>
+   <path d="M214 650l26 150M386 650l-26 150" stroke="#0c110f" stroke-width="16"/>
+   <path d="M150 760h300v40H150z" fill="#e9e3d6" opacity=".9"/>
+   <path d="M246 582l54 30 54-30v22l-54 32-54-32z" fill="#e7e0d3"/>
+   <path d="M300 636v164" stroke="#18201c" stroke-width="3"/>
+   ${[670,712,754].map(y=>`<circle cx="312" cy="${y}" r="5" fill="#e7e0d3"/>`).join('')}
+   <path d="M262 470h76l6 118c-24 18-64 18-88 0z" fill="url(#${id}s)"/>
+   <ellipse cx="300" cy="392" rx="86" ry="110" fill="url(#${id}s)"/>
+   <circle cx="300" cy="268" r="44" fill="url(#${id}h)"/>
+   <path d="M214 392c-8-96 34-128 88-128 66 0 96 44 90 128-8-52-38-84-90-82-50 2-80 30-88 82z" fill="url(#${id}h)"/>
+   <rect x="380" y="380" width="16" height="30" rx="7" fill="#c9a064"/>
+   <path d="M388 410c0 30-14 50-40 62" stroke="#c9a064" stroke-width="3" fill="none"/>
+   <circle cx="388" cy="388" r="16" fill="#c9a064" opacity=".5" filter="url(#${id}g)"/>
+   <path d="M372 400c4 40-6 74-30 96" stroke="#f6ead4" stroke-width="5" fill="none" opacity=".35" filter="url(#${id}b)"/>
+   <ellipse cx="268" cy="398" rx="9" ry="4" fill="#1c1512" opacity=".55"/><ellipse cx="330" cy="398" rx="9" ry="4" fill="#1c1512" opacity=".55"/>
+   <path d="M280 452q20 12 40 0" stroke="#4d3a31" stroke-width="3" fill="none" opacity=".6"/>
+  </g>`)},
+
+/* a freshly made hotel bed */
+bed(v){const id='a'+(U++),r=v%4;
+ return wrap(800,600,id,`
+  <linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a5550"/><stop offset="1" stop-color="#232b27"/></linearGradient>
+  <linearGradient id="${id}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4efe4"/><stop offset="1" stop-color="#bdb6a8"/></linearGradient>
+  <linearGradient id="${id}r" x1="${r%2}" y1="0" x2="${1-r%2}" y2="1"><stop offset="0" stop-color="#f3eadb" stop-opacity=".55"/><stop offset=".7" stop-color="#f3eadb" stop-opacity="0"/></linearGradient>`,
+ `<rect width="800" height="600" fill="url(#${id}w)"/>
+  <rect x="${r%2?40:600}" y="40" width="160" height="290" fill="#ece3d2" opacity=".55"/>
+  <path d="M${r%2?120:680} 40v290M${r%2?40:600} 185h160" stroke="#2a332f" stroke-width="6"/>
+  <rect width="800" height="600" fill="url(#${id}r)"/>
+  <rect x="160" y="160" width="480" height="150" rx="10" fill="#1a211e"/>
+  <rect x="${r%2?660:40}" y="330" width="100" height="130" fill="#141a17"/>
+  <path d="M${r%2?690:70} 330l20-90h20l20 90z" fill="#d9cfbc"/><ellipse cx="${r%2?710:90}" cy="250" rx="70" ry="40" fill="#f6e3bd" opacity=".35" filter="url(#${id}b)"/>
+  <rect x="200" y="235" width="180" height="78" rx="22" fill="#efeadf"/><rect x="420" y="235" width="180" height="78" rx="22" fill="#efeadf"/>
+  <rect x="236" y="262" width="150" height="62" rx="18" fill="#e3ddd0"/><rect x="414" y="262" width="150" height="62" rx="18" fill="#e3ddd0"/>
+  <polygon points="150,320 650,320 730,540 70,540" fill="url(#${id}d)"/>
+  <path d="M150 340h500" stroke="#fff" stroke-width="10" opacity=".7"/>
+  <polygon points="95,470 705,470 730,540 70,540" fill="#2f3a35"/>
+  <polygon points="70,540 730,540 730,580 70,580" fill="#9d978a"/>
+  <g transform="translate(${290+r*40} 418)"><rect x="0" y="0" width="150" height="26" rx="8" fill="#f4f0e8"/><rect x="8" y="-22" width="134" height="24" rx="8" fill="#e6e0d4"/><path d="M60 -32c10-14 24-14 30 0" stroke="#7d8a84" stroke-width="5" fill="none"/></g>
+  <rect y="580" width="800" height="20" fill="#0c100e"/>`)},
+
+/* housekeeping trolley in a corridor */
+cart(v){const id='a'+(U++);
+ return wrap(800,600,id,`
+  <linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a332f"/><stop offset="1" stop-color="#0b0f0d"/></linearGradient>
+  <radialGradient id="${id}l" cx=".5" cy=".1" r=".8"><stop offset="0" stop-color="#efe6d4" stop-opacity=".45"/><stop offset="1" stop-color="#efe6d4" stop-opacity="0"/></radialGradient>`,
+ `<rect width="800" height="600" fill="#33403a"/>
+  <polygon points="0,600 330,330 470,330 800,600" fill="url(#${id}f)"/>
+  <rect x="330" y="150" width="140" height="180" fill="#57635d"/>
+  ${[60,200].map(x=>`<polygon points="${x},${120+x*.35} ${x+80},${150+x*.3} ${x+80},${520-x*.35} ${x},${560-x*.3}" fill="#1b2320"/><polygon points="${800-x},${120+x*.35} ${720-x},${150+x*.3} ${720-x},${520-x*.35} ${800-x},${560-x*.3}" fill="#1b2320"/>`).join('')}
+  <rect width="800" height="600" fill="url(#${id}l)"/>
+  <g transform="translate(${v%2?40:0} 0)">
+   <rect x="230" y="200" width="12" height="340" fill="#0d1210"/><rect x="560" y="200" width="12" height="340" fill="#0d1210"/>
+   ${[230,340,450].map(y=>`<rect x="224" y="${y}" width="354" height="12" fill="#151c19"/>`).join('')}
+   ${[0,1,2,3].map(i=>[0,1,2,3].map(k=>`<rect x="${250+i*78}" y="${206-k*18}" width="66" height="18" rx="6" fill="${k%2?'#e4ded2':'#f3efe6'}"/>`).join('')).join('')}
+   ${[0,1,2,3,4].map(i=>`<rect x="${252+i*62}" y="${280+(i%2)*6}" width="26" height="${50-(i%2)*6}" rx="5" fill="${['#cfd6d2','#9fb0a8','#e7dccb','#8c9a94','#d8d0c0'][i]}"/><rect x="${258+i*62}" y="${266+(i%2)*6}" width="14" height="16" rx="3" fill="#1d2622"/>`).join('')}
+   ${[0,1,2].map(i=>`<rect x="${255+i*100}" y="${400}" width="80" height="50" rx="6" fill="#d9d2c4" opacity=".85"/>`).join('')}
+   <path d="M572 220h20c40 0 70 40 70 120v170c0 20-20 30-50 30h-40z" fill="#121816"/>
+   <path d="M592 230c30 0 50 30 52 90" stroke="#3a4741" stroke-width="3" fill="none"/>
+   ${[250,550].map(x=>`<circle cx="${x}" cy="555" r="18" fill="#060807"/><circle cx="${x}" cy="555" r="6" fill="#3a4741"/>`).join('')}
+  </g>`)},
+
+/* the swarm itself: a flock of agents around a glowing hub */
+swarm(v){const id='a'+(U++);
+ return wrap(800,600,id,`
+  <radialGradient id="${id}r" cx=".5" cy=".5" r=".7"><stop offset="0" stop-color="#1e3a31"/><stop offset="1" stop-color="#070a09"/></radialGradient>
+  <radialGradient id="${id}c" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f6e6c4"/><stop offset=".4" stop-color="#c9a064" stop-opacity=".6"/><stop offset="1" stop-color="#c9a064" stop-opacity="0"/></radialGradient>`,
+ `<rect width="800" height="600" fill="url(#${id}r)"/>
+  ${[0,1,2,3,4,5,6,7,8].map(i=>`<path d="M${i*100} 0v600M0 ${i*75}h800" stroke="#f3efe6" stroke-opacity=".04"/>`).join('')}
+  <circle cx="400" cy="300" r="190" fill="none" stroke="#f3efe6" stroke-opacity=".08"/><circle cx="400" cy="300" r="110" fill="none" stroke="#f3efe6" stroke-opacity=".12"/>
+  ${flock(id,90,400,300,380,240,3+v*17)}
+  ${flock(id,40,400,300,170,110,9+v*7,'#c9a064',.9)}
+  <circle cx="400" cy="300" r="90" fill="url(#${id}c)"/>
+  <rect x="380" y="270" width="40" height="64" rx="9" fill="#0b0f0d" stroke="#f3e6c8" stroke-width="2"/><path d="M392 290h16M392 300h16M392 310h10" stroke="#f3e6c8" stroke-width="2"/>`)},
+
+/* phone: task list (even) or chat with the Concierge agent (odd) */
+phone(v){const id='a'+(U++),chat=v%2===1;
+ const tasks=[0,1,2,3,4,5].map(i=>{const y=-150+i*60,done=i<(v===2?4:2);return `<rect x="-104" y="${y-22}" width="208" height="48" rx="10" fill="${done?'#e0dacd':'#f7f3eb'}"/>
+   <circle cx="-80" cy="${y+2}" r="11" fill="${done?'#151a18':'none'}" stroke="#151a18" stroke-width="2.5"/>${done?`<path d="M-86 ${y+2}l4 5 9-10" stroke="#f3efe6" stroke-width="2.5" fill="none" stroke-linecap="round"/>`:''}
+   <rect x="-58" y="${y-8}" width="${110-(i*23)%60}" height="7" rx="3" fill="#151a18" opacity="${done?.35:.75}"/><rect x="-58" y="${y+6}" width="${60+(i*17)%40}" height="5" rx="2" fill="#151a18" opacity=".3"/>
+   <rect x="64" y="${y-8}" width="26" height="14" rx="7" fill="${i%3===0?'#c9a064':'#9fb0a8'}"/>`}).join('');
+ const msgs=[[-1,70],[1,96],[-1,52],[1,120],[-1,84],[1,64]].map((m,i)=>{const y=-160+i*58,w=m[1]+40,x=m[0]<0?-104:104-w;return `<rect x="${x}" y="${y}" width="${w}" height="42" rx="16" fill="${m[0]<0?'#e0dacd':'#151a18'}"/><rect x="${x+14}" y="${y+12}" width="${w-40}" height="6" rx="3" fill="${m[0]<0?'#151a18':'#f3efe6'}" opacity=".6"/><rect x="${x+14}" y="${y+24}" width="${(w-40)*.6}" height="6" rx="3" fill="${m[0]<0?'#151a18':'#f3efe6'}" opacity=".4"/>`}).join('');
+ return wrap(800,600,id,`<linearGradient id="${id}t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a7470"/><stop offset="1" stop-color="#1c2320"/></linearGradient>
+  <linearGradient id="${id}l" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4ecdc" stop-opacity=".4"/><stop offset=".6" stop-color="#f4ecdc" stop-opacity="0"/></linearGradient>`,
+ `<rect width="800" height="600" fill="url(#${id}t)"/>
+  ${flock(id,22,640,120,140,70,21+v,'#f3e6c8',.8)}
+  <g transform="translate(${chat?420:380} 310) rotate(${chat?6:-7})">
+   <rect x="-126" y="-246" width="260" height="500" rx="36" fill="#000" opacity=".35" transform="translate(16 18)"/>
+   <rect x="-130" y="-250" width="260" height="500" rx="36" fill="#0b0f0d"/>
+   <rect x="-118" y="-238" width="236" height="476" rx="26" fill="#f1ece2"/>
+   <rect x="-118" y="-238" width="236" height="62" rx="26" fill="#1e3a31"/><rect x="-118" y="-200" width="236" height="24" fill="#1e3a31"/>
+   ${[0,1,2,3].map(i=>`<circle cx="${-90+i*22}" cy="-206" r="9" fill="${['#c9a064','#9fb0a8','#e7dccb','#f3efe6'][i]}" stroke="#1e3a31" stroke-width="3"/>`).join('')}
+   <rect x="20" y="-212" width="70" height="10" rx="5" fill="#f3efe6" opacity=".6"/>
+   ${chat?msgs:tasks}
+  </g>
+  <rect width="800" height="600" fill="url(#${id}l)"/>`)},
+
+/* linen room shelves */
+linen(v){const id='a'+(U++),r=rng(5+v*9);let s='';
+ [150,330,510].forEach(sy=>{let x=40+r()*20;while(x<720){const w=90+r()*40,n=3+Math.floor(r()*4),dark=r()<.18;
+   for(let k=0;k<n;k++)s+=`<rect x="${(x+(r()-.5)*6).toFixed(1)}" y="${sy-14-(k+1)*26}" width="${w.toFixed(1)}" height="24" rx="9" fill="${dark?(k%2?'#7d8a84':'#6c7973'):(k%2?'#e2dccf':'#f3efe6')}"/><path d="M${(x+10).toFixed(1)} ${sy-14-(k+1)*26+12}h${(w-20).toFixed(1)}" stroke="#000" stroke-opacity=".06" stroke-width="2"/>`;
+   x+=w+14+r()*20}
+   s+=`<rect x="0" y="${sy-14}" width="800" height="16" fill="#2b2420"/><rect x="0" y="${sy+2}" width="800" height="10" fill="#000" opacity=".25"/>`});
+ return wrap(800,600,id,`<linearGradient id="${id}w" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9aa39e"/><stop offset="1" stop-color="#3b4440"/></linearGradient>
+  <linearGradient id="${id}l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>`,
+ `<rect width="800" height="600" fill="url(#${id}w)"/>${s}
+  <rect x="${600-v*80}" y="520" width="130" height="80" rx="6" fill="#151c19"/><rect x="${610-v*80}" y="510" width="110" height="20" rx="8" fill="#e4ded2"/>
+  <rect width="800" height="600" fill="url(#${id}l)"/>`)},
+
+/* hotel corridor, doors, a housekeeper and cart far down the hall */
+corridor(v){const id='a'+(U++);let d='';
+ const L=x=>[200*x/330,600-270*x/330];
+ [[20,90],[130,185],[215,255],[275,300]].forEach(([a,b],i)=>{const[ta,ba]=L(a),[tb,bb]=L(b),ya=ta+(ba-ta)*.25,yb=tb+(bb-tb)*.25;
+  d+=`<polygon points="${a},${ya} ${b},${yb} ${b},${bb} ${a},${ba}" fill="#1a221f"/><polygon points="${800-a},${ya} ${800-b},${yb} ${800-b},${bb} ${800-a},${ba}" fill="#1a221f"/>`;
+  if(i===v%4)d+=`<polygon points="${a},${ya} ${b},${yb} ${b},${bb} ${a},${ba}" fill="#f2e3c1" opacity=".55"/>`;
+  d+=`<circle cx="${b-8}" cy="${(yb+bb)/2}" r="3" fill="#c9a064"/>`});
+ return wrap(800,600,id,`<linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3530"/><stop offset="1" stop-color="#090c0b"/></linearGradient>`,
+ `<rect width="800" height="600" fill="#44504a"/>
+  <polygon points="0,0 800,0 470,200 330,200" fill="#2d3833"/>
+  <polygon points="0,600 330,330 470,330 800,600" fill="url(#${id}f)"/>
+  <polygon points="300,600 385,330 415,330 500,600" fill="#5a3f2c" opacity=".55"/>
+  <rect x="330" y="200" width="140" height="130" fill="#d9d0bd" opacity=".75"/>
+  ${d}
+  ${[0,1,2,3].map(i=>{const y=40+i*42,w=60-i*12;return `<ellipse cx="400" cy="${y}" rx="${w}" ry="${8-i*1.5}" fill="#f6e6c4" opacity=".7"/><ellipse cx="400" cy="${y+10}" rx="${w*1.6}" ry="30" fill="#f6e6c4" opacity=".12" filter="url(#${id}b)"/>`}).join('')}
+  <g transform="translate(${v%2?430:350} 300)"><rect x="0" y="0" width="34" height="26" fill="#0a0e0c"/><rect x="2" y="-6" width="30" height="8" fill="#e4ded2"/><circle cx="42" cy="-26" r="6" fill="#0a0e0c"/><path d="M36 -18h12l4 44h-20z" fill="#0a0e0c"/></g>`)},
+
+/* room inspection through a phone camera */
+check(v){const id='a'+(U++);
+ const box=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="none" stroke="#f3e6c8" stroke-width="3" stroke-dasharray="10 7"/><circle cx="${x}" cy="${y}" r="15" fill="#c9a064"/><path d="M${x-7} ${y}l5 5 9-10" stroke="#0e1311" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+ return wrap(800,600,id,`<linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9c1bc"/><stop offset="1" stop-color="#6f7a75"/></linearGradient>
+  <linearGradient id="${id}m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8ecea"/><stop offset="1" stop-color="#8d9893"/></linearGradient>`,
+ `<rect width="800" height="600" fill="url(#${id}w)"/>
+  ${[0,1,2,3,4,5,6,7].map(i=>`<path d="M0 ${i*80}h800M${i*110} 0v380" stroke="#fff" stroke-opacity=".25" stroke-width="2"/>`).join('')}
+  <rect x="200" y="50" width="400" height="260" rx="10" fill="url(#${id}m)"/><path d="M260 90l120 200M320 90l100 170" stroke="#fff" stroke-opacity=".35" stroke-width="10"/>
+  <rect x="0" y="380" width="800" height="60" fill="#e9e4d9"/><rect x="0" y="440" width="800" height="160" fill="#2a332f"/>
+  <ellipse cx="400" cy="400" rx="120" ry="24" fill="#cfd4d1"/><ellipse cx="400" cy="400" rx="80" ry="12" fill="#9ea8a3"/>
+  <path d="M400 380v-40h30" stroke="#d6dbd8" stroke-width="10" fill="none" stroke-linecap="round"/>
+  ${[0,1,2].map(k=>`<rect x="600" y="${360-k*20}" width="130" height="20" rx="7" fill="${k%2?'#e6e1d6':'#f6f3ec'}"/>`).join('')}
+  <rect x="${v?90:110}" y="330" width="26" height="50" rx="6" fill="#9fb0a8"/><rect x="${v?96:116}" y="318" width="14" height="14" rx="3" fill="#2a332f"/>
+  ${box(286,368,230,62)}${box(590,312,150,72)}${v?box(190,40,420,280):box(80,310,70,80)}
+  <path d="M40 90V40h50M760 90V40h-50M40 510v50h50M760 510v50h-50" stroke="#fff" stroke-width="5" fill="none"/>
+  <rect x="330" y="520" width="140" height="34" rx="17" fill="#0e1311" opacity=".85"/><circle cx="352" cy="537" r="7" fill="#c9a064"/><rect x="368" y="533" width="80" height="8" rx="4" fill="#f3efe6" opacity=".7"/>`)}
+};
+/* the scenes are decoration: the copy beside each one carries its meaning */
+function draw(el){const k=el.dataset.art,v=+(el.dataset.v||0);el.setAttribute('aria-hidden','true');if(ART[k])el.innerHTML=ART[k](v)}
+$$('.art[data-art]').forEach(draw);
+const uri=s=>'url("data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)+'")';
+
+/* ═══ hero character (supplied GSAP animation, scoped to #heroChar) ═══ */
+const hc=$('#hcard');
+requestAnimationFrame(()=>setTimeout(()=>hc.classList.add('in'),reduce?0:250));
+(function heroCharacter(){
+  const root=$('#heroChar');
+  if(!window.gsap||!window.CustomEase||!window.CustomWiggle){$('.me',root).setAttribute('opacity','1');return}
+  gsap.registerPlugin(CustomEase,CustomWiggle);
+  const q=gsap.utils.selector(root);
+  if(reduce){gsap.set(q('.me'),{opacity:1});return}
+  gsap.set(q('.bg'),{transformOrigin:'50% 50%'});
+  gsap.set(q('.ear-right'),{transformOrigin:'0% 50%'});
+  gsap.set(q('.ear-left'),{transformOrigin:'100% 50%'});
+  gsap.set(q('.me'),{opacity:1});
+  const meTl=gsap.timeline({onComplete:addMouseEvent});
+  meTl
+   .from(q('.me'),{duration:1,yPercent:100,ease:'elastic.out(0.5, 0.4)'},0)
+   .from(q('.head, .hair, .shadow'),{duration:0.9,yPercent:20,ease:'elastic.out(0.58, 0.25)'},0.1)
+   .from(q('.ear-right'),{duration:1,rotate:40,yPercent:10,ease:'elastic.out(0.5, 0.2)'},0.2)
+   .from(q('.ear-left'),{duration:1,rotate:-40,yPercent:10,ease:'elastic.out(0.5, 0.2)'},0.2)
+   .to(q('.glasses'),{duration:1,keyframes:[{yPercent:-10},{yPercent:-0}],ease:'elastic.out(0.5, 0.2)'},0.25)
+   .from(q('.eyebrow-right, .eyebrow-left'),{duration:1,yPercent:300,ease:'elastic.out(0.5, 0.2)'},0.2)
+   .to(q('.eye-right, .eye-left'),{duration:0.01,opacity:1},0.35)
+   .to(q('.eye-right-2, .eye-left-2'),{duration:0.01,opacity:0},0.35);
+
+  const blink=gsap.timeline({repeat:-1,repeatDelay:5,paused:true});
+  blink
+   .to(q('.eye-right, .eye-left'),{duration:0.01,opacity:0},0)
+   .to(q('.eye-right-2, .eye-left-2'),{duration:0.01,opacity:1},0)
+   .to(q('.eye-right, .eye-left'),{duration:0.01,opacity:1},0.15)
+   .to(q('.eye-right-2, .eye-left-2'),{duration:0.01,opacity:0},0.15);
+
+  CustomWiggle.create('myWiggle',{wiggles:6,type:'ease-out'});
+  CustomWiggle.create('lessWiggle',{wiggles:4,type:'ease-in-out'});
+
+  let dizzyIsPlaying=false;
+  const dizzy=gsap.timeline({paused:true,onComplete:()=>{dizzyIsPlaying=false}});
+  dizzy
+   .to(q('.eyes'),{duration:0.01,opacity:0},0)
+   .to(q('.dizzy'),{duration:0.01,opacity:0.3},0)
+   .to(q('.mouth'),{duration:0.01,opacity:0},0)
+   .to(q('.oh'),{duration:0.01,opacity:0.85},0)
+   .to(q('.head, .hair-back, .shadow'),{duration:6,rotate:2,transformOrigin:'50% 50%',ease:'myWiggle'},0)
+   .to(q('.me'),{duration:6,rotate:-2,transformOrigin:'50% 100%',ease:'myWiggle'},0)
+   .to(q('.me'),{duration:4,scale:0.99,transformOrigin:'50% 100%',ease:'lessWiggle'},0)
+   .to(q('.dizzy-1'),{rotate:-360,duration:1,repeat:5,transformOrigin:'50% 50%',ease:'none'},0.01)
+   .to(q('.dizzy-2'),{rotate:360,duration:1,repeat:5,transformOrigin:'50% 50%',ease:'none'},0.01)
+   .to(q('.eyes'),{duration:0.01,opacity:1},4)
+   .to(q('.dizzy'),{duration:0.01,opacity:0},4)
+   .to(q('.oh'),{duration:0.01,opacity:0},4)
+   .to(q('.mouth'),{duration:0.01,opacity:1},4);
+
+  let xPosition,yPosition,width=innerWidth,height=innerHeight,storedX=0,storedY=0;
+  const pct=(a,b)=>100*a/b;
+  function updateScreenCoords(e){
+    if(!dizzyIsPlaying){xPosition=e.clientX;yPosition=e.clientY}
+    if(!dizzyIsPlaying&&Math.abs(e.movementX)>500){dizzyIsPlaying=true;dizzy.restart()}
+  }
+  const dom={face:q('.face'),eye:q('.eye'),innerFace:q('.inner-face'),hairFront:q('.hair-front'),hairBack:q('.hair-back'),shadow:q('.shadow'),ear:q('.ear'),brows:q('.eyebrow-left, .eyebrow-right')};
+  function animateFace(){
+    if(!xPosition)return;
+    if(storedX===xPosition&&storedY===yPosition)return;
+    const x=pct(xPosition,width)-50,y=pct(yPosition,height)-50,yHigh=pct(yPosition,height)-20,yLow=pct(yPosition,height)-80;
+    gsap.to(dom.face,{yPercent:yLow/30,xPercent:x/30});
+    gsap.to(dom.eye,{yPercent:yHigh/3,xPercent:x/2});
+    gsap.to(dom.innerFace,{yPercent:y/6,xPercent:x/8});
+    gsap.to(dom.hairFront,{yPercent:yHigh/15,xPercent:x/22});
+    gsap.to([...dom.hairBack,...dom.shadow],{yPercent:(yLow/20)*-1,xPercent:(x/20)*-1});
+    gsap.to(dom.ear,{yPercent:(y/1.5)*-1,xPercent:(x/10)*-1});
+    gsap.to(dom.brows,{yPercent:y*2.5});
+    storedX=xPosition;storedY=yPosition;
+  }
+  function addMouseEvent(){
+    if(matchMedia('(prefers-reduced-motion: no-preference)').matches){
+      addEventListener('mousemove',updateScreenCoords);
+      gsap.ticker.add(animateFace);
+      blink.play();
+    }
+  }
+  addEventListener('resize',()=>{width=innerWidth;height=innerHeight});
+})();
+
+/* quote rotation */
+const qs=$$('#quotes>div'),tk=$$('#ticks i');let qi=0;
+setInterval(()=>{qs[qi].classList.remove('on');tk[qi].classList.remove('on');qi=(qi+1)%qs.length;qs[qi].classList.add('on');tk[qi].classList.add('on')},5200);
+
+/* ticker: duplicate, and hide the copy from screen readers */
+const tr=$('#track'),dup=tr.firstElementChild.cloneNode(true);dup.setAttribute('aria-hidden','true');tr.appendChild(dup);
+
+/* manifesto words */
+const st=$('#statement');
+(function split(node){[...node.childNodes].forEach(c=>{if(c.nodeType===3){const f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(t=>{if(!t)return;if(/^\s+$/.test(t))f.appendChild(document.createTextNode(t));else{const s=document.createElement('span');s.className='w';s.textContent=t;f.appendChild(s)}});c.replaceWith(f)}else split(c)})})(st);
+const words=$$('.w',st);
+
+/* who rows: float picture */
+const rows=$('#rows'),fl=$('#float'),fla=$('.art',fl);
+fla.setAttribute('aria-hidden','true');
+$$('.row').forEach(r=>{r.addEventListener('pointerenter',()=>{fla.innerHTML=ART[r.dataset.art](+r.dataset.v);rows.classList.add('dim');r.classList.add('act');fl.classList.add('show')});
+  r.addEventListener('pointerleave',()=>{rows.classList.remove('dim');r.classList.remove('act');fl.classList.remove('show')})});
+let fx=0,fy=0,tx=0,ty=0;addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY});
+(function follow(){fx+=(tx-fx)*.14;fy+=(ty-fy)*.14;fl.style.transform=`translate(${fx}px,${fy}px)`;requestAnimationFrame(follow)})();
+
+/* plan cards: tap toggles back on touch */
+$$('.pcard').forEach(c=>c.addEventListener('click',e=>{if(e.target.closest('a'))return;if(!matchMedia('(hover:hover)').matches)c.classList.toggle('open')}));
+
+/* FAQ */
+const FAQ=[["What is an “assistant swarm”, exactly?","Several small AI agents, each with one job — scheduling, supplies, guest messages and room checks — that coordinate with each other so you don't have to. You see one feed; they divide the work behind it."],
+["Do my housekeepers need to learn new software?","No. They use the phone they already carry. The agents speak by text or voice in 14 languages, and a shift starts with one tap."],
+["What does Linnet connect to?","Property-management systems, booking calendars, supplier accounts and plain spreadsheets. If your schedule lives somewhere, the Scheduler agent can usually read it on day one."],
+["What happens to room photos and guest data?","Everything is encrypted, kept for 30 days by default, and never used to train models. You can delete any record at any time."],
+["Will it replace housekeepers?","No. It replaces the clipboard, the 6 a.m. group chat and the missed supply order. Every agent hands real decisions back to a person."],
+["How soon could we start?","Solo accounts go live the same day. Crew and Property plans get a guided setup within a week, and nothing is billed during the 14-day trial."]];
+$('#qs').innerHTML=FAQ.map((q,i)=>`<div class="qa"><button aria-expanded="false" aria-controls="an${i}"><h3>${q[0]}</h3><span class="tg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.75 12h16.5M12 3.75v16.5"/></svg></span></button><div class="an" id="an${i}"><div><p>${q[1]}</p></div></div></div>`).join('');
+$$('.qa button').forEach(b=>b.addEventListener('click',()=>{const q=b.parentNode,o=q.classList.toggle('open');b.setAttribute('aria-expanded',o)}));
+
+/* menu */
+const hdr=$('#hdr'),mb=$('#menub');
+mb.addEventListener('click',()=>{const o=hdr.classList.toggle('open');mb.setAttribute('aria-expanded',o);document.body.style.overflow=o?'hidden':''});
+$$('#menu a').forEach(a=>a.addEventListener('click',()=>{hdr.classList.remove('open');mb.setAttribute('aria-expanded',false);document.body.style.overflow=''}));
+addEventListener('keydown',e=>{if(e.key==='Escape'&&hdr.classList.contains('open'))mb.click()});
+
+/* reveal + counters */
+function countUp(el){const to=+el.dataset.count,pre=el.dataset.pre||'',suf=el.dataset.suf||'';if(reduce)return;let t0;const step=t=>{t0??=t;const k=Math.min(1,(t-t0)/1300),e=1-Math.pow(1-k,3);el.textContent=pre+Math.round(to*e).toLocaleString('en-US')+suf;if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;const t=en.target;t.classList.add('in','vis');if(t.dataset.count)countUp(t);io.unobserve(t)}),{threshold:.15});
+$$('.rv,[data-count]').forEach(e=>io.observe(e));
+$$('.pcard').forEach((c,i)=>{c.style.transitionDelay=i*.12+'s';io.observe(c)});
+
+/* scroll-driven */
+const mani=$('#mani'),wipe=$('#wipe'),ph1=$('#ph1'),ph2=$('#ph2'),meth=$('#method'),stp=$$('#steps .step'),mph=$$('#mphotos .ph'),un=$('#unmask');
+const prog=el=>{const r=el.getBoundingClientRect(),t=r.height-innerHeight;return t>0?clamp(-r.top/t):0};
+let lastY=scrollY,ticking=false;
+function frame(){
+  ticking=false;const y=scrollY,vh=innerHeight;
+  hdr.classList.toggle('scr',y>40);
+  if(!hdr.classList.contains('open'))hdr.classList.toggle('hide',y>lastY&&y>200);lastY=y;
+  hc.style.setProperty('--sp',clamp(y/vh).toFixed(3));
+  const pp=prog(mani),lit=pp/.6*words.length;
+  words.forEach((w,i)=>w.classList.toggle('lit',i<lit));
+  ph1.style.transform=`translateY(${(1.12-pp*1.7)*vh}px) rotate(${4-pp*7}deg)`;
+  ph2.style.transform=`translateY(${(1.5-pp*1.3)*vh}px) rotate(${-5+pp*6}deg)`;
+  wipe.style.setProperty('--w',clamp((pp-.66)/.3).toFixed(3));
+  if(innerWidth>=900){const mp=prog(meth),a=Math.min(3,Math.floor(mp*4));meth.style.setProperty('--mp',mp.toFixed(3));
+    stp.forEach((s,i)=>s.classList.toggle('on',i===a));mph.forEach((p,i)=>p.classList.toggle('in',i<=a))}
+  const up=prog(un);un.style.setProperty('--u',clamp(up/.55).toFixed(3));un.style.setProperty('--v',clamp((up-.55)/.2).toFixed(3));
+}
+addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(frame)}},{passive:true});
+addEventListener('resize',frame);frame();
+
+/* local clock */
+const ck=$('#clock');
+const tick=()=>{try{ck.textContent=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())}catch(e){}};
+tick();setInterval(tick,15000);
+})();
+</script>
+</body>
+</html>
+```
