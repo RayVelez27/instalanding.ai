@@ -1,0 +1,1493 @@
+<!doctype html>
+<!--
+  INSTALANDING.AI · Fullday AI Money Agent Page
+  slug     fullday-ai-money-agent-page
+  prompt   https://instalanding.ai/p/fullday-ai-money-agent-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/fullday-ai-money-agent-page
+  license  Fictional brand ("Fullday"); every member, story, figure, price, address and phone number is invented.
+           Replace names and copy before shipping. Every picture is HTML, CSS or inline SVG; no image files.
+
+  MAP
+  tokens    one :root block at the top of the <style>: --bg #f5f7fa, --ink #000 with 70/50/20% tints, --line,
+            --coral #ec5a4f, --peach #f79276, --green #16854a, --dark #141414, --ease cubic-bezier(.22,.8,.24,1);
+            Inter Tight 300-600 for everything, Montserrat 600 only on the payment cards; type classes .h1-.h6
+  sections  nav, hero, problem, solution, how-it-works, features, product, results, testimonials, benefits,
+            pricing, faq, journal, cta, footer (each carries data-section)
+  scripts   one classic script: clones <template id="tpl-phone"> into every [data-phone] slot; one
+            IntersectionObserver adds .in to every .rv; count-ups on [data-count]; the goal ring and the results chart
+            line draw on view; the "You asked" prompt types itself; mobile menu; product slider; story switcher;
+            benefits scroller with progress line and dots; pricing monthly/yearly toggles; FAQ accordion; the hero's
+            live task feed (a new row every 2.8s, paused when the tab is hidden or motion is reduced); newsletter stub
+  assets    no image files; fonts from Google Fonts; no libraries
+
+  ADAPTING
+  - Breakpoints at 1299.98px (hero phone and side phones hidden, most rows stack), 1199.98px (type steps down) and
+    809.98px (phone layout: burger menu, hero reordered, live feed hidden, one column).
+  - The phone mockup lives once in #tpl-phone; edit it there, not in the slots. Its two payment cards slide on a
+    9s keyframe loop (-217px = one card + gap), so change that offset if you resize .mcard.
+  - Sections overlap with 64px bottom radii over the next section's background: .res-wrap, the benefits wrapper and
+    .price-wrap paint --dark behind the rounded corners. Keep those wrappers if you reorder sections.
+  - Buttons are a pill inside a pill: the label is two <i> copies that roll on hover. Keep both copies identical.
+  - The results chart line animates by stroke-dashoffset, then restores its 12.5 dash pattern after 2.3s.
+  - .rv.l / .rv.r slide in from 40px off-side; under 810px they rise instead so they cannot widen the page.
+  - .answer > span is a child selector on purpose: a bare ".answer span" also hits the counter in the figure.
+  - prefers-reduced-motion: every animation and transition is cut, reveals show at once, the live feed stays still.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fullday – AI money for full lives</title>
+<meta name="description" content="Fullday is an AI money agent for busy people. It pays, plans, saves and splits around your calendar so you can say yes to more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f7fa; --ink:#000; --ink70:rgba(0,0,0,.7); --ink50:rgba(0,0,0,.5); --ink20:rgba(0,0,0,.2); --line:rgba(0,0,0,.1);
+  --white:#fff; --w70:rgba(255,255,255,.7); --w50:rgba(255,255,255,.5);
+  --coral:#ec5a4f; --peach:#f79276; --green:#16854a; --dark:#141414; --soft:#dbe3f6;
+  --ease:cubic-bezier(.22,.8,.24,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Inter Tight",system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-feature-settings:"cv03","cv04","cv09","cv11";overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
+img,svg{display:block}
+.container{width:100%;max-width:1360px;margin:0 auto;position:relative;z-index:2}
+h1,h2,h3,h4,h5,h6{text-wrap:balance}
+
+/* type */
+.h1{font-size:96px;font-weight:500;letter-spacing:-.045em;line-height:.95}
+.h2{font-size:64px;font-weight:500;letter-spacing:-.03em;line-height:1}
+.h2-light{font-size:64px;font-weight:400;letter-spacing:-.03em;line-height:1}
+.h3{font-size:48px;font-weight:500;letter-spacing:-.02em;line-height:1}
+.h4{font-size:40px;font-weight:500;letter-spacing:-.02em;line-height:1}
+.h5{font-size:32px;font-weight:500;letter-spacing:-.01em;line-height:1.05}
+.h6{font-size:24px;font-weight:500;letter-spacing:-.01em;line-height:1.05}
+.h6-light{font-size:24px;font-weight:400;letter-spacing:-.01em;line-height:1.1}
+.p{font-size:16px;line-height:1.35;color:var(--ink70)}
+.p18{font-size:18px;line-height:1.35;color:var(--ink70)}
+.label{font-size:16px;font-weight:500}
+.small{font-size:14px}
+
+/* buttons — sized to content by default, full width only when asked */
+.btn{display:inline-flex;width:max-content;max-width:100%;flex:none;align-self:flex-start;padding:2px;border-radius:100px;background:rgba(0,0,0,.01);box-shadow:1px 1px 1px #fff,-1px -1px 1px rgba(0,0,0,.04)}
+.btn>span{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;height:46px;padding:0 30px;border-radius:100px;background:linear-gradient(9deg,#1c1c1c,#545454);box-shadow:0 2px 0 #3c3c3c,inset 0 -.5px 0 rgba(255,255,255,.1),inset 0 1px 0 rgba(255,255,255,.2);color:#fff;font-weight:500;font-size:16px;white-space:nowrap}
+.btn>span i{font-style:normal;display:block;transition:transform .5s var(--ease),opacity .35s var(--ease)}
+.btn>span i+i{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-50% + 40px));opacity:0}
+.btn:hover>span i:first-child,.btn:focus-visible>span i:first-child{transform:translateY(-40px);opacity:0}
+.btn:hover>span i+i,.btn:focus-visible>span i+i{transform:translate(-50%,-50%);opacity:1}
+.btn.white{box-shadow:none;background:transparent}
+.btn.white>span{background:linear-gradient(9deg,#fff 17%,#cdcdcd 83%);color:#000;box-shadow:none}
+.btn.full{width:100%;align-self:stretch}.btn.full>span{width:100%}
+.ghost{display:inline-flex;align-items:center;gap:8px;height:50px;padding:0 6px;font-weight:500}
+.ghost .pl{width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.08);transition:transform .35s var(--ease)}
+.ghost:hover .pl{transform:scale(1.08)}
+
+/* section tag */
+.tag{display:inline-flex;align-items:center;gap:12px;font-size:16px;text-transform:uppercase;color:#000}
+.tag .orbit{position:relative;width:24px;height:24px;border:1px solid rgba(0,0,0,.65);border-radius:50%;flex:none}
+.tag .orbit:after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:#000;left:50%;top:50%;transform:translate(-50%,-50%)}
+.tag .orbit:before{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid transparent;border-top-color:#000;animation:spin 3s linear infinite}
+.tag span{display:flex;gap:8px}
+.tag.white{color:#fff}.tag.white .orbit{border-color:var(--w70)}.tag.white .orbit:after{background:#fff}.tag.white .orbit:before{border-top-color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.l{transform:translateX(-40px)}.rv.r{transform:translateX(40px)}.rv.s{transform:scale(.94)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+
+/* NAV */
+.nav{position:absolute;top:0;left:0;right:0;z-index:50;padding:14px 40px}
+.nav .inner{max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.nav .left{display:flex;align-items:center;gap:120px}
+.logo{display:flex;align-items:center;gap:8px;font-size:28px;font-weight:500;letter-spacing:-.03em}
+.logo svg{width:24px;height:24px}
+.menu{display:flex;gap:28px}
+.menu a{font-weight:500;font-size:16px;height:20px;overflow:hidden}
+.menu a .roll{display:block;transition:transform .4s var(--ease);text-shadow:0 19.2px 0 #000}
+.menu a:hover .roll{transform:translateY(-19.2px)}
+.burger{display:none;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.7);place-items:center}
+.burger svg{width:20px;height:20px}
+.mobile-menu{display:none}
+
+/* HERO */
+.hero{position:relative;padding:150px 40px 40px;border-radius:0 0 64px 64px;overflow:hidden;background:
+ radial-gradient(55% 55% at 88% 6%,rgba(247,146,118,.42),transparent 70%),
+ radial-gradient(45% 50% at 6% 18%,rgba(186,206,247,.75),transparent 70%),
+ radial-gradient(50% 60% at 50% 100%,rgba(255,226,214,.8),transparent 70%),
+ linear-gradient(180deg,#eef2fb,#f8f1ee)}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.035) 1px,transparent 1px);background-size:64px 64px;mask:linear-gradient(180deg,#000 15%,transparent 70%);-webkit-mask:linear-gradient(180deg,#000 15%,transparent 70%)}
+.hero .container{display:flex;flex-direction:column;gap:72px}
+.hero-top{display:flex;align-items:stretch;gap:72px;position:relative;z-index:4}
+.hero-left{display:flex;flex-direction:column;justify-content:space-between;width:300px;flex:none;padding-bottom:6px}
+.pill-tag{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--ink20);border-radius:100px;font-weight:500;width:max-content;background:rgba(255,255,255,.35);backdrop-filter:blur(8px)}
+.pill-tag i{width:6px;height:6px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 4px rgba(236,90,79,.15);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(236,90,79,0)}}
+.trust{display:flex;align-items:center;gap:12px}
+.avatars{display:flex}
+.avatars span{width:40px;height:40px;border-radius:50%;border:2px solid #fff;margin-left:-12px;display:grid;place-items:center;font-size:13px;font-weight:600;color:#fff;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.avatars span:first-child{margin-left:0}
+.trust .label{line-height:1.25}.trust .label small{display:block;color:var(--ink50);font-weight:400;font-size:14px;white-space:nowrap}
+.hero-right{display:flex;flex-direction:column;gap:28px;max-width:470px}
+.hero-right .p18{max-width:400px}
+.hero-ctas{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-phone{margin-left:auto;width:262px;flex:none;position:relative}
+.hero-phone .phone-slot{position:absolute;right:0;top:-36px;width:262px;height:532px}
+.hero-phone .phone{transform:scale(.75);transform-origin:top left;box-shadow:0 40px 80px rgba(20,25,30,.28),inset 0 0 0 2px #3a3a3a}
+.hero-phone .fchip{position:absolute;left:-168px;top:250px;z-index:2;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 16px 36px rgba(20,25,30,.14);font-size:12px;display:flex;align-items:center;gap:8px;white-space:nowrap;animation:bob 5s ease-in-out infinite}
+.hero-phone .fchip.b{left:-196px;top:330px;animation-delay:-2.5s}
+.hero-phone .fchip b{font-weight:600}
+.fchip .ai{width:22px;height:22px;border-radius:7px;background:#000;color:#fff;display:grid;place-items:center;font-size:10px;font-weight:600}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.hero-card{position:relative;z-index:3;background:#fff;border-radius:32px;padding:32px;display:flex;align-items:center;gap:32px;box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 24px 60px rgba(20,25,30,.06)}
+.hero-card .lc{flex:1;display:flex;flex-direction:column;gap:80px;min-width:0}
+.hero-card .lc .tw{display:flex;flex-direction:column;gap:12px;max-width:320px}
+.hero-card .icon-row{display:flex;align-items:center;justify-content:flex-start;gap:24px;padding-top:40px;border-top:1px dashed rgba(0,0,0,.15)}
+.hero-card .icon-row svg{width:64px;height:64px;flex:none;color:#000}
+.hero-card .icon-row p{max-width:260px}
+.dash{flex:1.15;min-width:0;aspect-ratio:1.673;border-radius:24px;overflow:hidden;position:relative;box-shadow:inset 0 0 24px #fff;background:linear-gradient(135deg,#eef3fd 0%,#fbe9e2 100%);padding:24px 24px 34px;display:flex;flex-direction:column;gap:16px}
+.dash .row{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.dash .big{font-size:40px;font-weight:500;letter-spacing:-.04em;line-height:1}
+.dash .big small{font-size:18px;color:var(--ink50);letter-spacing:0}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:100px;font-size:12px;font-weight:500;background:rgba(255,255,255,.7);white-space:nowrap}
+.chip.up{color:var(--green);background:#e9f8ef}
+.bars{flex:1;display:flex;align-items:flex-end;gap:10px;min-height:60px}
+.bars div{flex:1;border-radius:8px 8px 4px 4px;background:rgba(255,255,255,.8);position:relative;transform-origin:bottom;animation:grow 1.4s var(--ease) both}
+.bars div:nth-child(2){animation-delay:.05s}.bars div:nth-child(3){animation-delay:.1s}.bars div:nth-child(4){animation-delay:.15s}.bars div:nth-child(5){animation-delay:.2s}.bars div:nth-child(6){animation-delay:.25s}
+.bars div.hl{background:linear-gradient(180deg,#f79276,#f4b9a5)}
+.bars div span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--ink50);white-space:nowrap}
+.bars div em{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-style:normal;font-size:11px;font-weight:600}
+@keyframes grow{from{transform:scaleY(0)}}
+
+
+/* hero live feed */
+.live{position:relative;margin:28px 0;padding:14px 14px 12px;border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.62),rgba(255,255,255,.28));border:1px solid rgba(255,255,255,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 20px 50px rgba(30,40,70,.08),inset 0 1px 0 #fff;overflow:hidden}
+.live:before{content:"";position:absolute;inset:-40% -60% auto auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(247,146,118,.35),transparent 65%);animation:drift 9s ease-in-out infinite;pointer-events:none}
+@keyframes drift{50%{transform:translate(-60px,50px)}}
+.live-h{position:relative;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--ink70);margin-bottom:10px}
+.live-h .dot{width:7px;height:7px;border-radius:50%;background:#27b36a;box-shadow:0 0 0 0 rgba(39,179,106,.5);animation:ping 1.8s ease-out infinite}
+@keyframes ping{to{box-shadow:0 0 0 8px rgba(39,179,106,0)}}
+.live-h .clk{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink50)}
+.feed{position:relative;list-style:none;height:166px;overflow:hidden;mask:linear-gradient(180deg,#000 62%,transparent);-webkit-mask:linear-gradient(180deg,#000 62%,transparent)}
+.feed:before{content:"";position:absolute;left:15px;top:16px;bottom:0;width:1px;background:linear-gradient(180deg,rgba(0,0,0,.15),transparent)}
+.feed li{position:relative;display:flex;align-items:center;gap:10px;padding:6px 0;overflow:hidden;max-height:60px}
+.feed li.new{animation:feedIn .7s var(--ease) both}
+.feed li.new .ic{animation:pop .7s var(--ease) both}
+@keyframes feedIn{from{max-height:0;opacity:0;transform:translateY(-10px);padding:0}to{max-height:60px;opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.4)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.feed .ic{flex:none;width:31px;height:31px;border-radius:10px;display:grid;place-items:center;font-size:13px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.06);position:relative;z-index:1}
+.feed .tx2{flex:1;min-width:0;font-size:13px;line-height:1.2}
+.feed .tx2 b{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed .tx2 small{color:var(--ink50);font-size:11px}
+.feed em{font-style:normal;font-size:12px;font-weight:600;white-space:nowrap}
+.feed em.pos{color:var(--green)}
+.live-f{position:relative;display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:10px;border-top:1px dashed rgba(0,0,0,.12);font-size:12px;color:var(--ink50)}
+.live-f b{color:#000;font-weight:600;font-variant-numeric:tabular-nums}
+.live-f .bar{flex:1;height:4px;border-radius:4px;background:rgba(0,0,0,.06);margin:0 10px;overflow:hidden}
+.live-f .bar i{display:block;height:100%;width:40%;border-radius:4px;background:linear-gradient(90deg,#f79276,#ec5a4f);transition:width .8s var(--ease)}
+@media (max-width:809.98px){.live{display:none}}
+
+/* PHONE (shared) */
+.phone{width:350px;height:712px;border-radius:58px;background:linear-gradient(145deg,#2a2a2a,#0c0c0c);padding:12px;box-shadow:0 30px 60px rgba(0,0,0,.25),inset 0 0 0 2px #3a3a3a;position:relative}
+.phone:before{content:"";position:absolute;top:120px;left:-3px;width:3px;height:60px;background:#222;border-radius:2px}
+.screen{width:100%;height:100%;border-radius:46px;background:#f6f7f9;overflow:hidden;position:relative;padding:14px 18px}
+.ph-status{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;height:24px;padding:0 10px}
+.ph-island{width:96px;height:26px;background:#000;border-radius:20px}
+.ph-sig{display:flex;gap:3px;align-items:flex-end}.ph-sig i{width:3px;background:#000;border-radius:1px}
+.ph-head{display:flex;align-items:center;gap:10px;margin:20px 0 16px}
+.ph-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#f79276,#465864);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center}
+.ph-head small{display:block;font-size:10px;color:var(--ink50)}.ph-head b{font-size:13px;font-weight:600}
+.ph-bell{margin-left:auto;width:32px;height:32px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.ph-brief{background:#000;color:#fff;border-radius:14px;padding:10px 12px;font-size:11px;line-height:1.35;display:flex;gap:8px;margin-bottom:16px}
+.ph-brief b{font-weight:600}
+.ph-brief .ai{flex:none;width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#f79276,#ec5a4f);display:grid;place-items:center;font-size:9px;font-weight:700}
+.ph-label{font-size:9px;letter-spacing:.06em;color:var(--ink50)}
+.ph-bal{font-size:42px;letter-spacing:-.03em;font-weight:400;line-height:1.1;margin:2px 0 14px;font-variant-numeric:tabular-nums}
+.ph-bal small{font-size:18px;color:var(--ink50)}
+.ph-track{margin-right:-18px}
+.ph-cards{display:flex;gap:10px;width:max-content;animation:cards 9s var(--ease) infinite}
+@keyframes cards{0%,40%{transform:translateX(0)}50%,90%{transform:translateX(-217px)}100%{transform:translateX(0)}}
+.mcard{width:249px;height:150px;border-radius:12px;position:relative;padding:17px;color:#fafafa;font-family:Montserrat,sans-serif;font-weight:600;box-shadow:inset 0 -1.8px 0 rgba(255,255,255,.1),inset 0 1.8px 0 rgba(255,255,255,.2);overflow:hidden}
+.mcard.dark{background:linear-gradient(9deg,#1c1c1c,#545454)}
+.mcard.steel{background:linear-gradient(67deg,#465864,#aab9c3)}
+.mcard:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-110px;top:-120px;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)}
+.mcard .t{font-size:9px;letter-spacing:.04em}
+.mcard .net{position:absolute;right:17px;top:17px;font-size:11px;letter-spacing:.02em}
+.mcard .chipc{position:absolute;left:17px;top:46px;width:30px;height:22px;border-radius:5px;background:linear-gradient(135deg,#e9d7a6,#b79c5c);opacity:.9}
+.mcard .nm{position:absolute;left:17px;bottom:16px;font-size:10px}
+.mcard .nm small{display:block;font-size:7px;opacity:.8;margin-top:2px}
+.mcard .mk{position:absolute;right:15px;bottom:13px;width:28px;height:28px;color:#fff}
+.mcard .nfc{position:absolute;right:17px;top:17px;width:18px;height:18px}
+.ph-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 14px}
+.ph-actions div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10px;color:var(--ink70)}
+.ph-actions span{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.ph-actions div:first-child span{background:#000}
+.ph-list{background:#fff;border-radius:18px;padding:12px 14px}
+.ph-list .lh{font-size:12px;font-weight:600;display:flex;justify-content:space-between;margin-bottom:6px}
+.ph-list .lh small{font-weight:400;color:var(--ink50)}
+.tx{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:11px}
+.tx+.tx{border-top:1px solid rgba(0,0,0,.05)}
+.tx i{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;flex:none}
+.tx b{font-weight:500;display:block}.tx small{color:var(--ink50);font-size:10px}
+.tx em{margin-left:auto;font-style:normal;font-weight:600;white-space:nowrap}
+.tx em.pos{color:var(--green)}
+
+/* generic section shells */
+.sec{position:relative;padding:120px 40px 40px;border-radius:0 0 64px 64px}
+
+/* PROBLEM */
+.prob{padding-top:160px}
+.prob .head{display:flex;justify-content:space-between;align-items:flex-start;max-width:1150px;margin-bottom:80px;gap:24px}
+.prob .head h2{max-width:627px}
+.pcard{background:#fff;border-radius:24px;padding:24px;display:flex;align-items:center;justify-content:space-between;box-shadow:6px 6px 25px #fff;gap:20px}
+.pimg{flex:1;max-width:421px;aspect-ratio:1.394;border-radius:24px;overflow:hidden;position:relative;background:linear-gradient(160deg,#fde7df 0%,#f3d2c6 45%,#dfe6f6 100%)}
+.pimg .rcpt{position:absolute;width:44%;height:70%;background:#fff;border-radius:6px;box-shadow:0 14px 30px rgba(80,40,30,.15);padding:14px;display:flex;flex-direction:column;gap:7px}
+.pimg .rcpt i{display:block;height:5px;border-radius:3px;background:#eee}
+.pimg .rcpt i.k{background:#ddd;width:60%}
+.pimg .rcpt:after{content:"";position:absolute;bottom:-6px;left:0;right:0;height:12px;background:radial-gradient(circle at 6px 0,transparent 5px,#fff 5.5px) 0 0/12px 12px repeat-x}
+.pimg .r1{left:10%;top:16%;transform:rotate(-9deg)}
+.pimg .r2{left:34%;top:12%;transform:rotate(5deg)}
+.pimg .clock{position:absolute;right:9%;bottom:12%;width:34%;aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:0 18px 36px rgba(20,25,30,.18);display:grid;place-items:center}
+.pimg .clock svg{width:82%;height:82%}
+.pimg .hand{transform-origin:50px 50px;animation:spin 6s linear infinite}
+.pimg .hand.s{animation-duration:60s}
+.pcard .content{flex:1;max-width:764px;display:flex;align-items:center;gap:90px;padding-left:20px}
+.pcard .tw{flex:1;max-width:524px;display:flex;flex-direction:column;gap:72px}
+.pcard .tw .h6-light{max-width:450px}
+.pcard .side{max-width:150px;width:100%;height:254px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end}
+.dots3{display:flex;gap:6px}.dots3 i{width:12px;height:12px;border-radius:50%;background:var(--ink20)}.dots3 i.on{background:#000}
+
+/* SOLUTION */
+.sol .container{display:flex;flex-direction:column;align-items:center;gap:80px}
+.sol .hdr{max-width:600px;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.sol .hdr p{max-width:498px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
+.scard{display:flex;flex-direction:column;align-items:center;gap:24px}
+.scard .cap{display:flex;flex-direction:column;gap:10px;text-align:center;max-width:366px}
+.scard .cap p{font-size:14px;opacity:.64}
+.scard .cap h3{font-size:16px;font-weight:500}
+.vis{width:100%;aspect-ratio:.878;border-radius:24px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.vis.darkv{background:linear-gradient(227deg,rgba(46,46,46,.96),rgba(0,0,0,.98));border-color:rgba(255,255,255,.28)}
+.crossgrid{position:absolute;inset:0;width:100%;height:100%;opacity:.12}
+.prompt{position:absolute;top:56px;left:50%;transform:translateX(-45%);width:286px;max-width:calc(100% - 32px);min-height:96px;border-radius:20px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:16px 20px;color:#fff;box-shadow:0 12px 28px rgba(0,0,0,.12)}
+.prompt small{font-size:10px;opacity:.64;letter-spacing:.04em}
+.prompt p{font-size:17px;font-weight:500;letter-spacing:-.01em;margin-top:8px;line-height:1.2}
+.prompt .caret{display:inline-block;width:2px;height:16px;background:#fff;vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.answer{position:absolute;top:178px;left:18px;width:296px;max-width:calc(100% - 36px);border-radius:20px;background:#fff;padding:16px 20px;box-shadow:0 18px 36px rgba(20,25,30,.18)}
+.answer small{font-size:10px;font-weight:600;color:var(--green);letter-spacing:.04em}
+.answer b{display:block;font-size:30px;font-weight:500;letter-spacing:-.04em;margin-top:6px}
+/* child combinator: a bare ".answer span" also caught the counter inside the figure */
+.answer>span{display:block;font-size:12px;color:var(--ink50);margin-top:4px}
+.cmd{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);width:322px;max-width:calc(100% - 24px);height:40px;border-radius:20px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(22px);color:#fff;font-size:11px;display:flex;align-items:center;padding:0 16px;justify-content:space-between}
+.cmd span:first-child{opacity:.72}
+.eq{width:24px;height:24px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;gap:2px}
+.eq i{width:2px;height:11px;background:#000;border-radius:8px;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}
+@keyframes eq{50%{transform:scaleY(.35)}}
+.vis.see{background:radial-gradient(70% 60% at 20% 15%,#e2e9fa,transparent),radial-gradient(60% 60% at 90% 90%,#fbe2d8,transparent),#f9fafc}
+.see .panel{position:absolute;inset:7.5%;background:#fff;border-radius:18px;box-shadow:0 18px 40px rgba(20,25,30,.1);padding:20px;display:flex;flex-direction:column;gap:14px}
+.donut{display:flex;align-items:center;gap:16px}
+.donut svg{width:96px;height:96px;flex:none}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:12px}
+.legend span{display:flex;align-items:center;gap:6px}.legend i{width:8px;height:8px;border-radius:50%}
+.goal{font-size:12px}.goal .bar{height:8px;border-radius:8px;background:#eef1f6;margin-top:6px;overflow:hidden}.goal .bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#f79276,#ec5a4f)}
+.goal div:first-child{display:flex;justify-content:space-between}
+.vis.conn{background:radial-gradient(circle at 50% 50%,#fff 0,#fbeee9 40%,#eef2fb 100%)}
+.conn .ring{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed rgba(0,0,0,.12);transform:translate(-50%,-50%)}
+.conn .ring.a{width:58%;aspect-ratio:1;animation:spin 30s linear infinite}
+.conn .ring.b{width:86%;aspect-ratio:1;animation:spin 45s linear infinite reverse}
+.conn .node{position:absolute;padding:0 10px;height:34px;border-radius:12px;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,.08);display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600}
+.conn .mark{position:absolute;left:50%;top:50%;width:30%;height:30%;transform:translate(-50%,-50%);color:#000}
+
+/* HOW */
+.how .container{display:flex;gap:80px;align-items:flex-start}
+.how .left{flex:1;max-width:560px;position:sticky;top:80px;display:flex;flex-direction:column;gap:64px}
+.how .left .hd{display:flex;flex-direction:column;gap:32px}
+.how .left .hd>div{display:flex;flex-direction:column;gap:24px}
+.how .left p{max-width:445px}
+.how .steps{flex:1;display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:8px;position:sticky;top:80px}
+.step .num{background:#fff;border-radius:12px;padding:20px 8px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;font-size:14px;font-weight:500}
+.step .num svg{width:12px;height:10px}
+.step .body{flex:1;background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:100px;box-shadow:0 -10px 30px rgba(245,247,250,.9)}
+.step .body svg{width:24px;height:25px}
+.step .body .t{display:flex;flex-direction:column;gap:12px}
+
+/* FEATURES */
+.feat .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.fcard{background:#fff;border:1px solid var(--line);border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:51px;overflow:hidden;position:relative}
+.fcard .hd{display:flex;flex-direction:column;gap:20px;max-width:530px;position:relative;z-index:2}
+.uiwrap{position:relative;aspect-ratio:1.484;width:100%}
+.ui{position:absolute;border-radius:12px;background:#fff;box-shadow:0 20px 40px rgba(20,20,25,.18);padding:16px;display:flex;flex-direction:column;gap:12px;font-size:12px}
+.ui.a{left:0;top:0;width:326px;height:252px;border:1px solid var(--line)}
+.ui.b{right:0;bottom:0;width:326px;height:228px;border:1px solid var(--line)}
+.ui .uh{font-size:13px;font-weight:600;display:flex;justify-content:space-between}
+.ui .uh small{font-weight:400;color:var(--ink50)}
+.spark{width:100%;height:110px}
+.cat{display:flex;align-items:center;gap:10px}
+.cat i{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-style:normal;font-size:12px;flex:none}
+.cat .bar{flex:1;height:6px;border-radius:6px;background:#f0f2f5;overflow:hidden}.cat .bar b{display:block;height:100%;border-radius:6px}
+.cat em{font-style:normal;font-weight:600;width:52px;text-align:right}
+.fcard.glow:before{content:"";position:absolute;inset:-30% -40% auto;height:120%;background:radial-gradient(40% 40% at 50% 60%,rgba(247,146,118,.35),transparent 70%),radial-gradient(35% 35% at 30% 70%,rgba(186,206,247,.6),transparent 70%)}
+.fcard .centerui{display:flex;justify-content:center;position:relative;z-index:2}
+.goalcard{width:270px;aspect-ratio:.886;border-radius:20px;background:#fff;box-shadow:0 24px 50px rgba(20,25,30,.16);padding:18px;display:flex;flex-direction:column;gap:12px}
+.goalcard .ringwrap{position:relative;width:130px;height:130px;margin:6px auto 0}
+.goalcard .ringwrap b{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;font-weight:500;letter-spacing:-.03em;text-align:center}
+.goalcard .ringwrap b small{display:block;font-size:10px;color:var(--ink50);font-weight:400;letter-spacing:0}
+.goalcard .r{display:flex;justify-content:space-between;font-size:12px}
+.wide{position:relative;overflow:hidden;border-radius:24px;padding:80px;background:linear-gradient(227deg,rgba(46,46,46,.96),rgba(0,0,0,.98));border:1px solid rgba(23,33,43,.1);color:#fff;min-height:560px}
+.wide .shape{position:absolute;inset:0;opacity:.6;background:repeating-radial-gradient(circle at 100% 100%,transparent 0 60px,rgba(255,255,255,.05) 60px 61px)}
+.wide .lc{position:relative;z-index:2;max-width:628px;display:flex;flex-direction:column;gap:159px}
+.wide .lc .t{display:flex;flex-direction:column;gap:48px}
+.wide .lc .t>div{display:flex;flex-direction:column;gap:24px}
+.wide .lc p{color:#fff;opacity:.7;max-width:453px}
+.wide .blob{position:absolute;width:511px;height:570px;border-radius:50%;background:#fff;opacity:.2;filter:blur(100px);top:-205px;right:-304px;transform:rotate(-58deg)}
+.wide .phone-slot{position:absolute;right:48px;bottom:-174px;z-index:3}
+
+/* PRODUCT */
+.prod{padding:120px 40px 160px;background:radial-gradient(50% 45% at 50% 55%,rgba(247,146,118,.28),transparent 70%),radial-gradient(40% 40% at 20% 30%,rgba(186,206,247,.5),transparent 70%),var(--bg)}
+.prod .container{display:flex;flex-direction:column;align-items:center;gap:80px}
+.prod .hd{display:flex;flex-direction:column;gap:24px;max-width:674px;width:100%}
+.prod .row{display:flex;gap:64px;max-width:719px;width:100%}
+.prod .phone-sm .phone{width:312px;height:634px;border-radius:52px}
+.slider-card{padding-top:64px;display:flex;gap:32px}
+.vctl{display:flex;flex-direction:column;align-items:center;gap:6px}
+.arrow{width:20px;height:20px;border-radius:24px;display:grid;place-items:center;border:.5px solid var(--line);transition:background .3s}
+.arrow.on{background:#000;color:#fff;border-color:transparent}
+.arrow svg{width:10px;height:10px}
+.vdots{display:flex;flex-direction:column;gap:12px;padding:35px 5px;border:1px solid var(--ink20);border-radius:92px}
+.vdots i{width:10px;height:10px;border-radius:50%;background:var(--ink20);transition:background .3s}.vdots i.on{background:#000}
+.slides{width:291px;position:relative;min-height:220px}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;gap:32px;opacity:0;transform:translateY(20px);transition:.6s var(--ease);pointer-events:none}
+.slide.on{opacity:1;transform:none;pointer-events:auto}
+.slide .tw{display:flex;flex-direction:column;gap:12px}
+.slide .tw p{opacity:.7}
+.app{height:100%;display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.app .ah{font-size:18px;font-weight:500;letter-spacing:-.02em;padding:0 4px;margin-top:14px}
+.seg{display:flex;background:#fff;border-radius:100px;padding:3px;font-size:10px}
+.seg span{flex:1;text-align:center;padding:6px;border-radius:100px;color:var(--ink50)}.seg span.on{background:#000;color:#fff}
+.appcard{background:#fff;border-radius:16px;padding:12px}
+.appcard small{font-size:10px;color:var(--ink50)}
+.appcard b{display:block;font-size:24px;font-weight:500;letter-spacing:-.03em}
+
+/* RESULTS */
+.res-wrap{background:var(--dark)}
+.res{background:#fff;padding:120px 40px 160px;border-radius:0 0 64px 64px}
+.res .container{display:flex;flex-direction:column;gap:80px}
+.res .top{position:relative}
+.res .tc{position:absolute;left:0;top:0;width:44%;display:flex;flex-direction:column;gap:24px;z-index:2}
+.res .tc>div{display:flex;flex-direction:column;gap:24px}
+.res .chart{width:100%;height:auto}
+.timeline{display:flex;justify-content:space-between;font-weight:500;color:var(--ink50);margin-top:24px}
+.timeline span:first-child{color:#000}
+.rc{display:flex;gap:8px}
+.rc .num{background:var(--bg);border-radius:12px;padding:20px 8px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;font-size:14px;font-weight:500}
+.rc .body{flex:1;background:var(--bg);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:100px}
+.rc .body .ic{display:flex;align-items:center;gap:8px}
+.rc .body .ic svg{width:16px;height:16px}
+.rc .stat{font-size:64px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.rc .body .t{display:flex;flex-direction:column;gap:12px}
+.testi{display:flex;flex-direction:column;align-items:center;gap:80px;padding-top:80px}
+.trow{display:flex;gap:12px;width:100%}
+.portrait{flex:1;max-width:331px;aspect-ratio:.712;border-radius:24px;overflow:hidden;position:relative;border:1px solid rgba(13,22,32,.08);background:linear-gradient(180deg,#e7ecf7,#f6d8cd)}
+.portrait svg{position:absolute;inset:0;width:100%;height:100%}
+.portrait:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(247,146,118,0),rgba(247,146,118,.7))}
+.tcontent{flex:1;border:1px solid var(--line);border-radius:24px;padding:40px 40px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:70px}
+.tcontent .q{display:flex;flex-direction:column;gap:32px}
+.tcontent .q blockquote{transition:opacity .4s}
+.who{display:flex;flex-direction:column;gap:8px}
+.who .nm{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:500;flex-wrap:wrap}
+.who .nm span{font-size:16px;font-weight:400;color:var(--ink50);background:#f1f5f8;padding:4px 12px;border-radius:100px}
+.tfoot{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:.5px solid rgba(0,0,0,.25);margin-top:24px}
+.tav{display:flex;gap:6px}.tav button{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;font-size:13px;opacity:.5;transition:opacity .3s}.tav button.on{opacity:1}
+.tnav{display:flex;align-items:center;gap:12px;color:var(--ink50)}
+.tnav button{width:40px;height:40px;border-radius:22px;display:grid;place-items:center;background:var(--line)}
+.tnav button.next{background:#000;color:#fff}
+
+/* BENEFITS */
+.ben{background:var(--dark);color:#fff;padding:120px 40px 160px;border-radius:0 0 64px 64px}
+.ben .container{display:flex;flex-direction:column;gap:80px}
+.ben .top{display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.ben .top>div{max-width:674px;display:flex;flex-direction:column;gap:20px}
+.ben .track{display:flex;flex-direction:column;gap:45px;align-items:center}
+.pline{width:100%;height:3px;background:rgba(255,255,255,.25);position:relative;overflow:hidden}
+.pline i{position:absolute;left:0;top:0;bottom:0;width:33.4%;background:#fff;transition:transform .7s var(--ease)}
+.bscroll{width:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.bscroll::-webkit-scrollbar{display:none}
+.blist{display:flex;gap:12px;width:max-content}
+.bcard{width:560px;display:flex;flex-direction:column;gap:40px;scroll-snap-align:start}
+.bmedia{aspect-ratio:1.145;position:relative}
+.bmedia .bg{position:absolute;inset:0 0 auto;aspect-ratio:1.647;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:radial-gradient(60% 80% at 80% 0%,rgba(247,146,118,.35),transparent 70%),radial-gradient(60% 80% at 0% 100%,rgba(120,140,190,.3),transparent 70%),#1f1f1f;overflow:hidden}
+.bmedia .bg:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:32px 32px}
+.bmedia .fg{position:absolute;left:80px;top:176px;width:71%;aspect-ratio:1.278;border-radius:25px;background:#fff;color:#000;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 60px rgba(0,0,0,.4)}
+.bcard .tw{display:flex;flex-direction:column;gap:20px;max-width:469px}
+.bcard .tw .idx{opacity:.48}.bcard .tw p{color:#fff;opacity:.68}
+.bpag{display:flex;gap:8px;padding:6px 24px;border-radius:24px;background:rgba(255,255,255,.15)}
+.bpag button{width:10px;height:10px;border-radius:50%;background:#fff;opacity:.3;transition:opacity .3s}.bpag button.on{opacity:1}
+.fg .big{font-size:40px;font-weight:500;letter-spacing:-.04em;line-height:1}
+.fg .mini{display:flex;flex-direction:column;gap:8px;font-size:12px}
+.fg .mini div{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fg .done{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;background:#e9f8ef;color:var(--green);font-size:10px;margin-right:6px}
+.slider{height:6px;border-radius:6px;background:#eef1f6;position:relative}
+.slider b{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:#000}
+.slider u{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #000;transform:translate(-50%,-50%)}
+
+/* PRICING */
+.price-wrap{background:var(--dark)}
+.pricing{background:var(--bg);border-radius:64px 64px 0 0;padding:120px 40px 40px}
+.pricing .container{display:flex;flex-direction:column;align-items:center;gap:12px}
+.pricing .hd{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:560px;text-align:center;margin-bottom:68px}
+.pricing .hd p{max-width:380px;color:#000}
+.prow{width:100%;max-width:1132px;display:flex;align-items:center;gap:24px;padding:16px;background:#fff;border:1px solid rgba(13,23,34,.08);border-radius:20px;margin-bottom:8px}
+.plan{flex:1;padding:24px;display:flex;flex-direction:column;gap:49px}
+.toggle{display:flex;gap:4px;padding:4px;border:1px solid rgba(13,23,34,.08);border-radius:1000px;position:relative}
+.toggle button{flex:1;padding:8px;border-radius:1000px;font-size:16px;color:var(--ink50);position:relative;z-index:2;transition:color .3s}
+.toggle button.on{color:#000}
+.toggle .knob{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 6px);border-radius:1000px;background:var(--bg);transition:transform .45s var(--ease)}
+.toggle.yearly .knob{transform:translateX(calc(100% + 4px))}
+.plan .ptop{display:flex;flex-direction:column;gap:24px;margin-top:32px}
+.plan .pr{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:1000px;background:#e9f8ef;color:var(--green);font-weight:500;white-space:nowrap}
+.badge i{width:7px;height:7px;border-radius:50%;background:#27b36a}
+.badge.hot{background:#fdeceb;color:var(--coral)}.badge.hot i{background:var(--coral)}
+.amt{display:flex;align-items:flex-end;gap:5px}
+.amt .p18{color:var(--ink50);padding-bottom:3px}
+.anote{font-size:14px;font-weight:500;color:var(--ink50);text-align:right;max-width:160px}.anote b{color:#000;font-weight:500}
+.feats{display:grid;grid-template-columns:1fr 1fr;gap:6px 40px}
+.feat-i{display:flex;align-items:center;gap:10px;color:#000}
+.feat-i span{width:16px;height:16px;border-radius:50%;background:#f1f5f8;display:grid;place-items:center;flex:none}
+.pbot{display:flex;flex-direction:column;gap:24px}
+.pbot hr{border:0;border-top:1px dashed rgba(0,0,0,.15)}
+.pbot .r{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.pbot small{font-size:12px;font-weight:500;color:rgba(13,23,34,.58);display:block;margin-bottom:8px}
+.pside{flex:1;max-width:513px;display:flex;flex-direction:column;gap:24px}
+.pcardx{border-radius:24px;padding:40px;display:flex;flex-direction:column;gap:150px;color:#fff;background:linear-gradient(9deg,#1c1c1c,#545454);box-shadow:inset 0 -3.6px 0 rgba(255,255,255,.1),inset 0 3.6px 0 rgba(255,255,255,.2);position:relative;overflow:hidden}
+.pcardx.steel{background:linear-gradient(69deg,#465864,#7d8f9b)}
+.pcardx:after{content:"";position:absolute;width:380px;height:380px;right:-150px;top:-170px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 65%)}
+.pcardx .r{display:flex;justify-content:space-between;align-items:center;gap:20px;position:relative;z-index:1}
+.pcardx .net{font-family:Montserrat,sans-serif;font-size:14px;letter-spacing:.08em;opacity:.8}
+.pcardx p{color:#fff;max-width:291px}
+.pcardx svg{color:#fff}
+.trail{display:flex;justify-content:space-between;align-items:center;padding:0 8px;font-size:14px;color:var(--ink70)}
+.trail div{display:flex;align-items:center;gap:8px}
+.trail .sep{width:1px;height:11px;background:rgba(0,0,0,.25)}
+
+/* FAQ */
+.faq{padding:120px 40px 40px;border-radius:0 0 64px 64px}
+.faq .container{display:flex;gap:12px;align-items:flex-start}
+.faq .left{flex:1;max-width:560px;display:flex;flex-direction:column;gap:16px}
+.faq .left p{max-width:408px;margin-top:8px}
+.faq .list{flex:1;max-width:674px;display:flex;flex-direction:column}
+.qa{padding:20px 0;border-bottom:1px solid var(--line)}
+.qa:last-child{border-bottom:0}
+.qa .q{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.qa .q .qt{display:flex;gap:16px;font-size:20px;font-weight:500;line-height:24px}
+.qa .q .qt span{color:var(--ink50);transition:color .3s}
+.qa.open .q .qt span{color:var(--coral)}
+.qa .pm{width:28px;height:28px;flex:none;border-radius:50%;background:#000;display:grid;place-items:center}
+.qa .pm svg{width:12px;height:12px}
+.qa .pm .v{transform-origin:center;transition:transform .4s var(--ease)}
+.qa.open .pm .v{transform:scaleY(0)}
+.qa .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}
+.qa.open .a{grid-template-rows:1fr}
+.qa .a>div{overflow:hidden}
+.qa .a p{max-width:478px;padding-top:36px}
+
+/* BLOG */
+.blog{padding:120px 40px 40px}
+.blog .container{display:flex;flex-direction:column;gap:80px}
+.blog .top{display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.blog .top>div{max-width:560px;display:flex;flex-direction:column;gap:16px}
+.blog .top p{max-width:408px;margin-top:8px}
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.post{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.thumb{aspect-ratio:1.483;position:relative;overflow:hidden}
+.thumb>div{position:absolute;inset:0;transition:transform .7s var(--ease)}
+.post:hover .thumb>div{transform:scale(1.06)}
+.post .c{padding:20px;display:flex;flex-direction:column;gap:30px}
+.post .meta{display:flex;gap:8px;color:var(--ink50);font-size:16px;text-transform:uppercase}
+.readmore{display:flex;align-items:center;gap:10px;font-weight:500;color:#000}
+.readmore svg{width:16px;height:16px;transition:transform .35s var(--ease)}
+.post:hover .readmore svg{transform:translateX(4px)}
+
+/* CTA + FOOTER */
+.cta-wrap{position:relative;padding-top:100px;overflow:hidden}
+.cta{position:relative;padding:120px 30px 260px;border-radius:0 0 64px 64px;z-index:3}
+.cta .container{display:flex;align-items:center}
+.cta .phone-slot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3}
+.cta .phone-slot.rv{transform:translate(-50%,-50%) scale(.94)}
+.cta .phone-slot.rv.in{transform:translate(-50%,-50%)}
+.ctabox{flex:1;position:relative;overflow:hidden;background:#fff;border-radius:32px;padding:48px 30px;display:flex;justify-content:space-between;align-items:center;box-shadow:6px 6px 25px #fff;min-height:590px}
+.ctabox:before{content:"";position:absolute;inset:0;background:radial-gradient(40% 70% at 50% 50%,rgba(247,146,118,.28),transparent 70%),radial-gradient(30% 60% at 15% 80%,rgba(186,206,247,.45),transparent 70%);z-index:0}
+.ctaL{position:relative;z-index:3;width:388px;display:flex;flex-direction:column;gap:88px}
+.ctaL .top{display:flex;flex-direction:column;gap:12px}
+.ctaL .bot{display:flex;flex-direction:column;gap:24px}
+.ctaL .bot svg.mk{width:64px;height:64px;color:#000}
+.ctaL .bot hr{border:0;border-top:1px dashed rgba(0,0,0,.25)}
+.ctaR{position:relative;z-index:3;flex:1;max-width:351px;display:flex;flex-direction:column;gap:80px}
+.ctaR .t{display:flex;flex-direction:column;gap:24px}
+.pfl{display:flex;flex-direction:column;gap:6px;margin-bottom:24px}
+.pfl div{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:rgba(0,0,0,.03)}
+.pfl i{width:6px;height:6px;border-radius:50%;background:var(--coral);flex:none}
+.cta-band{position:absolute;left:-30%;right:-30%;top:60px;height:520px;background:radial-gradient(50% 50% at 50% 50%,rgba(247,146,118,.35),transparent 70%);z-index:1;pointer-events:none}
+.footer{position:relative;z-index:3;background:linear-gradient(235deg,#202020,#000);border-radius:64px 64px 0 0;margin-top:-80px;padding-top:80px}
+.footer .f-in{max-width:1360px;margin:0 auto;padding:80px 40px 40px;display:flex;flex-direction:column;gap:100px;color:#fff}
+.frow1{display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.flogo{display:flex;align-items:center;gap:14px;font-size:64px;font-weight:500;letter-spacing:-.045em;color:#fff}
+.flogo svg{width:64px;height:64px}
+.news{max-width:463px;flex:1;display:flex;flex-direction:column;gap:10px}
+.news form{display:flex;gap:20px}
+.news input{flex:1;min-width:0;background:transparent;border:1px solid var(--w50);border-radius:72px;padding:12px 24px;color:#fff;font:inherit;outline:none;transition:border-color .3s}
+.news input:focus{border-color:var(--coral)}
+.news button{background:#fff;color:#000;border-radius:103px;padding:12px 32px}
+.news .ok{font-size:14px;color:var(--w70);min-height:17px}
+.frow2{display:flex;justify-content:space-between;align-items:flex-start;gap:40px}
+.frow2 .ftag{font-size:32px;font-weight:400;letter-spacing:-.01em;line-height:1.1;max-width:340px}
+.fcols{flex:1;max-width:558px;display:flex;justify-content:space-between;gap:24px}
+.fcols div{display:flex;flex-direction:column;gap:16px}
+.fcols div b{font-weight:500;color:var(--w50);margin-bottom:24px}
+.fcols a{color:var(--w70);transition:color .25s}.fcols a:hover{color:#fff}
+.frow3{display:flex;justify-content:space-between;align-items:flex-start;padding:41px 0;border-top:1px solid rgba(255,255,255,.25);border-bottom:1px solid rgba(255,255,255,.25);gap:32px}
+.socials{display:flex;gap:4px}
+.socials a{width:40px;height:40px;border:1px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:600;transition:background .3s,color .3s}
+.socials a:hover{background:#fff;color:#000}
+.fcontact{flex:1;max-width:541px;display:flex;justify-content:space-between;gap:24px}
+.fcontact>div{display:flex;flex-direction:column;gap:16px}
+.fcontact b{font-weight:400;color:var(--w50)}
+.fcontact a,.fcontact p{color:var(--w70)}
+.frow4{display:flex;justify-content:space-between;align-items:center;gap:24px;color:rgba(255,255,255,.48);font-weight:500;margin-top:-60px}
+.frow4 a{display:flex;align-items:center;gap:5px;color:var(--w50);flex:none}
+
+/* RESPONSIVE */
+@media (max-width:1299.98px){
+  .hero-phone,.wide .phone-slot{display:none}
+  .hero-top{max-width:820px;gap:56px}
+  .hero-card{flex-direction:column;gap:40px;align-items:stretch}
+  .dash{flex:none;width:100%}
+  .prob{padding-top:80px}.prob .head h2{max-width:476px}
+  .sec,.faq,.blog{padding:40px}
+  .grid3,.bgrid{grid-template-columns:1fr 1fr}
+  .grid3.results>:last-child{grid-column:span 2}
+  .how .container{gap:60px}.how .left,.step{position:relative;top:auto}
+  .feat .grid2{grid-template-columns:1fr}
+  .wide{padding:48px;min-height:0}.wide .lc{gap:60px}
+  .prod{padding:40px 40px 80px}
+  .res{padding:80px 40px}.res .container{gap:40px}
+  .res .tc{position:relative;width:69%;margin-bottom:40px}
+  .testi{padding-top:40px;gap:40px}
+  .trow{flex-direction:column}.portrait{max-width:none;width:100%;aspect-ratio:1.4}
+  .ben{padding:80px 40px}
+  .pricing{padding:80px 40px 40px}
+  .prow{flex-direction:column}.plan,.pside{width:100%;max-width:none}
+  .faq .container{flex-direction:column;gap:60px}.faq .list{width:100%;max-width:none}
+  .cta .phone-slot{display:none}
+  .cta{padding:40px 30px}
+  .footer{margin-top:24px;padding-top:40px}
+  .ctabox{flex-direction:column;align-items:flex-start;gap:32px;min-height:0}
+  .ctaL{width:100%}.ctaR{max-width:none;width:100%}
+  .nav .left{gap:50px}
+  .footer .f-in{gap:60px;padding:0 40px 40px}
+  .flogo{font-size:48px}.flogo svg{width:48px;height:48px}
+  .frow4{margin-top:-30px}
+}
+@media (max-width:1199.98px){
+  .h1{font-size:64px}.h2,.h2-light{font-size:48px}
+}
+@media (max-width:809.98px){
+  .h1{font-size:52px}.h2{font-size:36px}.h2-light{font-size:40px}.h3{font-size:34px}.h4{font-size:30px}.h5{font-size:24px}
+  /* side-slide reveals start 40px off the edge and widen the page before they run; rise instead */
+  .rv.l,.rv.r{transform:translateY(40px)}
+  .nav{padding:12px 20px}.menu,.nav .btn{display:none}.burger{display:grid}
+  /* visibility keeps the closed menu's links out of the tab order; it flips after the slide-out ends */
+  .mobile-menu{position:fixed;inset:0;background:var(--bg);z-index:60;padding:88px 24px 24px;display:flex;flex-direction:column;gap:22px;font-size:30px;font-weight:500;letter-spacing:-.02em;transform:translateY(-100%);visibility:hidden;transition:transform .5s var(--ease),visibility 0s .5s}
+  .mobile-menu.open{transform:none;visibility:visible;transition:transform .5s var(--ease)}
+  .mobile-menu .x{position:absolute;top:14px;right:20px;width:40px;height:40px;border-radius:50%;background:#fff;font-size:24px}
+  .mobile-menu .btn{margin-top:auto}
+  .hero{padding:96px 20px 20px;border-radius:0 0 24px 24px}
+  .hero .container{gap:40px}
+  .hero-top{flex-direction:column;gap:36px}
+  .hero-left{order:1;width:auto;gap:20px;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .hero-right{order:0;gap:22px;max-width:none}
+  .hero-right .p18{font-size:17px}
+  .pill-tag{font-size:14px}
+  .hero-card{border-radius:20px;padding:16px;gap:16px}
+  .hero-card .lc{gap:24px;padding:8px 8px 0}
+  .hero-card .icon-row{flex-direction:row;align-items:center;gap:16px;padding-top:24px}
+  .hero-card .icon-row svg{width:44px;height:44px}
+  .hero-card .icon-row p{font-size:18px}
+  .dash{aspect-ratio:auto;min-height:250px;border-radius:16px;padding:18px 18px 32px}
+  .dash .big{font-size:34px}
+  .bars{flex:none;height:120px;gap:8px}
+  .sec,.faq,.blog{padding:30px 20px;border-radius:0 0 16px 16px}
+  .prob{padding:60px 20px 30px}.prob .head{flex-direction:column;margin-bottom:40px}
+  .pcard{flex-direction:column;align-items:stretch;gap:40px}
+  .pimg{max-width:none}
+  .pcard .content{flex-direction:column;gap:32px;padding:0;align-items:stretch}
+  .pcard .tw{gap:24px}
+  .pcard .side{max-width:none;height:auto;flex-direction:row;align-items:center}
+  .pcard .side .btn.full{width:max-content;align-self:auto}
+  .pcard .side .btn.full>span{width:auto}
+  .sol .container{gap:40px}
+  .grid3,.bgrid{grid-template-columns:1fr}.grid3.results>:last-child{grid-column:auto}
+  .how .container{flex-direction:column;gap:40px}.how .left{max-width:none;gap:40px}
+  .fcard{padding:24px;gap:40px}
+  .uiwrap{aspect-ratio:auto;display:flex;flex-direction:column;gap:8px}
+  .ui{position:relative;width:100%!important;height:auto!important;inset:auto}
+  .wide{padding:24px}.wide .lc{gap:40px}
+  .prod{padding:30px 20px}.prod .container{gap:60px}
+  .prod .row{flex-direction:column;align-items:center}
+  .slider-card{padding-top:0;order:-1}
+  .res{padding:60px 20px 30px;border-radius:0 0 16px 16px}.res .tc{width:100%}
+  .timeline{font-size:12px}
+  .tcontent{padding:20px;gap:40px}
+  .ben{padding:60px 20px;border-radius:0 0 16px 16px}.ben .top{flex-direction:column;align-items:flex-start}
+  .bcard{width:calc(100vw - 40px)}
+  .bmedia .fg{left:50%;transform:translateX(-50%);top:auto;bottom:0;width:84%;padding:14px;gap:8px}
+  .fg .big{font-size:28px}
+  .pricing{padding:60px 20px 30px;border-radius:16px}
+  .plan{padding:12px;gap:36px}
+  .plan .pr{flex-direction:column;align-items:flex-start;gap:16px}.anote{text-align:left;max-width:none}
+  .feats{grid-template-columns:1fr}
+  .pbot .r{flex-direction:column;align-items:flex-start;gap:24px}
+  .pcardx{padding:20px;gap:60px}
+  .trail{display:grid;grid-template-columns:1fr 1fr;gap:16px}.trail .sep{display:none}
+  .blog .top{flex-direction:column;align-items:flex-start}
+  .cta-wrap{padding-top:30px}.cta{padding:0 20px 30px;border-radius:0 0 16px 16px}
+  .ctabox{padding:30px 20px}
+  .footer{border-radius:20px 20px 0 0;margin-top:16px;padding-top:24px}.footer .f-in{padding:20px;gap:50px}
+  .frow1,.frow2,.frow3{flex-direction:column;align-items:flex-start;gap:32px}
+  .fcols,.fcontact{width:100%;max-width:none}
+  .fcontact{flex-direction:column}
+  .frow4{flex-direction:column;align-items:flex-start;gap:24px;margin-top:0}
+  .footer .f-in>*{width:100%;min-width:0}
+  .news{width:100%;max-width:none}.news form{gap:8px}.news input{width:100%;padding:12px 18px}.news button{padding:12px 18px;flex:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- shared SVG defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="g-peach" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f79276"/><stop offset="1" stop-color="#ec5a4f"/></linearGradient>
+    <linearGradient id="g-peach-dark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f79276"/><stop offset="1" stop-color="#9d381c"/></linearGradient>
+    <!-- Fullday mark: a day-ring that's almost full -->
+    <symbol id="mark" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="18" fill="none" stroke="currentColor" stroke-opacity=".12" stroke-width="8"/>
+      <path d="M24 6a18 18 0 1 1-17.1 12.4" fill="none" stroke="url(#g-peach)" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="24" cy="24" r="4.5" fill="#f79276"/>
+    </symbol>
+    <symbol id="mark-dark" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="18" fill="none" stroke="currentColor" stroke-opacity=".1" stroke-width="8"/>
+      <path d="M24 6a18 18 0 1 1-17.1 12.4" fill="none" stroke="url(#g-peach-dark)" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="24" cy="24" r="4.5" fill="#c75a3c"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 9 7"><path d="M8.1 0 2.7 5.4.45 3.1 0 3.6l2.7 2.7L8.6.45Z" fill="#000"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-step" viewBox="0 0 12 10"><path d="M0 0h12v2H0zM0 4h8v2H0zM0 8h4v2H0z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<!-- PHONE TEMPLATE: cloned into every [data-phone] slot -->
+<template id="tpl-phone">
+  <div class="phone"><div class="screen">
+    <div class="ph-status"><span>9:41</span><span class="ph-island"></span><span class="ph-sig"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i></span></div>
+    <div class="ph-head">
+      <div class="ph-av">RB</div>
+      <div><small>Thursday · 6 events</small><b>Morning, Ryan</b></div>
+      <span class="ph-bell"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></span>
+    </div>
+    <div class="ph-brief"><span class="ai">AI</span><span>Paid 2 bills overnight. <b>Friday dinner fits</b> your budget — want me to book?</span></div>
+    <div class="ph-label">FREE TO SPEND THIS WEEK</div>
+    <div class="ph-bal">$<span data-count="1840">0</span><small>.00</small></div>
+    <div class="ph-track"><div class="ph-cards">
+      <div class="mcard dark">
+        <div class="t">EVERYDAY</div><span class="net">FULLDAY</span><span class="chipc"></span>
+        <div class="nm">RYAN BROOKS<small>12/29</small></div>
+        <svg class="mk"><use href="#mark"/></svg>
+      </div>
+      <div class="mcard steel">
+        <div class="t">PLANS &amp; TRAVEL</div>
+        <svg class="nfc" viewBox="0 0 19 19" fill="none" stroke="#fafafa" stroke-width="1.8" stroke-linecap="round"><path d="M3 6.5a5 5 0 0 1 0 6M6.3 4.5a9 9 0 0 1 0 10M9.6 2.5a13 13 0 0 1 0 14M13 1a17 17 0 0 1 0 17"/></svg>
+        <span class="chipc"></span>
+        <div class="nm">RYAN BROOKS<small>12/29</small></div>
+        <svg class="mk"><use href="#mark"/></svg>
+      </div>
+    </div></div>
+    <div class="ph-actions">
+      <div><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M6 18l2-2M16 8l2-2"/></svg></span>Ask AI</div>
+      <div><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>Book</div>
+      <div><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M15 15c3 0 6 1.5 6 4"/></svg></span>Split</div>
+      <div><span><svg width="16" height="16" viewBox="0 0 24 24" fill="#000"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></span>More</div>
+    </div>
+    <div class="ph-list">
+      <div class="lh">Handled for you <small>This week</small></div>
+      <div class="tx"><i style="background:#e9f8ef;color:#16854a">✓</i><div><b>Electricity paid</b><small>Auto · on time</small></div><em>$72</em></div>
+      <div class="tx"><i style="background:#fdeceb;color:#ec5a4f">◎</i><div><b>Padel booked</b><small>Thu 7:00 PM</small></div><em>$32</em></div>
+      <div class="tx"><i style="background:#eef2fb;color:#465864">↗</i><div><b>Lisbon fund</b><small>Auto-saved</small></div><em class="pos">+$250</em></div>
+    </div>
+  </div></div>
+</template>
+
+<!-- NAV -->
+<header class="nav" data-section="nav">
+  <div class="inner">
+    <div class="left">
+      <a href="#header" class="logo" aria-label="Fullday home"><svg aria-hidden="true"><use href="#mark"/></svg>Fullday</a>
+      <nav class="menu" aria-label="Main">
+        <a href="#solution"><span class="roll">Product</span></a>
+        <a href="#how"><span class="roll">How it works</span></a>
+        <a href="#results"><span class="roll">Stories</span></a>
+        <a href="#pricing"><span class="roll">Pricing</span></a>
+        <a href="#faq"><span class="roll">FAQ</span></a>
+      </nav>
+    </div>
+    <a href="#pricing" class="btn"><span><i>Start free</i><i aria-hidden="true">Start free</i></span></a>
+    <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu">
+  <button class="x" aria-label="Close menu">×</button>
+  <a href="#solution">Product</a><a href="#how">How it works</a><a href="#results">Stories</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+  <a href="#pricing" class="btn full"><span><i>Start free</i><i aria-hidden="true">Start free</i></span></a>
+</div>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="header" data-section="hero">
+  <div class="container">
+    <div class="hero-top">
+      <div class="hero-left rv d2">
+        <span class="pill-tag"><i></i>AI MONEY AGENT</span>
+        <div class="live" role="img" aria-label="Live feed of tasks Fullday completes" data-component="live-feed">
+          <div class="live-h" aria-hidden="true"><span class="dot"></span>Working for you · live<span class="clk" id="lclk">9:41 AM</span></div>
+          <ul class="feed" id="feed" aria-hidden="true"></ul>
+          <div class="live-f" aria-hidden="true"><span>Today</span><span class="bar"><i id="lbar"></i></span><span><b id="lmin">42</b> min saved</span></div>
+        </div>
+        <div class="trust">
+          <div class="avatars" aria-hidden="true">
+            <span style="background:linear-gradient(135deg,#f79276,#c75a3c)">AM</span>
+            <span style="background:linear-gradient(135deg,#465864,#aab9c3)">JL</span>
+            <span style="background:linear-gradient(135deg,#1c1c1c,#545454)">SK</span>
+          </div>
+          <div class="label">120K+ busy people<small>run their money on Fullday</small></div>
+        </div>
+      </div>
+      <div class="hero-right rv">
+        <h1 class="h1">Say yes to more.</h1>
+        <p class="p18">Fullday is the AI that runs your money around your calendar — paying, saving, splitting and booking — so a packed week never needs a spreadsheet.</p>
+        <div class="hero-ctas">
+          <a href="#pricing" class="btn"><span><i>Start free</i><i aria-hidden="true">Start free</i></span></a>
+          <a href="#how" class="ghost"><span class="pl" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 1l7 4-7 4Z"/></svg></span>See how it works</a>
+        </div>
+      </div>
+      <div class="hero-phone rv s d3" aria-hidden="true">
+        <div class="fchip"><span class="ai">AI</span><span>Concert fits — <b>booked</b></span></div>
+        <div class="fchip b"><span style="width:8px;height:8px;border-radius:50%;background:#27b36a"></span><span><b>3 bills</b> paid while you slept</span></div>
+        <div class="phone-slot" data-phone></div>
+      </div>
+    </div>
+    <div class="hero-card rv d1">
+      <div class="lc">
+        <div class="tw">
+          <p class="p" style="color:var(--ink50);letter-spacing:.04em;font-size:14px">FULLDAY AI</p>
+          <p class="label" style="color:var(--ink70);font-weight:500;line-height:1.35">Reads your accounts, calendar and goals, then handles the money admin and tells you what you can say yes to.</p>
+        </div>
+        <div class="icon-row">
+          <svg aria-hidden="true"><use href="#mark"/></svg>
+          <p class="h6" style="color:#000">Your calendar is full. Your money admin shouldn’t be on it.</p>
+        </div>
+      </div>
+      <div class="dash" aria-hidden="true">
+        <div class="row">
+          <div style="flex:1"><p class="small" style="color:var(--ink50);margin-bottom:6px">Time handed back this month</p><div class="big">11.5 <small>hrs</small></div></div>
+          <span class="chip up">▲ 4 plans booked</span>
+        </div>
+        <div class="bars">
+          <div style="height:38%"><span>W1</span></div><div style="height:52%"><span>W2</span></div><div style="height:46%"><span>W3</span></div>
+          <div style="height:66%"><span>W4</span></div><div style="height:72%"><span>W5</span></div><div class="hl" style="height:90%"><em>3.1h</em><span>Now</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="sec prob" data-section="problem">
+  <div class="container">
+    <div class="head">
+      <div class="tag rv l"><i class="orbit"></i><span>PROBLEM <b>/</b> 01</span></div>
+      <h2 class="h3 rv r">The busier your life gets, the more money admin steals from it.</h2>
+    </div>
+    <div class="pcard rv">
+      <div class="pimg" aria-hidden="true">
+        <div class="rcpt r1"><i class="k"></i><i></i><i></i><i style="width:70%"></i><i></i><i class="k"></i></div>
+        <div class="rcpt r2"><i class="k"></i><i></i><i style="width:80%"></i><i></i><i></i><i class="k"></i></div>
+        <div class="clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#f1f1f1" stroke-width="4"/><g stroke="#ccc" stroke-width="3" stroke-linecap="round"><path d="M50 10v7M50 83v7M10 50h7M83 50h7"/></g><line class="hand" x1="50" y1="50" x2="50" y2="22" stroke="#000" stroke-width="4" stroke-linecap="round"/><line class="hand s" x1="50" y1="50" x2="72" y2="50" stroke="#ec5a4f" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="4" fill="#000"/></svg></div>
+      </div>
+      <div class="content">
+        <div class="tw">
+          <p class="h6-light" style="color:#000">Bills, refunds, splitting dinners, checking if you can afford the next plan — it quietly eats your evenings.</p>
+          <div style="display:flex;flex-direction:column;gap:24px">
+            <div class="h1">4+ hrs</div>
+            <p class="p">Every month goes to money chores no one wants to do. That’s a dinner, a class and a weekend morning you could have said yes to instead.</p>
+          </div>
+        </div>
+        <div class="side">
+          <div class="dots3" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+          <a href="#pricing" class="btn full"><span><i>Get time back</i><i aria-hidden="true">Get time back</i></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="sec sol" id="solution" data-section="solution">
+  <div class="container">
+    <div class="hdr">
+      <div class="tag rv"><i class="orbit"></i><span>THE SOLUTION <b>/</b> 02</span></div>
+      <h2 class="h2 rv">An AI that runs the money so you can run the day</h2>
+      <p class="p rv">Ask it anything, see your whole month at a glance, and let it act on the rules you set.</p>
+    </div>
+    <div class="grid3">
+      <div class="scard rv">
+        <div class="vis darkv" aria-hidden="true">
+          <svg class="crossgrid" viewBox="0 0 445 416" preserveAspectRatio="xMidYMid slice"><defs><pattern id="cross" width="98.5" height="102.7" patternUnits="userSpaceOnUse" x="-31" y="-58"><path d="M40 49h18M49 40v18" stroke="#fff" stroke-width="2.6"/><path d="M8 49h6M84 49h6M49 8v6M49 84v6" stroke="#fff" stroke-width=".7"/></pattern></defs><rect width="100%" height="100%" fill="url(#cross)"/></svg>
+          <div class="prompt"><small>YOU ASKED</small><p id="typed">Can I do Lisbon and the concert this month?</p></div>
+          <div class="answer"><small>✓ YES, BOTH FIT</small><b>$<span data-count="1840">0</span> left</b><span>After rent, bills, savings and both plans</span></div>
+          <div class="cmd"><span>Ask Fullday anything…</span><span class="eq"><i></i><i></i><i></i></span></div>
+        </div>
+        <div class="cap"><h3>Just Ask</h3><p>Plain-language answers about what you can afford, and when.</p></div>
+      </div>
+      <div class="scard rv d1">
+        <div class="vis see" aria-hidden="true">
+          <div class="panel">
+            <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600"><span>November, planned</span><span style="color:var(--ink50);font-weight:400">AI forecast</span></div>
+            <div class="donut">
+              <svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.9" fill="none" stroke="#eef1f6" stroke-width="6"/>
+                <circle cx="21" cy="21" r="15.9" fill="none" stroke="#000" stroke-width="6" stroke-dasharray="40 60" stroke-dashoffset="25"/>
+                <circle cx="21" cy="21" r="15.9" fill="none" stroke="#f79276" stroke-width="6" stroke-dasharray="25 75" stroke-dashoffset="-15"/>
+                <circle cx="21" cy="21" r="15.9" fill="none" stroke="#aab9c3" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-40"/></svg>
+              <div class="legend"><span><i style="background:#000"></i>Bills 40%</span><span><i style="background:#f79276"></i>Plans 25%</span><span><i style="background:#aab9c3"></i>Goals 20%</span><span><i style="background:#eef1f6"></i>Free 15%</span></div>
+            </div>
+            <div class="goal"><div><span>Lisbon weekend</span><b>72%</b></div><div class="bar"><i style="width:72%"></i></div></div>
+            <div class="goal"><div><span>Pottery course</span><b>45%</b></div><div class="bar"><i style="width:45%"></i></div></div>
+            <div class="goal"><div><span>Concert tickets</span><b>100%</b></div><div class="bar"><i style="width:100%"></i></div></div>
+          </div>
+        </div>
+        <div class="cap"><h3>See Your Month</h3><p>Bills, plans and goals mapped against your calendar.</p></div>
+      </div>
+      <div class="scard rv d2">
+        <div class="vis conn" aria-hidden="true">
+          <div class="ring a"></div><div class="ring b"></div>
+          <div class="node" style="left:10%;top:18%">🏦 Bank</div>
+          <div class="node" style="right:9%;top:26%">📅 Calendar</div>
+          <div class="node" style="left:8%;bottom:22%">💳 Cards</div>
+          <div class="node" style="right:12%;bottom:14%">⚙️ Rules</div>
+          <svg class="mark"><use href="#mark-dark"/></svg>
+        </div>
+        <div class="cap"><h3>Hands Off</h3><p>Connects bank, cards and calendar, then acts on your rules.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec how" id="how" data-section="how-it-works">
+  <div class="container">
+    <div class="left rv">
+      <div class="hd">
+        <div>
+          <div class="tag"><i class="orbit"></i><span>HOW IT WORKS <b>/</b> 03</span></div>
+          <h2 class="h2">Three steps, then it runs itself</h2>
+        </div>
+        <p class="p">Ten minutes of setup. After that, Fullday works in the background and only pings you when a decision is worth your time.</p>
+      </div>
+      <a href="#pricing" class="btn"><span><i>Start free</i><i aria-hidden="true">Start free</i></span></a>
+    </div>
+    <ol class="steps rv" style="list-style:none">
+      <li class="step">
+        <div class="num">/01<svg aria-hidden="true"><use href="#i-step"/></svg></div>
+        <div class="body">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
+          <div class="t"><h3 class="h6">Connect</h3><p class="p">Link your accounts, cards and calendar so Fullday sees both your money and your time in one place.</p></div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="num">/02<svg aria-hidden="true"><use href="#i-step"/></svg></div>
+        <div class="body">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></svg>
+          <div class="t"><h3 class="h6">Tell it what you want</h3><p class="p">Name the trips, classes, dinners and goals you’re chasing. Fullday plans the money around them.</p></div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="num">/03<svg aria-hidden="true"><use href="#i-step"/></svg></div>
+        <div class="body">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7Z"/></svg>
+          <div class="t"><h3 class="h6">Let it run</h3><p class="p">It pays, saves, splits and books within your limits, and sends one short brief instead of twenty notifications.</p></div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec feat" id="features" data-section="features">
+  <div class="container">
+    <div class="grid2">
+      <div class="fcard rv">
+        <div class="hd">
+          <div class="tag"><i class="orbit"></i><span>FEATURES <b>/</b> 04-1</span></div>
+          <h2 class="h4">Every plan priced before you commit.</h2>
+        </div>
+        <div class="uiwrap" aria-hidden="true">
+          <div class="ui a">
+            <div class="uh">Spent on living <small>November</small></div>
+            <div style="font-size:28px;font-weight:500;letter-spacing:-.03em">$2,914 <span class="chip up" style="font-size:11px;vertical-align:middle">$486 under plan</span></div>
+            <svg class="spark" viewBox="0 0 300 110" preserveAspectRatio="none"><defs><linearGradient id="sp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f79276" stop-opacity=".45"/><stop offset="1" stop-color="#f79276" stop-opacity="0"/></linearGradient></defs><path d="M0 80 C30 70 50 90 80 64 S130 30 160 52 210 40 240 22 280 30 300 12 V110 H0Z" fill="url(#sp)"/><path d="M0 80 C30 70 50 90 80 64 S130 30 160 52 210 40 240 22 280 30 300 12" fill="none" stroke="#ec5a4f" stroke-width="2.5"/><circle cx="240" cy="22" r="5" fill="#fff" stroke="#ec5a4f" stroke-width="2.5"/></svg>
+          </div>
+          <div class="ui b">
+            <div class="uh">This week’s plans <small>AI-checked</small></div>
+            <div class="cat"><i style="background:#fdeceb">🍝</i><div class="bar"><b style="width:70%;background:#ec5a4f"></b></div><em>$95</em></div>
+            <div class="cat"><i style="background:#eef2fb">🎾</i><div class="bar"><b style="width:30%;background:#465864"></b></div><em>$32</em></div>
+            <div class="cat"><i style="background:#e9f8ef">✈️</i><div class="bar"><b style="width:90%;background:#27b36a"></b></div><em>$310</em></div>
+            <div class="cat"><i style="background:#f4f4f4">🎟️</i><div class="bar"><b style="width:46%;background:#000"></b></div><em>$120</em></div>
+          </div>
+        </div>
+      </div>
+      <div class="fcard glow rv d1">
+        <div class="hd">
+          <div class="tag"><i class="orbit"></i><span>FEATURES <b>/</b> 04-2</span></div>
+          <h2 class="h4">Goals that fund themselves while you’re out.</h2>
+        </div>
+        <div class="centerui" aria-hidden="true">
+          <div class="goalcard">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600"><span>Lisbon weekend</span><span class="badge" style="font-size:11px;padding:3px 8px">On track</span></div>
+            <div class="ringwrap">
+              <svg viewBox="0 0 120 120" width="130" height="130"><circle cx="60" cy="60" r="50" fill="none" stroke="#f1f3f6" stroke-width="12"/><circle class="ringp" cx="60" cy="60" r="50" fill="none" stroke="url(#g-peach-dark)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)"/></svg>
+              <b><span>72%<small>$864 / $1,200</small></span></b>
+            </div>
+            <div class="r"><span style="color:var(--ink50)">AI auto-save</span><b>$75 / week</b></div>
+            <div class="r"><span style="color:var(--ink50)">Flights booked</span><b>Mar 14, 2027</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wide rv">
+      <div class="shape"></div><div class="blob"></div>
+      <div class="lc">
+        <div class="t">
+          <div>
+            <div class="tag white"><i class="orbit"></i><span>FEATURES <b>/</b> 04-3</span></div>
+            <h2 class="h2-light">An assistant that moves money while you move</h2>
+          </div>
+          <p class="p">Approve with one tap between meetings. Fullday pays, transfers, splits and books — always inside the limits you set.</p>
+        </div>
+        <a href="#how" class="btn white"><span><i>See what it can do</i><i aria-hidden="true">See what it can do</i></span></a>
+      </div>
+      <div class="phone-slot" data-phone aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section class="prod sec" data-section="product">
+  <div class="container">
+    <div class="hd rv">
+      <div class="tag"><i class="orbit"></i><span>PRODUCT <b>/</b> 05</span></div>
+      <h2 class="h2">Your whole week, budgeted in the background.</h2>
+    </div>
+    <div class="row">
+      <div class="phone-sm rv l" aria-hidden="true">
+        <div class="phone"><div class="screen">
+          <div class="ph-status"><span>9:41</span><span class="ph-island"></span><span class="ph-sig"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i></span></div>
+          <div class="app">
+            <div class="ah">This week</div>
+            <div class="seg"><span>Day</span><span class="on">Week</span><span>Month</span></div>
+            <div class="appcard"><small>Free to spend on plans</small><b>$1,286.40</b>
+              <div class="goal" style="margin-top:8px"><div class="bar"><i style="width:62%"></i></div></div></div>
+            <div class="appcard" style="display:flex;flex-direction:column;gap:10px">
+              <div class="cat"><i style="background:#fdeceb">🍝</i><span style="flex:1;font-size:12px">Dinner w/ Sam · Thu</span><em style="font-size:12px">$95</em></div>
+              <div class="cat"><i style="background:#eef2fb">🎾</i><span style="flex:1;font-size:12px">Padel · Fri</span><em style="font-size:12px">$32</em></div>
+              <div class="cat"><i style="background:#e9f8ef">🖼️</i><span style="flex:1;font-size:12px">Gallery · Sat</span><em style="font-size:12px">$24</em></div>
+              <div class="cat"><i style="background:#f4f4f4">✈️</i><span style="flex:1;font-size:12px">Lisbon flight</span><em style="font-size:12px">$310</em></div>
+            </div>
+            <div class="appcard"><small>Auto-paid by Fullday</small>
+              <div class="tx"><i style="background:#e9f8ef;color:#16854a">✓</i><div><b>Electricity</b><small>Nov 12</small></div><em>$72</em></div>
+              <div class="tx"><i style="background:#e9f8ef;color:#16854a">✓</i><div><b>Internet</b><small>Nov 15</small></div><em>$45</em></div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div class="slider-card rv r" data-component="vertical-slider">
+        <div class="vctl">
+          <button class="arrow" data-prod="-1" aria-label="Previous"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m2 8 4-4 4 4"/></svg></button>
+          <div class="vdots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+          <button class="arrow on" data-prod="1" aria-label="Next"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg></button>
+        </div>
+        <div class="slides" aria-live="polite">
+          <div class="slide on"><div class="tw"><p class="p">[05-1]</p><h3 class="h6">A daily brief, not a dashboard.</h3></div><p class="p">One short morning note: what got paid, what’s coming, and what you can say yes to today.</p></div>
+          <div class="slide"><div class="tw"><p class="p">[05-2]</p><h3 class="h6">Plans priced in seconds.</h3></div><p class="p">Forward an invite or ask out loud. Fullday checks it against bills and goals before you reply.</p></div>
+          <div class="slide"><div class="tw"><p class="p">[05-3]</p><h3 class="h6">Shared plans, split automatically.</h3></div><p class="p">Group dinners and trips settle themselves — everyone gets a request, nobody chases anyone.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REAL RESULTS -->
+<div class="res-wrap" id="results">
+<section class="res" data-section="results">
+  <div class="container">
+    <div class="top">
+      <div class="tc">
+        <div>
+          <div class="tag rv"><i class="orbit"></i><span>REAL RESULTS <b>/</b> 06</span></div>
+          <h2 class="h2 rv">More life per month, measured</h2>
+        </div>
+        <p class="p rv" style="max-width:453px">From day one, members see time handed back, plans booked and goals funded — tracked week by week.</p>
+      </div>
+      <div class="rv">
+        <svg class="chart" viewBox="0 0 1132 571" role="img" aria-label="30 day chart of time saved rising over time">
+          <defs><linearGradient id="fc" x1="0.81" x2="0.41" y1="0.04" y2="0.63"><stop offset="0" stop-color="#f8cfc5"/><stop offset="1" stop-color="#ecf5fb"/></linearGradient></defs>
+          <path transform="translate(0 44.631)" d="M 0 458.095 C 103.767 420.655 164.14 301.726 249.04 317.143 C 341.487 334.762 362.068 296.333 454.515 263.297 C 558.282 225.857 596.187 211.429 688.633 222.44 C 784.853 233.452 822.587 140.952 915.033 125.536 C 1003.71 110.119 1047.1 24.226 1132 0 L 1132 526.369 L 0 526.369 Z" fill="url(#fc)"/>
+          <path id="fcline" transform="translate(0 43.63)" d="M 0 459.096 C 103.767 421.656 164.14 302.727 249.04 318.144 C 341.487 335.763 348.347 300.838 440.794 267.802 C 544.561 230.362 596.187 212.43 688.633 223.442 C 784.853 234.453 822.587 141.953 915.033 126.537 C 1003.71 111.12 1046.24 24.226 1131.14 0" fill="none" stroke="#000" stroke-dasharray="12.5 12.5"/>
+          <path d="M0 571.2H1132" stroke="rgba(23,33,43,.16)" stroke-width="2.2"/>
+          <path transform="translate(158.652 130.724)" d="M 0 271.062 L 0 440.476 M 264.079 212.552 L 264.079 440.476 M 558.337 137.951 L 558.337 440.476 M 822.415 0 L 822.415 440.476" stroke="rgba(23,33,43,.22)" stroke-dasharray="6.6 13.2"/>
+          <circle cx="160" cy="389" r="20" fill="#f1f8fe" stroke="#949494" stroke-width=".5"/><circle cx="160" cy="389" r="7" fill="#949494"/>
+          <circle cx="424" cy="318" r="20" fill="#f1f8fe" stroke="#666" stroke-width=".5"/><circle cx="424" cy="318" r="7" fill="#666"/>
+          <circle cx="716" cy="265" r="20" fill="#fff4ea" stroke="#ff6742" stroke-width=".5"/><circle cx="716" cy="265" r="7" fill="#ff8a3d"/>
+          <circle cx="981" cy="142" r="20" fill="#f7f7f7" stroke="#3d3d3d" stroke-width=".5"/><circle cx="981" cy="142" r="7" fill="#6b6b6b"/>
+        </svg>
+        <div class="timeline" aria-hidden="true"><span>SIGN UP</span><span>WEEK 1</span><span>WEEK 2</span><span>WEEK 3</span><span>DAY 30</span></div>
+      </div>
+    </div>
+    <div class="grid3 results">
+      <div class="rc rv">
+        <div class="num" aria-hidden="true">/01<svg width="12" height="10"><use href="#i-step"/></svg></div>
+        <div class="body">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="p" style="color:#000">Time back</span></div>
+          <div class="t"><div class="stat"><span data-count="11">0</span>h</div><p class="p">Average hours of money admin handed back each month.</p></div>
+        </div>
+      </div>
+      <div class="rc rv d1">
+        <div class="num" aria-hidden="true">/02<svg width="12" height="10"><use href="#i-step"/></svg></div>
+        <div class="body">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></svg><span class="p" style="color:#000">Plans booked</span></div>
+          <div class="t"><div class="stat"><span data-count="2">0</span>X</div><p class="p">More plans said yes to, without blowing the monthly budget.</p></div>
+        </div>
+      </div>
+      <div class="rc rv d2">
+        <div class="num" aria-hidden="true">/03<svg width="12" height="10"><use href="#i-step"/></svg></div>
+        <div class="body">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="#000"/></svg><span class="p" style="color:#000">Goals funded</span></div>
+          <div class="t"><div class="stat"><span data-count="28">0</span>%</div><p class="p">Faster progress toward trips, courses and big-ticket goals.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi" data-section="testimonials">
+      <div class="tag rv"><i class="orbit"></i><span>STORIES <b>/</b> 07</span></div>
+      <div class="trow rv">
+        <div class="portrait" aria-hidden="true">
+          <svg viewBox="0 0 331 465" preserveAspectRatio="xMidYMid slice">
+            <defs><linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c98f75"/><stop offset="1" stop-color="#a86c55"/></linearGradient></defs>
+            <circle cx="260" cy="90" r="120" fill="#fff" opacity=".35"/>
+            <path d="M40 465c10-110 60-160 125-160s115 50 125 160Z" fill="#2b2f36"/>
+            <path d="M140 300h50v40c-10 12-40 12-50 0Z" fill="url(#skin)"/>
+            <ellipse cx="165" cy="225" rx="58" ry="70" fill="url(#skin)"/>
+            <path d="M105 215c-4-55 30-82 64-82s66 22 60 80c-8-30-30-42-62-42s-52 16-62 44Z" fill="#2a1f1a"/>
+          </svg>
+        </div>
+        <div class="tcontent">
+          <div class="q">
+            <svg width="25" height="21" viewBox="-1 -1 25 21" aria-hidden="true"><path d="M0 18.2 5.2 0h4.9L7.3 18.2Zm12.7 0L17.8 0h4.9L20 18.2Z" fill="#f46a44"/></svg>
+            <blockquote class="h5" id="tq" aria-live="polite">I run a studio, coach on weekends and travel twice a month. Fullday pays everything, tells me what I can book, and I haven’t opened a banking app since spring.</blockquote>
+          </div>
+          <div>
+            <div class="who">
+              <div class="nm"><b id="tn" style="font-weight:500">Daniel Carter</b><span id="tt">Member · 14 months</span></div>
+              <p class="p" id="tg">Said yes to: a 3-week sabbatical in Japan</p>
+            </div>
+            <div class="tfoot">
+              <div class="tav">
+                <button class="on" style="background:linear-gradient(135deg,#a86c55,#2b2f36)" data-t="0" aria-label="Story 1: Daniel Carter">DC</button>
+                <button style="background:linear-gradient(135deg,#f79276,#c75a3c)" data-t="1" aria-label="Story 2: Priya Nair">PN</button>
+                <button style="background:linear-gradient(135deg,#465864,#aab9c3)" data-t="2" aria-label="Story 3: Marcus Reid">MR</button>
+              </div>
+              <div class="tnav">
+                <button class="prev" aria-label="Previous story"><svg width="9" height="15" viewBox="0 0 9 15" aria-hidden="true"><path d="M7.3 0 0 7.3l7.3 7.3.9-.9L1.8 7.3 8.2.9Z"/></svg></button>
+                <span id="tc">01 / 03</span>
+                <button class="next" aria-label="Next story"><svg width="9" height="15" viewBox="0 0 9 15" aria-hidden="true"><path d="M.9 0 0 .9l6.4 6.4L0 13.8l.9.9 7.3-7.3Z" fill="#fff"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- BENEFITS -->
+<div style="background:var(--dark)">
+<section class="ben" data-section="benefits">
+  <div class="container">
+    <div class="top">
+      <div>
+        <div class="tag white rv"><i class="orbit"></i><span>KEY BENEFITS <b>/</b> 08</span></div>
+        <h2 class="h2 rv" style="color:#fff">Say yes faster, every time your week fills up.</h2>
+      </div>
+      <a href="#pricing" class="btn white rv"><span><i>Start free</i><i aria-hidden="true">Start free</i></span></a>
+    </div>
+    <div class="track rv">
+      <div class="pline" aria-hidden="true"><i id="bline"></i></div>
+      <div class="bscroll" id="bscroll" data-component="benefit-scroller">
+        <div class="blist">
+          <article class="bcard">
+            <div class="bmedia" aria-hidden="true"><div class="bg"></div>
+              <div class="fg"><small style="color:var(--ink50);font-size:12px">CAN I SAY YES? · FRIDAY DINNER</small><div class="big">Yes, $95</div>
+                <div class="mini"><div><span>Free this week</span><b>$1,840</b></div><div><span>Bills due</span><b>All covered</b></div><div><span>Lisbon goal</span><b>Still on track</b></div></div></div>
+            </div>
+            <div class="tw"><p class="p idx">[01]</p><h3 class="h6">Know what you can say yes to</h3><p class="p">Every invite checked against bills, savings and plans in seconds.</p></div>
+          </article>
+          <article class="bcard">
+            <div class="bmedia" aria-hidden="true"><div class="bg"></div>
+              <div class="fg"><small style="color:var(--ink50);font-size:12px">HANDLED THIS WEEK · 0 TAPS</small><div class="big">9 tasks</div>
+                <div class="mini"><div><span><i class="done">✓</i>Paid 3 bills on time</span><b>$214</b></div><div><span><i class="done">✓</i>Claimed 1 refund</span><b>+$48</b></div><div><span><i class="done">✓</i>Split 2 dinners</span><b>+$136</b></div></div></div>
+            </div>
+            <div class="tw"><p class="p idx">[02]</p><h3 class="h6">Admin that happens without you</h3><p class="p">Bills, refunds and splits get done in the background while you’re busy living.</p></div>
+          </article>
+          <article class="bcard">
+            <div class="bmedia" aria-hidden="true"><div class="bg"></div>
+              <div class="fg"><small style="color:var(--ink50);font-size:12px">AI LIMIT · NIGHTS OUT</small><div class="big">$240 <span style="font-size:14px;color:var(--ink50);letter-spacing:0">/ month</span></div>
+                <div class="slider"><b style="width:60%"></b><u style="left:60%"></u></div>
+                <div class="mini"><div><span>Spent so far</span><b>$148</b></div><div><span>Ask before</span><b>Anything over $80</b></div></div></div>
+            </div>
+            <div class="tw"><p class="p idx">[03]</p><h3 class="h6">Limits that flex with your life</h3><p class="p">Set the guardrails once; the AI adapts week to week and you stay in control.</p></div>
+          </article>
+        </div>
+      </div>
+      <div class="bpag"><button class="on" data-b="0" aria-label="Benefit 1"></button><button data-b="1" aria-label="Benefit 2"></button><button data-b="2" aria-label="Benefit 3"></button></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- PRICING -->
+<div class="price-wrap" id="pricing">
+<section class="pricing" data-section="pricing">
+  <div class="container">
+    <div class="hd">
+      <div class="tag rv"><i class="orbit"></i><span>PRICING <b>/</b> 09</span></div>
+      <h2 class="h2 rv">Simple plans for a fuller life.</h2>
+      <p class="p rv">Hand off the money admin, keep full control. Try it free for 14 days, cancel anytime.</p>
+    </div>
+
+    <div class="prow rv" data-plan data-m="16" data-y="160" data-save="32">
+      <div class="plan">
+        <div>
+          <div class="toggle" role="group" aria-label="Billing period"><span class="knob"></span><button class="on" data-mode="m" aria-pressed="true">MONTHLY</button><button data-mode="y" aria-pressed="false">YEARLY</button></div>
+          <div class="ptop">
+            <div class="pr"><h3 class="label">FULLDAY</h3><span class="badge"><i></i>Starter</span></div>
+            <div class="pr">
+              <div class="amt"><p class="h3 pv">$16.00</p><span class="p18 pt">/ MONTH</span></div>
+              <p class="anote pn">$160.00 billed yearly. <b>Save $32.</b></p>
+            </div>
+          </div>
+        </div>
+        <div class="feats">
+          <div class="feat-i"><span><svg width="9" height="7" aria-hidden="true"><use href="#i-check"/></svg></span>AI money assistant</div>
+          <div class="feat-i"><span><svg width="9" height="7" aria-hidden="true"><use href="#i-check"/></svg></span>Calendar-aware budgets</div>
+          <div class="feat-i"><span><svg width="9" height="7" aria-hidden="true"><use href="#i-check"/></svg></span>Connect up to 3 accounts</div>
+          <div class="feat-i"><span><svg width="9" height="7" aria-hidden="true"><use href="#i-check"/></svg></span>Daily AI brief</div>
+        </div>
+        <div class="pbot"><hr>
+          <div class="r"><div><small>PAY WITH</small><span>Card · Bank · Mobile wallet</span></div><a href="#" class="btn"><span><i>Start free</i><i aria-hidden="true">Start free</i></span></a></div>
+        </div>
+      </div>
+      <div class="pside">
+        <div class="pcardx" aria-hidden="true">
+          <div class="r"><span class="h6">FULLDAY</span><span class="net">STARTER</span></div>
+          <div class="r"><p class="p">Ask anything, see your month, and let AI keep your plans and bills in balance.</p><svg width="56" height="56"><use href="#mark"/></svg></div>
+        </div>
+        <div class="trail">
+          <div><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#000" aria-hidden="true"><circle cx="6.5" cy="6.5" r="6"/><path d="m4.3 4.3 4.4 4.4m0-4.4L4.3 8.7"/></svg>CANCEL ANYTIME</div><span class="sep"></span>
+          <div><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#000" aria-hidden="true"><circle cx="6" cy="6" r="5.5"/><path d="M6 2v4h3"/></svg>14-DAY FREE TRIAL</div><span class="sep"></span>
+          <div><svg width="14" height="13" viewBox="0 0 14 13" fill="none" stroke="#000" aria-hidden="true"><path d="M.5.5h9v7H5L2.5 9.5v-2h-2ZM11 2.5h2.5v7h-2v2L8.8 9.5H5.5"/></svg>HUMAN SUPPORT</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prow rv" data-plan data-m="24" data-y="240" data-save="48">
+      <div class="plan">
+        <div>
+          <div class="toggle" role="group" aria-label="Billing period"><span class="knob"></span><button class="on" data-mode="m" aria-pressed="true">MONTHLY</button><button data-mode="y" aria-pressed="false">YEARLY</button></div>
+          <div class="ptop">
+            <div class="pr"><h3 class="label">FULLDAY PRO</h3><span class="badge hot"><i></i>Most Popular</span></div>
+            <div class="pr">
+              <div class="amt"><p class="h3 pv">$24.00</p><span class="p18 pt">/ MONTH</span></div>
+              <p class="anote pn">$240.00 billed yearly. <b>Save $48.</b></p>
+            </div>
+          </div>
+        </div>
+        <div class="feats">
+          <div class="feat-i"><span><svg width="9" height="7" aria-hidden="true"><use href="#i-check"/></svg></span>Auto-pay &amp; auto-save</div>
+          <div class="feat-i"><span><svg width="9" height="7" aria-hidden="true"><use href="#i-check"/></svg></span>Bookings &amp; bill splitting</div>
+          <div class="feat-i"><span><svg width="9" height="7" aria-hidden="true"><use href="#i-check"/></svg></span>Unlimited accounts</div>
+          <div class="feat-i"><span><svg width="9" height="7" aria-hidden="true"><use href="#i-check"/></svg></span>Shared plans for two</div>
+        </div>
+        <div class="pbot"><hr>
+          <div class="r"><div><small>PAY WITH</small><span>Card · Bank · Mobile wallet</span></div><a href="#" class="btn"><span><i>Start free</i><i aria-hidden="true">Start free</i></span></a></div>
+        </div>
+      </div>
+      <div class="pside">
+        <div class="pcardx steel" aria-hidden="true">
+          <div class="r"><span class="h6">FULLDAY PRO</span><span class="net">AUTOPILOT</span></div>
+          <div class="r"><p class="p">The full hand-off. AI pays, saves, splits and books for you — inside your limits.</p><svg width="56" height="56"><use href="#mark"/></svg></div>
+        </div>
+        <div class="trail">
+          <div><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#000" aria-hidden="true"><circle cx="6.5" cy="6.5" r="6"/><path d="m4.3 4.3 4.4 4.4m0-4.4L4.3 8.7"/></svg>CANCEL ANYTIME</div><span class="sep"></span>
+          <div><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#000" aria-hidden="true"><circle cx="6" cy="6" r="5.5"/><path d="M6 2v4h3"/></svg>14-DAY FREE TRIAL</div><span class="sep"></span>
+          <div><svg width="14" height="13" viewBox="0 0 14 13" fill="none" stroke="#000" aria-hidden="true"><path d="M.5.5h9v7H5L2.5 9.5v-2h-2ZM11 2.5h2.5v7h-2v2L8.8 9.5H5.5"/></svg>PRIORITY SUPPORT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- FAQ -->
+<section class="faq" id="faq" data-section="faq">
+  <div class="container">
+    <div class="left rv">
+      <div class="tag"><i class="orbit"></i><span>FAQS <b>/</b> 10</span></div>
+      <h2 class="h2">Questions,<br>answered quickly.</h2>
+      <p class="p">Because you have somewhere to be. What the AI does, what it won’t do, and how your data stays yours.</p>
+    </div>
+    <div class="list rv">
+      <div class="qa open"><button class="q" aria-expanded="true"><span class="qt"><span>01.</span>What does the Fullday AI actually do?</span><i class="pm" aria-hidden="true"><svg viewBox="0 0 12 12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M1 6h10"/><path class="v" d="M6 1v10"/></svg></i></button><div class="a"><div><p class="p">It reads your accounts, cards and calendar, pays bills on time, saves toward your goals, splits shared costs, checks new plans against your budget and sends you one short daily brief.</p></div></div></div>
+      <div class="qa"><button class="q" aria-expanded="false"><span class="qt"><span>02.</span>Will it move money without asking me?</span><i class="pm" aria-hidden="true"><svg viewBox="0 0 12 12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M1 6h10"/><path class="v" d="M6 1v10"/></svg></i></button><div class="a"><div><p class="p">Only within rules you set. You choose what runs automatically and the amount above which Fullday asks first — one tap to approve or decline.</p></div></div></div>
+      <div class="qa"><button class="q" aria-expanded="false"><span class="qt"><span>03.</span>How is my financial data protected?</span><i class="pm" aria-hidden="true"><svg viewBox="0 0 12 12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M1 6h10"/><path class="v" d="M6 1v10"/></svg></i></button><div class="a"><div><p class="p">Data is encrypted in transit and at rest, never sold, and you can disconnect any account or calendar instantly from settings.</p></div></div></div>
+      <div class="qa"><button class="q" aria-expanded="false"><span class="qt"><span>04.</span>Which accounts and calendars can I connect?</span><i class="pm" aria-hidden="true"><svg viewBox="0 0 12 12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M1 6h10"/><path class="v" d="M6 1v10"/></svg></i></button><div class="a"><div><p class="p">Most major banks and card providers, plus the common calendar apps. Starter covers three accounts; Pro has no limit.</p></div></div></div>
+      <div class="qa"><button class="q" aria-expanded="false"><span class="qt"><span>05.</span>Can I share plans and split costs with someone?</span><i class="pm" aria-hidden="true"><svg viewBox="0 0 12 12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M1 6h10"/><path class="v" d="M6 1v10"/></svg></i></button><div class="a"><div><p class="p">Yes. Pro includes shared plans for two, and anyone can receive a split request — no app needed on their side.</p></div></div></div>
+      <div class="qa"><button class="q" aria-expanded="false"><span class="qt"><span>06.</span>How does the 14-day trial work?</span><i class="pm" aria-hidden="true"><svg viewBox="0 0 12 12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M1 6h10"/><path class="v" d="M6 1v10"/></svg></i></button><div class="a"><div><p class="p">Full access for 14 days. Cancel before it ends and you won’t be charged; switch plans or billing anytime after.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section class="blog" data-section="journal">
+  <div class="container">
+    <div class="top rv">
+      <div>
+        <div class="tag"><i class="orbit"></i><span>JOURNAL <b>/</b> 11</span></div>
+        <h2 class="h2">Notes for full lives.</h2>
+        <p class="p">Short reads on doing more, spending well and letting the boring parts run themselves.</p>
+      </div>
+      <a href="#" class="btn"><span><i>View All</i><i aria-hidden="true">View All</i></span></a>
+    </div>
+    <div class="bgrid">
+      <a href="#" class="post rv">
+        <div class="thumb" aria-hidden="true"><div style="background:linear-gradient(135deg,#eef2fb,#fbe2d8)">
+          <svg viewBox="0 0 445 300" width="100%" height="100%"><rect x="132" y="60" width="180" height="180" rx="20" fill="#fff" style="filter:drop-shadow(0 16px 30px rgba(0,0,0,.12))"/><rect x="132" y="60" width="180" height="44" rx="20" fill="#000"/><rect x="132" y="84" width="180" height="20" fill="#000"/><g fill="#eef1f6"><rect x="150" y="120" width="26" height="22" rx="5"/><rect x="186" y="120" width="26" height="22" rx="5"/><rect x="222" y="120" width="26" height="22" rx="5"/><rect x="258" y="120" width="26" height="22" rx="5"/><rect x="150" y="152" width="26" height="22" rx="5"/><rect x="186" y="152" width="26" height="22" rx="5"/><rect x="258" y="152" width="26" height="22" rx="5"/><rect x="150" y="184" width="26" height="22" rx="5"/><rect x="186" y="184" width="26" height="22" rx="5"/><rect x="222" y="184" width="26" height="22" rx="5"/></g><rect x="222" y="152" width="26" height="22" rx="5" fill="#f79276"/><circle cx="330" cy="90" r="30" fill="#f79276"/><path d="M330 74v16l10 6" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg>
+        </div></div>
+        <div class="c"><div style="display:flex;flex-direction:column;gap:12px"><div class="meta">GUIDE <span>/</span> Mar 24, 2026</div><h3 class="h6">The 10-minute monthly money reset</h3></div><span class="readmore">READ MORE <svg aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
+      </a>
+      <a href="#" class="post rv d1">
+        <div class="thumb" aria-hidden="true"><div style="background:linear-gradient(135deg,#f4e3dc,#dfe6f6)">
+          <svg viewBox="0 0 445 300" width="100%" height="100%"><g style="filter:drop-shadow(0 16px 30px rgba(0,0,0,.14))"><rect x="122" y="92" width="200" height="116" rx="16" fill="#fff"/><path d="M262 92v116" stroke="#e5e7ec" stroke-width="2" stroke-dasharray="5 6"/></g><text x="142" y="128" font-size="13" font-family="Inter Tight" fill="#999">LISBON</text><text x="142" y="160" font-size="28" font-family="Inter Tight" font-weight="600">LIS</text><path d="M196 152h40" stroke="#000" stroke-width="2"/><path d="m230 146 8 6-8 6" fill="none" stroke="#000" stroke-width="2"/><rect x="142" y="178" width="96" height="10" rx="5" fill="#eef1f6"/><rect x="142" y="178" width="70" height="10" rx="5" fill="#f79276"/><text x="292" y="156" font-size="12" font-family="Inter Tight" text-anchor="middle" font-weight="600">72%</text></svg>
+        </div></div>
+        <div class="c"><div style="display:flex;flex-direction:column;gap:12px"><div class="meta">PLANNING <span>/</span> Oct 24, 2026</div><h3 class="h6">Fund the trip before you book it</h3></div><span class="readmore">READ MORE <svg aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
+      </a>
+      <a href="#" class="post rv d2">
+        <div class="thumb" aria-hidden="true"><div style="background:linear-gradient(135deg,#1c1c1c,#545454)">
+          <svg viewBox="0 0 445 300" width="100%" height="100%"><circle cx="222" cy="150" r="80" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2" stroke-dasharray="6 8"/><circle cx="142" cy="150" r="26" fill="#fff"/><circle cx="302" cy="150" r="26" fill="#f79276"/><circle cx="222" cy="70" r="20" fill="#aab9c3"/><circle cx="222" cy="230" r="20" fill="#aab9c3"/><defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#fff"/></marker></defs><path d="M168 150h100" stroke="#fff" stroke-width="2.5" marker-end="url(#ah)"/><text x="142" y="155" font-size="13" text-anchor="middle" font-family="Inter Tight" font-weight="700">AI</text><text x="302" y="155" font-size="13" fill="#fff" text-anchor="middle" font-family="Inter Tight" font-weight="600">✓</text></svg>
+        </div></div>
+        <div class="c"><div style="display:flex;flex-direction:column;gap:12px"><div class="meta">SYSTEMS <span>/</span> May 11, 2026</div><h3 class="h6">Let AI do the boring money stuff</h3></div><span class="readmore">READ MORE <svg aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- CTA + FOOTER -->
+<div class="cta-wrap">
+  <div class="cta-band" aria-hidden="true"></div>
+  <section class="cta" data-section="cta" aria-label="Get started">
+    <div class="container">
+      <div class="phone-slot rv s" data-phone aria-hidden="true"></div>
+      <div class="ctabox">
+        <div class="ctaL rv l">
+          <div class="top">
+            <div class="tag"><i class="orbit"></i><span>GET STARTED <b>/</b> now</span></div>
+            <h2 class="h3">Fill your calendar.<br>We’ll handle the money.</h2>
+          </div>
+          <div class="bot">
+            <svg class="mk" aria-hidden="true"><use href="#mark"/></svg>
+            <hr>
+            <p class="h6" style="color:#000">One AI<br>For bills, plans and goals<br>Running all day</p>
+          </div>
+        </div>
+        <div class="ctaR rv r">
+          <div class="t">
+            <p class="p" style="color:#000">STARTING FROM</p>
+            <p class="h3">$16.00</p>
+            <p class="p">An AI money agent that works around your schedule, so a busier life never means messier finances.</p>
+          </div>
+          <div>
+            <div class="pfl"><div><i></i><span class="p">14 days free, everything included</span></div><div><i></i><span class="p">No setup fee. Cancel anytime.</span></div><div><i></i><span class="p">You set the limits, AI does the work</span></div></div>
+            <a href="#pricing" class="btn full"><span><i>Start free</i><i aria-hidden="true">Start free</i></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="footer" data-section="footer">
+    <div class="f-in">
+      <div class="frow1 rv">
+        <a href="#header" class="flogo" aria-label="Fullday, back to top"><svg aria-hidden="true"><use href="#mark"/></svg>Fullday</a>
+        <div class="news">
+          <span id="news-l">Get the weekly “Do more” note</span>
+          <form id="newsform"><input type="email" required placeholder="you@example.com" aria-labelledby="news-l"><button type="submit">Subscribe</button></form>
+          <span class="ok" id="newsok" role="status"></span>
+        </div>
+      </div>
+      <div class="frow2 rv">
+        <p class="ftag">Money on autopilot, for people who’d rather be out living.</p>
+        <nav class="fcols" aria-label="Footer">
+          <div><b>PRODUCT</b><a href="#solution">Overview</a><a href="#how">How it works</a><a href="#pricing">Pricing</a></div>
+          <div><b>COMPANY</b><a href="#results">Stories</a><a href="#">Journal</a><a href="#faq">Contact</a></div>
+          <div><b>LEGAL</b><a href="#">Privacy</a><a href="#">Security</a><a href="#">Terms</a></div>
+        </nav>
+      </div>
+      <div class="rv">
+        <div class="frow3">
+          <div class="socials"><a href="#" aria-label="X">X</a><a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="LinkedIn">IN</a></div>
+          <div class="fcontact">
+            <div><b>CONTACT</b><a href="mailto:hello@fullday.example">hello@fullday.example</a><a href="tel:+14155550148">+1 (415) 555-0148</a></div>
+            <div><b>HUMAN SUPPORT</b><p>Mon – Fri · 7:00 AM – 10:00 PM<br>Sat – Sun · 9:00 AM – 6:00 PM</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="frow4"><span>© 2026 Fullday. A fictional brand: members, stories, figures and prices are invented.</span><a href="#header">Back to Top <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></a></div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// phones
+const tpl=document.getElementById('tpl-phone');
+document.querySelectorAll('[data-phone]').forEach(s=>s.appendChild(tpl.content.cloneNode(true)));
+
+// reveal on scroll; the observer also fires for anything already on screen after an anchor jump
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+// counters
+const co=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,t=+el.dataset.count,d=reduced?0:1600,s=performance.now();
+  (function f(n){const p=d?Math.min((n-s)/d,1):1;el.textContent=Math.round(t*(1-Math.pow(1-p,3))).toLocaleString('en-US');if(p<1)requestAnimationFrame(f)})(s);co.unobserve(el)}),{threshold:.4});
+document.querySelectorAll('[data-count]').forEach(el=>co.observe(el));
+
+// goal ring
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const c=e.target;c.style.transition='stroke-dashoffset 1.6s cubic-bezier(.22,.8,.24,1)';c.style.strokeDashoffset=314*(1-.72);ro.unobserve(c)}}),{threshold:.5});
+document.querySelectorAll('.ringp').forEach(c=>ro.observe(c));
+
+// chart line draw, then restore its dash pattern
+const line=document.getElementById('fcline');
+if(line&&!reduced){const L=line.getTotalLength();line.style.strokeDasharray=L;line.style.strokeDashoffset=L;const lo=new IntersectionObserver(es=>{if(es[0].isIntersecting){line.style.transition='stroke-dashoffset 2.2s cubic-bezier(.22,.8,.24,1)';line.style.strokeDashoffset=0;setTimeout(()=>{line.style.strokeDasharray='12.5 12.5'},2300);lo.disconnect()}},{threshold:.3});lo.observe(line)}
+
+// typing prompt
+const typed=document.getElementById('typed');
+if(typed&&!reduced){const full=typed.textContent;const to=new IntersectionObserver(es=>{if(!es[0].isIntersecting)return;to.disconnect();let i=0;typed.innerHTML='<span class="caret"></span>';
+  const tick=()=>{i++;typed.innerHTML=full.slice(0,i)+'<span class="caret"></span>';if(i<full.length)setTimeout(tick,40)};setTimeout(tick,400)},{threshold:.5});to.observe(typed)}
+
+// mobile menu
+const mm=document.getElementById('mobile-menu'),burger=document.querySelector('.burger');
+const setMenu=open=>{mm.classList.toggle('open',open);burger.setAttribute('aria-expanded',String(open));if(open)mm.querySelector('.x').focus()};
+burger.addEventListener('click',()=>setMenu(true));
+mm.querySelectorAll('a,.x').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+addEventListener('keydown',e=>{if(e.key==='Escape'&&mm.classList.contains('open')){setMenu(false);burger.focus()}});
+
+// product slider
+let ps=0;const slides=[...document.querySelectorAll('.slide')],vd=[...document.querySelectorAll('.vdots i')],arr=[...document.querySelectorAll('[data-prod]')];
+const showP=i=>{ps=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,k)=>s.classList.toggle('on',k===ps));vd.forEach((d,k)=>d.classList.toggle('on',k===ps));arr[0].classList.toggle('on',ps>0);arr[1].classList.toggle('on',ps<slides.length-1)};
+arr.forEach(b=>b.onclick=()=>showP(ps+ +b.dataset.prod));
+vd.forEach((d,k)=>{d.style.cursor='pointer';d.onclick=()=>showP(k)});
+showP(0);
+
+// stories
+const T=[
+ {q:"I run a studio, coach on weekends and travel twice a month. Fullday pays everything, tells me what I can book, and I haven’t opened a banking app since spring.",n:"Daniel Carter",t:"Member · 14 months",g:"Said yes to: a 3-week sabbatical in Japan"},
+ {q:"Two jobs, a choir and a toddler. I just ask “can we do this?” and get a straight answer. We’ve booked more weekends away this year than the last three combined.",n:"Priya Nair",t:"Member · 9 months",g:"Said yes to: a weekend away every month"},
+ {q:"Group dinners used to mean a week of chasing people for money. Now the split happens before the bill even lands. I just show up.",n:"Marcus Reid",t:"Member · 2 years",g:"Said yes to: running a monthly supper club"}];
+const $=id=>document.getElementById(id);
+let ti=0;const tq=$('tq'),tavs=[...document.querySelectorAll('.tav button')];
+const showT=i=>{ti=(i+T.length)%T.length;tq.style.opacity=0;setTimeout(()=>{const d=T[ti];tq.textContent=d.q;$('tn').textContent=d.n;$('tt').textContent=d.t;$('tg').textContent=d.g;$('tc').textContent=`0${ti+1} / 03`;tq.style.opacity=1},reduced?0:250);tavs.forEach((a,k)=>a.classList.toggle('on',k===ti))};
+document.querySelector('.tnav .prev').onclick=()=>showT(ti-1);
+document.querySelector('.tnav .next').onclick=()=>showT(ti+1);
+tavs.forEach(a=>a.onclick=()=>showT(+a.dataset.t));
+
+// benefits scroller
+const bs=$('bscroll'),bl=$('bline'),bp=[...document.querySelectorAll('.bpag button')];
+const updB=()=>{const max=bs.scrollWidth-bs.clientWidth,p=max>0?bs.scrollLeft/max:0;bl.style.transform=`translateX(${p*199}%)`;const k=Math.round(p*2);bp.forEach((d,j)=>d.classList.toggle('on',j===k))};
+bs.addEventListener('scroll',updB,{passive:true});
+bp.forEach(d=>d.onclick=()=>{const max=bs.scrollWidth-bs.clientWidth;bs.scrollTo({left:max*(+d.dataset.b/2),behavior:reduced?'auto':'smooth'})});
+updB();
+
+// pricing toggles
+document.querySelectorAll('[data-plan]').forEach(p=>{
+  const m=+p.dataset.m,y=+p.dataset.y,s=+p.dataset.save,tg=p.querySelector('.toggle'),pv=p.querySelector('.pv'),pt=p.querySelector('.pt'),pn=p.querySelector('.pn');
+  tg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const yr=b.dataset.mode==='y';tg.classList.toggle('yearly',yr);tg.querySelectorAll('button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b))});
+    pv.textContent='$'+(yr?y:m).toFixed(2);pt.textContent=yr?'/ YEAR':'/ MONTH';
+    pn.innerHTML=yr?`Equals $${(y/12).toFixed(2)} per month. <b>Save $${s}.</b>`:`$${y.toFixed(2)} billed yearly. <b>Save $${s}.</b>`;
+  });
+});
+
+// FAQ: one open at a time
+const qas=[...document.querySelectorAll('.qa')];
+qas.forEach(q=>q.querySelector('.q').addEventListener('click',()=>{const o=q.classList.contains('open');qas.forEach(x=>{x.classList.remove('open');x.querySelector('.q').setAttribute('aria-expanded','false')});if(!o){q.classList.add('open');q.querySelector('.q').setAttribute('aria-expanded','true')}}));
+
+// hero live feed
+(function(){
+  const feed=$('feed');if(!feed)return;
+  const items=[
+   ['⚡','#e9f8ef','Paid electricity','Auto · on time','$72',''],
+   ['🍝','#fdeceb','Split dinner with Sam','Request sent','+$48','pos'],
+   ['🎾','#eef2fb','Booked padel, Thu 7 PM','Fits this week','$32',''],
+   ['✈️','#fff4ea','Moved to Lisbon fund','Goal 72% → 75%','+$75','pos'],
+   ['↩︎','#e9f8ef','Claimed refund','Cancelled class','+$24','pos'],
+   ['🎟️','#f4f0ff','Held concert tickets','Awaiting your tap','$120',''],
+   ['📶','#eef2fb','Paid internet','Auto · on time','$45',''],
+   ['🧾','#fdeceb','Flagged duplicate charge','Disputed for you','$18','pos']];
+  let i=0,mins=42,t=new Date();t.setHours(9,41,0,0);
+  const clk=$('lclk'),lm=$('lmin'),lb=$('lbar');
+  const add=(anim)=>{const d=items[i++%items.length],li=document.createElement('li');
+    li.innerHTML=`<span class="ic" style="background:${d[1]}">${d[0]}</span><span class="tx2"><b>${d[2]}</b><small>${d[3]} · now</small></span><em class="${d[5]}">${d[4]}</em>`;
+    if(anim)li.className='new';
+    feed.querySelectorAll('small').forEach((s,k)=>{s.textContent=s.textContent.replace(/· .*$/,'· '+(k===0?'1m':(k+1)*2+'m')+' ago')});
+    feed.prepend(li);while(feed.children.length>5)feed.lastChild.remove();};
+  for(let k=0;k<3;k++)add(false);
+  const tick=()=>{add(true);mins+=Math.round(3+Math.random()*5);lm.textContent=mins;lb.style.width=Math.min(95,mins/1.6)+'%';
+    t=new Date(t.getTime()+60000*(1+Math.floor(Math.random()*3)));clk.textContent=t.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});};
+  lb.style.width=mins/1.6+'%';
+  if(!reduced)setInterval(()=>{if(!document.hidden)tick()},2800);
+})();
+
+// newsletter (demo only: nothing is sent)
+$('newsform').addEventListener('submit',e=>{e.preventDefault();e.target.reset();$('newsok').textContent='You’re in. First note lands Monday.'});
+</script>
+</body>
+</html>

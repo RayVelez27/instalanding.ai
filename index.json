@@ -2,8 +2,121 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 85,
+  "count": 87,
   "pages": [
+    {
+      "slug": "fullday-ai-money-agent-page",
+      "title": "Fullday AI Money Agent Page",
+      "description": "A soft blue-and-peach page for an AI money agent that works around your calendar: a hero with a live feed of tasks it just finished and a phone with sliding payment cards, a self-typing \"can I afford it\" prompt, sticky how-it-works steps, a results chart whose dashed line draws in, a story switcher, a snap-scrolling benefits row, monthly/yearly pricing toggles and rounded sections that tuck under each other",
+      "category": "web",
+      "theme": "light",
+      "added": "Nov 7, 2026",
+      "bestFor": [
+        "fintech and personal finance apps",
+        "AI agents that act for users",
+        "consumer subscription products",
+        "calendar and productivity tools"
+      ],
+      "style": [
+        "light",
+        "soft-gradients",
+        "phone-mockups",
+        "scroll-reveals",
+        "rounded-sections"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "problem",
+        "solution",
+        "how-it-works",
+        "features",
+        "product",
+        "results",
+        "testimonials",
+        "benefits",
+        "pricing",
+        "faq",
+        "journal",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Inter Tight",
+          "Montserrat"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/fullday-ai-money-agent-page/index.html",
+        "prompt": "pages/fullday-ai-money-agent-page/PROMPT.md",
+        "preview": "pages/fullday-ai-money-agent-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/fullday-ai-money-agent.html",
+      "page": "https://instalanding.ai/prompt/fullday-ai-money-agent-page"
+    },
+    {
+      "slug": "fortix-ai-money-copilot-app-page",
+      "title": "Fortix AI Money Copilot App Page",
+      "description": "A bright, airy app page for an AI money copilot: a headline set with glossy gradient app icons, six dark glass phone screens drawn entirely in HTML and SVG (net worth, AI chat, autopilot rules, a forecast with a confidence band, a blocked-fraud alert), a turning 3D ring of stat cards, floating badges and chat bubbles, a landscape dashboard that tips up into view and a tap-through 3D feature carousel",
+      "category": "web",
+      "theme": "light",
+      "added": "Nov 7, 2026",
+      "bestFor": [
+        "fintech and personal finance apps",
+        "AI assistants and copilots",
+        "mobile app launches",
+        "consumer apps with an App Store CTA"
+      ],
+      "style": [
+        "light",
+        "glassmorphism",
+        "phone-mockups",
+        "3d-carousel",
+        "gradient-icons"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "clients",
+        "about",
+        "experience",
+        "testimonials",
+        "details",
+        "autopilot",
+        "feature-cards",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Inter"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/fortix-ai-money-copilot-app-page/index.html",
+        "prompt": "pages/fortix-ai-money-copilot-app-page/PROMPT.md",
+        "preview": "pages/fortix-ai-money-copilot-app-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/fortix-ai-money-copilot.html",
+      "page": "https://instalanding.ai/prompt/fortix-ai-money-copilot-app-page"
+    },
     {
       "slug": "linnet-ai-housekeeping-swarm-page",
       "title": "Linnet AI Housekeeping Swarm Page",
