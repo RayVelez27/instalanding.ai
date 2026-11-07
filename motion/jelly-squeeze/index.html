@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jelly Squeeze · InstaLanding Motion</title>
+<!--
+  JELLY SQUEEZE · InstaLanding Motion
+  After Voicu Apostol's (cerpow.com) jelly drag study, which scrubs 215 pre-rendered
+  JPEG frames with GSAP Draggable. This version keeps the feel (a vertical drag
+  with a throw, exponential smoothing, an optional follow-the-mouse mode) but draws
+  the jelly live in Canvas 2D, so it is one file with no images and no libraries,
+  and the jelly wobbles back on a real spring instead of replaying frames.
+
+  MAP
+    data-section="stage"     the canvas (jelly, plate, acrylic press) and the drag pad
+    data-section="controls"  the caption and the Follow mouse checkbox
+
+  ADAPTING
+    - Colours: JELLY (top / mid / deep) and the CSS custom properties on :root.
+    - Feel: CFG.travel (pointer px for a full press), CFG.smoothing (the original's
+      0.11 lag), CFG.wobble (0 = dead, 1 = loose).
+    - The drag pad is a role="slider": arrows, Page Up/Down, Home and End press it.
+-->
+<style>
+  :root {
+    --bg: #b1b3c0;
+    --ink: #464e60;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html {
+    background: var(--bg);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  body {
+    min-height: 100svh;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-align: center;
+    line-height: 1.8;
+  }
+  main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100svh;
+    width: 100%;
+    padding-bottom: 40px;
+  }
+  .mark {
+    position: absolute;
+    top: 18px;
+    left: 22px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(70, 78, 96, .7);
+  }
+  .canvas-wrapper {
+    position: relative;
+    width: min(640px, 94vw, (100svh - 96px) * 4 / 3);
+    aspect-ratio: 4 / 3;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: clamp(22px, 6vw, 42px);
+    opacity: 0;
+    transform: scale(.92);
+    transition: opacity 1.1s ease, transform 1.3s var(--ease);
+  }
+  canvas.in { opacity: 1; transform: none; }
+  .drag-trigger {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -49%);
+    width: 72%;
+    height: 78%;
+    border-radius: 999px;
+    cursor: grab;
+    touch-action: none;
+    outline: none;
+  }
+  .drag-trigger:active, .drag-trigger.is-drag { cursor: grabbing; }
+  .drag-trigger:focus-visible { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); }
+  .follow .drag-trigger { cursor: default; }
+
+  .bottom-controls {
+    position: absolute;
+    bottom: 12px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    padding: 0 16px;
+    opacity: 0;
+    transition: opacity 1.3s ease .4s;
+  }
+  .bottom-controls.in { opacity: 1; }
+  h1, .checkbox-label {
+    font-size: 17px;
+    font-weight: 450;
+    letter-spacing: -.01em;
+    color: var(--ink);
+  }
+  .checkbox-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .checkbox-label input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .checkmark-icon {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    transition: background-color .2s;
+  }
+  .checkmark-icon::after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 3.5px;
+    top: 0;
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .checkbox-label input:checked ~ .checkmark-icon { background: var(--ink); }
+  .checkbox-label input:checked ~ .checkmark-icon::after { display: block; }
+  .checkbox-label input:focus-visible ~ .checkmark-icon { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); }
+  @media (hover: none) and (pointer: coarse) {
+    .checkbox-label { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    canvas, .bottom-controls { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="mark" aria-hidden="true">Jelly Squeeze · Motion study</p>
+
+  <div class="canvas-wrapper" data-section="stage">
+    <canvas aria-hidden="true"></canvas>
+    <div class="drag-trigger" role="slider" tabindex="0" aria-label="Squeeze the jelly" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Resting"></div>
+  </div>
+
+  <div class="bottom-controls" data-section="controls">
+    <h1>Drag vertically to squeeze</h1>
+    <label class="checkbox-label">
+      <input type="checkbox" id="followMouse">
+      <span class="checkmark-icon" aria-hidden="true"></span>
+      Follow mouse
+    </label>
+  </div>
+</main>
+
+<script>
+  const canvas = document.querySelector('canvas')
+  const ctx = canvas.getContext('2d')
+  const pad = document.querySelector('.drag-trigger')
+  const follow = document.getElementById('followMouse')
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)')
+
+  const CFG = { travel: 220, smoothing: 0.11, wobble: 0.6, speed: 1 }
+  const JELLY = { top: '#ff9db0', mid: '#f0416a', deep: '#a50f3c' }
+
+  // Scene, in a 640 x 480 design space that is scaled to the canvas
+  const FLOOR = 352, CX = 320, H0 = 196, W0 = 250
+  const LIFT = 46            // the press hovers this far above the jelly when untouched
+  const MIN_H = 0.42 * H0    // a full press squeezes it to 42%
+
+  // Input state: p is the press, 0 (lifted) to 1 (full squeeze)
+  let goal = 0.18, shown = goal, vel = 0, dragging = false, followMouse = false
+  // Jelly spring: height and its speed
+  let h = H0, hv = 0, t = 0
+  // Seeded bubbles, in the jelly's own (u, v) space
+  let seed = 7
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
+  const BUBBLES = Array.from({ length: 16 }, () => ({ u: rnd() * 1.5 - 0.75, v: 0.12 + rnd() * 0.72, r: 1.6 + rnd() * rnd() * 7 }))
+
+  let W = 640, H = 480, S = 1, dpr = 1
+  const size = () => {
+    const r = canvas.getBoundingClientRect()
+    dpr = Math.min(devicePixelRatio || 1, 2)
+    W = r.width; H = r.height; S = W / 640
+    canvas.width = Math.round(W * dpr)
+    canvas.height = Math.round(H * dpr)
+  }
+  new ResizeObserver(size).observe(canvas)
+  size()
+
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x))
+  const pressBottom = (p) => FLOOR - (H0 + LIFT) + p * (H0 + LIFT - MIN_H)
+
+  /* ---------- input: a vertical drag with a throw, like Draggable's inertia ---------- */
+  let lastY = 0, samples = []
+  pad.addEventListener('pointerdown', (e) => {
+    if (followMouse) return
+    dragging = true; vel = 0; lastY = e.clientY; samples = [[performance.now(), goal]]
+    pad.setPointerCapture(e.pointerId)
+    pad.classList.add('is-drag')
+  })
+  pad.addEventListener('pointermove', (e) => {
+    if (!dragging) return
+    const travel = CFG.travel * (e.pointerType === 'touch' ? 0.55 : 1)
+    goal = clamp(goal + (e.clientY - lastY) / travel)
+    lastY = e.clientY
+    samples.push([performance.now(), goal])
+    if (samples.length > 6) samples.shift()
+  })
+  const release = () => {
+    if (!dragging) return
+    dragging = false
+    pad.classList.remove('is-drag')
+    const [t0, p0] = samples[0], [t1, p1] = samples[samples.length - 1]
+    vel = t1 - t0 > 0 && performance.now() - t1 < 80 ? ((p1 - p0) / (t1 - t0)) * 1000 : 0
+    if (reduce.matches) vel = 0
+  }
+  pad.addEventListener('pointerup', release)
+  pad.addEventListener('pointercancel', release)
+  pad.addEventListener('keydown', (e) => {
+    const steps = { ArrowDown: 0.1, ArrowRight: 0.1, ArrowUp: -0.1, ArrowLeft: -0.1, PageDown: 0.25, PageUp: -0.25 }
+    if (e.key in steps) goal = clamp(goal + steps[e.key])
+    else if (e.key === 'Home') goal = 0
+    else if (e.key === 'End') goal = 1
+    else return
+    e.preventDefault(); vel = 0
+  })
+
+  const setFollow = (on) => {
+    followMouse = on; follow.checked = on; dragging = false; vel = 0
+    document.body.classList.toggle('follow', on)
+  }
+  follow.addEventListener('change', () => setFollow(follow.checked))
+  addEventListener('mousemove', (e) => { if (followMouse) goal = clamp(e.clientY / innerHeight) })
+
+  /* ---------- physics ---------- */
+  const stepPhysics = (dt) => {
+    // The throw: glide on, losing speed, and stop dead at either end
+    if (!dragging && vel) {
+      goal += vel * dt
+      vel *= Math.exp(-dt / 0.28)
+      if (goal <= 0 || goal >= 1) { goal = clamp(goal); vel = 0 }
+      if (Math.abs(vel) < 0.002) vel = 0
+    }
+    // The original's frame-rate independent lag
+    shown += (goal - shown) * (1 - Math.exp(-CFG.smoothing * 60 * dt))
+
+    // The jelly wants its full height; the press caps it
+    const gap = FLOOR - pressBottom(shown)
+    const omega = 2 * Math.PI * 2.1
+    const zeta = reduce.matches ? 1 : 0.05 + (1 - CFG.wobble) * 0.55
+    const n = 4, d = dt / n
+    for (let i = 0; i < n; i++) {
+      hv += (omega * omega * (H0 - h) - 2 * zeta * omega * hv) * d
+      h += hv * d
+      if (h > gap) { h = gap; if (hv > 0) hv = 0 }
+    }
+    if (reduce.matches) { h = Math.min(H0, gap); hv = 0 }
+  }
+
+  /* ---------- drawing ---------- */
+  // The jelly outline in its own space: a rounded square (superellipse), widest at the foot
+  const N = 120, SHAPE = Array.from({ length: N }, (_, i) => {
+    const a = (i / N) * Math.PI * 2, c = Math.cos(a), s = Math.sin(a), k = 2 / 3.6
+    return { a, u: Math.sign(c) * Math.abs(c) ** k, v: (1 - Math.sign(s) * Math.abs(s) ** k) / 2 }
+  })
+
+  // Map a point of the jelly's own space onto the stage, squashed, bulged and rippling
+  const jellyMap = (u, v, a, w, squash, ripple, dome) => {
+    const bulge = squash * 0.26 * Math.sin(Math.PI * v) ** 1.4
+    const r = 1 + ripple * Math.sin(5 * a - t * 17) * Math.sin(Math.PI * v)
+    const x = CX + u * (w / 2) * (1 - 0.13 * v + bulge) * r
+    const lift = v > 0.55 ? dome * (1 - u * u) * ((v - 0.55) / 0.45) : 0
+    return [x, FLOOR - v * h * (1 + (r - 1) * 0.5) - lift]
+  }
+
+  const ellipse = (x, y, rx, ry, fill) => {
+    ctx.beginPath(); ctx.ellipse(x, y, Math.max(rx, 0.1), Math.max(ry, 0.1), 0, 0, Math.PI * 2)
+    ctx.fillStyle = fill; ctx.fill()
+  }
+  const radial = (x, y, r, stops) => {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, Math.max(r, 0.1))
+    stops.forEach(([o, c]) => g.addColorStop(o, c))
+    return g
+  }
+
+  const draw = () => {
+    ctx.setTransform(dpr * S, 0, 0, dpr * S, 0, 0)
+    const VH = 480
+    // Room
+    const bg = ctx.createLinearGradient(0, 0, 0, VH)
+    bg.addColorStop(0, '#d4d5df'); bg.addColorStop(0.62, '#c2c4d0'); bg.addColorStop(1, '#a7a9b8')
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, 640, VH)
+    ctx.save(); ctx.scale(1, 0.3)
+    ellipse(CX, (FLOOR + 10) / 0.3, 330, 330, radial(CX, (FLOOR + 10) / 0.3, 330, [[0, 'rgba(255,255,255,.55)'], [1, 'rgba(255,255,255,0)']]))
+    ctx.restore()
+
+    const squash = 1 - h / H0
+    const w = W0 * (H0 / h) ** 0.55
+    const ripple = reduce.matches ? 0 : clamp(Math.abs(hv) / 5200, 0, 0.035)
+    const dome = reduce.matches ? 0 : clamp(hv * 0.035, -10, 14)
+
+    // Plate
+    ellipse(CX, FLOOR + 22, 252, 30, radial(CX, FLOOR + 22, 252, [[0, 'rgba(40,40,70,.28)'], [1, 'rgba(40,40,70,0)']]))
+    const plate = ctx.createLinearGradient(0, FLOOR - 26, 0, FLOOR + 30)
+    plate.addColorStop(0, '#fbfbff'); plate.addColorStop(1, '#d9dae6')
+    ellipse(CX, FLOOR + 6, 236, 36, plate)
+    ellipse(CX, FLOOR + 2, 196, 25, '#eceef6')
+    // Shadow and the pink light the jelly throws forward onto the plate
+    ellipse(CX, FLOOR + 3, w * 0.6, 12 + squash * 4, radial(CX, FLOOR + 3, w * 0.6, [[0, 'rgba(110,10,45,.45)'], [1, 'rgba(110,10,45,0)']]))
+    ctx.save(); ctx.translate(CX, FLOOR + 16); ctx.scale(1, 0.22)
+    ellipse(0, 0, w * 0.5, w * 0.5, radial(0, 0, w * 0.5, [[0, 'rgba(255,80,120,.5)'], [1, 'rgba(255,80,120,0)']]))
+    ctx.restore()
+
+    // Jelly body
+    const pts = SHAPE.map((p) => jellyMap(p.u, p.v, p.a, w, squash, ripple, dome))
+    const top = FLOOR - h - Math.max(0, dome)
+    const body = new Path2D()
+    pts.forEach(([x, y], i) => (i ? body.lineTo(x, y) : body.moveTo(x, y)))
+    body.closePath()
+    const fill = ctx.createLinearGradient(0, top, 0, FLOOR)
+    fill.addColorStop(0, JELLY.top); fill.addColorStop(0.45, JELLY.mid); fill.addColorStop(1, JELLY.deep)
+    ctx.globalAlpha = 0.94; ctx.fillStyle = fill; ctx.fill(body); ctx.globalAlpha = 1
+
+    ctx.save(); ctx.clip(body)
+    // Light passing through: a warm glow low and to the right
+    ctx.globalCompositeOperation = 'screen'
+    const gx = CX + w * 0.12, gy = FLOOR - h * 0.28
+    ellipse(gx, gy, w * 0.55, h * 0.5, radial(gx, gy, w * 0.55, [[0, 'rgba(255,214,190,.6)'], [1, 'rgba(255,214,190,0)']]))
+    ctx.globalCompositeOperation = 'source-over'
+    // Thicker towards the edges, so they read deeper
+    ctx.strokeStyle = 'rgba(110,0,35,.05)'
+    for (let k = 1; k <= 12; k++) { ctx.lineWidth = w * 0.36 * k / 12; ctx.stroke(body) }
+    // Bubbles, carried by the same squash
+    for (const b of BUBBLES) {
+      const [x, y] = jellyMap(b.u, b.v, Math.atan2(b.v - 0.5, b.u), w, squash, ripple, dome)
+      const r = b.r * (0.8 + 0.2 * (H0 / h))
+      ctx.beginPath(); ctx.ellipse(x, y, r * (w / W0) ** 0.5, r * (h / H0) ** 0.5, 0, 0, Math.PI * 2)
+      ctx.fillStyle = 'rgba(255,190,205,.18)'; ctx.fill()
+      ctx.lineWidth = 0.9; ctx.strokeStyle = 'rgba(255,235,240,.55)'; ctx.stroke()
+      ellipse(x - r * 0.35, y - r * 0.35, r * 0.28, r * 0.22, 'rgba(255,255,255,.8)')
+    }
+    // The top face catches the room light
+    const sheen = ctx.createLinearGradient(0, top, 0, top + h * 0.3)
+    sheen.addColorStop(0, 'rgba(255,255,255,.42)'); sheen.addColorStop(1, 'rgba(255,255,255,0)')
+    ctx.fillStyle = sheen; ctx.fillRect(0, top - 20, 640, h * 0.3 + 20)
+    // The press darkens the top as it closes in
+    const near = clamp(1 - (FLOOR - h - pressBottom(shown)) / 40)
+    if (near > 0) {
+      const sh = ctx.createLinearGradient(0, top, 0, top + 46)
+      sh.addColorStop(0, `rgba(90,0,30,${0.38 * near})`); sh.addColorStop(1, 'rgba(90,0,30,0)')
+      ctx.fillStyle = sh; ctx.fillRect(0, top - 20, 640, 66)
+    }
+    // Rim light down the left side
+    const rim = ctx.createLinearGradient(CX - w * 0.6, 0, CX, 0)
+    rim.addColorStop(0, 'rgba(255,255,255,.85)'); rim.addColorStop(0.5, 'rgba(255,255,255,0)')
+    ctx.lineWidth = 5; ctx.strokeStyle = rim; ctx.stroke(body)
+    // Specular highlights
+    const sx = CX - w * 0.24, sy = top + h * 0.2
+    ctx.save(); ctx.translate(sx, sy); ctx.rotate(-0.55)
+    ellipse(0, 0, w * 0.1, h * 0.055 + 4, radial(0, 0, w * 0.1, [[0, 'rgba(255,255,255,.95)'], [0.5, 'rgba(255,255,255,.5)'], [1, 'rgba(255,255,255,0)']]))
+    ctx.restore()
+    ellipse(CX + w * 0.27, top + h * 0.3, 3.2, 2.4, 'rgba(255,255,255,.85)')
+    ctx.restore()
+    ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(130,8,45,.45)'; ctx.stroke(body)
+
+    // The acrylic press and its stem
+    const pb = pressBottom(shown), pw = 430, ph = 26, pt = pb - ph
+    ctx.fillStyle = 'rgba(255,255,255,.26)'
+    ctx.fillRect(CX - 21, -10, 42, pt + 10)
+    ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 1.2
+    ctx.strokeRect(CX - 21, -10, 42, pt + 10)
+    const slab = new Path2D(); slab.roundRect(CX - pw / 2, pt, pw, ph, 13)
+    const acr = ctx.createLinearGradient(0, pt, 0, pb)
+    acr.addColorStop(0, 'rgba(255,255,255,.62)'); acr.addColorStop(1, 'rgba(225,228,245,.32)')
+    ctx.fillStyle = acr; ctx.fill(slab)
+    ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.stroke(slab)
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.fillRect(CX - pw / 2 + 18, pt + 5, pw - 36, 1.6)
+    // Pink tint where the slab touches the jelly
+    if (near > 0.5) {
+      ctx.save(); ctx.clip(slab)
+      const tw = w * 0.46
+      ctx.fillStyle = radial(CX, pb, tw, [[0, `rgba(240,65,106,${0.35 * (near - 0.5) * 2})`], [1, 'rgba(240,65,106,0)']])
+      ctx.fillRect(CX - tw, pt, tw * 2, ph)
+      ctx.restore()
+    }
+  }
+
+  /* ---------- loop ---------- */
+  let last = performance.now()
+  const frame = (now) => {
+    const dt = Math.min(0.05, (now - last) / 1000) * CFG.speed
+    last = now
+    t += dt
+    if (!document.hidden) { stepPhysics(dt); draw() }
+    pad.setAttribute('aria-valuenow', Math.round(shown * 100))
+    requestAnimationFrame(frame)
+  }
+  draw()
+  requestAnimationFrame(() => {
+    canvas.classList.add('in')
+    document.querySelector('.bottom-controls').classList.add('in')
+    requestAnimationFrame(frame)
+  })
+
+  /* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The page works on its own; when it
+     is framed, the lab drives it with postMessage and it reports how hard
+     the jelly is pressed.
+       ?autoplay=2400   press and release on a loop (previews)
+       { source: 'il-motion', type: 'speed', value: 0.25 }
+       { ..., type: 'step', value: 1 | -1 }       press harder / let go a little
+       { ..., type: 'travel', value: 220 }        pointer px for a full press
+       { ..., type: 'smoothing', value: 0.11 }    the lag behind the pointer
+       { ..., type: 'wobble', value: 0.6 }        how loose the spring is
+       { ..., type: 'followMouse', value: true }  the Follow mouse checkbox
+       { ..., type: 'autoplay', value: true | false }
+  ------------------------------------------------------------------ */
+  ;(() => {
+    const PLAN = [0.92, 0.08, 0.66, 0.0, 1, 0.3]
+    let timer = 0, i = 0
+    const next = () => { if (!dragging && !followMouse) { goal = PLAN[i++ % PLAN.length]; vel = 0 } }
+    const autoplay = (on, ms = 2400) => {
+      clearInterval(timer)
+      if (on) { setTimeout(next, 300); timer = setInterval(() => { if (!document.hidden) next() }, ms) }
+    }
+    const qs = new URLSearchParams(location.search)
+    if (qs.has('autoplay')) autoplay(true, Number(qs.get('autoplay')) || 2400)
+    addEventListener('message', (e) => {
+      const d = e.data
+      if (!d || d.source !== 'il-motion') return
+      if (d.type === 'speed') CFG.speed = Math.max(0.05, Number(d.value) || 1)
+      if (d.type === 'step') { goal = clamp(goal + (d.value > 0 ? 0.25 : -0.25)); vel = 0 }
+      if (d.type === 'travel') CFG.travel = Number(d.value) || 220
+      if (d.type === 'smoothing') CFG.smoothing = Number(d.value) || 0.11
+      if (d.type === 'wobble') CFG.wobble = clamp(Number(d.value))
+      if (d.type === 'followMouse') setFollow(Boolean(d.value))
+      if (d.type === 'autoplay') autoplay(Boolean(d.value))
+    })
+    let lastText = ''
+    const report = () => {
+      const pct = Math.round(clamp(1 - h / H0) * 100 / (1 - MIN_H / H0))
+      const state = followMouse ? 'FOLLOWING THE MOUSE' : dragging ? 'DRAGGING' : vel ? 'THROWN' : Math.abs(hv) > 25 ? 'WOBBLING' : pct ? 'HELD' : 'AT REST · DRAG VERTICALLY'
+      const text = `SQUEEZE ${String(pct).padStart(2, '0')}% · ${state}`
+      if (text !== lastText) {
+        lastText = text
+        pad.setAttribute('aria-valuetext', pct ? `Squeezed ${pct}%` : 'Resting')
+        if (parent !== window) parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*')
+      }
+      setTimeout(report, 120)
+    }
+    report()
+  })()
+</script>
+</body>
+</html>
