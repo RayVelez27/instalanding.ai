@@ -2,8 +2,131 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 89,
+  "count": 91,
   "pages": [
+    {
+      "slug": "forgewave-vibe-manufacturing-studio-page",
+      "title": "Forgewave Vibe-Manufacturing Studio Page",
+      "description": "A red-and-ink page for a studio that turns a described vibe into a real product, drawn entirely in animated SVG: a robot arm loading a conveyor in the hero, a typed brief pressed into a speaker, four sticky service cards with faders, linkages, a layer-by-layer printer and a units counter, a projects grid, a team switcher with blinking robot portraits, pricing, a scroll-grown assembly line, a testimonial switcher and a factory-belt footer",
+      "category": "web",
+      "theme": "dark",
+      "added": "Nov 8, 2026",
+      "bestFor": [
+        "hardware and product studios",
+        "manufacturing and prototyping services",
+        "industrial design agencies",
+        "AI-to-physical product startups"
+      ],
+      "style": [
+        "dark",
+        "factory-red",
+        "illustrated",
+        "svg-animation",
+        "sticky-cards"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "about",
+        "services",
+        "projects",
+        "team",
+        "pricing",
+        "strategic",
+        "testimonials",
+        "blog",
+        "footer",
+        "menu"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Plus Jakarta Sans",
+          "Inter",
+          "Oswald",
+          "Fragment Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/forgewave-vibe-manufacturing-studio-page/index.html",
+        "prompt": "pages/forgewave-vibe-manufacturing-studio-page/PROMPT.md",
+        "preview": "pages/forgewave-vibe-manufacturing-studio-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/forgewave-vibe-manufacturing-studio.html",
+      "page": "https://instalanding.ai/prompt/forgewave-vibe-manufacturing-studio-page"
+    },
+    {
+      "slug": "kyma-ai-automation-agency-page",
+      "title": "KYMA AI Automation Agency Page",
+      "description": "A brutalist black, paper and lime page for an AI automation agency, laid on a visible four-column grid: a hero with a live automation pipeline you can play, a sticky section where eight pain points fly off the screen as you scroll, an ROI calculator with sliders, an indexed services table, a six-week process ruler, a case study with drawn art, seeded halftone portraits for the team, an integrations grid, a pricing toggle and generative article covers",
+      "category": "web",
+      "theme": "dark",
+      "added": "Nov 8, 2026",
+      "bestFor": [
+        "AI automation agencies and consultancies",
+        "B2B services with an ROI story",
+        "dev and ops studios",
+        "technical founders selling done-for-you work"
+      ],
+      "style": [
+        "dark",
+        "brutalist",
+        "acid-lime",
+        "grid-lines",
+        "scroll-driven"
+      ],
+      "sections": [
+        "nav",
+        "menu",
+        "hero",
+        "logos",
+        "about",
+        "pain",
+        "roi",
+        "services",
+        "process",
+        "case",
+        "testimonials",
+        "integrations",
+        "team",
+        "pricing",
+        "faq",
+        "articles",
+        "contact",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "TASA Orbiter",
+          "Inter Tight",
+          "Roboto Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/kyma-ai-automation-agency-page/index.html",
+        "prompt": "pages/kyma-ai-automation-agency-page/PROMPT.md",
+        "preview": "pages/kyma-ai-automation-agency-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/kyma-ai-automation-agency.html",
+      "page": "https://instalanding.ai/prompt/kyma-ai-automation-agency-page"
+    },
     {
       "slug": "cutcrew-ai-video-agents-page",
       "title": "Cutcrew AI Video Agents Page",

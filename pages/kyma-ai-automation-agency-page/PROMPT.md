@@ -1,0 +1,1385 @@
+INSTALANDING.AI · KYMA AI Automation Agency Page
+
+The page below is the build. Use it as the starting point, not as inspiration:
+- Keep its layout, design values (colours, type, spacing, radii) and motion exactly as they are.
+- Replace the fictional brand, copy, names and numbers with mine.
+- If I name a stack (React, Next.js, Vue, Svelte, Astro...), convert it faithfully to that stack;
+  otherwise ship it as this one HTML file.
+- Read the MAP and ADAPTING notes in its header comment before you edit.
+- Check it in a real browser: no console errors, no horizontal scroll at 390px, reduced motion respected.
+
+Credit: keep this line as a comment at the top of the file you produce:
+KYMA AI Automation Agency Page · INSTALANDING.AI (MIT) · https://instalanding.ai/prompt/kyma-ai-automation-agency-page
+
+kyma-ai-automation-agency.html:
+```html
+<!doctype html>
+<!--
+  INSTALANDING.AI · KYMA AI Automation Agency Page
+  slug     kyma-ai-automation-agency-page
+  prompt   https://instalanding.ai/p/kyma-ai-automation-agency-page.txt   (the one-shot brief this file was built from)
+  page     https://instalanding.ai/prompt/kyma-ai-automation-agency-page
+  license  Fictional agency ("KYMA") with fictional clients (Boltshift, Command+R, Lightspeed and the rest); every
+           person, quote, figure, review and price is invented, the address and number are placeholders and the
+           email uses the reserved .example domain. Integration names only identify the tools. Replace before
+           shipping. Every picture (portraits, pipeline, case art, article covers, crystal) is SVG drawn in code.
+
+  MAP
+  tokens    one :root block at the top of the <style>: --ink #050505, --paper #f4f4e8 / --paper2 #ffffed, --panel
+            #1c1e19, --lime #d1ff00, greys --g1-g4, hairlines --line; TASA Orbiter (falls back to Inter Tight) for
+            headings and body, Roboto Mono for labels; .h is the uppercase display style, .lbl the "[01] LABEL_"
+            kicker with a blinking cursor; everything sits on a fixed four-column grid of hairlines
+  sections  nav, menu, hero, logos, about, pain, roi, services, process, case, testimonials, integrations, team,
+            pricing, faq, articles, contact, footer (each carries data-section)
+  scripts   one IIFE: a Los Angeles clock; the full-screen menu; seeded SVG portraits for every avatar and team
+            card; a logo marquee; the hero's live pipeline (packets ride six nodes on SVG paths, counters and a log
+            tick up, the play button runs a 90s "demo" at 2.4x); stat bars and count-ups on reveal; the pain section
+            (eight problem chips fly out of a sticky frame as you scroll, then a lime highlight sweeps the answer);
+            the ROI calculator (three sliders and an overhead toggle, eased total); the six-week process (a ruler
+            marker and steps that auto-advance); case-study rings and bars; the integrations grid; pricing toggle;
+            FAQ accordion; article and crystal art; both forms validate in place and send nothing.
+  assets    no image files; TASA Orbiter, Inter Tight and Roboto Mono from Google Fonts; no libraries
+
+  ADAPTING
+  - One breakpoint at 980px: every 4-column grid collapses to one column, the hero demo drops under the copy, the
+    integrations grid goes two-up with its title card first.
+  - The pain chips are placed by data-x / data-y (fractions of the screen from the centre) and fly outward along
+    that angle; keep them inside +-.45 or they start off screen.
+  - The ROI total is employees x hours x hourly cost x 52, x 1.3 with overhead on.
+  - The header uses mix-blend-mode: difference, so it reads on both the dark and the paper sections.
+  - prefers-reduced-motion: animations and transitions are cut, reveals show at once, the pipeline idles until
+    Play is pressed, the process steps stop auto-advancing and every SVG animation is paused.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KYMA — AI Automation Specialists</title>
+<meta name="description" content="We build custom AI systems that handle your repetitive work, so you can focus on growth, not grunt work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=TASA+Orbiter:wght@400..800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cpath d='M22 6h-5l-6 9V6H7v20h4v-8l6 8h5l-8-10z' fill='%23d1ff00' transform='matrix(-1 0 0 1 32 0)'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#050505; --ink2:#0f0f11; --panel:#1c1e19; --paper:#f4f4e8; --paper2:#ffffed;
+  --lime:#d1ff00; --g1:#686868; --g2:#bcbcbc; --g3:#3d3d3d; --g4:#999;
+  --line:rgba(156,156,156,.18);
+  --head:"TASA Orbiter","Inter Tight",Inter,"Helvetica Neue",Arial,sans-serif;
+  --mono:"Roboto Mono",ui-monospace,Menlo,monospace;
+  --pad:40px; --max:1360px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--head);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+.wrap{max-width:calc(var(--max) + var(--pad)*2);margin:0 auto;padding:0 var(--pad);position:relative}
+.dark{background:var(--ink);color:var(--paper)}
+.mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.02em}
+.h{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:-.035em;line-height:.95}
+.lime{color:var(--lime)}
+.muted{color:var(--g1)}
+
+/* column grid lines */
+.gridlines{position:fixed;inset:0;pointer-events:none;z-index:1}
+.gridlines .wrap{height:100%;display:grid;grid-template-columns:repeat(4,1fr)}
+.gridlines i{border-left:1px solid var(--line);height:100%}
+.gridlines i:last-child{border-right:1px solid var(--line)}
+section,footer{position:relative;z-index:2}
+section .wrap,footer .wrap{z-index:2}
+
+/* animated grain (replaces GIF) */
+.grain{position:fixed;inset:-100px;pointer-events:none;z-index:60;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .6s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-37px,21px)}40%{transform:translate(23px,-41px)}60%{transform:translate(-11px,47px)}80%{transform:translate(41px,13px)}100%{transform:translate(0,0)}}
+
+/* header */
+.top{position:fixed;top:0;left:0;right:0;z-index:50;mix-blend-mode:difference;color:#f4f4e8;pointer-events:none}
+.top .wrap{display:grid;grid-template-columns:repeat(4,1fr);align-items:center;height:60px}
+.top a,.top button{pointer-events:auto}
+.logo{display:inline-flex;align-items:center;font-family:var(--head);font-weight:800;font-size:24px;letter-spacing:-.04em;line-height:1}
+.logo .k{display:inline-block;transform:scaleX(-1)}
+.logo sup{font-size:.55em;font-weight:500;margin-left:1px;transform:translateY(-.35em)}
+.top .mono{font-size:11px;font-weight:600}
+.menu-btn{justify-self:end;display:flex;align-items:center;gap:12px;height:32px;padding:0 16px 0 10px;background:#f4f4e8;color:#050505;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.02em}
+.menu-btn .bars{width:18px;height:12px;position:relative}
+.menu-btn .bars:before,.menu-btn .bars:after,.menu-btn .bars span{content:"";position:absolute;left:0;right:0;height:2px;background:currentColor}
+.menu-btn .bars:before{top:0}.menu-btn .bars span{top:5px}.menu-btn .bars:after{bottom:0}
+
+/* menu overlay */
+.menu{position:fixed;inset:0;z-index:70;background:var(--ink);color:var(--paper);clip-path:inset(0 0 100% 0);transition:clip-path .7s cubic-bezier(.7,0,.2,1);display:flex;flex-direction:column}
+.menu.open{clip-path:inset(0 0 0 0)}
+.menu .wrap{width:100%}
+.menu .bar{display:flex;justify-content:space-between;align-items:center;height:60px}
+.menu .close{background:var(--lime);color:var(--ink);height:32px;padding:0 16px;font-family:var(--mono);font-size:11px;font-weight:600}
+.menu nav{flex:1;display:flex;flex-direction:column;justify-content:center}
+.menu nav a{display:flex;align-items:baseline;gap:24px;font-family:var(--head);font-weight:700;font-size:clamp(44px,8vw,110px);letter-spacing:-.04em;line-height:1;text-transform:uppercase;border-bottom:1px solid var(--line);padding:10px 0;transition:color .25s,padding .35s}
+.menu nav a small{font-family:var(--mono);font-size:12px;color:var(--g1);letter-spacing:0;font-weight:500}
+.menu nav a:hover{color:var(--lime);padding-left:20px}
+.menu .foot{display:flex;justify-content:space-between;padding:24px 0;font-family:var(--mono);font-size:11px;color:var(--g2)}
+
+/* labels */
+.lbl{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;display:flex;gap:2px;align-items:center}
+.lbl .n{color:var(--g1)}
+.dark .lbl .t{color:var(--lime)}
+.cur{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* buttons */
+.btn{display:flex;align-items:center;justify-content:space-between;gap:16px;height:50px;padding:0 14px 0 16px;background:var(--panel);color:var(--paper);border-bottom:2px solid var(--lime);font-family:var(--head);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:-.01em;position:relative;overflow:hidden;transition:color .3s}
+.btn:before{content:"";position:absolute;inset:0;background:var(--lime);transform:translateY(101%);transition:transform .45s cubic-bezier(.7,0,.2,1)}
+.btn>*{position:relative}
+.btn:hover{color:var(--ink)}
+.btn:hover:before{transform:none}
+.btn:hover .px{fill:var(--ink)}
+.px{width:11px;height:13px;flex:none;fill:var(--lime);transition:fill .3s}
+.link{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase}
+.link .px{fill:currentColor}
+.sq{display:inline-flex;width:12px;height:12px;background:var(--ink);align-items:center;justify-content:center}
+.sq svg{width:8px;height:8px}
+
+/* reveal */
+.js .rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.js .rv.in{opacity:1;transform:none}
+.js .rv.d1{transition-delay:.08s}.js .rv.d2{transition-delay:.16s}.js .rv.d3{transition-delay:.24s}.js .rv.d4{transition-delay:.32s}
+.js .lines .ln{display:block;overflow:hidden}
+.js .lines .ln>span{display:inline-block;transform:translateY(105%);transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.js .lines.in .ln>span{transform:none}
+.js .lines.in .ln:nth-child(2)>span{transition-delay:.07s}
+.js .lines.in .ln:nth-child(3)>span{transition-delay:.14s}
+.js .lines.in .ln:nth-child(4)>span{transition-delay:.21s}
+
+/* avatars (replace photos) */
+.av{width:28px;height:28px;flex:none;display:inline-block;overflow:hidden;background:#222;border:1px solid var(--paper)}
+.av svg{width:100%;height:100%;display:block}
+.stack{display:flex}
+.stack .av+.av{margin-left:-4px}
+.stack .more{width:28px;height:28px;background:var(--ink);color:var(--lime);font-family:var(--mono);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-left:4px}
+
+/* ============ HERO ============ */
+.hero{min-height:max(calc(100vh - 72px),800px);overflow:hidden;display:flex;flex-direction:column}
+.hero .wrap{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto 1fr;width:100%}
+.hero-copy{grid-column:1/5;padding-top:230px}
+.hero h1{font-size:clamp(40px,4.9vw,74px);margin-top:4px}
+@media (min-width:981px){.hero h1 .ln{white-space:nowrap}}
+.hero h1 .b{color:var(--lime)}
+.hero .sub{font-family:var(--head);font-size:19px;font-weight:600;letter-spacing:-.02em;line-height:1.35;max-width:500px;margin-top:58px;color:var(--g2)}
+.hero .sub b{color:var(--paper)}
+.hero .cta{grid-column:1;margin-top:40px;align-self:start;position:relative;z-index:3}
+.hero .cta .btn{width:100%}
+.ghost{position:absolute;left:25%;right:0;bottom:0;font-family:var(--head);font-weight:600;font-size:clamp(150px,23vw,330px);letter-spacing:-.05em;line-height:.72;color:var(--g3);white-space:nowrap;pointer-events:none;user-select:none;transform:translateY(8%)}
+.demo{position:absolute;right:var(--pad);top:400px;width:calc((100% - var(--pad)*2)/4);border-top:1px solid var(--line);padding:16px 14px 0;z-index:3;background:var(--ink)}
+.demo p{font-family:var(--mono);font-size:12px;font-weight:600;line-height:1.35;text-transform:uppercase}
+.demo p .g{color:var(--g1)}
+.screen{margin-top:16px;aspect-ratio:310/260;position:relative;background:#0b0c0a;border:1px solid #1d1f1b;overflow:hidden;cursor:pointer}
+.screen svg.flow{position:absolute;inset:0;width:100%;height:100%}
+.screen .hud{position:absolute;left:10px;right:10px;bottom:10px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;font-weight:600}
+.screen .hud .live{display:flex;align-items:center;gap:6px}
+.screen .hud .live i{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.play{position:absolute;left:10px;top:10px;width:32px;height:32px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;transition:transform .3s}
+.screen:hover .play{transform:scale(1.12)}
+.play svg{width:14px;height:14px}
+.screen .time{position:absolute;left:50px;top:19px;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--paper);opacity:.85}
+.screen .prog{position:absolute;left:0;bottom:0;height:2px;background:var(--lime);width:0}
+.screen .log{position:absolute;left:10px;bottom:30px;max-width:52%;white-space:nowrap;overflow:hidden;font-family:var(--mono);font-size:8px;line-height:1.5;color:var(--g1);text-align:left;text-transform:uppercase}
+.screen .log b{color:var(--lime);font-weight:500}
+.trust{grid-column:1/3;align-self:end;display:flex;align-items:center;gap:14px;padding:20px 0;position:relative;z-index:3}
+.trust .stars{color:var(--lime);font-size:11px;letter-spacing:3px}
+.trust .mono{font-size:11px;font-weight:600}
+.logos{background:var(--paper2);color:var(--ink);overflow:hidden;position:relative;z-index:3;border-top:1px solid var(--line)}
+.marq{display:flex;width:max-content;animation:marq 40s linear infinite}
+.marq .lg{width:340px;height:72px;display:flex;align-items:center;justify-content:center;gap:8px;border-left:1px solid rgba(0,0,0,.07);font-family:var(--head);font-weight:700;font-size:17px;letter-spacing:-.03em}
+.marq .lg svg{height:24px;width:auto}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ============ WHO WE ARE ============ */
+.who{padding:130px 0 0}
+.who h2{font-size:clamp(40px,5vw,72px);max-width:1200px;margin-top:20px}
+.who .row{display:grid;grid-template-columns:repeat(4,1fr);margin-top:44px}
+.who .stack{grid-column:1}
+.quote{grid-column:3/4;position:relative}
+.quote .qm{width:26px;height:20px;display:block;margin-bottom:6px}
+.quote blockquote{font-family:var(--head);font-weight:600;font-size:clamp(20px,1.6vw,23px);letter-spacing:-.025em;line-height:1.2;color:var(--g1);text-indent:48px}
+.quote blockquote b{color:var(--ink)}
+.person{display:flex;align-items:center;gap:12px;margin-top:26px}
+.person .av{width:40px;height:40px}
+.person .mono{font-size:11px;font-weight:600;line-height:1.5}
+.person .mono span{display:block;color:var(--g1);font-weight:500}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);align-items:end;margin-top:70px;border-bottom:1px solid var(--line)}
+.stat{padding:0 0 0 0;display:flex;flex-direction:column}
+.stat .num{font-family:var(--head);font-weight:700;font-size:clamp(36px,3.4vw,52px);letter-spacing:-.05em;padding:0 0 18px 0}
+.stat .cap{font-family:var(--mono);font-size:11px;font-weight:600;padding:0 0 14px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.stat .bars{display:flex;flex-direction:column;gap:7px;padding:0 10px 30px}
+.stat .bars i{height:8px;background:var(--g2);transform-origin:left;transform:scaleX(0);transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.stat.in .bars i{transform:none}
+
+/* ============ PAIN ============ */
+.pain{height:260vh}
+.pain .sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pain h2{font-size:clamp(34px,3.8vw,56px);text-align:center;line-height:.98}
+.pain .after{position:absolute;left:0;right:0;top:calc(50% + 90px);text-align:center;font-family:var(--head);font-weight:700;font-size:clamp(14px,1.2vw,17px);letter-spacing:-.01em;text-transform:uppercase}
+.pain .after span{background:linear-gradient(var(--lime),var(--lime)) no-repeat 0 100%/var(--hl,0%) 100%;padding:2px 4px}
+.chip{position:absolute;left:50%;top:50%;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:10px;font-weight:500;padding:5px 8px;white-space:nowrap;text-transform:uppercase;will-change:transform}
+.chip:before{content:"✕ ";color:var(--lime)}
+
+/* ============ ROI ============ */
+.roi{padding:40px 0 130px}
+.roi .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.roi h2{grid-column:2/4;font-size:clamp(28px,2.6vw,38px);letter-spacing:-.04em}
+.roi h2 .muted{color:var(--g1)}
+.calc{grid-column:2/4;background:var(--ink);color:var(--paper);padding:26px 30px 30px;margin-top:36px}
+.field{margin-bottom:26px}
+.field .top2{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:12px}
+.field .top2 output{font-size:13px;color:var(--paper)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:linear-gradient(var(--lime),var(--lime)) 0/var(--p,50%) 100% no-repeat,#f4f4e8}
+input[type=range]::-moz-range-track{height:3px;background:#f4f4e8}
+input[type=range]::-moz-range-progress{height:3px;background:var(--lime)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#1f8bff;border:2px solid var(--paper);margin-top:-5.5px}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#1f8bff;border:2px solid var(--paper)}
+.yn{display:flex;gap:4px;margin-top:4px}
+.yn button{font-family:var(--mono);font-size:11px;padding:5px 9px;background:transparent;color:var(--g2);border:1px solid var(--g3)}
+.yn button.on{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.annual{margin-top:36px}
+.annual .mono{font-size:11px;font-weight:600}
+.annual .big{font-family:var(--head);font-weight:700;font-size:clamp(40px,4.4vw,64px);letter-spacing:-.05em;color:var(--lime);line-height:1;margin-top:10px;font-variant-numeric:tabular-nums}
+.roi .note{grid-column:2/4;font-family:var(--head);font-size:13px;font-weight:500;line-height:1.4;color:var(--g1);max-width:420px;margin-top:16px}
+.roi .side{grid-column:1/5;display:grid;grid-template-columns:repeat(4,1fr);margin-top:70px;align-items:end}
+.roi .side .say{grid-column:2;font-family:var(--head);font-weight:600;font-size:19px;letter-spacing:-.02em;line-height:1.2;padding-right:20px}
+.roi .side .lets{grid-column:4;font-size:clamp(28px,2.6vw,38px)}
+.roi .side .who2{grid-column:3;display:flex;justify-content:flex-end;align-items:center;gap:12px;text-align:right;padding-right:20px}
+.roi .side .who2 .av{width:48px;height:48px}
+.roi .side .btn{grid-column:4;margin-top:18px}
+
+/* ============ SERVICES ============ */
+.services{padding:130px 0 0}
+.services h2{font-size:clamp(36px,3.8vw,56px);margin-top:20px;max-width:800px}
+.svc-head,.svc{display:grid;grid-template-columns:1fr 1fr 2fr}
+.svc-head{margin-top:70px;font-family:var(--mono);font-size:11px;color:var(--g2);padding-bottom:12px;border-bottom:1px solid var(--line)}
+.svc{padding:40px 0 50px;border-bottom:1px solid var(--line);transition:background .4s}
+.svc:hover{background:rgba(209,255,0,.03)}
+.svc .id{font-family:var(--head);font-weight:700;font-size:28px;color:var(--lime);letter-spacing:-.03em}
+.svc .nm{display:flex;gap:8px;align-items:flex-start;font-family:var(--mono);font-size:13px;font-weight:600;padding-top:4px}
+.svc .nm svg{width:14px;height:14px;flex:none;margin-top:1px}
+.svc h3{font-size:clamp(20px,1.9vw,28px);letter-spacing:-.03em;max-width:500px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tags span{font-family:var(--mono);font-size:11px;font-weight:600;background:var(--panel);padding:5px 7px;text-transform:uppercase}
+.svc-end{display:grid;grid-template-columns:repeat(4,1fr);padding:40px 0 80px;align-items:start}
+.svc-end h3{grid-column:2/4;font-size:clamp(30px,3vw,44px)}
+.svc-end h3 .muted{color:var(--g1)}
+.price-link{grid-column:4;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.price-link a{width:100%;display:flex;justify-content:space-between;align-items:center;border-left:2px solid var(--lime);padding:10px 0 10px 12px;font-family:var(--mono);font-size:12px;font-weight:600}
+.price-link small{font-family:var(--mono);font-size:11px;color:var(--g2)}
+
+/* ============ PROCESS ============ */
+.process{padding:130px 0 0}
+.process .top3{display:grid;grid-template-columns:repeat(4,1fr)}
+.process h2{grid-column:2/4;font-size:clamp(40px,4vw,64px)}
+.process .top3 p{grid-column:2/3;font-family:var(--head);font-weight:600;font-size:19px;color:var(--g1);letter-spacing:-.02em;line-height:1.3;margin-top:24px}
+.ruler{margin-top:80px;height:16px;position:relative;background:repeating-linear-gradient(90deg,var(--g1) 0 1px,transparent 1px 16px) 0 100%/100% 8px no-repeat,repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 80px) 0 100%/100% 16px no-repeat}
+.ruler .on{position:absolute;left:0;top:0;height:4px;width:25%;background:var(--lime);transition:left .6s cubic-bezier(.7,0,.2,1)}
+.weeks{display:grid;grid-template-columns:repeat(4,1fr);min-height:340px}
+.wk{padding:16px 10px 20px;cursor:pointer;transition:background .4s;border-bottom:2px solid transparent;align-self:start}
+.wk:nth-child(2){margin-top:44px}.wk:nth-child(3){margin-top:88px}.wk:nth-child(4){margin-top:132px}
+.wk .mono{font-size:11px;font-weight:600;color:var(--g1);display:flex;align-items:center;gap:8px}
+.wk .mono i{width:6px;height:6px;background:var(--g1);border-radius:50%}
+.wk h4{font-family:var(--head);font-weight:700;font-size:20px;letter-spacing:-.03em;text-transform:uppercase;margin-top:24px}
+.wk p{font-family:var(--head);font-weight:500;font-size:14px;color:var(--g1);line-height:1.35;margin-top:6px;max-width:240px}
+.wk.on{background:var(--paper2);border-bottom-color:var(--lime)}
+.wk.on .mono{color:var(--ink)}.wk.on .mono i{background:var(--lime);box-shadow:0 0 0 2px var(--ink)}
+.post{display:grid;grid-template-columns:repeat(4,1fr);padding:110px 0 120px;row-gap:56px}
+.post h3{grid-column:1;font-size:clamp(28px,2.4vw,36px);letter-spacing:-.04em}
+.post h3 .muted{color:var(--g1)}
+.post .lead{grid-column:3/5;font-family:var(--head);font-weight:600;font-size:clamp(19px,1.6vw,23px);letter-spacing:-.025em;line-height:1.2;color:var(--g1)}
+.post .lead b{color:var(--ink);display:block}
+.pcard{padding-right:30px}
+.pcard:nth-of-type(1){grid-column:2}
+.pcard h5{display:flex;gap:10px;align-items:center;font-family:var(--head);font-weight:600;font-size:17px;letter-spacing:-.02em}
+.pcard h5 svg{width:16px;height:16px}
+.pcard p{font-family:var(--head);font-weight:500;font-size:13px;line-height:1.45;color:var(--g1);margin-top:18px;max-width:240px}
+
+/* ============ CASE ============ */
+.case{padding:110px 0 0}
+.case .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.case .l{grid-column:1/3;padding-right:var(--pad)}
+.case .hdr{display:flex;justify-content:space-between}
+.case .hdr .mono{font-size:11px;font-weight:600}
+.case h2{font-size:clamp(28px,2.6vw,40px);letter-spacing:-.04em;margin-top:24px}
+.meta{margin-top:40px;border-top:1px solid var(--line)}
+.meta div{display:grid;grid-template-columns:1fr 1fr;padding:18px 0;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;font-weight:600}
+.meta div span:first-child{color:var(--g2);display:flex;gap:8px;align-items:center}
+.meta svg{width:12px;height:12px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}
+.kpis div{padding:28px 16px 60px;border-left:1px solid var(--line)}
+.kpis div:first-child{border-left:0;padding-left:16px}
+.kpis b{display:block;font-family:var(--head);font-size:clamp(40px,3.6vw,56px);letter-spacing:-.05em;font-weight:700}
+.kpis span{font-family:var(--mono);font-size:11px;color:var(--g2);font-weight:600}
+.case .btn{margin-top:0}
+.case .r{grid-column:3/5;position:relative;min-height:560px;overflow:hidden;background:#060706}
+.case .r svg.art{position:absolute;inset:0;width:100%;height:100%}
+.case .r .brand{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--head);font-weight:700;font-size:30px;letter-spacing:-.03em}
+.case .r .brand svg{width:34px;height:34px}
+
+/* ============ TESTIMONIALS ============ */
+.testi{padding:130px 0 120px}
+.testi .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.testi h2{grid-column:2/4;font-size:clamp(40px,4vw,64px)}
+.testi .grid>p{grid-column:2/3;font-family:var(--head);font-weight:600;font-size:18px;color:var(--g1);letter-spacing:-.02em;line-height:1.3;margin-top:22px}
+.feature{display:grid;grid-template-columns:repeat(4,1fr);margin-top:80px}
+.feature .qm{width:26px;height:20px}
+.feature blockquote{grid-column:2/4;font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:-.035em;font-size:clamp(22px,2.2vw,32px);line-height:1.06}
+.feature .co{grid-column:2;margin-top:30px;display:flex;gap:6px;align-items:center;font-family:var(--head);font-weight:700;font-size:13px}
+.feature .co svg{width:14px;height:14px}
+.feature .person{grid-column:3;margin-top:30px}
+.rating{display:grid;grid-template-columns:repeat(4,1fr);margin-top:60px;align-items:end}
+.rating .big{grid-column:1/3;font-family:var(--head);font-weight:700;font-size:clamp(140px,17vw,250px);letter-spacing:-.07em;line-height:.8}
+.rating .info{grid-column:3/5;border-top:1px solid var(--line)}
+.rating .info div{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;font-weight:600}
+.rating .info .stars{letter-spacing:4px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);margin-top:80px}
+.limecard{background:var(--lime);padding:20px 16px;display:flex;flex-direction:column;justify-content:space-between;min-height:420px}
+.limecard .two{display:flex;gap:26px}
+.limecard b{display:block;font-family:var(--head);font-size:clamp(28px,2.6vw,38px);letter-spacing:-.05em;font-weight:700}
+.limecard .two span{font-family:var(--mono);font-size:9px;font-weight:600}
+.limecard h4{font-family:var(--head);font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:-.02em;line-height:1.05;margin-top:16px}
+.limecard p{font-family:var(--head);font-weight:600;font-size:12px;line-height:1.3;margin-top:8px}
+.tcard{background:var(--paper2);border-left:1px solid var(--line);padding:20px 16px;display:flex;flex-direction:column}
+.tcard .stars{letter-spacing:3px;font-size:11px}
+.tcard blockquote{font-family:var(--head);font-weight:600;font-size:15px;letter-spacing:-.02em;line-height:1.3;margin-top:14px;flex:1}
+.tcard .ks{display:flex;gap:30px;border-top:1px solid var(--line);padding-top:12px;margin-top:20px}
+.tcard .ks b{display:block;font-family:var(--head);font-size:17px;letter-spacing:-.03em}
+.tcard .ks span{font-family:var(--mono);font-size:9px;color:var(--g1);font-weight:600}
+.tcard .person{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+
+/* ============ INTEGRATIONS ============ */
+.integ{padding:0}
+.igrid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(84px,auto);position:relative}
+.tile{border-bottom:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:84px;transition:background .3s}
+.tile svg{width:28px;height:28px;transition:transform .4s}
+.tile span{font-family:var(--mono);font-size:9px;color:var(--g1);font-weight:600;opacity:0;transition:opacity .3s}
+.tile:hover{background:var(--panel)}
+.tile:hover span{opacity:1}
+.tile:hover svg{transform:scale(1.15)}
+.tile.more{background:var(--lime);color:var(--ink);font-family:var(--mono);font-size:12px;font-weight:600}
+.tile.more:hover{background:#e3ff58}
+.icenter{position:absolute;left:25%;right:25%;top:calc(84px*3);height:calc(84px*2);background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:2}
+.icenter h2{font-size:clamp(34px,3.4vw,50px);margin-top:14px}
+
+/* ============ TEAM ============ */
+.team{padding:130px 0 0}
+.team .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.team h2{grid-column:2/4;font-size:clamp(40px,4vw,64px)}
+.team .grid>p{grid-column:2/3;font-family:var(--head);font-weight:600;font-size:18px;color:var(--g1);letter-spacing:-.02em;line-height:1.3;margin-top:24px}
+.members{display:grid;grid-template-columns:repeat(2,1fr);margin-top:80px}
+.member .strip{display:flex;justify-content:space-between;background:var(--paper2);border-bottom:2px solid var(--lime);padding:8px 8px;font-family:var(--mono);font-size:11px;font-weight:600}
+.member .strip span:first-child{color:var(--g1)}
+.member .body{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:360px}
+.member .ph{grid-column:1/3;position:relative;overflow:hidden;background:#d9d9cc}
+.member .ph svg{position:absolute;inset:0;width:100%;height:100%}
+.member .ph .nm{position:absolute;right:0;bottom:0;width:50%;padding:0 8px 8px;background:var(--paper)}
+.member .ph .nm{display:none}
+.member .info{display:flex;flex-direction:column;justify-content:flex-end}
+.member .info h4{font-family:var(--head);font-weight:700;font-size:18px;letter-spacing:-.03em;text-transform:uppercase;line-height:1;padding:0 8px}
+.member .info .mono{font-size:9px;color:var(--g1);font-weight:600;padding:4px 8px 10px}
+.socials{display:flex;border-top:1px solid var(--line)}
+.socials a{flex:1;height:36px;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--line);transition:background .25s}
+.socials a:first-child{border-left:0}
+.socials a:hover{background:var(--lime)}
+.socials svg{width:13px;height:13px}
+.member .ph svg .scan{animation:scan 5s linear infinite}
+@keyframes scan{from{transform:translateY(-30%)}to{transform:translateY(130%)}}
+.teamfoot{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.teamfoot .plus{grid-column:3;background:var(--lime);padding:18px 14px;text-align:right;min-height:130px;display:flex;flex-direction:column;justify-content:flex-end}
+.teamfoot .plus b{font-family:var(--head);font-size:36px;letter-spacing:-.05em}
+.teamfoot .plus span{font-family:var(--mono);font-size:10px;font-weight:600}
+.teamfoot .car{grid-column:4;display:flex;align-items:flex-start;justify-content:flex-end;padding:22px 0}
+.mission{display:grid;grid-template-columns:repeat(4,1fr);padding:120px 0 0}
+.mission h3{grid-column:1/2;font-size:clamp(28px,2.4vw,36px);letter-spacing:-.04em}
+.mission h3 .muted{color:var(--g1)}
+.mission .mid{grid-column:3;font-family:var(--head);font-weight:600;font-size:17px;color:var(--g1);letter-spacing:-.02em;line-height:1.3;padding-right:20px}
+.mission .mid .logo{margin-top:36px;font-size:20px;color:var(--ink)}
+.mission .btn{grid-column:4;align-self:center}
+.hiring{display:grid;grid-template-columns:repeat(4,1fr);margin-top:120px}
+.hiring .card{grid-column:3/5;background:var(--lime);display:grid;grid-template-columns:1fr 1fr;min-height:230px;position:relative;overflow:hidden}
+.hiring .card .stack{padding:20px 16px}
+.hiring .card .stack .av{border-color:var(--lime)}
+.hiring .card .txt{padding:20px 16px}
+.hiring h4{font-family:var(--head);font-weight:700;font-size:clamp(20px,1.9vw,28px);letter-spacing:-.035em;line-height:1;text-transform:uppercase}
+.hiring .open{display:flex;gap:6px;align-items:center;margin-top:10px;font-family:var(--mono);font-size:10px;font-weight:600}
+.hiring .open b{background:var(--ink);color:var(--lime);padding:2px 4px;font-weight:600}
+.hiring .card .link{position:absolute;right:16px;bottom:16px}
+.hiring .card svg.pat{position:absolute;left:0;bottom:0;width:50%;height:60%;opacity:.9}
+
+/* ============ PRICING ============ */
+.pricing{padding:130px 0 120px}
+.pricing .hd{text-align:center;display:flex;flex-direction:column;align-items:center}
+.pricing h2{font-size:clamp(40px,4vw,64px);margin-top:14px}
+.toggle{display:flex;align-items:center;gap:14px;margin-top:50px;font-family:var(--mono);font-size:11px;font-weight:600}
+.switch{width:40px;height:20px;background:var(--panel);border:1px solid var(--g3);position:relative}
+.switch i{position:absolute;top:2px;left:2px;width:14px;height:14px;background:var(--paper);transition:left .3s}
+.switch.on i{left:22px;background:var(--lime)}
+.toggle .opt{color:var(--g1);transition:color .3s}.toggle .opt.on{color:var(--paper)}
+.save{font-family:var(--mono);font-size:10px;color:var(--g1);margin-top:12px}
+.save.on{color:var(--lime)}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);margin-top:30px;align-items:end}
+.plan{border-left:1px solid var(--line);display:flex;flex-direction:column;padding:0}
+.plan:first-child{border-left:0}
+.plan .pt{padding:28px 20px 20px;border-bottom:1px solid var(--line)}
+.plan .pt .row1{display:flex;justify-content:space-between;align-items:center}
+.plan h3{font-family:var(--head);font-weight:600;font-size:26px;letter-spacing:-.03em}
+.plan .pop{background:var(--lime);color:var(--ink);font-family:var(--mono);font-size:10px;font-weight:600;padding:3px 5px}
+.plan .desc{font-family:var(--mono);font-size:11px;font-weight:500;margin-top:18px;line-height:1.35;max-width:280px}
+.plan .pr{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:4px}
+.plan .pr b{font-family:var(--head);font-weight:600;font-size:34px;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.plan .pr span{font-family:var(--mono);font-size:10px;font-weight:600}
+.plan .pr em{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--lime);margin-left:auto;opacity:0;transition:opacity .3s}
+.annualon .plan .pr em{opacity:1}
+.plan ul{list-style:none;padding:20px 20px 40px;flex:1}
+.plan li{display:flex;gap:10px;font-family:var(--mono);font-size:11px;font-weight:500;padding:6px 0;text-transform:uppercase}
+.plan li svg{width:11px;height:11px;flex:none;margin-top:1px}
+.plan .ft{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.plan .ft .stripes{background:repeating-linear-gradient(90deg,var(--g3) 0 1px,transparent 1px 7px)}
+.plan .ft .btn{border-bottom-color:transparent;background:var(--ink)}
+.plan.popular{background:var(--ink2)}
+.plan.popular .ft .btn{border-bottom-color:var(--lime);background:var(--panel)}
+.plan.popular .pt{padding-top:50px}
+
+/* ============ FAQ ============ */
+.faq{padding:130px 0 0}
+.faq .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.faq h2{grid-column:2/4;font-size:clamp(40px,4vw,64px)}
+.qa{grid-column:2/5;margin-top:60px;border-top:1px solid var(--line)}
+.qi{border-bottom:1px solid var(--line);transition:background .3s}
+.qi button{width:100%;display:flex;align-items:center;gap:14px;padding:16px 10px;text-align:left;font-family:var(--head);font-weight:600;font-size:clamp(16px,1.3vw,19px);letter-spacing:-.02em}
+.qi button .n{width:18px;height:18px;background:var(--lime);font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;flex:none;transition:opacity .3s}
+.qi button .pl{margin-left:auto;width:12px;height:12px;flex:none;transition:transform .4s}
+.qi .ans{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.2,.7,.2,1)}
+.qi .ans>div{overflow:hidden}
+.qi .ans p{font-family:var(--head);font-weight:500;font-size:14px;line-height:1.45;max-width:500px;padding:0 10px 22px 42px}
+.qi.open{background:var(--paper2)}
+.qi.open .ans{grid-template-rows:1fr}
+.qi.open .pl{transform:rotate(45deg)}
+.ask{display:grid;grid-template-columns:repeat(4,1fr);margin-top:100px;background:var(--paper2);padding:40px 0}
+.ask .qm{grid-column:2;justify-self:end;width:26px;height:20px;margin-right:30px}
+.ask .t{grid-column:3/4}
+.ask .t .mono{font-size:11px;color:var(--g1);font-weight:600;text-align:right}
+.ask .t h3{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:-.03em;font-size:clamp(18px,1.4vw,22px);line-height:1.05;text-align:right;margin-top:12px}
+.ask .person{justify-content:flex-end;text-align:right}
+.ask .lnk{grid-column:4;display:flex;align-items:flex-end;justify-content:flex-end;padding-right:12px}
+
+/* ============ ARTICLES ============ */
+.articles{padding:130px 0 120px}
+.articles .grid{display:grid;grid-template-columns:repeat(4,1fr);align-items:end}
+.articles h2{grid-column:2/4;font-size:clamp(40px,4vw,64px)}
+.articles .all{grid-column:4;justify-self:end}
+.posts{display:grid;grid-template-columns:2fr 1fr 1fr;margin-top:60px}
+.post-c{padding:10px;display:flex;flex-direction:column;border-left:1px solid var(--line)}
+.post-c:first-child{border-left:0}
+.post-c .bar{display:flex;justify-content:space-between;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:10px;font-weight:600;padding:5px 6px}
+.post-c .img{position:relative;aspect-ratio:4/3;overflow:hidden;background:#060706}
+.post-c:first-child .img{aspect-ratio:16/10}
+.post-c .img svg{position:absolute;inset:0;width:100%;height:100%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.post-c:hover .img svg{transform:scale(1.06)}
+.post-c .by{display:flex;justify-content:space-between;font-family:var(--head);font-size:12px;font-weight:600;color:var(--g1);margin-top:14px}
+.post-c .by b{color:var(--ink)}
+.post-c h3{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:-.03em;font-size:clamp(17px,1.4vw,21px);line-height:1.02;margin-top:10px;max-width:420px}
+.post-c p{font-family:var(--head);font-weight:500;font-size:13px;line-height:1.4;color:var(--g1);margin-top:10px;max-width:420px}
+
+/* ============ CTA ============ */
+.cta2{padding:110px 0 110px;overflow:hidden}
+.cta2 .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.cta2 .l{grid-column:1/3;padding-right:var(--pad);display:flex;flex-direction:column}
+.cta2 h2{font-size:clamp(40px,3.8vw,58px);margin-top:20px}
+.checks{margin-top:40px;width:50%}
+.checks div{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding:0;font-family:var(--mono);font-size:11px;font-weight:600}
+.checks div i{width:30px;height:30px;background:var(--panel);display:flex;align-items:center;justify-content:center;margin:0}
+.checks svg{width:12px;height:12px}
+.crystal{position:relative;margin-top:40px;flex:1;min-height:300px;overflow:hidden}
+.crystal svg{position:absolute;inset:0;width:100%;height:100%}
+.cta2 .sayq{position:relative;padding:30px 0 0}
+.cta2 .sayq p{font-family:var(--head);font-weight:600;font-size:19px;letter-spacing:-.02em;line-height:1.25;max-width:300px}
+.cta2 .sayq .person .mono span{color:var(--lime)}
+.form{grid-column:3/5}
+.form .intro{font-family:var(--head);font-weight:600;font-size:clamp(20px,1.6vw,24px);letter-spacing:-.025em;line-height:1.2}
+.form .intro span{color:var(--g2)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;margin-top:30px}
+.fl{display:flex;flex-direction:column;margin-bottom:22px}
+.fl.full{grid-column:1/3}
+.fl label{font-family:var(--mono);font-size:10px;font-weight:600;margin-bottom:8px}
+.fl input,.fl textarea{background:var(--panel);border:0;border-bottom:1px solid var(--g3);padding:12px 10px;font-family:var(--head);font-size:14px;color:var(--paper);outline:none;transition:border-color .3s}
+.fl input:focus,.fl textarea:focus{border-bottom-color:var(--lime)}
+.fl input::placeholder,.fl textarea::placeholder{color:var(--g1)}
+.fl textarea{min-height:110px;resize:vertical}
+.phone{display:flex;background:var(--panel);border-bottom:1px solid var(--g3)}
+.phone span{padding:12px 10px;font-family:var(--head);font-size:14px;border-right:1px solid var(--g3);color:var(--g2)}
+.phone input{flex:1;border:0!important}
+.spend{display:flex;flex-wrap:wrap;gap:6px}
+.spend label{margin:0;cursor:pointer}
+.spend input{display:none}
+.spend span{display:flex;align-items:center;gap:8px;background:var(--panel);padding:8px 10px;font-family:var(--head);font-size:12px;font-weight:600}
+.spend span:before{content:"";width:10px;height:10px;border:1px solid var(--g1)}
+.spend input:checked+span{background:var(--paper);color:var(--ink)}
+.spend input:checked+span:before{background:var(--lime);border-color:var(--ink)}
+.agree{display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:10px;font-weight:600;margin:6px 0 26px;cursor:pointer}
+.agree input{appearance:none;-webkit-appearance:none;width:12px;height:12px;background:var(--panel);border:1px solid var(--g1);margin:0;cursor:pointer}
+.agree input:checked{background:var(--lime)}
+.agree u{text-underline-offset:2px}
+.submitrow{display:grid;grid-template-columns:1fr 1fr}
+.submitrow .btn{grid-column:2}
+.submitrow small{grid-column:2;font-family:var(--head);font-size:12px;font-weight:500;color:var(--g2);margin-top:10px;display:flex;gap:6px;align-items:center}
+.submitrow small b{color:var(--paper)}
+.btn[data-state=loading] .lab:after{content:"";display:inline-block;width:10px;height:10px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;margin-left:8px;animation:spin .7s linear infinite;vertical-align:-1px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn[data-state=done]{background:var(--lime);color:var(--ink)}
+.btn[data-state=error]{border-bottom-color:#ff4d2e}
+
+/* ============ FOOTER ============ */
+footer{padding:110px 0 30px;overflow:hidden}
+.news{display:grid;grid-template-columns:repeat(4,1fr);align-items:start}
+.news h3{font-family:var(--head);font-weight:700;font-size:26px;letter-spacing:-.04em;text-transform:uppercase;margin-top:12px}
+.news .d{font-family:var(--head);font-size:12px;font-weight:500;color:var(--g1);line-height:1.4;margin-top:8px;max-width:180px}
+.news .fl input{background:var(--paper2);color:var(--ink);border-bottom:1px solid var(--g2)}
+.news .fl input::placeholder{color:var(--g2)}
+.news .agree{grid-column:2/4}
+.news .agree input{background:var(--paper2);border-color:var(--ink)}
+.news .agree input:checked{background:var(--ink)}
+.news form{grid-column:2/5;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end;margin-top:28px}
+.news form .btn{align-self:start;margin-top:21px}
+.fbot{display:grid;grid-template-columns:repeat(4,1fr);margin-top:120px}
+.fbot .addr{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--g1);text-align:right;padding-right:20px;margin-top:16px;line-height:1.5}
+.fbot .contact a{display:block;font-family:var(--mono);font-size:11px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.fbot .contact .mail{display:inline-block;background:var(--lime);font-family:var(--head);font-weight:700;font-size:clamp(18px,1.6vw,24px);letter-spacing:-.03em;padding:2px 4px;margin-top:12px;text-decoration:none}
+.fnav .mono,.flegal .mono{font-size:11px;color:var(--g1);font-weight:600}
+.fnav a{display:block;font-family:var(--head);font-weight:700;text-transform:uppercase;font-size:clamp(22px,2vw,30px);letter-spacing:-.04em;line-height:1.05;overflow:hidden;position:relative}
+.fnav a span{display:block;transition:transform .45s cubic-bezier(.7,0,.2,1)}
+.fnav a span+span{position:absolute;left:0;top:0;transform:translateY(100%);color:var(--g1)}
+.fnav a:hover span:first-child{transform:translateY(-100%)}
+.fnav a:hover span+span{transform:none}
+.fnav nav{margin-top:12px}
+.flegal ul{list-style:none;margin:12px 0 30px}
+.flegal li{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 0;display:flex;gap:14px}
+.flegal li span{color:var(--g1)}
+.flegal a:hover{background:var(--lime)}
+.giant{display:grid;grid-template-columns:repeat(4,1fr);margin-top:80px;align-items:end}
+.giant .w{grid-column:2/4;font-family:var(--head);font-weight:700;font-size:clamp(110px,15vw,220px);letter-spacing:-.07em;line-height:.75;transform:translateY(4%)}
+.giant small{grid-column:4;font-family:var(--head);font-size:11px;color:var(--g1);font-weight:500;line-height:1.45;text-align:right}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:980px){
+  :root{--pad:16px}
+  .gridlines .wrap{grid-template-columns:repeat(2,1fr)}
+  .gridlines i:nth-child(n+3){display:none}
+  .top .wrap{grid-template-columns:1fr auto}
+  .top .mono{display:none}
+  .hero-copy{padding-top:150px}
+  .hero .cta{grid-column:1/5}
+  .demo{position:relative;right:auto;top:auto;width:auto;margin:40px 0 0;grid-column:1/5;padding:16px 0 0}
+  .hero .wrap{grid-template-rows:auto}
+  .trust{grid-column:1/5}
+  .ghost{left:0;font-size:38vw;opacity:.6}
+  .who .row,.stats,.roi .grid,.roi .side,.svc-end,.process .top3,.post,.case .grid,.testi .grid,.feature,.rating,.cards,.team .grid,.mission,.hiring,.faq .grid,.ask,.articles .grid,.cta2 .grid,.news,.news form,.fbot,.giant,.teamfoot{grid-template-columns:1fr}
+  .who .row>*,.roi .grid>*,.roi .side>*,.svc-end>*,.process .top3>*,.post>*,.case .grid>*,.testi .grid>*,.feature>*,.rating>*,.cards>*,.team .grid>*,.mission>*,.hiring>*,.faq .grid>*,.ask>*,.articles .grid>*,.cta2 .grid>*,.news>*,.news form>*,.fbot>*,.giant>*,.teamfoot>*{grid-column:1/-1!important}
+  .quote{margin-top:40px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat .bars{display:none}
+  .stat{border-bottom:1px solid var(--line);padding-top:24px}
+  .chip{font-size:9px}
+  .calc{padding:20px 16px}
+  .roi .side{row-gap:20px}
+  .roi .side .who2{justify-content:flex-start;text-align:left}
+  .svc-head{display:none}
+  .svc{grid-template-columns:1fr;gap:10px}
+  .price-link{align-items:stretch}
+  .weeks{grid-template-columns:1fr 1fr;min-height:0}
+  .wk:nth-child(n){margin-top:0}
+  .case .l{padding-right:0}
+  .case .r{min-height:320px;margin-top:30px}
+  .cards{gap:1px}
+  .igrid{grid-template-columns:repeat(2,1fr)}
+  .icenter{position:relative;left:auto;right:auto;top:auto;grid-column:1/3;order:-1;height:220px}
+  .members{grid-template-columns:1fr}
+  .hiring .card{grid-template-columns:1fr;min-height:200px}
+  .hiring .card svg.pat{display:none}
+  .plans{grid-template-columns:1fr}
+  .plan{border-left:0;border-top:1px solid var(--line)}
+  .qa{grid-column:1/-1}
+  .ask .qm{justify-self:start}
+  .ask .t .mono,.ask .t h3{text-align:left}
+  .ask .person{justify-content:flex-start;text-align:left}
+  .ask{padding:30px 16px;row-gap:16px}
+  .posts{grid-template-columns:1fr}
+  .post-c{border-left:0;padding:10px 0 30px}
+  .checks{width:100%}
+  .form{margin-top:50px}
+  .fgrid{grid-template-columns:1fr}
+  .fl.full{grid-column:1}
+  .submitrow{grid-template-columns:1fr}
+  .submitrow .btn,.submitrow small{grid-column:1}
+  .fbot{row-gap:40px}
+  .fbot .addr{text-align:left}
+  .giant small{text-align:left;margin-top:30px}
+  .teamfoot .car{justify-content:flex-start}
+}
+/* the closed menu leaves the tab order once its wipe has finished */
+.menu{visibility:hidden;transition:clip-path .7s cubic-bezier(.7,0,.2,1),visibility 0s .7s}
+.menu.open{visibility:visible;transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+.wk:focus-visible{outline-offset:-2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}.js .lines .ln>span{transform:none}}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<!-- reusable SVG symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="px" viewBox="0 0 11 13"><rect x="0" y="0" width="3" height="3"/><rect x="4" y="3" width="3" height="3"/><rect x="8" y="5" width="3" height="3"/><rect x="4" y="7" width="3" height="3"/><rect x="0" y="10" width="3" height="3"/></symbol>
+    <symbol id="qm" viewBox="0 0 26 20"><path d="M0 20V11C0 4.5 3.3.8 9.6 0l1 3C7 4 5.6 6 5.5 9.3H11V20H0Zm15 0V11c0-6.5 3.3-10.2 9.6-11l1 3C22 4 20.6 6 20.5 9.3H26V20H15Z" fill="currentColor"/></symbol>
+    <symbol id="chk" viewBox="0 0 12 12"><path d="M1.5 6.3 4.6 9.3 10.5 2.7" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="plus" viewBox="0 0 12 12"><rect x="5" y="0" width="2" height="12" fill="currentColor"/><rect x="0" y="5" width="12" height="2" fill="currentColor"/></symbol>
+    <symbol id="bolt" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="M13.5 4 7 13.2h4.4L10.3 20l6.6-9.3h-4.4z" fill="var(--bg,#fff)"/></symbol>
+    <symbol id="cmd" viewBox="0 0 24 24"><path d="M3 3h11a7 7 0 0 1 2 13.7L21 21h-6l-4-4H8v4H3z" fill="currentColor"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M3 3h5l5 7 6-7h2l-7 8.5L22 21h-5l-5.4-7.5L5 21H3l7.6-9z" fill="currentColor"/></symbol>
+    <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></symbol>
+    <symbol id="i-in" viewBox="0 0 24 24"><rect x="3" y="9" width="4" height="12" fill="currentColor"/><circle cx="5" cy="5" r="2.2" fill="currentColor"/><path d="M10 9h3.8v1.8C14.5 9.6 16 8.7 18 8.7c3 0 4 2 4 5V21h-4v-6.4c0-1.6-.4-2.7-1.9-2.7-1.6 0-2.1 1.2-2.1 2.8V21h-4z" fill="currentColor"/></symbol>
+    <symbol id="i-fb" viewBox="0 0 24 24"><path d="M14 8V6.2c0-.9.6-1.2 1.1-1.2H18V1h-4c-3.6 0-4.4 2.7-4.4 4.4V8H7v4h2.6v11H14V12h3.5l.5-4z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<div class="gridlines" aria-hidden="true"><div class="wrap"><i></i><i></i><i></i><i></i></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="top" data-section="nav">
+  <div class="wrap">
+    <a href="#home" class="logo" aria-label="KYMA home"><span class="k">K</span>YMA<sup>®</sup></a>
+    <div class="mono">AI Automation Specialists</div>
+    <div class="mono">San Francisco, CA <span id="clock">--:--</span></div>
+    <button class="menu-btn" id="openMenu" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span class="bars"><span></span></span>MENU</button>
+  </div>
+</header>
+
+<div class="menu" id="menu" aria-hidden="true" data-section="menu">
+  <div class="wrap bar"><a href="#home" class="logo"><span class="k">K</span>YMA<sup>®</sup></a><button class="close" id="closeMenu">CLOSE ✕</button></div>
+  <div class="wrap" style="flex:1;display:flex"><nav>
+    <a href="#home"><small>01</small>Home</a>
+    <a href="#about"><small>02</small>About us</a>
+    <a href="#case"><small>03</small>Case studies</a>
+    <a href="#articles"><small>04</small>Articles</a>
+    <a href="#team"><small>05</small>Careers</a>
+    <a href="#contact"><small>06</small>Contact</a>
+  </nav></div>
+  <div class="wrap foot"><span>HELLO@KYMA.EXAMPLE</span><span>[415] 555-0142</span></div>
+</div>
+
+<main>
+<!-- ============ HERO ============ -->
+<section class="hero dark" id="home" data-section="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="lbl rv"><span class="n">[01]</span><span class="t">Eliminate your bottleneck</span><span class="cur">_</span></div>
+      <h1 class="h lines"><span class="ln"><span>Scale your operations <span class="b">[10x]</span></span></span><span class="ln"><span>without hiring <span class="b">[100]</span> people.</span></span></h1>
+      <p class="sub rv d2"><b>We build custom AI systems</b> that handle your repetitive work, so you can focus on growth, not grunt work.</p>
+    </div>
+    <div class="cta rv d3"><a href="#services" class="btn"><span>Our services</span><svg class="px"><use href="#px"/></svg></a></div>
+    <div class="trust rv d4">
+      <div class="stack" data-avatars="5,9,13,17,21"></div>
+      <div><div class="stars">★★★★★</div><div class="mono">Trusted by 50+ companies</div></div>
+    </div>
+  </div>
+  <div class="ghost" aria-hidden="true">KYMA</div>
+  <div class="demo rv d3">
+    <p>What used to take 6 hours <span class="g">now runs automatically</span> without human oversight.</p>
+    <div class="screen" id="screen" role="button" tabindex="0" aria-pressed="false" aria-label="Play the 90-second automation demo">
+      <svg class="flow" id="flow" viewBox="0 0 310 260" preserveAspectRatio="xMidYMid slice"></svg>
+      <div class="log" id="log"></div>
+      <div class="play" id="playBtn"><svg viewBox="0 0 14 14"><path id="playIcon" d="M3 1.5v11l9-5.5z" fill="#050505"/></svg></div>
+      <div class="time"><span id="tlabel">PLAY DEMO</span> / 90 SEC</div>
+      <div class="hud"><span class="live"><i></i>LIVE AUTOMATION</span><span>2026</span></div>
+      <div class="prog" id="prog"></div>
+    </div>
+  </div>
+</section>
+
+<div class="logos" aria-label="Clients" data-section="logos">
+  <div class="marq" id="marq"></div>
+</div>
+
+<!-- ============ WHO WE ARE ============ -->
+<section class="who" id="about" data-section="about">
+  <div class="wrap">
+    <div class="lbl rv"><span class="n">[02]</span><span class="t">Who we are</span><span class="cur">_</span></div>
+    <h2 class="h lines"><span class="ln"><span>Humans should do human</span></span><span class="ln"><span>work. AI should do everything</span></span><span class="ln"><span>else. We build the systems</span></span><span class="ln"><span>that make this happen.</span></span></h2>
+    <div class="row">
+      <div class="stack rv" data-avatars="3,7,11,15" data-more="+6"></div>
+      <div class="quote rv d2">
+        <svg class="qm"><use href="#qm"/></svg>
+        <blockquote>We've been doing this for <b>three years across 50+ companies</b> and dozens of industries.</blockquote>
+        <div class="person"><span class="av" data-seed="1"></span><div class="mono">Anders Eriksson<span>Founder &amp; CEO</span></div></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat" data-rows="7"><div class="num" data-count="50" data-suffix="+">50+</div><div class="cap">Successful deployments</div><div class="bars"></div></div>
+      <div class="stat" data-rows="10"><div class="num" data-count="83" data-suffix="%">83%</div><div class="cap">Reduction in processing time</div><div class="bars"></div></div>
+      <div class="stat" data-rows="13"><div class="num" data-count="245" data-suffix="K">245K</div><div class="cap">Hours automated for clients</div><div class="bars"></div></div>
+      <div class="stat" data-rows="16"><div class="num" data-count="12.4" data-prefix="$" data-suffix="M" data-dec="1">$12.4M</div><div class="cap">Cost savings delivered</div><div class="bars"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAIN ============ -->
+<section class="pain" id="pain" data-section="pain">
+  <div class="sticky">
+    <h2 class="h">Your team is drowning in<br>work that shouldn't exist.</h2>
+    <div class="after" id="after"><span>AI automation eliminates them all.</span></div>
+    <div class="chip" data-x="-.33" data-y="-.36">Customer support backlog growing daily.</div>
+    <div class="chip" data-x=".1" data-y="-.4">Repetitive tasks blocking strategic work.</div>
+    <div class="chip" data-x="-.4" data-y="-.24">Best people stuck doing work a script could handle.</div>
+    <div class="chip" data-x=".28" data-y="-.26">Data entry consuming 20+ hours weekly.</div>
+    <div class="chip" data-x="-.36" data-y=".27">Errors from manual processes costing thousands monthly.</div>
+    <div class="chip" data-x=".2" data-y=".3">Scaling requires expensive headcount.</div>
+    <div class="chip" data-x="-.3" data-y=".4">Customer onboarding delayed by manual handoffs.</div>
+    <div class="chip" data-x=".26" data-y=".42">Reports built manually every month from scratch.</div>
+  </div>
+</section>
+
+<!-- ============ ROI ============ -->
+<section class="roi" id="roi" data-section="roi">
+  <div class="wrap">
+    <div class="grid">
+      <h2 class="h rv"><span class="muted">How much is</span> manual<br>work costing you?</h2>
+      <div class="calc rv d1">
+        <div class="field"><div class="top2"><span>Number of employees</span><output id="o-emp"></output></div><input type="range" id="emp" min="1" max="200" value="25"></div>
+        <div class="field"><div class="top2"><span>Hours per employee per week</span><output id="o-hrs"></output></div><input type="range" id="hrs" min="1" max="40" value="12"></div>
+        <div class="field"><div class="top2"><span>Average hourly cost per employee</span><output id="o-cost"></output></div><input type="range" id="cost" min="15" max="200" value="45"></div>
+        <div class="field" style="margin-bottom:0"><div class="top2"><span>Include benefits and overhead?</span></div><div class="yn" id="ovh"><button class="on" data-v="1">Yes</button><button data-v="0">No</button></div></div>
+        <div class="annual"><div class="mono">Annual cost</div><div class="big" id="total">$0</div></div>
+      </div>
+      <p class="note rv d2">*This calculation shows direct labor costs only. Most companies find their true cost is 20-30% higher when including errors and lost productivity. Get an exact breakdown in your free 30-minute audit.</p>
+      <div class="side">
+        <p class="say rv">I've helped 50+ companies automate their operations. Let me show you what's possible for yours.</p>
+        <div class="who2 rv d1"><div class="person" style="margin:0;gap:12px"><div class="mono" style="text-align:right">Sophie Bergman<span>Head of Client Solutions</span></div><span class="av" data-seed="2"></span></div></div>
+        <div style="grid-column:4" class="rv d2"><h3 class="h lets" style="font-size:clamp(28px,2.6vw,38px)">Let's get<br>started</h3><a href="#contact" class="btn" style="margin-top:18px"><span>Book my free audit</span><svg class="px"><use href="#px"/></svg></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="services dark" id="services" data-section="services">
+  <div class="wrap">
+    <div class="lbl rv"><span class="n">[03]</span><span class="t">What we offer</span><span class="cur">_</span></div>
+    <h2 class="h lines"><span class="ln"><span>The services that</span></span><span class="ln"><span>eliminate manual work.</span></span></h2>
+    <div class="svc-head"><span>[ID]</span><span>[SERVICE]</span><span>[WHAT WE DO]</span></div>
+    <div class="svc rv"><div class="id">01</div><div class="nm"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 1h5l3 3v9H3z"/><path d="M8 1v3h3M5 7h4M5 9.5h4"/></svg>Document processing</div><div><h3 class="h">Extract, classify, and route documents automatically.</h3><div class="tags"><span>Invoice processing</span><span>Contract analysis</span><span>Form data extraction</span><span>Compliance verification</span></div></div></div>
+    <div class="svc rv"><div class="id">02</div><div class="nm"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 8V7a5 5 0 0 1 10 0v1"/><rect x="1.5" y="7.5" width="2.5" height="4"/><rect x="10" y="7.5" width="2.5" height="4"/><path d="M11 11.5c0 1-1 1.5-3 1.5"/></svg>Customer support</div><div><h3 class="h">Handle inquiries 24/7 with human-like accuracy.</h3><div class="tags"><span>Chatbots with escalation</span><span>Email auto-response</span><span>Ticket routing &amp; triage</span><span>Knowledge base automation</span></div></div></div>
+    <div class="svc rv"><div class="id">03</div><div class="nm"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 1h5l3 3v9H3z"/><path d="M5 11V9M7 11V7M9 11V8"/></svg>Data processing &amp; analysis</div><div><h3 class="h">Transform raw data into insights automatically.</h3><div class="tags"><span>Report generation</span><span>Data cleansing</span><span>Predictive analytics</span><span>Automated dashboards</span></div></div></div>
+    <div class="svc rv"><div class="id">04</div><div class="nm"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="3" cy="3" r="1.8"/><circle cx="11" cy="11" r="1.8"/><path d="M4.5 4.2 9.5 9.8M3 5v4.5a1.5 1.5 0 0 0 1.5 1.5H9"/></svg>Workflow automation</div><div><h3 class="h">Connect your tools and eliminate manual handoffs.</h3><div class="tags"><span>CRM automation</span><span>Lead qualification</span><span>Onboarding sequences</span><span>Approval workflows</span></div></div></div>
+    <div class="svc-end">
+      <h3 class="h rv"><span class="muted">Automate what's</span><br>holding you back.</h3>
+      <div class="price-link rv d1"><a href="#pricing"><span class="lime">$</span><span style="display:flex;gap:8px;align-items:center">SEE PRICING <span class="sq" style="background:var(--lime)"><svg viewBox="0 0 8 8"><path d="M1 7 7 1M2.5 1H7v4.5" stroke="#050505" stroke-width="1.4" fill="none"/></svg></span></span></a><small>FLEXIBLE PLANS FOR ANY SCALE.</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="process" id="process" data-section="process">
+  <div class="wrap">
+    <div class="top3">
+      <div class="lbl rv" style="grid-column:1"><span class="n">[04]</span><span class="t">How it works</span><span class="cur">_</span></div>
+      <h2 class="h lines"><span class="ln"><span>Lightning-quick</span></span><span class="ln"><span>deployment.</span></span></h2>
+      <p class="rv d2">From first call to live automation in just 6 weeks.</p>
+    </div>
+    <div class="ruler"><div class="on" id="rulerOn"></div></div>
+    <div class="weeks" id="weeks">
+      <div class="wk on"><div class="mono"><i></i>Week 1</div><h4>Process audit</h4><p>We map your workflows, identify automation opportunities, and calculate potential ROI.</p></div>
+      <div class="wk"><div class="mono"><i></i>Week 2-3</div><h4>Solution design</h4><p>Custom AI architecture tailored to your systems and requirements.</p></div>
+      <div class="wk"><div class="mono"><i></i>Week 4-5</div><h4>Build &amp; test</h4><p>Development, integration, and rigorous testing with your team.</p></div>
+      <div class="wk"><div class="mono"><i></i>Week 6</div><h4>Deploy and train</h4><p>Launch with full team training and monitoring.</p></div>
+    </div>
+    <div class="post">
+      <h3 class="h rv"><span class="muted">What happens</span><br>post-launch?</h3>
+      <p class="lead rv d1">We don't disappear after deployment. <b>Your automation gets better over time.</b></p>
+      <div class="pcard rv"><h5><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 9h3l2-6 4 10 2-4h3"/></svg>Continuous Monitoring</h5><p>Real-time tracking of every workflow. Monthly reports on time saved, costs reduced, and ROI.</p></div>
+      <div class="pcard rv d1"><h5><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 1 3 9h5l-1 6 6-8H8z"/></svg>Ongoing Optimization</h5><p>Quarterly analysis and recommendations to maximize ROI. Add workflows, adjust systems, scale what works.</p></div>
+      <div class="pcard rv d2"><h5><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.5 10V8a5.5 5.5 0 0 1 11 0v2"/><rect x="2" y="9" width="2.6" height="4"/><rect x="11.4" y="9" width="2.6" height="4"/></svg>Support &amp; Training</h5><p>Priority support via Slack and email. Train new team members, update processes, get help when you need it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASE ============ -->
+<section class="case dark" id="case" data-section="case">
+  <div class="wrap">
+    <div class="grid">
+      <div class="l">
+        <div class="hdr"><div class="lbl rv"><span class="n">[05]</span><span class="t">Featured customer story</span><span class="cur">_</span></div><span class="mono rv">Dec 1, 2025</span></div>
+        <h2 class="h rv d1">How Boltshift cut support costs by 62% and 3x'd response speed with AI automation.</h2>
+        <div class="meta rv d2">
+          <div><span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="5"/><path d="M1 6h10M6 1c2 2 2 8 0 10M6 1c-2 2-2 8 0 10"/></svg>Industry</span><span>Enterprise software</span></div>
+          <div><span><svg viewBox="0 0 12 12" fill="currentColor"><rect x="1" y="1" width="2" height="2"/><rect x="5" y="1" width="2" height="2"/><rect x="9" y="1" width="2" height="2"/><rect x="1" y="5" width="2" height="2"/><rect x="5" y="5" width="2" height="2"/><rect x="9" y="5" width="2" height="2"/><rect x="1" y="9" width="2" height="2"/><rect x="5" y="9" width="2" height="2"/></svg>Company size</span><span>450 employees</span></div>
+          <div><span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="5"/><path d="M6 3v3l2 1.5"/></svg>Automation timeline</span><span>2 months</span></div>
+        </div>
+        <div class="kpis">
+          <div class="rv"><b data-count="87" data-suffix="%">87%</b><span>Time saved on support</span></div>
+          <div class="rv d1"><b data-count="3" data-suffix="X">3X</b><span>Ticket resolution speed</span></div>
+        </div>
+        <a href="#case" class="btn rv"><span>Read customer story</span><svg class="px"><use href="#px"/></svg></a>
+      </div>
+      <div class="r rv d2">
+        <svg class="art" viewBox="0 0 680 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <radialGradient id="cg1" cx="50%" cy="56%" r="55%"><stop offset="0" stop-color="#d1ff00" stop-opacity=".55"/><stop offset=".35" stop-color="#6e8f00" stop-opacity=".25"/><stop offset="1" stop-color="#060706" stop-opacity="0"/></radialGradient>
+            <filter id="cblur"><feGaussianBlur stdDeviation="6"/></filter>
+          </defs>
+          <rect width="680" height="560" fill="#060706"/>
+          <rect width="680" height="560" fill="url(#cg1)"/>
+          <g id="rings" fill="none" stroke="#d1ff00"></g>
+          <g id="caseBars"></g>
+        </svg>
+        <div class="brand"><svg style="--bg:#060706;color:#f4f4e8"><use href="#bolt"/></svg>Boltshift</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="testi" id="testimonials" data-section="testimonials">
+  <div class="wrap">
+    <div class="grid">
+      <div class="lbl rv" style="grid-column:1"><span class="n">[06]</span><span class="t">Testimonials</span><span class="cur">_</span></div>
+      <h2 class="h lines"><span class="ln"><span>Don't take our</span></span><span class="ln"><span>word for it.</span></span></h2>
+      <p class="rv d2">Companies that deployed automation and never looked back.</p>
+    </div>
+    <div class="feature">
+      <svg class="qm rv"><use href="#qm"/></svg>
+      <blockquote class="rv d1">Our sales team was spending half their day on admin work. Now they're talking to customers and closing deals. The automation handles everything from lead qualification to contract routing, and our close rates have never been higher.</blockquote>
+      <div class="co rv"><svg><use href="#cmd"/></svg>Command+R</div>
+      <div class="person rv d1"><span class="av" data-seed="5"></span><div class="mono">Ryan Martinez<span>VP of Sales Operations</span></div></div>
+    </div>
+    <div class="rating">
+      <div class="big rv">4.9</div>
+      <div class="info rv d1">
+        <div><span>Client reviews</span><span>45 reviews</span></div>
+        <div><span>Average review rating</span><span class="stars">★★★★★ 4.9</span></div>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="limecard rv">
+        <div class="two"><div><b data-count="50" data-suffix="+">50+</b><span>COMPANIES AUTOMATED</span></div><div><b data-count="99" data-suffix="%">99%</b><span>SATISFACTION RATE</span></div></div>
+        <div><a class="logo" style="font-size:18px"><span class="k">K</span>YMA<sup>®</sup></a><h4>Real clients.<br>Real results.<br>Zero complaints.</h4><p>Every automation delivered on time. Every client still with us.</p></div>
+      </div>
+      <div class="tcard rv d1"><div class="stars">★★★★★</div><blockquote>Our project managers were drowning in reporting work. Now they spend their time on client relationships and strategic planning instead of copying data between systems. The ROI was immediate.</blockquote><div class="ks"><div><b>92%</b><span>REPORT GENERATION</span></div><div><b>99.8%</b><span>COMPLIANCE ACCURACY</span></div></div><div class="person"><span class="av" data-seed="6"></span><div class="mono">Jennifer Wu<span>Director of Operations</span></div></div></div>
+      <div class="tcard rv d2"><div class="stars">★★★★★</div><blockquote>The automation completely transformed our business model. Our analysts now spend their time doing actual analysis and strategy work instead of data janitor tasks. We quadrupled our client base without hiring a single additional analyst.</blockquote><div class="ks"><div><b>2X</b><span>FASTER CLIENT DELIVERY</span></div><div><b>4X</b><span>MORE ANALYST CAPACITY</span></div></div><div class="person"><span class="av" data-seed="7"></span><div class="mono">Rebecca Martinez<span>CEO</span></div></div></div>
+      <div class="tcard rv d3"><div class="stars">★★★★★</div><blockquote>We went from dreading month-end close to having financials ready in under a week. The system catches errors we would have missed manually, and our team finally has time for strategic analysis instead of data entry.</blockquote><div class="ks"><div><b>12 DAYS</b><span>FASTER CLOSING TIME</span></div><div><b>95%</b><span>RECONCILATION TIME</span></div></div><div class="person"><span class="av" data-seed="8"></span><div class="mono">Marcus Thompson<span>CFO</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTEGRATIONS ============ -->
+<section class="integ dark" id="integrations" data-section="integrations">
+  <div class="wrap">
+    <div class="igrid" id="igrid">
+      <div class="icenter"><div class="lbl"><span class="n">[07]</span><span class="t">Integrations</span><span class="cur">_</span></div><h2 class="h">Connect<br>your tools.</h2></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEAM ============ -->
+<section class="team" id="team" data-section="team">
+  <div class="wrap">
+    <div class="grid">
+      <div class="lbl rv" style="grid-column:1"><span class="n">[08]</span><span class="t">The team</span><span class="cur">_</span></div>
+      <h2 class="h lines"><span class="ln"><span>Meet the</span></span><span class="ln"><span>team behind</span></span><span class="ln"><span>the systems.</span></span></h2>
+      <p class="rv d2">We debug code, map workflows, solve problems, and occasionally go outside.</p>
+    </div>
+    <div class="members" id="members"></div>
+    <div class="teamfoot">
+      <div class="plus rv"><b>+6</b><span>MORE TEAM MEMBERS</span></div>
+      <div class="car"><a href="#team" class="link">Careers <span class="sq"><svg viewBox="0 0 8 8"><path d="M1 7 7 1M2.5 1H7v4.5" stroke="#d1ff00" stroke-width="1.4" fill="none"/></svg></span></a></div>
+    </div>
+    <div class="mission">
+      <h3 class="h rv"><span class="muted">Automate the work that</span> wastes human potential.</h3>
+      <div class="mid rv d1">We help companies redirect talent from low-value tasks to high-value work.<div><span class="logo"><span class="k">K</span>YMA<sup>®</sup></span></div></div>
+      <a href="#about" class="btn rv d2"><span>About us</span><svg class="px"><use href="#px"/></svg></a>
+    </div>
+    <div class="hiring">
+      <div class="card rv">
+        <div class="stack" data-avatars="23,27,31"></div>
+        <div class="txt"><h4>Join us,<br>we're hiring.</h4><div class="open"><b>08</b>OPEN POSITIONS</div></div>
+        <svg class="pat" viewBox="0 0 200 120" preserveAspectRatio="none" aria-hidden="true" id="hirePat"></svg>
+        <a href="#team" class="link">Careers <span class="sq"><svg viewBox="0 0 8 8"><path d="M1 7 7 1M2.5 1H7v4.5" stroke="#d1ff00" stroke-width="1.4" fill="none"/></svg></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="pricing dark" id="pricing" data-section="pricing">
+  <div class="wrap">
+    <div class="hd">
+      <div class="lbl rv"><span class="n">[09]</span><span class="t">Pricing</span><span class="cur">_</span></div>
+      <h2 class="h lines"><span class="ln"><span>Flexible pricing</span></span><span class="ln"><span>for any scale.</span></span></h2>
+      <div class="toggle rv d2"><span class="opt on" id="optM">MONTHLY</span><button class="switch" id="billing" aria-label="Annual billing" aria-pressed="false"><i></i></button><span class="opt" id="optA">ANNUAL</span></div>
+      <div class="save rv d2" id="save">SAVE 20%</div>
+    </div>
+    <div class="plans" id="plans">
+      <div class="plan rv">
+        <div class="pt"><div class="row1"><h3>Quick Win</h3></div><p class="desc">Perfect for small teams automating a single high-impact workflow.</p></div>
+        <div class="pr"><b data-m="499">$499</b><span>/MONTH</span><em>BILLED ANNUALLY</em></div>
+        <ul><li><svg><use href="#chk"/></svg>Single workflow automation</li><li><svg><use href="#chk"/></svg>Up to 3 system integrations</li><li><svg><use href="#chk"/></svg>2-week implementation timeline</li><li><svg><use href="#chk"/></svg>Ongoing support &amp; maintenance</li><li><svg><use href="#chk"/></svg>Email support (48hr response)</li></ul>
+        <div class="ft"><div class="stripes"></div><a href="#contact" class="btn"><span>Get started</span><svg class="px"><use href="#px"/></svg></a></div>
+      </div>
+      <div class="plan popular rv d1">
+        <div class="pt"><div class="row1"><h3>Scale</h3><span class="pop">POPULAR</span></div><p class="desc">For companies ready to automate multiple processes.</p></div>
+        <div class="pr"><b data-m="2500">$2500</b><span>/MONTH</span><em>BILLED ANNUALLY</em></div>
+        <ul><li><svg><use href="#chk"/></svg>Up to 3 workflow automations</li><li><svg><use href="#chk"/></svg>Unlimited system integrations</li><li><svg><use href="#chk"/></svg>Advanced analytics &amp; reporting</li><li><svg><use href="#chk"/></svg>Ongoing optimization &amp; support</li><li><svg><use href="#chk"/></svg>Quarterly strategy reviews</li><li><svg><use href="#chk"/></svg>Custom training sessions</li><li><svg><use href="#chk"/></svg>Priority email &amp; Slack support</li></ul>
+        <div class="ft"><div class="stripes"></div><a href="#contact" class="btn"><span>Get started</span><svg class="px"><use href="#px"/></svg></a></div>
+      </div>
+      <div class="plan rv d2">
+        <div class="pt"><div class="row1"><h3>Full Stack</h3></div><p class="desc">Comprehensive automation strategy for large organizations.</p></div>
+        <div class="pr"><b data-m="6750">$6750</b><span>/MONTH</span><em>BILLED ANNUALLY</em></div>
+        <ul><li><svg><use href="#chk"/></svg>Unlimited workflow automations</li><li><svg><use href="#chk"/></svg>Enterprise system integrations</li><li><svg><use href="#chk"/></svg>White-glove onboarding &amp; change management</li><li><svg><use href="#chk"/></svg>Monthly optimization &amp; strategy sessions</li><li><svg><use href="#chk"/></svg>SLA guarantee</li><li><svg><use href="#chk"/></svg>Dedicated automation strategist</li><li><svg><use href="#chk"/></svg>Annual ROI reporting &amp; executive reviews</li></ul>
+        <div class="ft"><div class="stripes"></div><a href="#contact" class="btn"><span>Contact sales</span><svg class="px"><use href="#px"/></svg></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq" id="faq" data-section="faq">
+  <div class="wrap">
+    <div class="grid">
+      <div class="lbl rv" style="grid-column:1"><span class="n">[10]</span><span class="t">Answers</span><span class="cur">_</span></div>
+      <h2 class="h lines"><span class="ln"><span>Frequently</span></span><span class="ln"><span>asked questions</span></span></h2>
+      <div class="qa" id="qa"></div>
+    </div>
+    <div class="ask rv">
+      <svg class="qm"><use href="#qm"/></svg>
+      <div class="t"><div class="mono">Have a question?</div><h3>Reach out anytime. We're happy to answer any questions before you commit to working together.</h3>
+        <div class="person"><div class="mono">Sophie Bergman<span>Head of Client Solutions</span></div><span class="av" data-seed="2"></span></div></div>
+      <div class="lnk"><a href="#contact" class="link">Ask a question <span class="sq"><svg viewBox="0 0 8 8"><path d="M1 7 7 1M2.5 1H7v4.5" stroke="#d1ff00" stroke-width="1.4" fill="none"/></svg></span></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARTICLES ============ -->
+<section class="articles" id="articles" data-section="articles">
+  <div class="wrap">
+    <div class="grid">
+      <div class="lbl rv" style="grid-column:1;align-self:start"><span class="n">[11]</span><span class="t">AI knowledge base</span><span class="cur">_</span></div>
+      <h2 class="h lines" style="align-self:start"><span class="ln"><span>Articles &amp; insights.</span></span></h2>
+      <a href="#articles" class="link all rv">All articles <span class="sq"><svg viewBox="0 0 8 8"><path d="M1 7 7 1M2.5 1H7v4.5" stroke="#d1ff00" stroke-width="1.4" fill="none"/></svg></span></a>
+    </div>
+    <div class="posts">
+      <a class="post-c rv" href="#articles">
+        <div class="bar"><span>JAN 15, 2025</span><span>ROI &amp; STRATEGY</span></div>
+        <div class="img" role="img" aria-label="Dark wave-shaped hill with a yellow-green glow at its base"><svg id="art1" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice"></svg></div>
+        <div class="by"><span><b>By Elena Petrova</b> / Lead Automation Strategist</span><svg class="px" style="color:var(--ink)"><use href="#px" style="fill:currentColor"/></svg></div>
+        <h3>How to calculate ROI for AI automation projects.</h3>
+        <p>Most companies underestimate automation ROI by focusing only on labor costs. Here is how to calculate the true value including hidden costs and opportunity gains.</p>
+      </a>
+      <a class="post-c rv d1" href="#articles">
+        <div class="bar"><span>JAN 8, 2025</span><span>IMPLEMENTATION</span></div>
+        <div class="img" role="img" aria-label="Ribbon of green light over a dark sea"><svg id="art2" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"></svg></div>
+        <div class="by"><span><b>By Marco Rossi</b> / Head of Engineering</span></div>
+        <h3>5 processes you can automate today without custom development.</h3>
+        <p>You do not need a six-month implementation to see automation results. These five processes can be automated in days using existing tools and deliver immediate ROI.</p>
+      </a>
+      <a class="post-c rv d2" href="#articles">
+        <div class="bar"><span>JAN 8, 2025</span><span>RISK MANAGEMENT</span></div>
+        <div class="img" role="img" aria-label="Streak of green light cutting through a dark night sky"><svg id="art3" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"></svg></div>
+        <div class="by"><span><b>By Anders Eriksson</b> / Founder &amp; CEO</span></div>
+        <h3>When AI automation fails.</h3>
+        <p>Not every automation project succeeds. Here are the most common reasons AI automation initiatives fail and how to avoid these expensive mistakes.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA / FORM ============ -->
+<section class="cta2 dark" id="contact" data-section="contact">
+  <div class="wrap">
+    <div class="grid">
+      <div class="l">
+        <div class="lbl rv"><span class="n">[12]</span><span class="t">Lets get started</span><span class="cur">_</span></div>
+        <h2 class="h lines"><span class="ln"><span>Ready to automate</span></span><span class="ln"><span>your biggest</span></span><span class="ln"><span>bottleneck?</span></span></h2>
+        <div class="checks rv d2">
+          <div><i><svg class="lime"><use href="#chk"/></svg></i>ROI projections for your business</div>
+          <div><i><svg class="lime"><use href="#chk"/></svg></i>Best-fit technology stack</div>
+          <div><i><svg class="lime"><use href="#chk"/></svg></i>Implementation timeline</div>
+        </div>
+        <div class="crystal rv d2" role="img" aria-label="Dark crystal slab glowing lime green on a rocky landscape"><svg id="crystal" viewBox="0 0 640 420" preserveAspectRatio="xMidYMax slice"></svg></div>
+        <div class="sayq rv"><p>I personally review every automation audit to ensure we can deliver real value.</p><div class="person"><span class="av" data-seed="1"></span><div class="mono">Anders Eriksson<span>Founder &amp; CEO</span></div></div></div>
+      </div>
+      <form class="form rv d1" id="auditForm" novalidate>
+        <p class="intro">Book a free 30-minute audit with our team. <span>We'll review your processes and show you exactly what's possible.</span></p>
+        <div class="fgrid">
+          <div class="fl"><label for="f-name">NAME*</label><input id="f-name" required placeholder="Jane Smith"></div>
+          <div class="fl"><label for="f-email">EMAIL*</label><input id="f-email" type="email" required placeholder="jane@example.com"></div>
+          <div class="fl"><label for="f-co">COMPANY*</label><input id="f-co" required placeholder="Your company name"></div>
+          <div class="fl"><label for="f-ph">PHONE</label><div class="phone"><span>+1 ▾</span><input id="f-ph" type="tel" placeholder="201 555 0123"></div></div>
+          <div class="fl full"><label>MONTHLY OPERATIONAL SPEND</label><div class="spend">
+            <label><input type="radio" name="sp"><span>Under $50K</span></label><label><input type="radio" name="sp" checked><span>$50K - $250K</span></label><label><input type="radio" name="sp"><span>$250K - $500K</span></label><label><input type="radio" name="sp"><span>$500K - $1M</span></label><label><input type="radio" name="sp"><span>$1M - $5M</span></label><label><input type="radio" name="sp"><span>$5M+</span></label>
+          </div></div>
+          <div class="fl full"><label for="f-msg">WHAT DO YOU WANT TO AUTOMATE?*</label><textarea id="f-msg" required placeholder="Tell us about the repetitive work consuming your team's time (e.g., customer service emails, invoice processing, data entry...)"></textarea></div>
+        </div>
+        <label class="agree"><input type="checkbox" required>BY SUBMITTING, YOU AGREE TO OUR <u>TERMS</u> AND <u>PRIVACY POLICY.</u></label>
+        <div class="submitrow"><button class="btn" type="submit"><span class="lab">Book my free audit</span><svg class="px"><use href="#px"/></svg></button><small>◷ We'll reach out <b>within 2 hours</b> to schedule your call.</small></div>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer data-section="footer">
+  <div class="wrap">
+    <div class="news">
+      <div class="rv"><div class="lbl"><span class="n">[13]</span><span class="t">Footer</span><span class="cur">_</span></div><h3>Newsletter</h3><p class="d">Practical automation strategies delivered monthly. Unsubscribe anytime.</p></div>
+      <form id="newsForm" novalidate class="rv d1">
+        <div class="fl" style="margin:0"><label for="n-name">NAME*</label><input id="n-name" required placeholder="Jane Smith"></div>
+        <div class="fl" style="margin:0"><label for="n-email">EMAIL*</label><input id="n-email" type="email" required placeholder="jane@example.com"></div>
+        <button class="btn" type="submit"><span class="lab">Subscribe</span><svg class="px"><use href="#px"/></svg></button>
+        <label class="agree" style="grid-column:1/3;margin-top:14px"><input type="checkbox" required>BY SUBMITTING, YOU AGREE TO OUR TERMS AND PRIVACY POLICY.</label>
+      </form>
+    </div>
+    <div class="fbot">
+      <div class="rv"><span class="logo"><span class="k">K</span>YMA<sup>®</sup></span><div class="addr">2847 MISSION STREET SAN<br>FRANCISCO, CA 94110</div></div>
+      <div class="fnav rv d1"><div class="mono">[NAVIGATION]</div><nav>
+        <a href="#home"><span>Home</span><span>Home</span></a><a href="#about"><span>About us</span><span>About us</span></a><a href="#case"><span>Case studies</span><span>Case studies</span></a><a href="#articles"><span>Articles</span><span>Articles</span></a><a href="#team"><span>Careers</span><span>Careers</span></a><a href="#contact"><span>Contact</span><span>Contact</span></a>
+      </nav></div>
+      <div class="contact rv d2"><a href="tel:+14155550142">[415] 555-0142</a><a class="mail" href="mailto:hello@kyma.example">HELLO@KYMA.EXAMPLE</a></div>
+      <div class="flegal rv d3"><div class="mono">[SOCIALS]</div><ul><li><span>1.0</span><a href="#">X / TWITTER</a></li><li><span>1.1</span><a href="#">INSTAGRAM</a></li><li><span>1.2</span><a href="#">LINKEDIN</a></li><li><span>1.3</span><a href="#">YOUTUBE</a></li></ul>
+        <div class="mono">[LEGAL]</div><ul><li><span>2.0</span><a href="#">ACCEPTABLE USE POLICY</a></li><li><span>2.1</span><a href="#">PRIVACY POLICY</a></li><li><span>2.2</span><a href="#">TERMS &amp; CONDITIONS</a></li><li><span>2.3</span><a href="#">COOKIES</a></li></ul></div>
+    </div>
+    <div class="giant"><div class="w" aria-hidden="true"><span style="display:inline-block;transform:scaleX(-1)">K</span>YMA</div><small>© 2026 KYMA, a fictional studio. The clients, people, figures and reviews on this page are invented. Tool names in the integrations grid belong to their owners and only identify the tools.</small></div>
+  </div>
+</footer>
+
+<script>
+(()=>{
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg';
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rnd=(seed=>()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646})(7);
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+/* ---------- clock ---------- */
+const clock=$('#clock');
+const tick=()=>{try{clock.textContent=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date())}catch(e){}};
+tick();setInterval(tick,1000);
+
+/* ---------- menu ---------- */
+const menu=$('#menu');
+const openBtn=$('#openMenu');
+openBtn.onclick=()=>{menu.classList.add('open');menu.setAttribute('aria-hidden','false');openBtn.setAttribute('aria-expanded','true');$('#closeMenu').focus()};
+const closeM=()=>{if(!menu.classList.contains('open'))return;menu.classList.remove('open');menu.setAttribute('aria-hidden','true');openBtn.setAttribute('aria-expanded','false');if(menu.contains(document.activeElement))openBtn.focus()};
+$('#closeMenu').onclick=closeM;$$('#menu nav a').forEach(a=>a.addEventListener('click',closeM));
+addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
+
+/* ---------- generative portraits (replace photos) ---------- */
+const tones=[['#2a2c26','#8a8c80','#d1ff00'],['#24221f','#a19c90','#d1ff00'],['#1d2021','#7f878a','#c2f000'],['#262420','#9b8f80','#d1ff00']];
+function portrait(seed,opts={}){
+  const r=mulberry(seed*97+3), t=tones[seed%tones.length];
+  const id='p'+seed+'_'+Math.floor(r()*1e6);
+  const hx=50+(r()-.5)*6, hy=40+(r()-.5)*4, hw=15+r()*3, hh=19+r()*3;
+  const hair=r(); const sh=30+r()*6;
+  let hairPath='';
+  if(hair<.4) hairPath=`<path d="M${hx-hw-1} ${hy-2} Q${hx-hw} ${hy-hh-6} ${hx} ${hy-hh-4} Q${hx+hw} ${hy-hh-6} ${hx+hw+1} ${hy-2} Q${hx+hw-3} ${hy-hh+4} ${hx} ${hy-hh+3} Q${hx-hw+3} ${hy-hh+4} ${hx-hw-1} ${hy-2}Z" fill="#111"/>`;
+  else if(hair<.75) hairPath=`<path d="M${hx-hw-2} ${hy+14} Q${hx-hw-5} ${hy-hh-4} ${hx} ${hy-hh-5} Q${hx+hw+5} ${hy-hh-4} ${hx+hw+2} ${hy+14} L${hx+hw-2} ${hy-4} Q${hx} ${hy-hh+6} ${hx-hw+2} ${hy-4}Z" fill="#141414"/>`;
+  else hairPath=`<path d="M${hx-hw} ${hy-4} Q${hx} ${hy-hh-7} ${hx+hw} ${hy-4} Q${hx} ${hy-hh+1} ${hx-hw} ${hy-4}Z" fill="#191919"/>`;
+  const halftone=opts.halftone!==false;
+  return `<svg viewBox="0 0 100 ${opts.tall?130:100}" preserveAspectRatio="xMidYMid slice" xmlns="${NS}">
+  <defs>
+   <linearGradient id="${id}bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${opts.light?'#e4e4d6':t[0]}"/><stop offset="1" stop-color="${opts.light?'#bdbdb0':'#0b0b0a'}"/></linearGradient>
+   <radialGradient id="${id}sk" cx="${r()>.5?'35%':'65%'}" cy="35%" r="75%"><stop offset="0" stop-color="${t[1]}"/><stop offset="1" stop-color="#1a1a18"/></radialGradient>
+   <linearGradient id="${id}rim" x1="0" x2="1"><stop offset="0" stop-color="${t[2]}" stop-opacity="0"/><stop offset=".85" stop-color="${t[2]}" stop-opacity="0"/><stop offset="1" stop-color="${t[2]}" stop-opacity=".7"/></linearGradient>
+   <pattern id="${id}ht" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="1.2" cy="1.2" r=".55" fill="#000" fill-opacity=".35"/></pattern>
+  </defs>
+  <rect width="100" height="${opts.tall?130:100}" fill="url(#${id}bg)"/>
+  <g transform="translate(0 ${opts.tall?22:0})">
+   <path d="M${hx-sh-12} 112 Q${hx-sh} ${hy+hh+12} ${hx} ${hy+hh+10} Q${hx+sh} ${hy+hh+12} ${hx+sh+12} 112Z" fill="${['#1b1b1b','#2b2f25','#e8e8dc','#3a3a36'][Math.floor(r()*4)]}"/>
+   <rect x="${hx-5}" y="${hy+hh-6}" width="10" height="14" fill="url(#${id}sk)"/>
+   <ellipse cx="${hx}" cy="${hy}" rx="${hw}" ry="${hh}" fill="url(#${id}sk)"/>
+   ${hairPath}
+   <ellipse cx="${hx}" cy="${hy}" rx="${hw}" ry="${hh}" fill="url(#${id}rim)"/>
+  </g>
+  ${halftone?`<rect width="100" height="${opts.tall?130:100}" fill="url(#${id}ht)"/>`:''}
+  ${opts.scan?`<rect class="scan" x="0" y="0" width="100" height="6" fill="${t[2]}" fill-opacity=".12"/>`:''}
+  </svg>`;
+}
+$$('[data-avatars]').forEach(el=>{
+  el.innerHTML=el.dataset.avatars.split(',').map(s=>`<span class="av">${portrait(+s)}</span>`).join('')+(el.dataset.more?`<span class="more">${el.dataset.more}</span>`:'');
+});
+$$('.av[data-seed]').forEach(el=>el.innerHTML=portrait(+el.dataset.seed));
+
+/* ---------- client logo marquee ---------- */
+const clients=[
+ ['Boltshift','<svg viewBox="0 0 24 24" style="--bg:#ffffed"><use href="#bolt"/></svg>'],
+ ['Lightspeed','<svg viewBox="0 0 30 16"><circle cx="5" cy="8" r="5"/><circle cx="14" cy="8" r="5"/><rect x="18" y="3" width="11" height="10" rx="5"/></svg>'],
+ ['Command+R','<svg viewBox="0 0 24 24"><use href="#cmd"/></svg>'],
+ ['Crosspoint','<svg viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/></svg>'],
+ ['Hexagrid','<svg viewBox="0 0 24 24"><path d="M12 1 22 6.5v11L12 23 2 17.5v-11z"/><path d="M12 7 17 10v5l-5 3-5-3v-5z" fill="#ffffed"/></svg>'],
+ ['Northwave','<svg viewBox="0 0 28 20"><path d="M0 14q7-14 14 0t14 0v6H0z"/></svg>']
+];
+const mq=$('#marq');
+mq.innerHTML=[...clients,...clients,...clients,...clients].map(([n,s])=>`<div class="lg">${s.replace('<svg','<svg fill="#050505"')}<span>${n}</span></div>`).join('');
+
+/* ---------- hero demo: animated automation pipeline (replaces video) ---------- */
+const flow=$('#flow');
+const nodes=[{x:40,y:78,l:'INBOX'},{x:120,y:78,l:'CLASSIFY'},{x:200,y:78,l:'EXTRACT'},{x:270,y:130,l:'VALIDATE'},{x:200,y:182,l:'CRM'},{x:120,y:182,l:'REPORT'}];
+const edges=[[0,1],[1,2],[2,3],[3,4],[4,5],[1,5]];
+let html=`<defs><pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".6" fill="#2a2d25"/></pattern><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="310" height="260" fill="url(#dots)"/>`;
+edges.forEach(([a,b],i)=>{const A=nodes[a],B=nodes[b];const mx=(A.x+B.x)/2,my=(A.y+B.y)/2+(i===5?30:0);html+=`<path id="e${i}" d="M${A.x} ${A.y} Q${mx} ${my} ${B.x} ${B.y}" fill="none" stroke="#2f332a" stroke-width="1" stroke-dasharray="3 3"/>`});
+const nr=n=>`x="${n.x-26}" y="${n.y-11}" width="52" height="22"`;
+html+=`<defs>
+ <clipPath id="nodeClip">${nodes.map(n=>`<rect ${nr(n)}/>`).join('')}</clipPath>
+ <mask id="outMask" maskUnits="userSpaceOnUse" x="0" y="0" width="310" height="260"><rect width="310" height="260" fill="#fff"/>${nodes.map(n=>`<rect ${nr(n)} fill="#000"/>`).join('')}</mask>
+ <filter id="glass" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.2"/></filter>
+ <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".14"/><stop offset=".45" stop-color="#fff" stop-opacity=".03"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+</defs>`;
+html+=`<g id="pk" mask="url(#outMask)"></g>`;
+nodes.forEach(n=>{html+=`<rect ${nr(n)} fill="#151812" fill-opacity=".55"/>`});
+html+=`<g clip-path="url(#nodeClip)"><g id="pkB" filter="url(#glass)" opacity=".9"></g></g>`;
+nodes.forEach((n,i)=>{html+=`<g id="n${i}"><rect ${nr(n)} fill="url(#sheen)" stroke="#3a3e33"/><line x1="${n.x-25}" y1="${n.y-10.5}" x2="${n.x+25}" y2="${n.y-10.5}" stroke="#fff" stroke-opacity=".18" stroke-width=".6"/><text x="${n.x}" y="${n.y+3}" text-anchor="middle" font-family="Roboto Mono,monospace" font-size="7" fill="#e4e4d6" font-weight="600">${n.l}</text></g>`});
+html+=`<g transform="translate(170 214)"><text font-family="Roboto Mono,monospace" font-size="7" fill="#686868">TASKS DONE</text><text id="cnt" y="16" font-family="Inter Tight,Arial" font-weight="700" font-size="16" fill="#d1ff00">0</text></g>`;
+html+=`<g transform="translate(240 214)"><text font-family="Roboto Mono,monospace" font-size="7" fill="#686868">HRS SAVED</text><text id="hrsSaved" y="16" font-family="Inter Tight,Arial" font-weight="700" font-size="16" fill="#f4f4e8">0.0</text></g>`;
+flow.innerHTML=html;
+const pk=$('#pk',flow), pkB=$('#pkB',flow), cnt=$('#cnt',flow), hs=$('#hrsSaved',flow), logEl=$('#log');
+const route=[0,1,2,3,4];
+let packets=[], done=0, playing=false, playT=0, last=performance.now(), spawnAcc=0;
+const msgs=['INVOICE #4821 → PARSED','TICKET #219 → ROUTED','LEAD SCORED: 87','CONTRACT → FLAGGED','REPORT Q3 → SENT','FORM #77 → EXTRACTED','EMAIL → AUTO-REPLIED','PO #1180 → APPROVED'];
+let logs=[];
+function spawn(){const p=document.createElementNS(NS,'circle');p.setAttribute('r','3');p.setAttribute('fill','#d1ff00');p.setAttribute('filter','url(#glow)');pk.appendChild(p);const q=document.createElementNS(NS,'circle');q.setAttribute('r','5');q.setAttribute('fill','#d1ff00');pkB.appendChild(q);packets.push({el:p,b:q,seg:0,t:0,alt:Math.random()<.3})}
+function flash(i){const r=$('#n'+i+' rect',flow);r.setAttribute('stroke','#d1ff00');setTimeout(()=>r.setAttribute('stroke','#3a3e33'),260)}
+function step(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  const speed=playing?2.4:1;
+  if(!RM||playing){spawnAcc+=dt*speed; if(spawnAcc>.7){spawnAcc=0;spawn()}}
+  packets=packets.filter(p=>{
+    p.t+=dt*speed*1.3;
+    const ei = p.alt&&p.seg===1 ? 5 : p.seg;
+    const path=$('#e'+ei,flow); const L=path.getTotalLength();
+    const pt=path.getPointAtLength(Math.min(1,p.t)*L); p.el.setAttribute('cx',pt.x);p.el.setAttribute('cy',pt.y);p.b.setAttribute('cx',pt.x);p.b.setAttribute('cy',pt.y);
+    if(p.t>=1){p.t=0;
+      const reached = edges[ei][1]; flash(reached);
+      if(ei===5||p.seg>=4){p.el.remove();p.b.remove();done++;cnt.textContent=done.toLocaleString();hs.textContent=(done*.37).toFixed(1);
+        logs.unshift(msgs[done%msgs.length]);logs=logs.slice(0,2);logEl.innerHTML=logs.map((m,i)=>i?m:'<b>'+m+'</b>').join('<br>');return false}
+      p.seg++;
+    }
+    return true});
+  if(playing){playT+=dt;const s=Math.min(90,playT);$('#tlabel').textContent='0'+Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');$('#prog').style.width=(s/90*100)+'%';if(s>=90){togglePlay()}}
+  requestAnimationFrame(step)}
+requestAnimationFrame(step);
+function togglePlay(){playing=!playing;$('#screen').setAttribute('aria-pressed',playing);$('#playIcon').setAttribute('d',playing?'M3 2h3v10H3zM8 2h3v10H8z':'M3 1.5v11l9-5.5z');if(!playing){if(playT>=90){playT=0;$('#prog').style.width='0'}$('#tlabel').textContent=playT?'PAUSED':'PLAY DEMO'}}
+$('#screen').addEventListener('click',togglePlay);
+$('#screen').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}});
+
+/* ---------- stats bars ---------- */
+$$('.stat').forEach(s=>{const n=+s.dataset.rows;const b=$('.bars',s);b.innerHTML=Array.from({length:n},(_,i)=>`<i style="transition-delay:${i*40}ms"></i>`).join('')});
+
+/* ---------- reveal + counters ---------- */
+function countUp(el){const to=+el.dataset.count,dec=+(el.dataset.dec||0),pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';const t0=performance.now(),d=1400;
+  const f=now=>{const k=Math.min(1,(now-t0)/d),e=1-Math.pow(1-k,3);el.textContent=pre+(to*e).toFixed(dec)+suf;if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');$$('[data-count]',e.target).forEach(countUp);if(e.target.dataset.count)countUp(e.target);io.unobserve(e.target)}}),{threshold:.15,rootMargin:'0px 0px -5% 0px'});
+$$('.rv,.lines,.stat').forEach(el=>io.observe(el));
+
+/* ---------- pain sticky scroll ---------- */
+const pain=$('#pain'), chips=$$('.chip',pain), after=$('#after');
+chips.forEach((c,i)=>{c.dataset.ang=Math.atan2(+c.dataset.y,+c.dataset.x);c.dataset.rot=(i%2?1:-1)*(4+i*1.5)});
+function painScroll(){
+  const r=pain.getBoundingClientRect(),h=pain.offsetHeight-innerHeight;
+  const p=Math.max(0,Math.min(1,-r.top/h));
+  const W=innerWidth,H=innerHeight;
+  chips.forEach((c,i)=>{
+    const x=+c.dataset.x*W*(W<700?1.1:1), y=+c.dataset.y*H;
+    const k=Math.max(0,Math.min(1,(p-.15-i*.03)/.45));
+    const fly=k*k*(W*.6);
+    const a=+c.dataset.ang;
+    c.style.transform=`translate(-50%,-50%) translate(${x+Math.cos(a)*fly}px,${y+Math.sin(a)*fly}px) rotate(${k*c.dataset.rot*4}deg)`;
+    c.style.opacity=1-k;
+  });
+  after.style.setProperty('--hl',(Math.max(0,Math.min(1,(p-.55)/.3))*100)+'%');
+}
+addEventListener('scroll',painScroll,{passive:true});addEventListener('resize',painScroll);painScroll();
+
+/* ---------- ROI calculator ---------- */
+const emp=$('#emp'),hrs=$('#hrs'),cost=$('#cost');let ovh=1;
+const fmt=n=>'$'+Math.round(n).toLocaleString('en-US');
+let shown=0;
+function calc(){
+  [emp,hrs,cost].forEach(i=>i.style.setProperty('--p',((i.value-i.min)/(i.max-i.min)*100)+'%'));
+  $('#o-emp').textContent=emp.value;$('#o-hrs').textContent=hrs.value+' HRS';$('#o-cost').textContent='$'+cost.value;
+  const target=emp.value*hrs.value*cost.value*52*(ovh?1.3:1);
+  const from=shown,t0=performance.now();
+  const f=now=>{const k=Math.min(1,(now-t0)/400);shown=from+(target-from)*(1-Math.pow(1-k,3));$('#total').textContent=fmt(shown);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f);
+}
+[emp,hrs,cost].forEach(i=>i.addEventListener('input',calc));
+$$('#ovh button').forEach(b=>b.onclick=()=>{$$('#ovh button').forEach(x=>x.classList.remove('on'));b.classList.add('on');ovh=+b.dataset.v;calc()});
+calc();
+
+/* ---------- process timeline ---------- */
+const wks=$$('.wk'),ron=$('#rulerOn');let wi=0,wTimer;
+function setWk(i){wi=i;wks.forEach((w,j)=>{w.classList.toggle('on',j===i);w.setAttribute('aria-pressed',j===i)});ron.style.left=(i*25)+'%'}
+function auto(){clearInterval(wTimer);if(!RM)wTimer=setInterval(()=>setWk((wi+1)%4),3200)}
+wks.forEach((w,i)=>{w.tabIndex=0;w.setAttribute('role','button');w.setAttribute('aria-pressed',i===0);w.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setWk(i);clearInterval(wTimer)}});w.addEventListener('click',()=>{setWk(i);auto()});w.addEventListener('mouseenter',()=>{setWk(i);clearInterval(wTimer)});w.addEventListener('mouseleave',auto)});
+auto();
+
+/* ---------- case study art (replaces photo) ---------- */
+(function(){const g=$('#rings');let s='';for(let i=0;i<14;i++){const r=40+i*26;s+=`<ellipse cx="340" cy="310" rx="${r*1.6}" ry="${r*.55}" stroke-opacity="${(.5-i*.032).toFixed(3)}" stroke-width="${i<3?1.2:.7}"/>`}g.innerHTML=s;
+ const cb=$('#caseBars');let b='';const R=mulberry(11);for(let i=0;i<46;i++){const x=10+i*14.6,h=20+Math.pow(Math.sin(i/45*Math.PI),2)*220*(.6+R()*.4);b+=`<rect x="${x}" y="${560-h}" width="2" height="${h}" fill="#d1ff00" fill-opacity="${(.08+R()*.18).toFixed(2)}"><animate attributeName="height" values="${h};${h*.6};${h}" dur="${3+R()*3}s" repeatCount="indefinite"/><animate attributeName="y" values="${560-h};${560-h*.6};${560-h}" dur="${3+R()*3}s" repeatCount="indefinite"/></rect>`}cb.innerHTML=b;
+ g.innerHTML+=`<animateTransform attributeName="transform" type="rotate" from="0 340 310" to="360 340 310" dur="120s" repeatCount="indefinite"/>`;})();
+
+/* ---------- integrations grid ---------- */
+const tools=[
+ ['PYTHON','<path d="M12 2c-5 0-4.7 2.2-4.7 2.2v2.3H12v.7H5.4S2 6.8 2 12s3 5 3 5h1.8v-2.4S6.7 11.5 10 11.5h4.7s3 0 3-2.9V4.9S18.2 2 12 2Zm-2.6 1.6a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z"/><path d="M12 22c5 0 4.7-2.2 4.7-2.2v-2.3H12v-.7h6.6S22 17.2 22 12s-3-5-3-5h-1.8v2.4s.1 3.1-3.2 3.1H9.3s-3 0-3 2.9v3.7S5.8 22 12 22Zm2.6-1.6a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Z" opacity=".7"/>'],
+ null,
+ ['OPENAI API','<g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 3a4 4 0 0 1 4 4v4M21 12a4 4 0 0 1-4 4h-4M12 21a4 4 0 0 1-4-4v-4M3 12a4 4 0 0 1 4-4h4"/></g>'],
+ null,
+ null,
+ ['AWS','<text x="12" y="13" text-anchor="middle" font-family="Inter Tight,Arial" font-weight="800" font-size="8.5">aws</text><path d="M5 16q7 3.5 14 0" fill="none" stroke="currentColor" stroke-width="1.4"/>'],
+ null,
+ ['GITHUB','<path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/>'],
+ ['ZAPIER','<rect x="2" y="5" width="20" height="14" rx="3"/><text x="12" y="14.3" text-anchor="middle" font-family="Inter Tight,Arial" font-weight="800" font-size="6.2" fill="#050505">zapier</text>'],
+ null,
+ ['MAKE','<path d="M4 19 9 5h3L7 19zM10 19l5-14h3l-5 14zM17 19l3-14h2.5l-3 14z"/>'],
+ null,
+ null,null,null,
+ ['DOCKER','<path d="M3 12h17c1 0 1.6-.8 2-1.6.6.2 1 .8 1 .8s-.9 1.6-2.4 1.6C19 18 14 20 9 20c-4.7 0-6.3-3.4-6-8Z"/><g><rect x="5" y="9" width="2.3" height="2.3"/><rect x="8" y="9" width="2.3" height="2.3"/><rect x="11" y="9" width="2.3" height="2.3"/><rect x="14" y="9" width="2.3" height="2.3"/><rect x="8" y="6" width="2.3" height="2.3"/><rect x="11" y="6" width="2.3" height="2.3"/><rect x="11" y="3" width="2.3" height="2.3"/></g>'],
+ ['CLOUD','<path d="M7 19a5 5 0 0 1-.7-9.9A6 6 0 0 1 18 8.6 4.6 4.6 0 0 1 17.6 19Z"/><path d="M9 15a3 3 0 0 1 6 0" fill="none" stroke="#050505" stroke-width="1.6"/>'],
+ null,null,null,
+ null,
+ ['ANTHROPIC API','<g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></g>'],
+ null,
+ ['NODE.JS','<path d="M12 2 21 7v10l-9 5-9-5V7z" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="15" text-anchor="middle" font-family="Inter Tight,Arial" font-weight="800" font-size="7">JS</text>'],
+ ['VERCEL','<path d="M12 4 22 20H2z"/>'],
+ null,
+ ['STRIPE','<path d="M16.5 7.3c-1.2-.6-2.6-1-4-1-2.7 0-4.4 1.4-4.4 3.5 0 3.6 5.3 3 5.3 4.6 0 .6-.6.9-1.5.9-1.4 0-3.1-.6-4.3-1.3v3.6c1.4.6 2.9.9 4.3.9 2.8 0 4.7-1.3 4.7-3.6 0-3.8-5.3-3.2-5.3-4.6 0-.5.4-.8 1.2-.8 1.2 0 2.8.4 4 1.1z"/>'],
+ null,
+ null,
+ ['AIRTABLE','<path d="M11 3 2 6.5l9 3.6 9-3.6zM12.5 11.8V21l8.5-3.4V8.5zM2 8.7v8.6l8 3.3v-8.4z"/>'],
+ null,
+ 'MORE'
+];
+const ig=$('#igrid');
+tools.forEach((t,i)=>{const d=document.createElement('div');d.className='tile';
+  if(t==='MORE'){d.className='tile more';d.textContent='+40 MORE'}
+  else if(t){d.innerHTML=`<svg viewBox="0 0 24 24" fill="#f4f4e8">${t[1]}</svg><span>${t[0]}</span>`}
+  ig.appendChild(d)});
+
+/* ---------- team (portraits generated) ---------- */
+const team=[['01','SWEDEN','1983','Anders Eriksson','Founder & CEO',1],['02','FRANCE','1988','Sophie Bergman','Head of Client Solutions',2],['03','UNITED STATES','1995','Marco Rossi','Head of Engineering',3],['04','UKRAINE','1992','Elena Petrov','Lead Automation Strategist',4]];
+$('#members').innerHTML=team.map(([id,c,y,n,r,s],i)=>`<div class="member rv d${i%2}">
+ <div class="strip"><span>ID[${id}]</span><span>${c}/${y}</span></div>
+ <div class="body"><div class="ph">${portrait(s+40,{light:true,tall:true,scan:true})}</div>
+ <div class="info"><h4>${n.replace(' ','<br>')}</h4><div class="mono">${r}</div>
+ <div class="socials"><a href="#" aria-label="X"><svg><use href="#i-x"/></svg></a><a href="#" aria-label="Instagram"><svg><use href="#i-ig"/></svg></a><a href="#" aria-label="LinkedIn"><svg><use href="#i-in"/></svg></a><a href="#" aria-label="Facebook"><svg><use href="#i-fb"/></svg></a></div></div></div></div>`).join('');
+$$('#members .rv').forEach(el=>io.observe(el));
+
+/* hiring pattern */
+(function(){let s='';for(let x=0;x<200;x+=6)for(let y=0;y<120;y+=6){const v=Math.sin(x/22)+Math.cos(y/14)+(x+y)/160;if(v>.9)s+=`<rect x="${x}" y="${y}" width="${v>1.6?4:2}" height="${v>1.6?4:2}" fill="#050505"/>`}$('#hirePat').innerHTML=s})();
+
+/* ---------- pricing ---------- */
+const bill=$('#billing');let annual=false;
+bill.onclick=()=>{annual=!annual;bill.classList.toggle('on',annual);bill.setAttribute('aria-pressed',annual);$('#optA').classList.toggle('on',annual);$('#optM').classList.toggle('on',!annual);$('#save').classList.toggle('on',annual);$('#plans').classList.toggle('annualon',annual);
+  $$('.plan .pr b').forEach(b=>{const m=+b.dataset.m,to=annual?Math.round(m*.8):m,from=+b.textContent.replace(/\D/g,''),t0=performance.now();const f=now=>{const k=Math.min(1,(now-t0)/450);b.textContent='$'+Math.round(from+(to-from)*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)})};
+
+/* ---------- FAQ ---------- */
+const faqs=[["Do you require long-term contracts?","No. Most projects start with a 2-3 week discovery phase to map processes and calculate ROI. If we don't think automation makes sense for you, we'll tell you. Ongoing support and optimization are available but not required."],
+["What happens if the automation doesn't deliver promised ROI?","We measure results and track against projections. If a system isn't performing as expected, we investigate why (adoption issues, technical problems, process changes) and work to fix it. Our reputation depends on delivering actual results."],
+["Can we make changes to automated workflows ourselves?","Depends on the implementation. No-code systems are usually easy for your team to modify. Custom systems require development skills. We document everything thoroughly and can train your team on making updates."],
+["How involved do we need to be during implementation?","Week 1-2 require significant involvement (5-10 hours) for discovery and process mapping. Weeks 3-4 need a few hours for design review. Weeks 5-8 are mostly our team building. Week 9 requires involvement for training and deployment. Total client time investment: 20-30 hours."],
+["Do you work with companies outside the US?","Yes. We work with clients globally. Most of our team is in US/EU timezones but we accommodate different time zones. All client communication is in English."],
+["What if automation breaks?","We build monitoring into every system so we know immediately if something fails. We implement automatic retry logic for transient failures. For critical systems, we provide 24/7 monitoring and support. We also train your team to handle common issues."]];
+const qa=$('#qa');
+qa.innerHTML=faqs.map(([q,a],i)=>`<div class="qi${i?'':' open'} rv"><button aria-expanded="${!i}"><span class="n">${String(i+1).padStart(2,'0')}</span>${q}<svg class="pl"><use href="#plus"/></svg></button><div class="ans"><div><p>${a}</p></div></div></div>`).join('');
+$$('.qi',qa).forEach(q=>{io.observe(q);$('button',q).onclick=()=>{const o=q.classList.contains('open');$$('.qi',qa).forEach(x=>{x.classList.remove('open');$('button',x).setAttribute('aria-expanded','false')});if(!o){q.classList.add('open');$('button',q).setAttribute('aria-expanded','true')}}});
+
+/* ---------- article artwork (replaces photos) ---------- */
+// 1: dark wave-shaped hill with yellow-green glow at its base
+$('#art1').innerHTML=`<defs>
+ <linearGradient id="a1sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030403"/><stop offset=".7" stop-color="#0b0f05"/><stop offset="1" stop-color="#1c2606"/></linearGradient>
+ <radialGradient id="a1glow" cx="50%" cy="100%" r="70%"><stop offset="0" stop-color="#e8ff4a" stop-opacity=".95"/><stop offset=".25" stop-color="#b6e000" stop-opacity=".55"/><stop offset=".6" stop-color="#3d5000" stop-opacity=".15"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+ <linearGradient id="a1hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1c18"/><stop offset=".55" stop-color="#070807"/><stop offset="1" stop-color="#000"/></linearGradient>
+ <linearGradient id="a1rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d1ff00" stop-opacity="0"/><stop offset="1" stop-color="#d1ff00" stop-opacity=".8"/></linearGradient>
+ <filter id="a1n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .35 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+</defs>
+<rect width="800" height="500" fill="url(#a1sky)"/>
+<rect y="140" width="800" height="360" fill="url(#a1glow)"><animate attributeName="opacity" values=".85;1;.85" dur="6s" repeatCount="indefinite"/></rect>
+<path d="M-20 500 L-20 330 C120 300 180 120 360 110 C520 100 560 260 660 300 C730 330 780 320 820 310 L820 500Z" fill="url(#a1hill)"/>
+<path d="M-20 330 C120 300 180 120 360 110 C520 100 560 260 660 300 C730 330 780 320 820 310" fill="none" stroke="#d1ff00" stroke-opacity=".25" stroke-width="1.2"/>
+<path d="M-20 500 L-20 470 C200 452 600 452 820 470 L820 500Z" fill="url(#a1rim)" opacity=".55"/>
+<rect width="800" height="500" fill="#fff" filter="url(#a1n)" opacity=".5"/>`;
+// 2: ribbon of green light over a dark sea
+(function(){let waves='';for(let i=0;i<22;i++){const y=190+i*5.2;waves+=`<path d="M0 ${y} Q100 ${y-2+(i%3)} 200 ${y} T400 ${y}" stroke="#d1ff00" stroke-opacity="${(.03+i*.006).toFixed(3)}" fill="none"/>`}
+$('#art2').innerHTML=`<defs>
+ <linearGradient id="a2sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020302"/><stop offset=".62" stop-color="#0a0d07"/><stop offset=".63" stop-color="#050604"/><stop offset="1" stop-color="#000"/></linearGradient>
+ <linearGradient id="a2rib" x1="0" x2="1"><stop offset="0" stop-color="#d1ff00" stop-opacity="0"/><stop offset=".3" stop-color="#d1ff00"/><stop offset=".7" stop-color="#9aff40"/><stop offset="1" stop-color="#d1ff00" stop-opacity="0"/></linearGradient>
+ <filter id="a2b"><feGaussianBlur stdDeviation="7"/></filter><filter id="a2b2"><feGaussianBlur stdDeviation="1.4"/></filter>
+ <linearGradient id="a2ref" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d1ff00" stop-opacity=".35"/><stop offset="1" stop-color="#d1ff00" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="400" height="300" fill="url(#a2sky)"/>
+<g><path id="rib" d="M-20 150 C80 60 160 170 230 110 S360 60 420 120" stroke="url(#a2rib)" stroke-width="26" fill="none" filter="url(#a2b)" opacity=".7"/>
+<path d="M-20 150 C80 60 160 170 230 110 S360 60 420 120" stroke="url(#a2rib)" stroke-width="3" fill="none" filter="url(#a2b2)"/>
+<path d="M-20 156 C80 70 160 178 230 118 S360 70 420 128" stroke="url(#a2rib)" stroke-width="1" fill="none" opacity=".6"/>
+<animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="7s" repeatCount="indefinite"/></g>
+<rect x="60" y="189" width="300" height="111" fill="url(#a2ref)" opacity=".5" filter="url(#a2b)"/>
+${waves}`})();
+// 3: streak of green light cutting through a night sky
+(function(){const R=mulberry(5);let st='';for(let i=0;i<120;i++){st+=`<circle cx="${(R()*400).toFixed(1)}" cy="${(R()*300).toFixed(1)}" r="${(R()*.9+.2).toFixed(2)}" fill="#f4f4e8" opacity="${(R()*.7+.1).toFixed(2)}"/>`}
+$('#art3').innerHTML=`<defs>
+ <linearGradient id="a3sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#0b1006"/></linearGradient>
+ <linearGradient id="a3st" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1ff00" stop-opacity="0"/><stop offset=".6" stop-color="#d1ff00" stop-opacity=".8"/><stop offset="1" stop-color="#f6ffc0"/></linearGradient>
+ <filter id="a3b"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<rect width="400" height="300" fill="url(#a3sky)"/>${st}
+<g><line x1="40" y1="10" x2="300" y2="250" stroke="url(#a3st)" stroke-width="22" filter="url(#a3b)" opacity=".55"/>
+<line x1="40" y1="10" x2="300" y2="250" stroke="url(#a3st)" stroke-width="2.2"/>
+<circle cx="300" cy="250" r="5" fill="#f6ffc0"/><circle cx="300" cy="250" r="22" fill="#d1ff00" opacity=".35" filter="url(#a3b)"><animate attributeName="r" values="18;28;18" dur="3s" repeatCount="indefinite"/></circle></g>
+<path d="M0 280 L60 262 L120 274 L200 255 L260 270 L330 258 L400 268 L400 300 L0 300Z" fill="#000"/>`})();
+
+/* ---------- crystal slab on rocky landscape ---------- */
+(function(){const R=mulberry(21);let rocks='';
+for(let layer=0;layer<3;layer++){let d='M0 420 ';const base=330+layer*30;for(let x=0;x<=640;x+=20+R()*30){d+=`L${x.toFixed(0)} ${(base-R()*40+layer*5).toFixed(0)} `}d+='L640 420Z';rocks+=`<path d="${d}" fill="${['#0d0f0b','#080907','#030303'][layer]}"/>`}
+$('#crystal').innerHTML=`<defs>
+ <radialGradient id="crg" cx="50%" cy="78%" r="55%"><stop offset="0" stop-color="#d1ff00" stop-opacity=".55"/><stop offset=".4" stop-color="#6b8a00" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+ <linearGradient id="crf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f2419"/><stop offset=".55" stop-color="#0a0b08"/><stop offset="1" stop-color="#2a3a00"/></linearGradient>
+ <linearGradient id="crs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4d00"/><stop offset="1" stop-color="#d1ff00"/></linearGradient>
+ <filter id="crb"><feGaussianBlur stdDeviation="10"/></filter>
+</defs>
+<rect width="640" height="420" fill="#050505"/>
+<rect width="640" height="420" fill="url(#crg)"><animate attributeName="opacity" values=".8;1;.8" dur="5s" repeatCount="indefinite"/></rect>
+<g transform="rotate(-6 320 300)">
+ <path d="M282 330 L300 70 L362 58 L372 322Z" fill="#d1ff00" filter="url(#crb)" opacity=".35"/>
+ <path d="M282 330 L300 70 L344 62 L344 326Z" fill="url(#crf)"/>
+ <path d="M344 62 L362 58 L372 322 L344 326Z" fill="url(#crs)" opacity=".85"/>
+ <path d="M300 70 L318 64 L362 58 L344 62Z" fill="#c9f500" opacity=".7"/>
+ <path d="M300 70 L282 330" stroke="#d1ff00" stroke-opacity=".5"/>
+ <path d="M344 62 L344 326" stroke="#efffa0" stroke-opacity=".8"/>
+</g>
+${rocks}
+<ellipse cx="330" cy="340" rx="120" ry="10" fill="#d1ff00" opacity=".25" filter="url(#crb)"/>`})();
+
+/* ---------- forms (simulated states) ---------- */
+function wire(form,okText){
+  form.addEventListener('submit',e=>{e.preventDefault();const btn=$('button[type=submit]',form),lab=$('.lab',btn);
+    const bad=$$('[required]',form).filter(i=>i.type==='checkbox'?!i.checked:!i.value.trim()||(i.type==='email'&&!/^\S+@\S+\.\S+$/.test(i.value)));
+    $$('[required]',form).forEach(i=>i.style.borderBottomColor='');
+    if(bad.length){btn.dataset.state='error';lab.textContent='Error, try again';bad.forEach(i=>i.style.borderBottomColor='#ff4d2e');setTimeout(()=>{btn.dataset.state='';lab.textContent=lab.dataset.orig},1800);return}
+    btn.dataset.state='loading';lab.textContent='Loading';
+    setTimeout(()=>{btn.dataset.state='done';lab.textContent=okText},1200)});
+  const l=$('.lab',form);l.dataset.orig=l.textContent;
+}
+wire($('#auditForm'),'Thank you');wire($('#newsForm'),'Thank you');
+if(RM)$$('svg').forEach(v=>v.pauseAnimations?.());
+})();
+</script>
+</body>
+</html>
+```
