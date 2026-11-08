@@ -2,8 +2,76 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 88,
+  "count": 89,
   "pages": [
+    {
+      "slug": "cutcrew-ai-video-agents-page",
+      "title": "Cutcrew AI Video Agents Page",
+      "description": "A bright, playful page for five AI video-editing agents, each a candy-coloured robot mascot drawn in SVG that floats in place: a hero fan of agent cards, a sentence with the robots set inline, a dark timeline strip with hover tooltips, three ways to brief the agents (an accordion with a self-typing prompt and a TypeScript SDK card), a studio services index, a six-week gantt with a sweeping playhead, fanning project decks, an album gallery, a team card deck, auto-advancing stories, monthly/annual pricing and a spinning 3D ring of covers in the CTA",
+      "category": "web",
+      "theme": "light",
+      "added": "Nov 7, 2026",
+      "bestFor": [
+        "AI video and creative tools",
+        "multi-agent products",
+        "SaaS with a studio or services arm",
+        "playful consumer and prosumer apps"
+      ],
+      "style": [
+        "light",
+        "playful",
+        "svg-mascots",
+        "bento",
+        "electric-green"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "statement",
+        "timeline",
+        "logos",
+        "numbers",
+        "features",
+        "create",
+        "connected",
+        "agents",
+        "services",
+        "process",
+        "projects",
+        "gallery",
+        "team",
+        "stories",
+        "testimonials",
+        "pricing",
+        "faq",
+        "contact",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Switzer (Fontshare)",
+          "Inter",
+          "Geist Mono"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/cutcrew-ai-video-agents-page/index.html",
+        "prompt": "pages/cutcrew-ai-video-agents-page/PROMPT.md",
+        "preview": "pages/cutcrew-ai-video-agents-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/cutcrew-ai-video-agents.html",
+      "page": "https://instalanding.ai/prompt/cutcrew-ai-video-agents-page"
+    },
     {
       "slug": "foldwise-ai-product-designer-page",
       "title": "Foldwise AI Product Designer Page",
