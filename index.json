@@ -2,8 +2,66 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 87,
+  "count": 88,
   "pages": [
+    {
+      "slug": "foldwise-ai-product-designer-page",
+      "title": "Foldwise AI Product Designer Page",
+      "description": "A quiet grey page for an AI-native product designer, laid out as a folding book: twelve paper and dark-stock panels (a cover, contents, seven case studies, field notes, about and a business-card contact) concertina open in 3D as you scroll, shading as they turn. Every case study plate is drawn in SVG: an agent run with a live step, an approval queue, model routing on two phones, an autonomy dial, a design system sheet, a context-window selector and an undo gap. On phones the book lies flat as one tall stack",
+      "category": "web",
+      "theme": "light",
+      "added": "Nov 7, 2026",
+      "bestFor": [
+        "portfolios and case-study sites",
+        "AI design and agent tools",
+        "studio and agency pages",
+        "product launch microsites"
+      ],
+      "style": [
+        "light",
+        "editorial",
+        "3d-fold",
+        "scroll-driven",
+        "svg-illustration"
+      ],
+      "sections": [
+        "nav",
+        "menu",
+        "fold",
+        "cover",
+        "index",
+        "agent-runs",
+        "approval-queue",
+        "model-routing",
+        "autonomy-dial",
+        "signal-design-system",
+        "context-window",
+        "undo-for-agents",
+        "notes",
+        "about",
+        "contact"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Familjen Grotesk"
+        ],
+        "features": [
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/foldwise-ai-product-designer-page/index.html",
+        "prompt": "pages/foldwise-ai-product-designer-page/PROMPT.md",
+        "preview": "pages/foldwise-ai-product-designer-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/foldwise-ai-product-designer.html",
+      "page": "https://instalanding.ai/prompt/foldwise-ai-product-designer-page"
+    },
     {
       "slug": "fullday-ai-money-agent-page",
       "title": "Fullday AI Money Agent Page",
