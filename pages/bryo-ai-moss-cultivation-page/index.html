@@ -295,17 +295,6 @@
         letter-spacing: 0.16em;
         color: var(--ink2);
       }
-      .hint i {
-        width: 20px;
-        height: 20px;
-        border: 1.3px solid currentColor;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        font: normal 14px var(--sans);
-        animation: nudge 1.6s infinite;
-      }
-      @keyframes nudge { 50% { transform: translateY(2px); } }
       .vision {
         position: absolute;
         left: 50%;
@@ -769,7 +758,7 @@
         .talk { grid-column: 3; }
       }
       @media (prefers-reduced-motion: reduce) {
-        .mist, .f1, .f2, .bob, .dot:before, .hint i { animation: none; }
+        .mist, .f1, .f2, .bob, .dot:before { animation: none; }
         .hero-copy .line span { animation: none; transform: none; }
         .rv { opacity: 1; transform: none; transition: none; }
         .card-bg, .sol-card, .card-copy p { transition: none; }
@@ -826,7 +815,7 @@ GROWTH   +0.4 MM/DAY</pre>
             <div class="caption" id="caption">
               Autonomous bryophyte cultivation.<br />Vision models, micro-misting,<br />and infinite patience.
             </div>
-            <div class="hint" id="hint">SCROLL TO EXPLORE <i>⌄</i></div>
+            <div class="hint" id="hint">SCROLL TO EXPLORE</div>
           </div>
           <div class="layer" id="L2">
             <div class="vision" id="vision">

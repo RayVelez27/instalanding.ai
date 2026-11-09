@@ -16,7 +16,7 @@ A misty sage-and-lime page for an AI that grows moss, painted entirely in code: 
 | Libraries | none — plain HTML, CSS and JS |
 | Fonts | Inter Tight, JetBrains Mono |
 | Uses | canvas-2d, inline-svg, inlined-images, reduced-motion |
-| Size | 106 KB · prompt ~27,318 tokens |
+| Size | 106 KB · prompt ~27,231 tokens |
 
 Every region is tagged `data-section`, and the file opens with a header comment that maps its design tokens, sections and scripts, and lists what breaks when you edit it. Read that first.
 
