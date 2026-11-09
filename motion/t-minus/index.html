@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T−Minus · InstaLanding Motion</title>
+<!--
+  T−MINUS · InstaLanding Motion
+  A ten-second countdown on a 5×5 grid of glass tiles. Every tile shows the same digit, but
+  each one crops its own window of a giant numeral, so together they read as one number. Once
+  a second the digit zooms in from a fifth of its size to full size and back; that pulse ripples
+  out from the centre tile, ring by ring. The hue walks from cool blue through magenta to orange
+  as it counts down, and zero fires a shockwave.
+
+  MAP
+    data-section="stage"   the tilted grid: bloom numeral, tiles, corner brackets, shockwave rings
+    data-section="hud"     the readouts: state, sequence, timecode, hue, ten progress segments
+
+  ADAPTING
+    - Colour: one number, --h on :root (CSS-registered, so it transitions). hueFor() maps the
+      digit to a hue; each tile offsets it by its distance from the centre (--hh).
+    - Type: Bricolage Grotesque 700 from Google Fonts; the numeral is sized var(--size) / .73
+      and trimmed to cap height with text-box, so a tile's window lines up with its neighbours.
+    - Motion: CFG.stagger (seconds per ring out from the centre, 0.06), CFG.columns (odd: 3, 5
+      or 7), CFG.burst (the shockwave at zero), CFG.tilt (pointer tilt and idle sway).
+      --scale-from / --scale-to / --scale-size set how far the digit zooms.
+    - Each tile's offset is translate(−dx·pitch·t, −dy·pitch·t): at full zoom every tile shows
+      its own slice of one big digit; zoomed out each shows a small whole digit.
+    - Space pauses, R or a click restarts, arrows pause and step a quarter second.
+    - prefers-reduced-motion: starts paused on a mid pulse with no tilt, drift, grain or
+      shockwave; Space still plays it.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@property --h    { syntax: '<number>'; inherits: true; initial-value: 205; }
+@property --zoom { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+:root {
+  --size: min(60vmin, 620px);
+  --columns: 5;
+  --gap: calc(var(--size) * .014);
+  --pitch: calc((var(--size) + var(--gap)) / var(--columns));
+  --radius: calc(var(--size) * .02);
+
+  --scale-from: .2;
+  --scale-to: 1;
+  --scale-size: .7;
+
+  --h: 205;
+  --pulse: 0;
+  transition: --h 900ms cubic-bezier(.2, .7, .2, 1);
+
+  --ink: rgb(255 255 255 / .88);
+  --dim: rgb(255 255 255 / .42);
+  --faint: rgb(255 255 255 / .1);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 45%, #0e0e14 0%, #06060a 55%, #020203 100%);
+  color: var(--ink);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  -webkit-font-smoothing: antialiased;
+  cursor: crosshair;
+  user-select: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- atmosphere ---------- */
+
+/* The aurora and grain overhang the screen so their drift never shows an edge; clipping them
+   in a fixed box stops phones from widening the layout viewport to fit the overhang. */
+.clip { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+.clip.under { z-index: 0; }
+.clip.over { z-index: 4; }
+
+.aurora {
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(38% 32% at 32% 38%, hsl(var(--h) 90% 50% / .32), transparent 70%),
+    radial-gradient(34% 40% at 70% 64%, hsl(calc(var(--h) + 60) 90% 50% / .24), transparent 70%),
+    radial-gradient(60% 50% at 50% 50%, hsl(calc(var(--h) - 40) 80% 30% / .22), transparent 75%);
+  filter: blur(70px) saturate(1.2);
+  animation: drift 26s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes drift {
+  50%  { transform: rotate(12deg) scale(1.08) translate(-2%, 2%); }
+  100% { transform: rotate(-10deg) scale(1.15) translate(3%, -2%); }
+}
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(ellipse 75% 70% at 50% 48%, transparent 40%, rgb(0 0 0 / .75) 100%);
+}
+
+.grain {
+  position: absolute;
+  inset: -50%;
+  pointer-events: none;
+  opacity: .075;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain .9s steps(6) infinite;
+}
+
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-3%, 2%); }
+  40%  { transform: translate(2%, -4%); }
+  60%  { transform: translate(-4%, -1%); }
+  80%  { transform: translate(3%, 3%); }
+  100% { transform: translate(-1%, 4%); }
+}
+
+.flash {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle at 50% 48%, hsl(var(--h) 100% 82% / .6), hsl(var(--h) 100% 60% / .15) 35%, transparent 65%);
+}
+
+/* ---------- stage ---------- */
+
+.stage {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.tilt {
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.bloom {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.bloom::before {
+  content: attr(data-n);
+  font: 700 calc(var(--size) / .73) / 1 "Bricolage Grotesque", sans-serif;
+  text-box: trim-both cap alphabetic;
+  color: hsl(var(--h) 100% 58%);
+  filter: blur(calc(var(--size) * .09));
+  opacity: calc(.16 + .5 * var(--pulse));
+  transform: scale(calc(.35 + .65 * var(--pulse)));
+}
+
+.grid {
+  --mx: calc(var(--size) / 2);
+  --my: calc(var(--size) / 2);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  grid-template-rows: repeat(var(--columns), 1fr);
+  gap: var(--gap);
+  width: 100%;
+  height: 100%;
+  -webkit-box-reflect: below calc(var(--gap) * 2) linear-gradient(to bottom, rgb(255 255 255 / .16), transparent 38%);
+}
+
+.grid span {
+  --dx: calc(var(--x) - (var(--columns) - 1) / 2);
+  --dy: calc(var(--y) - (var(--columns) - 1) / 2);
+  --hh: calc(var(--h) + (var(--dx) + var(--dy)) * 7);
+
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(calc(var(--size) * .55) circle at
+      calc(var(--mx) - var(--x) * var(--pitch))
+      calc(var(--my) - var(--y) * var(--pitch)),
+      rgb(255 255 255 / .085), transparent 70%),
+    linear-gradient(180deg, rgb(255 255 255 / .035), rgb(255 255 255 / .008));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / .06),
+    inset 0 1px 0 rgb(255 255 255 / .1),
+    0 24px 48px -24px rgb(0 0 0 / .9);
+  backdrop-filter: blur(6px);
+}
+
+.grid span::before {
+  --scale-t: calc(var(--scale-from) + (var(--scale-to) - var(--scale-from)) * var(--zoom));
+  --scale-min: calc(var(--scale-size) / var(--columns));
+  --scale: calc(var(--scale-min) + (1 - var(--scale-min)) * var(--scale-t));
+
+  content: attr(data-n);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-size: calc(var(--size) / .73);
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+
+  background: linear-gradient(168deg,
+    hsl(calc(var(--hh) - 25) 100% 94%) 22%,
+    hsl(var(--hh) 95% 68%) 48%,
+    hsl(calc(var(--hh) + 35) 92% 50%) 78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  transform:
+    translate(-50%, -50%)
+    translate(
+      calc(var(--dx) * var(--pitch) * var(--scale-t) * -1),
+      calc(var(--dy) * var(--pitch) * var(--scale-t) * -1)
+    )
+    scale(var(--scale));
+  will-change: transform;
+}
+
+/* glossy top edge */
+.grid span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgb(255 255 255 / .07), transparent 38%);
+  pointer-events: none;
+}
+
+/* corner brackets */
+.frame { position: absolute; inset: calc(var(--size) * -.045); pointer-events: none; }
+.frame b {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid rgb(255 255 255 / .28);
+}
+.frame b:nth-child(1) { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+.frame b:nth-child(2) { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+.frame b:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+.frame b:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* shockwave */
+.rings {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.rings i {
+  grid-area: 1 / 1;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  border: 1.5px solid hsl(var(--h) 100% 78% / .9);
+  box-shadow: 0 0 40px hsl(var(--h) 100% 60% / .5), inset 0 0 40px hsl(var(--h) 100% 60% / .3);
+  opacity: 0;
+}
+
+.burst .rings i { animation: ring 1.7s cubic-bezier(.12, .7, .2, 1) forwards; }
+.burst .rings i:nth-child(2) { animation-delay: .1s; }
+.burst .rings i:nth-child(3) { animation-delay: .22s; }
+.burst .flash { animation: flash 1.3s ease-out; }
+.burst .grid { animation: kick .9s cubic-bezier(.2, .9, .2, 1); }
+
+@keyframes ring  { 0% { opacity: .95; transform: scale(.15); } 100% { opacity: 0; transform: scale(2.8); } }
+@keyframes flash { 0% { opacity: 0; } 7% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes kick  { 0% { transform: scale(1); } 12% { transform: scale(1.045); } 100% { transform: scale(1); } }
+
+/* ---------- HUD ---------- */
+
+.hud {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(18px, 3.2vw, 36px);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  pointer-events: none;
+}
+.hud.top { top: 0; align-items: flex-start; }
+.hud.bottom { bottom: 0; align-items: flex-end; }
+
+.hud .col { display: grid; gap: 10px; }
+.hud .right { text-align: right; justify-items: end; }
+
+.state { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); }
+.state::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: hsl(var(--h) 100% 66%);
+  box-shadow: 0 0 0 3px hsl(var(--h) 100% 66% / .18), 0 0 16px hsl(var(--h) 100% 60%);
+  animation: blink 1s ease-in-out infinite;
+}
+.paused .state::before { animation: none; background: var(--dim); box-shadow: none; }
+
+@keyframes blink { 50% { opacity: .35; } }
+
+.timecode {
+  font-size: clamp(15px, 1.9vw, 22px);
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.timecode em { font-style: normal; color: hsl(var(--h) 100% 74%); }
+
+.segments { display: flex; gap: 5px; }
+.segments i {
+  width: clamp(12px, 2vw, 22px);
+  height: 3px;
+  border-radius: 2px;
+  background: var(--faint);
+  transition: background .4s, box-shadow .4s;
+}
+.segments i.on {
+  background: hsl(var(--h) 100% 70%);
+  box-shadow: 0 0 10px hsl(var(--h) 100% 60% / .8);
+}
+
+kbd {
+  font: inherit;
+  color: var(--ink);
+  padding: 2px 6px;
+  border: 1px solid rgb(255 255 255 / .18);
+  border-radius: 4px;
+  margin-right: 6px;
+}
+
+@media (max-width: 560px) {
+  .hud .hint { display: none; } /* .hud .col sets display: grid, so match its weight */
+  .hud { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora, .grain, .state::before { animation: none; }
+  :root { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="clip under" aria-hidden="true"><div class="aurora"></div></div>
+
+<main class="stage" id="stage" data-section="stage">
+  <h1 class="sr-only">T−Minus: a countdown from nine to zero on a grid of glass tiles</h1>
+  <div class="tilt" id="tilt" role="img" aria-label="A five by five grid of glass tiles counting down from nine to zero">
+    <div class="bloom" id="bloom" data-n="9"></div>
+    <div class="grid" id="grid"></div>
+    <div class="frame"><b></b><b></b><b></b><b></b></div>
+    <div class="rings"><i></i><i></i><i></i></div>
+  </div>
+  <div class="flash" aria-hidden="true"></div>
+</main>
+
+<div class="vignette" aria-hidden="true"></div>
+<div class="clip over" aria-hidden="true"><div class="grain"></div></div>
+
+<div data-section="hud">
+  <header class="hud top">
+    <div class="col">
+      <span class="state" id="state">Live</span>
+      <span>Sequence <span id="seq">001</span></span>
+    </div>
+    <div class="col right">
+      <span class="timecode" id="tc">T−00:09.000</span>
+      <span id="hue">Hue 205°</span>
+    </div>
+  </header>
+
+  <footer class="hud bottom">
+    <div class="col">
+      <span>Countdown</span>
+      <div class="segments" id="segments"></div>
+    </div>
+    <div class="col right hint">
+      <span><kbd>Space</kbd>Pause</span>
+      <span><kbd>R</kbd>Restart</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const stage = document.getElementById('stage');
+  const tilt = document.getElementById('tilt');
+  const grid = document.getElementById('grid');
+  const bloom = document.getElementById('bloom');
+  const tc = document.getElementById('tc');
+  const seqEl = document.getElementById('seq');
+  const hueEl = document.getElementById('hue');
+  const stateEl = document.getElementById('state');
+  const segWrap = document.getElementById('segments');
+
+  // stagger: seconds per ring away from the centre; columns: odd, so there is a centre tile
+  const CFG = { stagger: 0.06, columns: 5, burst: true, tilt: true, speed: 1 };
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // build tiles
+  let cells = [], centre = null;
+  function build() {
+    const COLS = CFG.columns;
+    root.style.setProperty('--columns', COLS);
+    grid.textContent = '';
+    cells = [];
+    const c = (COLS - 1) / 2;
+    for (let i = 0; i < COLS * COLS; i++) {
+      const x = i % COLS, y = Math.floor(i / COLS);
+      const el = document.createElement('span');
+      el.style.setProperty('--x', x);
+      el.style.setProperty('--y', y);
+      el.dataset.n = 9;
+      grid.appendChild(el);
+      cells.push({ el, n: null, x, y, ring: Math.abs(x - c) + Math.abs(y - c) });
+    }
+    centre = cells[Math.floor(cells.length / 2)];
+    tilt.setAttribute('aria-label', `A ${COLS} by ${COLS} grid of glass tiles counting down from nine to zero`);
+  }
+  build();
+
+  // progress segments
+  const segs = Array.from({ length: 10 }, () => {
+    const s = document.createElement('i');
+    segWrap.appendChild(s);
+    return s;
+  });
+
+  const ease = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+  const hueFor = n => 205 + (9 - n) * 20;   // cool blue → magenta → red → orange
+  const pad = (v, l) => String(v).padStart(l, '0');
+
+  // reduced motion starts paused on a mid pulse (6, digit at full size)
+  let elapsed = reduce ? 3.5 : 0;
+  let last = performance.now();
+  let paused = reduce;
+  let lastN = null;
+  document.body.classList.toggle('paused', paused);
+  stateEl.textContent = paused ? 'Paused' : 'Live';
+
+  // pointer / tilt
+  let px = 0, py = 0, rx = 0, ry = 0, pointerActive = false;
+
+  addEventListener('pointermove', e => {
+    pointerActive = true;
+    px = e.clientX / innerWidth * 2 - 1;
+    py = e.clientY / innerHeight * 2 - 1;
+    const r = grid.getBoundingClientRect();
+    grid.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    grid.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+  document.addEventListener('pointerleave', () => { pointerActive = false; });
+
+  function burst() {
+    if (!CFG.burst || reduce) return;
+    stage.classList.remove('burst');
+    void stage.offsetWidth;
+    stage.classList.add('burst');
+  }
+
+  function restart() {
+    elapsed = 0;
+    lastN = null;
+    stage.classList.remove('burst');
+  }
+
+  function setPaused(v) {
+    paused = v;
+    document.body.classList.toggle('paused', paused);
+    stateEl.textContent = paused ? 'Paused' : 'Live';
+  }
+  const step = (dir) => { setPaused(true); elapsed = Math.max(0, elapsed + dir * 0.25); };
+
+  addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); setPaused(!paused); }
+    else if (e.key === 'r' || e.key === 'R') restart();
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); step(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); step(-1); }
+  });
+  stage.addEventListener('click', restart);
+
+  let lastPulse = 0;
+  function frame(now) {
+    const dt = Math.min(now - last, 100) / 1000 * CFG.speed;
+    last = now;
+    if (!paused && !document.hidden) elapsed += dt;
+    const t = elapsed;
+
+    // tiles: digit flips and pulse ripple outward from the centre
+    for (const c of cells) {
+      const local = Math.max(0, t - c.ring * CFG.stagger);
+      const n = 9 - (Math.floor(local) % 10);
+      if (c.n !== n) { c.n = n; c.el.dataset.n = n; }
+      const ph = local % 1;
+      const z = ease(ph < .5 ? ph * 2 : 2 - ph * 2);
+      c.el.style.setProperty('--zoom', z.toFixed(4));
+      if (c === centre) { root.style.setProperty('--pulse', z.toFixed(4)); lastPulse = z; }
+    }
+
+    // global state
+    const n = 9 - (Math.floor(t) % 10);
+    if (n !== lastN) {
+      const ticked = lastN !== null;
+      lastN = n;
+      const h = hueFor(n);
+      root.style.setProperty('--h', h);
+      bloom.dataset.n = n;
+      hueEl.textContent = `Hue ${pad(h % 360, 3)}°`;
+      segs.forEach((s, i) => s.classList.toggle('on', i < 10 - n));
+      if (n === 0 && t > 0.5 && ticked && !paused) burst();
+    }
+
+    // timecode until zero
+    const rem = Math.max(0, 9 - (t % 10));
+    const secs = Math.floor(rem);
+    const ms = Math.floor((rem - secs) * 1000);
+    tc.innerHTML = rem === 0
+      ? 'T−00:00.000 <em>Zero</em>'
+      : `T−00:${pad(secs, 2)}.${pad(ms, 3)}`;
+    seqEl.textContent = pad(Math.floor(t / 10) + 1, 3);
+
+    // tilt: follow the pointer, gentle sway when idle
+    const on = CFG.tilt && !reduce;
+    const tx = !on ? 0 : pointerActive ? -py * 9 : Math.sin(now / 2200) * 3;
+    const ty = !on ? 0 : pointerActive ?  px * 12 : Math.cos(now / 2700) * 4;
+    rx += (tx - rx) * 0.06;
+    ry += (ty - ry) * 0.06;
+    tilt.style.transform = `perspective(1400px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+
+    requestAnimationFrame(frame);
+  }
+
+  requestAnimationFrame(frame);
+
+  /* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The page works on its own; when it
+     is framed, the lab drives it with postMessage and it reports where
+     the countdown is.
+       ?autoplay=2400   play on load even under reduced motion (previews)
+       { source: 'il-motion', type: 'speed', value: 0.25 }
+       { ..., type: 'step', value: 1 | -1 }      pause and step a quarter second
+       { ..., type: 'stagger', value: 0.06 }     seconds per ring out from the centre
+       { ..., type: 'columns', value: 5 }        3, 5 or 7 tiles a side
+       { ..., type: 'burst', value: true }       shockwave at zero
+       { ..., type: 'tilt', value: true }        pointer tilt and idle sway
+       { ..., type: 'autoplay', value: true | false }   play / pause
+  ------------------------------------------------------------------ */
+  const qs = new URLSearchParams(location.search);
+  if (qs.has('autoplay')) setPaused(false);
+  let touched = false;
+  addEventListener('message', (e) => {
+    const d = e.data;
+    if (!d || d.source !== 'il-motion') return;
+    if (d.type === 'speed') CFG.speed = Math.max(0.05, Number(d.value) || 1);
+    if (d.type === 'step') step(d.value > 0 ? 1 : -1);
+    if (d.type === 'stagger') CFG.stagger = Math.min(0.3, Math.max(0, Number(d.value) || 0));
+    if (d.type === 'columns') {
+      // odd counts only, so a centre tile exists for the ripple and the bloom
+      const v = Math.round(Number(d.value) || 5);
+      const cols = Math.min(7, Math.max(3, v % 2 ? v : v + 1));
+      if (cols !== CFG.columns) { CFG.columns = cols; build(); }
+    }
+    if (d.type === 'burst') CFG.burst = Boolean(d.value);
+    if (d.type === 'tilt') CFG.tilt = Boolean(d.value);
+    // The lab sends autoplay:false on load; only a real press pauses the loop
+    if (d.type === 'autoplay') { if (d.value) setPaused(false); else if (touched) setPaused(true); touched = true; }
+  });
+  let lastText = '';
+  const report = () => {
+    const n = lastN ?? 9;
+    const state = paused ? 'PAUSED · SPACE TO PLAY' : 'PLAYING';
+    const text = `T−${n} · PULSE ${String(Math.round(lastPulse * 100)).padStart(2, '0')}% · ${state}`;
+    if (text !== lastText) {
+      lastText = text;
+      if (parent !== window) parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*');
+    }
+    setTimeout(report, 120);
+  };
+  report();
+})();
+</script>
+</body>
+</html>

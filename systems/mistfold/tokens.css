@@ -1,0 +1,149 @@
+/* InstaLanding design system · Mistfold · mistfold@1.0.0
+   Extracted from https://instalanding.ai/demos/mistfold-biology-workbench.html
+   Fonts (Google Fonts): UnifrakturMaguntia (display), Fanwood Text 400 + italic (text), Cinzel 400-900 (numerals and small caps), JetBrains Mono 400/600 (code) */
+:root {
+  /* Color · paper & ink */
+  --mf-paper: #F4F2EC;
+  --mf-card: #FDFCF9;
+  --mf-card-deep: #F7F5EF;
+  --mf-tint: #EEF2EF;
+  --mf-white: #FFFFFF;
+  --mf-glass: #FAF9F5;
+  --mf-ink: #4D524F;
+  --mf-ink-strong: #1D2420;
+  --mf-ink-soft: #7A7F7B;
+  --mf-placeholder: #8D918E;
+  --mf-line: #E2DED3;
+  --mf-line-dark: #D3CEC1;
+  --mf-line-faint: #EFECE4;
+
+  /* Color · illumination */
+  --mf-sage: #4C7264;
+  --mf-sage-dark: #3D5E52;
+  --mf-sage-deep: #2F5145;
+  --mf-sage-light: #7FAE9C;
+  --mf-mint: #8FBCAA;
+  --mf-blue: #4C6D7B;
+  --mf-violet: #675A7C;
+  --mf-mauve: #86667F;
+  --mf-lilac: #B3A3C6;
+
+  /* Color · house accents */
+  --mf-ochre: #897A5D;
+  --mf-umber: #85613A;
+  --mf-moss: #4E663E;
+  --mf-olive: #7D7A4C;
+  --mf-oxblood: #792E2E;
+  --mf-plum: #5D4144;
+  --mf-rust: #653E2F;
+
+  /* Color · surfaces */
+  --mf-foot: #FBFAF6;
+  --mf-medal-mid: #F4F6F3;
+  --mf-medal-edge: #E7ECE8;
+  --mf-code-bg: #F3F1EA;
+  --mf-code-ink: #2C4A40;
+  --mf-code-comment: #80847F;
+  --mf-code-string: #6A6740;
+
+  /* Color · gradients */
+  --mf-title-grad: linear-gradient(298deg, var(--mf-ink-strong) 5%, var(--mf-sage), var(--mf-sage-light) 70%, var(--mf-sage));
+  --mf-mark-grad: linear-gradient(110deg, var(--mf-sage), var(--mf-mint), var(--mf-blue), var(--mf-violet), var(--mf-lilac), var(--mf-sage));
+  --mf-medal-grad: conic-gradient(from 210deg, var(--mf-sage), var(--mf-mint), var(--mf-blue), var(--mf-violet), var(--mf-lilac), var(--mf-sage));
+  --mf-star-grad: linear-gradient(135deg, var(--mf-sage), var(--mf-violet));
+
+  /* Type · families */
+  --mf-font-display: "UnifrakturMaguntia", serif;
+  --mf-font-text: "Fanwood Text", serif;
+  --mf-font-numeral: "Cinzel", serif;
+  --mf-font-mono: "JetBrains Mono", monospace;
+
+  /* Type · scale */
+  --mf-wordmark: clamp(110px, 22vw, 260px);
+  --mf-display: 58px;
+  --mf-title-cta: 52px;
+  --mf-title: 44px;
+  --mf-display-sm: 40px;
+  --mf-title-sm: 38px;
+  --mf-price: 32px;
+  --mf-name: 30px;
+  --mf-logo: 28px;
+  --mf-numeral: 26px;
+  --mf-fleuron: 22px;
+  --mf-subtitle: 19px;
+  --mf-lead: 18px;
+  --mf-text: 17px;
+  --mf-card-text: 16px;
+  --mf-foot-text: 15px;
+  --mf-small: 14.5px;
+  --mf-step: 14px;
+  --mf-code: 12.5px;
+  --mf-label: 12px;
+  --mf-fine: 11.5px;
+  --mf-caps: 11px;
+  --mf-caps-sm: 10.5px;
+  --mf-micro: 9.5px;
+
+  /* Shape · radii */
+  --mf-radius-sm: 6px;
+  --mf-radius: 8px;
+  --mf-radius-lg: 10px;
+  --mf-radius-xl: 14px;
+  --mf-radius-glow: 16px;
+  --mf-corner: scoop;
+
+  /* Shape · borders */
+  --mf-hair: 1px;
+  --mf-rule: 2px;
+  --mf-spine: 3px;
+  --mf-ring-w: 2px;
+  --mf-ring-w-tier: 1.5px;
+  --mf-focus: 2px;
+  --mf-frame-inset: 7px;
+  --mf-tier-inset: 5px;
+
+  /* Shape · marks */
+  --mf-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5c.6 5.6 4.9 9.9 10.5 10.5-5.6.6-9.9 4.9-10.5 10.5C11.4 16.9 7.1 12.6 1.5 12 7.1 11.4 11.4 7.1 12 1.5z'/%3E%3C/svg%3E");
+
+  /* Depth · rings */
+  --mf-ring-stops: var(--mf-line-dark) 0%, var(--mf-sage) 12%, var(--mf-mint) 19%, var(--mf-blue) 27%, var(--mf-line-dark) 40%, var(--mf-line-dark) 52%, var(--mf-violet) 64%, var(--mf-lilac) 70%, var(--mf-sage) 80%, var(--mf-line-dark) 92%;
+  --mf-ring-glow-stops: transparent 0%, var(--mf-sage) 12%, var(--mf-mint) 19%, var(--mf-blue) 27%, transparent 40%, transparent 52%, var(--mf-violet) 64%, var(--mf-lilac) 70%, var(--mf-sage) 80%, transparent 92%;
+
+  /* Depth · shadows and glow */
+  --mf-shadow-btn: 0 6px 18px -8px color-mix(in srgb, var(--mf-sage) 60%, transparent);
+  --mf-shadow-card: 0 14px 30px -22px color-mix(in srgb, var(--mf-ink-strong) 35%, transparent);
+  --mf-shadow-medal: 0 6px 14px -8px color-mix(in srgb, var(--mf-ink-strong) 35%, transparent);
+  --mf-shadow-field: 0 18px 40px -26px color-mix(in srgb, var(--mf-ink-strong) 45%, transparent);
+  --mf-shadow-field-focus: 0 18px 40px -22px color-mix(in srgb, var(--mf-sage) 55%, transparent);
+  --mf-glow-blur: 20px;
+  --mf-glow-opacity: 0.28;
+  --mf-glass-blur: 10px;
+
+  /* Motion · easing */
+  --mf-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --mf-ease-spark: cubic-bezier(0.65, 0, 0.35, 1);
+  --mf-ease-sweep: cubic-bezier(0.45, 0, 0.2, 1);
+
+  /* Motion · durations */
+  --mf-dur: 0.25s;
+  --mf-dur-reveal: 0.7s;
+  --mf-dur-draw: 1.4s;
+  --mf-medal-spin: 2.4s;
+  --mf-ring-spin-fast: 6s;
+  --mf-ring-spin: 9s;
+  --mf-shimmer: 10s;
+  --mf-shimmer-slow: 12s;
+  --mf-aurora: 16s;
+
+  /* Space · layout */
+  --mf-nav-w: 1100px;
+  --mf-finale-w: 1000px;
+  --mf-frame-w: 760px;
+  --mf-tiers-w: 680px;
+  --mf-flow-w: 620px;
+  --mf-stats-w: 600px;
+  --mf-cards-w: 580px;
+  --mf-intro-w: 560px;
+  --mf-frame-pad: 40px 30px;
+  --mf-frame-gap: 44px;
+}

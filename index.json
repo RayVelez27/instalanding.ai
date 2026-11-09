@@ -2,8 +2,63 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 94,
+  "count": 95,
   "pages": [
+    {
+      "slug": "nimbus-ai-assistant-page",
+      "title": "Nimbus AI Assistant Page",
+      "description": "A light, coral-accented page for an all-in-one AI assistant: a hero under a parallax sky of canvas-drawn clouds with two tilted CSS phones, a glass-pill nav that shrinks on scroll, a three-slide product carousel, a logo ticker, a dark integrations panel with tool tiles orbiting the logo on three rings, masonry testimonials, pricing with a shared annual switch, journal cards with SVG art, an FAQ accordion and a sky CTA that overlaps the footer",
+      "category": "web",
+      "theme": "light",
+      "added": "Nov 8, 2026",
+      "bestFor": [
+        "AI assistants and copilots",
+        "productivity SaaS",
+        "mobile-first AI apps",
+        "integration-heavy platforms"
+      ],
+      "style": [
+        "light",
+        "serif-display",
+        "sky",
+        "glassmorphism",
+        "phone-mockups"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "process",
+        "integrations",
+        "testimonials",
+        "pricing",
+        "blog",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Instrument Serif",
+          "Inter"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/nimbus-ai-assistant-page/index.html",
+        "prompt": "pages/nimbus-ai-assistant-page/PROMPT.md",
+        "preview": "pages/nimbus-ai-assistant-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/nimbus-ai-assistant.html",
+      "page": "https://instalanding.ai/prompt/nimbus-ai-assistant-page"
+    },
     {
       "slug": "bryo-ai-moss-cultivation-page",
       "title": "Bryo AI Moss Cultivation Page",

@@ -1,0 +1,108 @@
+/* InstaLanding design system · Cyber Bird · cyber-bird@1.0.0
+   Extracted from https://instalanding.ai/demos/cyber-bird-arcade.html
+   Fonts (Google Fonts): Jersey 10 (pixel display), Geist 400-600 (text), Geist Mono 400-500 (labels, figures)
+   Themes: set data-cb-theme="night|dawn|day" on the .cb root; it swaps the glow pair below */
+:root {
+  /* Color · core */
+  --cb-bg: #04050B;
+  --cb-ink: #EEF3FF;
+  --cb-muted: #98A0B3;
+  --cb-dim: #5D6477;
+  --cb-accent: #2FE0FF;
+  --cb-accent-hi: #7AF0FF;
+  --cb-accent-ink: #031218;
+  --cb-key: #0B0A1A;
+  --cb-title-ink: #EAF3FF;
+  --cb-void: #000000;
+  --cb-track: #2A2D36;
+
+  /* Color · skies (the glow pair per theme) */
+  --cb-night-glow: #3B5BFF;
+  --cb-night-glow2: #4FD8FF;
+  --cb-dawn-glow: #9B37FF;
+  --cb-dawn-glow2: #FF8A5C;
+  --cb-day-glow: #2D7BFF;
+  --cb-day-glow2: #9FD0FF;
+
+  /* Color · sticker & code */
+  --cb-sticker-hi: #8AF3FF;
+  --cb-sticker-mid: #2FC8FF;
+  --cb-sticker-lo: #2D6BFF;
+  --cb-code-ink: #C9D1E3;
+  --cb-code-key: #FF7A8A;
+  --cb-code-str: #9FE0A8;
+  --cb-code-num: #FFCF6B;
+
+  /* Color · lines & glass */
+  --cb-line: rgba(238, 243, 255, .09);
+  --cb-line2: rgba(238, 243, 255, .17);
+  --cb-fill: rgba(255, 255, 255, .03);
+  --cb-fill-hi: rgba(255, 255, 255, .07);
+  --cb-glass: rgba(6, 8, 18, .62);
+  --cb-panel: rgba(6, 8, 16, .94);
+  --cb-well: rgba(0, 0, 0, .45);
+  --cb-scanline: rgba(255, 255, 255, .022);
+
+  /* Type · families */
+  --cb-font-display: "Jersey 10", monospace;
+  --cb-font-text: "Geist", system-ui, -apple-system, sans-serif;
+  --cb-font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* Type · scale */
+  --cb-title: clamp(108px, 19vw, 270px);
+  --cb-final: clamp(66px, 11.5vw, 176px);
+  --cb-h2: clamp(54px, 7.2vw, 100px);
+  --cb-mode: 72px;
+  --cb-log: 64px;
+  --cb-big: 46px;
+  --cb-h3: 40px;
+  --cb-keycap: 30px;
+  --cb-brand: 28px;
+  --cb-lede: clamp(16px, 1.6vw, 19px);
+  --cb-body: 15px;
+  --cb-label-lg: 12px;
+  --cb-label: 11px;
+  --cb-micro: 10px;
+
+  /* Shape · radii */
+  --cb-pill: 999px;
+  --cb-r-console: 20px;
+  --cb-r-card: 18px;
+  --cb-r-nav: 14px;
+  --cb-r-btn: 12px;
+  --cb-r-seg: 10px;
+  --cb-r-icon: 9px;
+  --cb-r-link: 8px;
+  --cb-r-chip: 7px;
+  --cb-r-badge: 6px;
+  --cb-r-kbd: 5px;
+
+  /* Shape · borders */
+  --cb-hair: 1px;
+  --cb-key-border: 3px;
+
+  /* Depth · pixel steps and glass */
+  --cb-step: .04em;
+  --cb-step-title: .035em;
+  --cb-key-step: 4px;
+  --cb-blur: blur(16px) saturate(1.4);
+
+  /* Motion · easing */
+  --cb-ease: cubic-bezier(.2, .7, .2, 1);
+
+  /* Motion · durations */
+  --cb-dur-fast: .2s;
+  --cb-dur: .25s;
+  --cb-dur-card: .4s;
+  --cb-dur-glow: .9s;
+  --cb-dur-gauge: 1s;
+  --cb-blink: 1.4s;
+  --cb-marquee: 46s;
+
+  /* Space · layout */
+  --cb-maxw: 1200px;
+  --cb-gutter: 16px;
+  --cb-block: 150px;
+  --cb-gap: 14px;
+  --cb-head-gap: 48px;
+}

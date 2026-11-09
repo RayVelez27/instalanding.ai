@@ -1,0 +1,93 @@
+/* InstaLanding design system · Modelyard · modelyard@1.0.0
+   Extracted from https://instalanding.ai/demos/modelyard-router.html
+   Fonts (Google Fonts): Anton (display, always capitals), Inter 300-800 (text), JetBrains Mono 400-600 (labels, data, code) */
+:root {
+  /* Color · core */
+  --my-blue: #183FAD;
+  --my-blue-2: #3253B6;
+  --my-blue-3: #ABB9DE;
+  --my-blue-deep: #0D2770;
+  --my-yellow: #F1BF0A;
+  --my-ink: #0B0D14;
+  --my-white: #FFFFFF;
+
+  /* Color · surfaces */
+  --my-bg: #FFFFFF;
+  --my-chip: #EEF0F7;
+  --my-soft: #C7D1EC;
+  --my-mist: #E9ECF6;
+  --my-knob: #E9EBF2;
+  --my-night: #0B0F1F;
+  --my-muted: #586078;
+  --my-ok: #3DDC97;
+  --my-line: rgba(11, 13, 20, 0.11);
+  --my-line-strong: rgba(11, 13, 20, 0.24);
+  --my-glow: rgba(120, 150, 255, 0.22);
+  --my-glow-night: rgba(70, 105, 230, 0.32);
+
+  /* Color · code */
+  --my-code-bg: #0A1233;
+  --my-code-fg: #DDE3F5;
+  --my-code-key: #F1BF0A;
+  --my-code-str: #A9BBF0;
+  --my-code-dim: #6C789E;
+
+  /* Type · families */
+  --my-font-display: "Anton", Impact, "Arial Narrow", sans-serif;
+  --my-font-text: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --my-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Type · scale */
+  --my-display: clamp(48px, 11.2vw, 124px);
+  --my-menu-lg: clamp(56px, 7.5vw, 88px);
+  --my-h2: clamp(42px, 7.4vw, 66px);
+  --my-menu: clamp(40px, 13vw, 60px);
+  --my-h2-code: clamp(36px, 5.4vw, 54px);
+  --my-h2-console: clamp(34px, 5vw, 50px);
+  --my-h2-cta: clamp(32px, 4.8vw, 48px);
+  --my-price: 48px;
+  --my-stat: 36px;
+  --my-h3: 28px;
+  --my-lead: 17px;
+  --my-text: 16px;
+  --my-ui: 15px;
+  --my-small: 13px;
+  --my-eyebrow: 11px;
+
+  /* Shape · radii */
+  --my-r: 32px;
+  --my-r-sm: 20px;
+  --my-pill: 999px;
+
+  /* Shape · borders */
+  --my-focus: 2px;
+
+  /* Depth · moulded plastic and grain */
+  --my-sh-raised: 0 1px 1px rgba(9, 12, 30, 0.08), 0 8px 18px -10px rgba(9, 12, 30, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -2px 3px -1px rgba(0, 0, 0, 0.14), inset 0 12px 18px -6px rgba(255, 255, 255, 0.22);
+  --my-sh-pressed: 0 1px 1px rgba(9, 12, 30, 0.06), inset 0 2px 6px rgba(0, 0, 0, 0.22), inset 0 -4px 10px -2px rgba(255, 255, 255, 0.35);
+  --my-sh-knob: 0 12px 22px -10px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -3px 4px -1px rgba(0, 0, 0, 0.16), inset 0 16px 22px -8px rgba(255, 255, 255, 0.5);
+  --my-sh-knob-on: 0 6px 14px -8px rgba(0, 0, 0, 0.5), inset 0 3px 7px rgba(0, 0, 0, 0.2), inset 0 -5px 10px -2px rgba(255, 255, 255, 0.45);
+  --my-sh-term: 0 30px 60px -30px rgba(10, 18, 51, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --my-sh-night: 0 30px 60px -34px rgba(11, 15, 31, 0.7);
+  --my-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+
+  /* Motion · easing */
+  --my-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Motion · durations */
+  --my-dur-hover: 200ms;
+  --my-dur-button: 220ms;
+  --my-dur-press: 260ms;
+  --my-dur-turn: 300ms;
+  --my-dur-open: 360ms;
+  --my-dur-swap: 420ms;
+  --my-dur-fill: 480ms;
+  --my-rig: 7.5s;
+
+  /* Space · layout */
+  --my-wrap: 1080px;
+  --my-gap: 16px;
+  --my-s-xl: clamp(80px, 11vw, 136px);
+  --my-s-l: clamp(64px, 8vw, 96px);
+  --my-s-m: clamp(36px, 5vw, 52px);
+}
