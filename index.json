@@ -2,8 +2,197 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 91,
+  "count": 94,
   "pages": [
+    {
+      "slug": "bryo-ai-moss-cultivation-page",
+      "title": "Bryo AI Moss Cultivation Page",
+      "description": "A misty sage-and-lime page for an AI that grows moss, painted entirely in code: a floating moss island with a fern under a scroll-driven camera that dollies down into a fogged conifer valley, telling a five-beat story (headline, word-by-word vision, an account with sensor hotspots, a field card with a coverage sparkline and a feature list), then use-case cards with generated aerial art, counting stats, four growth loops, a live moss-growth simulation with AI detection boxes, pricing, an FAQ and a waitlist CTA",
+      "category": "web",
+      "theme": "light",
+      "added": "Nov 8, 2026",
+      "bestFor": [
+        "climate and agritech startups",
+        "AI for the physical world",
+        "hardware with a cloud service",
+        "landscape and green-infrastructure teams"
+      ],
+      "style": [
+        "light",
+        "nature",
+        "scroll-story",
+        "canvas-art",
+        "lime"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "use-cases",
+        "how-it-works",
+        "product",
+        "pricing",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Inter Tight",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/bryo-ai-moss-cultivation-page/index.html",
+        "prompt": "pages/bryo-ai-moss-cultivation-page/PROMPT.md",
+        "preview": "pages/bryo-ai-moss-cultivation-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/bryo-ai-moss-cultivation.html",
+      "page": "https://instalanding.ai/prompt/bryo-ai-moss-cultivation-page"
+    },
+    {
+      "slug": "landra-ai-landing-page-generator-page",
+      "title": "Landra AI Landing Page Generator Page",
+      "description": "A black-and-lime page for an AI tool that turns one sentence into a landing page: a WebGL hero strip of eight generated pages that bends with drag speed and opens any one full screen through a pixel-mosaic dissolve, a giant LANDRA wordmark with a prompt box, and a live demo where a typed prompt builds a themed mock site step by step with a timer, then features, counting stats, a monthly / yearly pricing toggle, an FAQ and a prompt CTA",
+      "category": "web",
+      "theme": "dark",
+      "added": "Nov 8, 2026",
+      "bestFor": [
+        "AI website and page builders",
+        "generative design tools",
+        "no-code and marketing SaaS",
+        "AI product launches with a live demo"
+      ],
+      "style": [
+        "dark",
+        "lime",
+        "webgl",
+        "gallery",
+        "live-demo"
+      ],
+      "sections": [
+        "topbar",
+        "hero",
+        "logos",
+        "how-it-works",
+        "demo",
+        "features",
+        "stats",
+        "pricing",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "gsap",
+            "version": "3.12.5",
+            "cdn": "jsdelivr"
+          },
+          {
+            "name": "three",
+            "version": "0.169.0",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Inter Tight"
+        ],
+        "features": [
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/landra-ai-landing-page-generator-page/index.html",
+        "prompt": "pages/landra-ai-landing-page-generator-page/PROMPT.md",
+        "preview": "pages/landra-ai-landing-page-generator-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/landra-ai-landing-page-generator.html",
+      "page": "https://instalanding.ai/prompt/landra-ai-landing-page-generator-page"
+    },
+    {
+      "slug": "buttonzilla-glass-console-page",
+      "title": "ButtonZilla Glass Console Page",
+      "description": "A dark hardware-style console for live 3D glass buttons: a WebGL monitor with a refracting, bevelled pill button that tilts on hover, squashes on press and sends a ripple through its surface, a solo or eight-up grid view, an amber LCD readout with signal meters, eight preset channels (Frosted, Crystal, Amber, Jelly, Bubble, Cobalt, Clay, Sea glass), and rotary knobs for shape, glass, liquid and scene, with Shuffle, Reset and Copy JSON",
+      "category": "web",
+      "theme": "dark",
+      "added": "Nov 8, 2026",
+      "bestFor": [
+        "UI component generators",
+        "design tool and plugin sites",
+        "3D and WebGL showcases",
+        "interactive product playgrounds"
+      ],
+      "style": [
+        "dark",
+        "hardware",
+        "webgl",
+        "glass",
+        "three.js"
+      ],
+      "sections": [
+        "nav",
+        "monitor",
+        "rack",
+        "bank",
+        "modules",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [
+          {
+            "name": "three",
+            "version": "0.170.0",
+            "cdn": "jsdelivr"
+          }
+        ],
+        "fonts": [
+          "Inter",
+          "JetBrains Mono",
+          "Unbounded",
+          "Onest",
+          "Manrope",
+          "Geologica",
+          "Rubik"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [
+        {
+          "label": "ButtonZilla by Shakuro",
+          "href": "https://buttonzilla.vercel.app",
+          "note": "The 3D glass buttons this console drives, credited in the page's foot line"
+        }
+      ],
+      "files": {
+        "html": "pages/buttonzilla-glass-console-page/index.html",
+        "prompt": "pages/buttonzilla-glass-console-page/PROMPT.md",
+        "preview": "pages/buttonzilla-glass-console-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/buttonzilla-glass-console.html",
+      "page": "https://instalanding.ai/prompt/buttonzilla-glass-console-page"
+    },
     {
       "slug": "forgewave-vibe-manufacturing-studio-page",
       "title": "Forgewave Vibe-Manufacturing Studio Page",

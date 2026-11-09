@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stretch Type · InstaLanding Motion</title>
+<!--
+  STRETCH TYPE · InstaLanding Motion
+  After a GSAP MorphSVG study inspired by volumkonferansen.no, which spells FIRE in
+  three stacked copies per letter and morphs each copy between a short and a tall
+  version, so one grows while another shrinks. This version spells MOTION and needs
+  no plugin: every letter is a function of its top and height, redrawn each frame,
+  so the strokes stay 15.5 units thick however far a letter stretches.
+
+  MAP
+    data-section="stage"     the SVG (six letter columns, three stacked copies each)
+    data-section="controls"  the caption
+
+  ADAPTING
+    - Colours: --bg and --ink on :root.
+    - Letters: GLYPHS maps a character to a draw(x, y, h) function and a width; add
+      one there and change WORD. Built from rectangles and bands, 15.5 units thick.
+    - Motion: CFG.duration (one stretch, the original's 2.5s), CFG.short (the
+      shortest copy, 72 units of 486), CFG.sync (lock every column together).
+      SEEK and SCALE give each column its own offset and tempo, as the original did.
+    - Drag the stage up or down to scrub; Space pauses; arrows step.
+-->
+<style>
+  :root { --bg: #000; --ink: #ff3c38; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    min-height: 100svh;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  main {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px 64px;
+  }
+  .mark {
+    position: absolute;
+    top: 18px;
+    left: 22px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(255, 60, 56, .55);
+  }
+  .stage {
+    touch-action: none;
+    cursor: ns-resize;
+    outline: none;
+    border-radius: 6px;
+    line-height: 0;
+  }
+  .stage:focus-visible { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink); }
+  svg {
+    display: block;
+    height: min(70vh, 70svh);
+    max-width: 92vw;
+    width: auto;
+    overflow: visible;
+  }
+  svg path { fill: currentColor; }
+  .controls {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 0 16px;
+  }
+  h1 {
+    font-size: 15px;
+    font-weight: 450;
+    letter-spacing: -.01em;
+    color: rgba(255, 60, 56, .75);
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="mark" aria-hidden="true">Stretch Type · Motion study</p>
+  <div class="stage" data-section="stage" tabindex="0" role="img" aria-label="The word MOTION in three stacked copies whose letters stretch and shrink">
+    <svg id="type" viewBox="0 0 297 486" aria-hidden="true"></svg>
+  </div>
+  <div class="controls" data-section="controls">
+    <h1>Drag up or down to scrub · Space to pause</h1>
+  </div>
+</main>
+
+<script>
+  const svg = document.getElementById('type')
+  const stage = document.querySelector('.stage')
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)')
+  const NS = 'http://www.w3.org/2000/svg'
+
+  const CFG = { duration: 2.5, short: 72, sync: false, speed: 1 }
+  const TOTAL = 486, GAP = 21, MID = 162, S = 15.565, LETTER_GAP = 11
+
+  /* ---------- glyphs: each draws itself at (x, y) with height h ---------- */
+  const rect = (x, y, w, h) => `M${x} ${y}H${x + w}V${y + h}H${x}Z`
+  const quad = (a, b, c, d) => `M${a[0]} ${a[1]}L${b[0]} ${b[1]}L${c[0]} ${c[1]}L${d[0]} ${d[1]}Z`
+  const round = (x, y, w, h, r) => {
+    r = Math.min(r, w / 2, h / 2)
+    return `M${x + r} ${y}H${x + w - r}Q${x + w} ${y} ${x + w} ${y + r}V${y + h - r}Q${x + w} ${y + h} ${x + w - r} ${y + h}H${x + r}Q${x} ${y + h} ${x} ${y + h - r}V${y + r}Q${x} ${y} ${x + r} ${y}Z`
+  }
+  // the inner counter runs the other way, so nonzero filling leaves a hole
+  const roundRev = (x, y, w, h, r) => {
+    r = Math.min(r, w / 2, h / 2)
+    return `M${x + r} ${y}Q${x} ${y} ${x} ${y + r}V${y + h - r}Q${x} ${y + h} ${x + r} ${y + h}H${x + w - r}Q${x + w} ${y + h} ${x + w} ${y + h - r}V${y + r}Q${x + w} ${y} ${x + w - r} ${y}Z`
+  }
+  const GLYPHS = {
+    M: { w: 60, draw: (x, y, h, w) => {
+      // thinner bands than N's, so the V's notch stays open at the top
+      const cx = x + w / 2, d = Math.max(S * 2.6, h * 0.5), b = S * 1.1
+      return rect(x, y, S, h) + rect(x + w - S, y, S, h) +
+        quad([x, y], [x + b, y], [cx + b / 2, y + d], [cx - b / 2, y + d]) +
+        quad([x + w - b, y], [x + w, y], [cx + b / 2, y + d], [cx - b / 2, y + d])
+    } },
+    O: { w: 38, draw: (x, y, h, w) => round(x, y, w, h, 13) + roundRev(x + S, y + S, w - 2 * S, Math.max(0, h - 2 * S), 2) },
+    T: { w: 40, draw: (x, y, h, w) => rect(x, y, w, S) + rect(x + (w - S) / 2, y, S, h) },
+    I: { w: 16, draw: (x, y, h, w) => rect(x, y, w, h) },
+    // the diagonal runs between the stems and keeps the stroke's thickness at any slope (capped so short counters stay open)
+    N: { w: 50, draw: (x, y, h, w) => {
+      const inner = w - 2 * S, v = Math.min(S * Math.hypot(inner, h) / inner, h * 0.42)
+      return rect(x, y, S, h) + rect(x + w - S, y, S, h) + quad([x + S, y], [x + w - S, y + h - v], [x + w - S, y + h], [x + S, y + v])
+    } },
+  }
+  const WORD = 'MOTION'
+  // Each column's own offset (seconds) and tempo, like the original's seek() and timescale()
+  const SEEK = [1, 0, 1.5, 1, 0.5, 2]
+  const SCALE = [0.8, 1, 1.2, 1, 0.9, 1.1]
+
+  const columns = []
+  let x = 0
+  for (const ch of WORD) {
+    const g = GLYPHS[ch]
+    const paths = [0, 1, 2].map(() => svg.appendChild(document.createElementNS(NS, 'path')))
+    columns.push({ g, x, paths })
+    x += g.w + LETTER_GAP
+  }
+  svg.setAttribute('viewBox', `0 0 ${x - LETTER_GAP} ${TOTAL}`)
+
+  /* ---------- the stretch: power1.inOut, there and back ---------- */
+  const ease = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2)
+  const phaseAt = (t) => {
+    const c = ((t / CFG.duration) % 2 + 2) % 2 // 0..2: forward, then back
+    return ease(c < 1 ? c : 2 - c)
+  }
+
+  let t = 0, playing = !reduce.matches, lastP = 0
+  const draw = () => {
+    const tall = TOTAL - 2 * GAP - MID - CFG.short
+    columns.forEach((col, i) => {
+      const lt = CFG.sync ? t : (t + SEEK[i]) * SCALE[i]
+      const p = phaseAt(lt)
+      if (i === 0) lastP = p
+      const h1 = CFG.short + (tall - CFG.short) * p
+      const h3 = tall + (CFG.short - tall) * p
+      const ys = [0, h1 + GAP, h1 + GAP + MID + GAP]
+      const hs = [h1, MID, h3]
+      col.paths.forEach((path, k) => path.setAttribute('d', col.g.draw(col.x, ys[k], hs[k], col.g.w)))
+    })
+  }
+
+  let last = performance.now()
+  const frame = (now) => {
+    const dt = Math.min(0.05, (now - last) / 1000) * CFG.speed
+    last = now
+    if (playing && !dragging && !document.hidden) t += dt
+    draw()
+    requestAnimationFrame(frame)
+  }
+
+  /* ---------- input: scrub, pause, step ---------- */
+  let dragging = false, lastY = 0
+  stage.addEventListener('pointerdown', (e) => {
+    dragging = true; lastY = e.clientY
+    stage.setPointerCapture(e.pointerId)
+  })
+  stage.addEventListener('pointermove', (e) => {
+    if (!dragging) return
+    t += ((e.clientY - lastY) / (stage.clientHeight || 400)) * CFG.duration * 1.6
+    lastY = e.clientY
+  })
+  const up = () => { dragging = false }
+  stage.addEventListener('pointerup', up)
+  stage.addEventListener('pointercancel', up)
+  const step = (dir) => { playing = false; t += dir * CFG.duration * 0.25 }
+  addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'k') { e.preventDefault(); playing = !playing }
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); step(1) }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); step(-1) }
+  })
+  reduce.addEventListener?.('change', () => { if (reduce.matches) playing = false })
+
+  t = reduce.matches ? 0.8 : 0
+  draw()
+  requestAnimationFrame(frame)
+
+  /* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The page works on its own; when it
+     is framed, the lab drives it with postMessage and it reports where
+     the stretch is.
+       ?autoplay=2400   play on load even under reduced motion (previews)
+       { source: 'il-motion', type: 'speed', value: 0.25 }
+       { ..., type: 'step', value: 1 | -1 }      pause and step a quarter stretch
+       { ..., type: 'duration', value: 2.5 }     seconds for one stretch
+       { ..., type: 'short', value: 72 }         the shortest copy, units of 486
+       { ..., type: 'sync', value: true }        every column in step
+       { ..., type: 'autoplay', value: true | false }   play / pause
+  ------------------------------------------------------------------ */
+  ;(() => {
+    const qs = new URLSearchParams(location.search)
+    if (qs.has('autoplay')) playing = true
+    let touched = false
+    addEventListener('message', (e) => {
+      const d = e.data
+      if (!d || d.source !== 'il-motion') return
+      if (d.type === 'speed') CFG.speed = Math.max(0.05, Number(d.value) || 1)
+      if (d.type === 'step') step(d.value > 0 ? 1 : -1)
+      if (d.type === 'duration') CFG.duration = Math.max(0.3, Number(d.value) || 2.5)
+      if (d.type === 'short') CFG.short = Math.min(140, Math.max(40, Number(d.value) || 72))
+      if (d.type === 'sync') CFG.sync = Boolean(d.value)
+      // The lab sends autoplay:false on load; only a real press pauses the loop
+      if (d.type === 'autoplay') { if (d.value) playing = true; else if (touched) playing = false; touched = true }
+    })
+    let lastText = ''
+    const report = () => {
+      const pct = Math.round(lastP * 100)
+      const state = dragging ? 'SCRUBBING' : playing ? 'PLAYING' : 'PAUSED · SPACE TO PLAY'
+      const text = `STRETCH ${String(pct).padStart(2, '0')}% · ${state}`
+      if (text !== lastText) {
+        lastText = text
+        if (parent !== window) parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*')
+      }
+      setTimeout(report, 120)
+    }
+    report()
+  })()
+</script>
+</body>
+</html>
