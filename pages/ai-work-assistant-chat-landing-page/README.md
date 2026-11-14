@@ -1,6 +1,6 @@
 # AI Work Assistant Chat Landing Page
 
-A soft pastel AI-assistant launch page whose hero is a working chat: it types its own first question, streams answers with thread cards, drafts and calendar slots, and is ringed by agent badges that spin, tick and fail on their own.
+A soft pastel AI-assistant launch page whose hero is a working chat that types its own first question and streams answers with drafts and calendar slots.
 
 ![AI Work Assistant Chat Landing Page](preview.jpg)
 

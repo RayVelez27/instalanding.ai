@@ -1,6 +1,6 @@
 # Peelo AI Sticker Printer Page
 
-A warm-black subscription page for an AI sticker printer: a condensed SAY IT. STICK IT. headline that blurs in letter by letter under an orange glow with four die-cut stickers popping around it, a gallery of sticker sheets with their prompts on hover, five how-it-works rows that stack as you scroll, the printer and its refills on tilted cards, three plans and a drag-to-scroll review slider, every picture drawn in SVG.
+A warm-black subscription page for an AI sticker printer, with a condensed headline that blurs in under an orange glow, die-cut stickers popping around it and every picture drawn in SVG.
 
 ![Peelo AI Sticker Printer Page](preview.jpg)
 

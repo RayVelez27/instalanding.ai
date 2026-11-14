@@ -1,6 +1,6 @@
 # Hearthly AI Home Care Page
 
-A warm, illustrated page for an AI home assistant: a floating collage of glossy home-system cards that floods open into a night scene of the house, stacking service folders, arched system plates and a word-lit testimonial.
+A warm, illustrated page for an AI home assistant, with a floating collage of glossy home-system cards that floods open into a night scene of the house.
 
 ![Hearthly AI Home Care Page](preview.jpg)
 

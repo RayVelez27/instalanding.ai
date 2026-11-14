@@ -1,6 +1,6 @@
 # Foldwise AI Product Designer Page
 
-A quiet grey page for an AI-native product designer, laid out as a folding book: twelve paper and dark-stock panels (a cover, contents, seven case studies, field notes, about and a business-card contact) concertina open in 3D as you scroll, shading as they turn. Every case study plate is drawn in SVG: an agent run with a live step, an approval queue, model routing on two phones, an autonomy dial, a design system sheet, a context-window selector and an undo gap. On phones the book lies flat as one tall stack.
+A quiet grey page for an AI-native product designer, laid out as a folding book whose twelve panels of SVG case studies concertina open in 3D as you scroll.
 
 ![Foldwise AI Product Designer Page](preview.jpg)
 

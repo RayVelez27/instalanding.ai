@@ -1,6 +1,6 @@
 # Agentic Art Expo Page
 
-An editorial event page for an expo where AI agents exhibit: a giant wordmark that flies into the header, a satin hero with live particle trails, a programme that floods dark from a full stop, and every picture painted in code.
+An editorial event page for an expo where AI agents exhibit, with a satin hero of live particle trails and a programme that floods dark from a full stop.
 
 ![Agentic Art Expo Page](preview.jpg)
 

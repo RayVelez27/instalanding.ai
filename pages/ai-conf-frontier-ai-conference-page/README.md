@@ -1,6 +1,6 @@
 # AI/CONF Frontier AI Conference Page
 
-A pink-and-cobalt bento page for a frontier AI conference: a huge outlined headline over slow orbit rings and a typed prompt, a sticky sidebar with a morphing glass orb agenda and a live countdown ticket, and navy scenes in liquid glass (a gooey neural net, a compute chip, an attention heatmap, test-tube benchmarks and server racks).
+A pink-and-cobalt bento page for a frontier AI conference, with a huge outlined headline over slow orbit rings, a live countdown ticket and navy scenes in liquid glass.
 
 ![AI/CONF Frontier AI Conference Page](preview.jpg)
 

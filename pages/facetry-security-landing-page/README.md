@@ -1,6 +1,6 @@
 # Facetry Security Landing Page
 
-A black-and-chrome security platform page: an extruded metal logo on a rough stone pedestal in a CSS 3D scene, spring-morphing between three shapes, glass panels floating around it, a live spring tuner, and a footer with live region clocks.
+A black-and-chrome security platform page, with an extruded metal logo spring-morphing between three shapes on a stone pedestal in a CSS 3D scene.
 
 ![Facetry Security Landing Page](preview.jpg)
 

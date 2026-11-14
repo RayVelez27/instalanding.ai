@@ -1,6 +1,6 @@
 # Rowline Agronomy AI Page
 
-A dark-green landing page for a farm AI: a live NDVI scan wipes across a field rendered pixel by pixel, the scanner's lens opens into a dawn landscape with a drone flying in, five agents slide past sideways, and every field, crop map and device is drawn in code.
+A dark-green page for a farm AI, where a live NDVI scan wipes across a field rendered pixel by pixel and the lens opens into a dawn landscape with a drone flying in.
 
 ![Rowline Agronomy AI Page](preview.jpg)
 

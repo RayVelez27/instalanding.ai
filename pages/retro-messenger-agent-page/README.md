@@ -1,6 +1,6 @@
 # Retro Messenger Agent Page
 
-An AI agent pitched as your old instant-messenger buddy: a working chat window that plans and runs tasks, nudges that shake the screen, and a buddy-list footer.
+An AI agent pitched as your old instant-messenger buddy, with a working chat window that plans and runs tasks and nudges that shake the screen.
 
 ![Retro Messenger Agent Page](preview.jpg)
 

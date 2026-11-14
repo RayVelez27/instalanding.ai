@@ -1,6 +1,6 @@
 # Hazard Terminal Security Page
 
-Antivirus as an amber hazard terminal: a spinning seal HUD, a live scan where three cores vote, and a searchable grid of 72 spirits, each guarding a threat.
+Antivirus as an amber hazard terminal, with a spinning seal HUD, a live scan where three cores vote and a searchable grid of 72 spirits guarding threats.
 
 ![Hazard Terminal Security Page](preview.jpg)
 

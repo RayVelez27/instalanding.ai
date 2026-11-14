@@ -1,6 +1,6 @@
 # Bryo AI Moss Cultivation Page
 
-A misty sage-and-lime page for an AI that grows moss, painted entirely in code: a floating moss island with a fern under a scroll-driven camera that dollies down into a fogged conifer valley, telling a five-beat story (headline, word-by-word vision, an account with sensor hotspots, a field card with a coverage sparkline and a feature list), then use-case cards with generated aerial art, counting stats, four growth loops, a live moss-growth simulation with AI detection boxes, pricing, an FAQ and a waitlist CTA.
+A misty sage-and-lime page for an AI that grows moss, painted in code, where a scroll-driven camera dollies from a floating moss island down into a fogged conifer valley.
 
 ![Bryo AI Moss Cultivation Page](preview.jpg)
 

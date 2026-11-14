@@ -1,6 +1,6 @@
 # Blackletter Biology Workbench
 
-A computational biology platform set like an illuminated manuscript: blackletter headings lit by a WebGL shader, spinning conic frame borders, and hand-drawn lab sketches in the margins.
+A computational biology platform set like an illuminated manuscript, with blackletter headings lit by a WebGL shader and hand-drawn lab sketches in the margins.
 
 ![Blackletter Biology Workbench](preview.jpg)
 

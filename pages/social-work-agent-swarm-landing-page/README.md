@@ -1,6 +1,6 @@
 # Social Work Agent Swarm Landing Page
 
-A loud neo-brutalist page for a swarm of AI agents that help social workers: huge stencil type over op-art ring patterns, animoji characters whose eyes follow the cursor, a filterable crew of eight agent cards, an approval queue, guardrails and pricing.
+A loud neo-brutalist page for a swarm of AI agents that help social workers, with huge stencil type over op-art rings and animoji characters whose eyes follow the cursor.
 
 ![Social Work Agent Swarm Landing Page](preview.jpg)
 

@@ -1,6 +1,6 @@
 # Paper Sun Agent Page
 
-AI agents for the night shift: a paper-cut sunset panel you can slap stickers on, a dusk-to-daybreak arc, and a run log that stops to ask.
+AI agents for the night shift, with a paper-cut sunset panel you can slap stickers on and a run log that stops to ask.
 
 ![Paper Sun Agent Page](preview.jpg)
 

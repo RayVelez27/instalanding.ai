@@ -1,6 +1,6 @@
 # Maasai-Inspired Event Landing Page
 
-A cultural events studio page on Maasai-inspired dusk: a Rive hero rebuilt in SVG where four warriors leap into the adumu, a scroll-driven frieze of leaping silhouettes, generated beadwork and gala art, and textures cut from the warriors' own shapes.
+A cultural events studio page on a Maasai-inspired dusk, with a hero where four warriors leap into the adumu and a scroll-driven frieze of leaping silhouettes.
 
 ![Maasai-Inspired Event Landing Page](preview.jpg)
 

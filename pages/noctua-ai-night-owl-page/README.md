@@ -1,6 +1,6 @@
 # Noctua AI Night Owl Page
 
-A stark black-on-white page for an AI that works the night shift: a quartered loader with blinking owl eyes and a counter, a giant NIGHT ——◐ OWL headline whose moon slides through its phases, the viewer's own clock and a greeting for their hour, and four illustrated feature cards (a starlit draft, an overnight task queue, glowing owl eyes, a sunrise digest) drawn in SVG.
+A stark black-on-white page for an AI that works the night shift, with a giant NIGHT OWL headline whose moon slides through its phases and a greeting for the viewer's own hour.
 
 ![Noctua AI Night Owl Page](preview.jpg)
 

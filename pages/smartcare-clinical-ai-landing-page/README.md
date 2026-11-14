@@ -1,6 +1,6 @@
 # SmartCare Clinical AI Landing Page
 
-Iridescence shader hero + CSS power switch: one light source for buttons, cards and charts.
+An iridescent shader hero and a CSS power switch, with one light source shared by the buttons, cards and charts.
 
 ![SmartCare Clinical AI Landing Page](preview.jpg)
 

@@ -1,6 +1,6 @@
 # tokenhaus AI Design System Academy Page
 
-A four-ink Bauhaus page for an AI design-systems academy: the hero is a grid of quarter-circle tiles that turn as the next section slides over it, "SYSTEM" fans out into echoes in pink, amber and white, courses grow out of circles into pills, and every swatch, specimen and tutor portrait is drawn in SVG.
+A four-ink Bauhaus page for an AI design-systems academy, with a hero grid of quarter-circle tiles that turn as you scroll and every swatch and tutor portrait drawn in SVG.
 
 ![tokenhaus AI Design System Academy Page](preview.jpg)
 

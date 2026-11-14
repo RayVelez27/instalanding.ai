@@ -1,6 +1,6 @@
 # Fullday AI Money Agent Page
 
-A soft blue-and-peach page for an AI money agent that works around your calendar: a hero with a live feed of tasks it just finished and a phone with sliding payment cards, a self-typing "can I afford it" prompt, sticky how-it-works steps, a results chart whose dashed line draws in, a story switcher, a snap-scrolling benefits row, monthly/yearly pricing toggles and rounded sections that tuck under each other.
+A soft blue-and-peach page for an AI money agent that works around your calendar, with a live feed of finished tasks, sliding payment cards on a phone and a self-typing can I afford it prompt.
 
 ![Fullday AI Money Agent Page](preview.jpg)
 

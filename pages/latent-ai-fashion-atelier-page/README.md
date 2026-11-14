@@ -1,6 +1,6 @@
 # Latent AI Fashion Atelier Page
 
-A dark, iridescent page for an AI fashion atelier: a wireframe cloth ripples toward the pointer under a giant "Latent" that scatters as the hero tilts away, six capsules slide past sideways, a "Zero" knockout zooms open onto a gradient, and every picture is generative SVG.
+A dark, iridescent page for an AI fashion atelier, with a wireframe cloth that ripples toward the pointer under a giant Latent and every picture generated in SVG.
 
 ![Latent AI Fashion Atelier Page](preview.jpg)
 

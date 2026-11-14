@@ -1,6 +1,6 @@
 # Ostler AI Hotel Concierge Page
 
-A late-night oxblood page for an AI hotel concierge: a giant "Ostler" springs apart letter by letter over a guest's phone chat, six module covers slide past sideways, "Awake" zooms into a hotel facade at night, and every phone, dashboard and room is drawn in SVG.
+A late-night oxblood page for an AI hotel concierge, with a giant Ostler that springs apart letter by letter over a guest's phone chat and every room drawn in SVG.
 
 ![Ostler AI Hotel Concierge Page](preview.jpg)
 

@@ -1,6 +1,6 @@
 # Tarn File Transfer Page
 
-A frosted steel-grey page for a heavy-file transfer service: the hero zooms out of a giant glass send button into its frame, a magnifying lens glides across the manifesto, a light sweeps the service tiles, and a send button you can try with your own file.
+A frosted steel-grey page for a heavy-file transfer service, where the hero zooms out of a giant glass send button and a send button you can try with your own file.
 
 ![Tarn File Transfer Page](preview.jpg)
 

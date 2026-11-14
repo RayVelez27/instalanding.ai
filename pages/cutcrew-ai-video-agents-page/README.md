@@ -1,6 +1,6 @@
 # Cutcrew AI Video Agents Page
 
-A bright, playful page for five AI video-editing agents, each a candy-coloured robot mascot drawn in SVG that floats in place: a hero fan of agent cards, a sentence with the robots set inline, a dark timeline strip with hover tooltips, three ways to brief the agents (an accordion with a self-typing prompt and a TypeScript SDK card), a studio services index, a six-week gantt with a sweeping playhead, fanning project decks, an album gallery, a team card deck, auto-advancing stories, monthly/annual pricing and a spinning 3D ring of covers in the CTA.
+A bright, playful page for five AI video-editing agents, each a candy-coloured SVG robot mascot, with a self-typing brief, a six-week gantt with a sweeping playhead and a spinning 3D ring of covers.
 
 ![Cutcrew AI Video Agents Page](preview.jpg)
 

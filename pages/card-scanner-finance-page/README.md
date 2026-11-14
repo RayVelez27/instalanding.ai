@@ -1,6 +1,6 @@
 # Card Scanner Finance Page
 
-Autonomous finance agents: tilted cards in an orbit ring, a scroll-pinned scanner that turns cards into code, and a live control bento.
+Autonomous finance agents with tilted cards in an orbit ring and a scroll-pinned scanner that turns cards into code.
 
 ![Card Scanner Finance Page](preview.jpg)
 

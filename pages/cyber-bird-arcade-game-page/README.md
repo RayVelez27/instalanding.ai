@@ -1,6 +1,6 @@
 # Cyber Bird Arcade Game Page
 
-A pixel-art arcade game launch page with the game playable right in the hero: a one-button flyer threading an armored cyber-pickup through stainless rocket stacks, night, dawn and day skies drawn by code, difficulty presets and a local mission log.
+A pixel-art arcade game launch page with the game playable in the hero, where a one-button flyer threads an armored cyber-pickup through stainless rocket stacks.
 
 ![Cyber Bird Arcade Game Page](preview.jpg)
 

@@ -1,6 +1,6 @@
 # Ochre AI Meditation App Page
 
-A sunset-poster page for an AI meditation app: a thin "OCHRE" is split ink-on-paper by a dark field that sweeps across as the sun sets, the hero phone breathes over a live WebGL ocean, a moon window opens into the night, and every landscape is painted on canvas.
+A sunset-poster page for an AI meditation app, where a dark field sweeps across the title as the sun sets and the hero phone breathes over a live WebGL ocean.
 
 ![Ochre AI Meditation App Page](preview.jpg)
 

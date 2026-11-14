@@ -1,6 +1,6 @@
 # Kestrel AI Finance Landing Page
 
-A bright fintech page for an AI finance platform: a 3D-tilting cash-runway dashboard with a self-drawing forecast chart and a live agent feed, orbiting integration chips, glossy diamond icon tiles, product rows with dark live panels, hover-flip agent cards and a demo booking widget.
+A bright fintech page for an AI finance platform, with a 3D-tilting cash-runway dashboard, a self-drawing forecast chart and a live agent feed.
 
 ![Kestrel AI Finance Landing Page](preview.jpg)
 

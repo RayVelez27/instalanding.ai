@@ -1,6 +1,6 @@
 # Fortix AI Money Copilot App Page
 
-A bright, airy app page for an AI money copilot: a headline set with glossy gradient app icons, six dark glass phone screens drawn entirely in HTML and SVG (net worth, AI chat, autopilot rules, a forecast with a confidence band, a blocked-fraud alert), a turning 3D ring of stat cards, floating badges and chat bubbles, a landscape dashboard that tips up into view and a tap-through 3D feature carousel.
+A bright, airy app page for an AI money copilot, with six dark glass phone screens drawn in HTML and SVG, a turning 3D ring of stat cards and a tap-through 3D feature carousel.
 
 ![Fortix AI Money Copilot App Page](preview.jpg)
 

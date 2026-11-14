@@ -1,6 +1,6 @@
 # Ghost Agent Landing Page
 
-Invisible AI agents pitched as ghosts: pixel ghosts float up a curved hero, and three SVG ghosts clear a 100-task board live.
+Invisible AI agents pitched as ghosts, where pixel ghosts float up a curved hero and three SVG ghosts clear a 100-task board live.
 
 ![Ghost Agent Landing Page](preview.jpg)
 

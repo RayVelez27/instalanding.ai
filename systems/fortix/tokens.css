@@ -1,0 +1,125 @@
+/* InstaLanding design system · Fortix · fortix@1.0.0
+   Extracted from https://instalanding.ai/demos/fortix-ai-money-copilot.html
+   Fonts (Google Fonts): Inter 400-900 for everything, with tabular figures */
+:root {
+  /* Color · core */
+  --fx-ink: #1A1A1A;
+  --fx-ink65: rgba(26,26,26,.65);
+  --fx-ink50: rgba(26,26,26,.5);
+  --fx-ink10: rgba(26,26,26,.1);
+  --fx-ink05: rgba(26,26,26,.05);
+  --fx-bg: #FFFFFF;
+  --fx-white: #FFFFFF;
+  --fx-black: #000000;
+  --fx-store-line: #A6A6A6;
+  --fx-star: #FCA800;
+  --fx-select: #6A6A6A;
+
+  /* Color · gradient stops */
+  --fx-violet: #7C4DFF;
+  --fx-violet-deep: #4A1FB8;
+  --fx-red: #F85032;
+  --fx-red-deep: #E73827;
+  --fx-gold: #FDC830;
+  --fx-orange: #F37335;
+  --fx-pink: #E60B79;
+  --fx-pink-deep: #990750;
+  --fx-green: #50B224;
+  --fx-green-deep: #3F8C1C;
+  --fx-blue: #3A8BFF;
+  --fx-blue-deep: #0D4FD1;
+  --fx-cyan: #22D3EE;
+  --fx-cyan-deep: #0E7490;
+
+  /* Color · gradients */
+  --fx-g-purple: linear-gradient(225deg, var(--fx-violet), var(--fx-violet-deep));
+  --fx-g-red: linear-gradient(225deg, var(--fx-red), var(--fx-red-deep));
+  --fx-g-orange: linear-gradient(225deg, var(--fx-gold), var(--fx-orange));
+  --fx-g-pink: linear-gradient(225deg, var(--fx-pink), var(--fx-pink-deep));
+  --fx-g-green: linear-gradient(225deg, var(--fx-green), var(--fx-green-deep));
+  --fx-g-blue: linear-gradient(225deg, var(--fx-blue), var(--fx-blue-deep));
+  --fx-g-cyan: linear-gradient(225deg, var(--fx-cyan), var(--fx-cyan-deep));
+
+  /* Color · screen */
+  --fx-night: #06060B;
+  --fx-lilac: #A78BFA;
+  --fx-lilac-hi: #C4B5FD;
+  --fx-aqua-hi: #67E8F9;
+  --fx-orchid: #F0ABFC;
+  --fx-magenta: #FF4FD8;
+  --fx-up: #4ADE80;
+  --fx-alert: #FCA5A5;
+  --fx-blush: #FBCFE8;
+  --fx-indigo: #1E1B4B;
+  --fx-orb-core: #1B0F3D;
+  --fx-orb-mini: #140B30;
+  --fx-btn-ink: #0B0B12;
+  --fx-text-gradient: linear-gradient(90deg, var(--fx-lilac-hi), var(--fx-aqua-hi));
+
+  /* Type · families */
+  --fx-font-display: Inter, system-ui, sans-serif;
+  --fx-font-text: Inter, system-ui, sans-serif;
+
+  /* Type · scale */
+  --fx-h1: 80px;
+  --fx-h2: 48px;
+  --fx-stat: 48px;
+  --fx-h3: 36px;
+  --fx-card-title: 32px;
+  --fx-lead: 24px;
+  --fx-label: 16px;
+  --fx-small: 14px;
+
+  /* Shape · radii */
+  --fx-pill: 100px;
+  --fx-r-block: 32px;
+  --fx-r-icon: 24px;
+  --fx-r-card: 20px;
+  --fx-r-bubble: 16px;
+  --fx-r-logo: 12px;
+  --fx-r-store: 10px;
+  --fx-r-glass: 1.2em;
+  --fx-r-phone: 16% / 7.4%;
+  --fx-r-screen: 13.5% / 6.3%;
+
+  /* Shape · borders */
+  --fx-hair: 1px;
+  --fx-av-ring: 4px;
+
+  /* Depth · devices, glass and gloss */
+  --fx-frame: linear-gradient(145deg, #4A4A52 0%, #16161A 22%, #2C2C33 48%, #0C0C0F 72%, #3A3A42 100%);
+  --fx-shadow-device: 0 50px 60px -10px rgba(10,6,30,.35), 0 18px 24px rgba(0,0,0,.18), inset 0 0 0 1px rgba(255,255,255,.18), inset 0 0 0 3px #08080A;
+  --fx-screen: radial-gradient(90% 45% at 15% -5%, rgba(124,77,255,.55), transparent 70%), radial-gradient(70% 40% at 105% 15%, rgba(0,212,255,.28), transparent 70%), radial-gradient(80% 40% at 50% 115%, rgba(255,79,216,.18), transparent 70%), var(--fx-night);
+  --fx-screen-wide: radial-gradient(60% 80% at 10% 0%, rgba(124,77,255,.5), transparent 70%), radial-gradient(50% 70% at 100% 100%, rgba(0,212,255,.25), transparent 70%), var(--fx-night);
+  --fx-glass: linear-gradient(160deg, rgba(255,255,255,.1), rgba(255,255,255,.03));
+  --fx-glass-line: rgba(255,255,255,.1);
+  --fx-blur: blur(12px);
+  --fx-gloss: linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,0));
+  --fx-shadow-icon: 0 2px 4px rgba(0,0,0,.2);
+  --fx-shadow-float: 0 8px 16px rgba(0,0,0,.2);
+  --fx-shadow-card: 0 16px 24px rgba(0,0,0,.2);
+  --fx-shadow-stat: 8px 20px 32px rgba(0,0,0,.25);
+
+  /* Motion · easing */
+  --fx-ease: cubic-bezier(.2,.8,.2,1);
+  --fx-ease-turn: cubic-bezier(.3,.8,.3,1);
+
+  /* Motion · durations */
+  --fx-dur-hover: .25s;
+  --fx-dur-quick: .3s;
+  --fx-dur-turn: .9s;
+  --fx-dur-ring: 1s;
+  --fx-dur-tip: 1s;
+  --fx-blink: 1.2s;
+  --fx-spin: 5s;
+  --fx-float: 6s;
+  --fx-ring-step: 2.6s;
+  --fx-carousel-step: 3.5s;
+
+  /* Space · layout */
+  --fx-wrap: 800px;
+  --fx-gut: 24px;
+  --fx-gap: 16px;
+  --fx-nav-gap: 104px;
+  --fx-sec: 240px;
+}

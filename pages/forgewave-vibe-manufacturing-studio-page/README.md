@@ -1,6 +1,6 @@
 # Forgewave Vibe-Manufacturing Studio Page
 
-A red-and-ink page for a studio that turns a described vibe into a real product, drawn entirely in animated SVG: a robot arm loading a conveyor in the hero, a typed brief pressed into a speaker, four sticky service cards with faders, linkages, a layer-by-layer printer and a units counter, a projects grid, a team switcher with blinking robot portraits, pricing, a scroll-grown assembly line, a testimonial switcher and a factory-belt footer.
+A red-and-ink page for a studio that turns a described vibe into a real product, drawn entirely in animated SVG from a robot arm loading a conveyor to a factory-belt footer.
 
 ![Forgewave Vibe-Manufacturing Studio Page](preview.jpg)
 

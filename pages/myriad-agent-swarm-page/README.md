@@ -1,6 +1,6 @@
 # Myriad Agent Swarm Page
 
-An agent-select screen for an AI swarm: pick one of five agents and a 640-point particle swarm reforms into its shape while the whole page recolours to match.
+An agent-select screen for an AI swarm, where picking one of five agents reforms a 640-point particle swarm into its shape and recolours the page.
 
 ![Myriad Agent Swarm Page](preview.jpg)
 

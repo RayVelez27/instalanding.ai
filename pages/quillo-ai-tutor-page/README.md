@@ -1,6 +1,6 @@
 # Quillo AI Tutor Page
 
-A bright, hand-made page for an AI tutor on a graph-paper grid: a giant QUILLO in a selection box with handles, sticky notes, cursor tags and owl avatars, a statement that lights word by word, draggable polaroids, four feature cards with folder tabs that stack as you scroll, and a googly-eyed blob that follows your cursor.
+A bright, hand-made page for an AI tutor on a graph-paper grid, with a giant QUILLO in a selection box, draggable polaroids and a googly-eyed blob that follows your cursor.
 
 ![Quillo AI Tutor Page](preview.jpg)
 

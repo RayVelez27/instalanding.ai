@@ -1,6 +1,6 @@
 # Side Quest Adoption Center Page
 
-A butter-yellow adoption center for ideas you have no time for: a waving page mascot, six illustrated side quests to adopt with confetti, and a lifecycle from spark to archive.
+A butter-yellow adoption center for ideas you have no time for, with a waving mascot, six illustrated side quests to adopt with confetti and a spark-to-archive lifecycle.
 
 ![Side Quest Adoption Center Page](preview.jpg)
 

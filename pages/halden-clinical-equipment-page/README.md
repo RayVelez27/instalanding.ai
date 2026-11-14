@@ -1,6 +1,6 @@
 # Halden Clinical Equipment Page
 
-A clinical equipment service in ink and paper: a dot-matrix wordmark that splits apart, a pinned 12-check inspection board, a rate card and a scroll-driven pre-owned shelf.
+A clinical equipment service in ink and paper, with a dot-matrix wordmark that splits apart, a pinned 12-check inspection board and a scroll-driven pre-owned shelf.
 
 ![Halden Clinical Equipment Page](preview.jpg)
 

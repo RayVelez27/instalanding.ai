@@ -1,6 +1,6 @@
 # Landra AI Landing Page Generator Page
 
-A black-and-lime page for an AI tool that turns one sentence into a landing page: a WebGL hero strip of eight generated pages that bends with drag speed and opens any one full screen through a pixel-mosaic dissolve, a giant LANDRA wordmark with a prompt box, and a live demo where a typed prompt builds a themed mock site step by step with a timer, then features, counting stats, a monthly / yearly pricing toggle, an FAQ and a prompt CTA.
+A black-and-lime page for an AI that turns one sentence into a landing page, with a WebGL strip of generated pages that bends as you drag and a live demo that builds a mock site from your prompt.
 
 ![Landra AI Landing Page Generator Page](preview.jpg)
 

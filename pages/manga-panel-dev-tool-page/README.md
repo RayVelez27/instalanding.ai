@@ -1,6 +1,6 @@
 # Manga Panel Dev Tool Page
 
-A deploy CLI pitched as a black-and-white manga issue: a sliced retro sun over a city skyline, a typing terminal, three villains defeated and a reader-mail FAQ.
+A deploy CLI pitched as a black-and-white manga issue, with a sliced retro sun over a city skyline and a typing terminal.
 
 ![Manga Panel Dev Tool Page](preview.jpg)
 

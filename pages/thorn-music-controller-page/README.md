@@ -1,6 +1,6 @@
 # Thorn Music Controller Page
 
-A desktop music controller built in CSS 3D from layered DOM: every dial, fader, joystick and tape key works, with clicks you can hear and three finishes.
+A desktop music controller built in CSS 3D, where every dial, fader, joystick and tape key works with clicks you can hear.
 
 ![Thorn Music Controller Page](preview.jpg)
 

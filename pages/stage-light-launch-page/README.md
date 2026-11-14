@@ -1,6 +1,6 @@
 # Stage Light Launch Page
 
-A product announcement lit like a stage: conic spotlights, rising dust, a hairline grid and a light sweep running through the wordmark.
+A product announcement lit like a stage, with conic spotlights, rising dust and a light sweep running through the wordmark.
 
 ![Stage Light Launch Page](preview.jpg)
 

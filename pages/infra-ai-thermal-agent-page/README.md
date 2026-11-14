@@ -1,6 +1,6 @@
 # Infra AI Thermal Agent Page
 
-A thermal-camera page for an AI agent that sees heat: a giant condensed "INFRA" over a swirling WebGL heat plume, its letters stretching from the centre out as you scroll, every picture painted as a live heat field with a camera HUD, and a probe that reads the temperature under your cursor.
+A thermal-camera page for an AI agent that sees heat, with a giant INFRA over a swirling WebGL heat plume and a probe that reads the temperature under your cursor.
 
 ![Infra AI Thermal Agent Page](preview.jpg)
 

@@ -1,6 +1,6 @@
 # Sunset Scroll Story Page
 
-A fusion company told as one long sunset: scroll and the sun goes down over a layered SVG landscape, night falls, then a live canvas tokamak takes over.
+A fusion company told as one long sunset, where the sun goes down over a layered SVG landscape as you scroll and a live canvas tokamak takes over at night.
 
 ![Sunset Scroll Story Page](preview.jpg)
 

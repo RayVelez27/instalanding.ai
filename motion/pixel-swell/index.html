@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixel Swell · InstaLanding Motion</title>
+<meta name="description" content="Four pixelated wave bands roll under a red sun as you scroll, in pure CSS: a scroll-driven angle, sin() per bar and heights rounded to 8px rungs.">
+<!--
+  PIXEL SWELL · a scroll-driven CSS motion study
+  The page's scroll is the only clock. One registered angle, --a, runs 0deg -> 360deg
+  over the whole scroll (animation-timeline: scroll(root)); every bar in four wave
+  bands sets its height from sin(--a × turns × speed + its index × step), rounded down
+  to 8px rungs and cut into stripes by a mask. The sun is the first stop of the body's
+  radial gradient, so it simply scrolls away as the sky deepens to navy.
+
+  Bleeding-edge CSS, with fallbacks so it runs everywhere:
+  - sibling-index() (Chromium 138+): each bar also carries --i inline; @supports swaps in the native one
+  - random() (not in Chromium yet): seeded per-bar --amp / --off, set inline when unsupported
+  - animation-timeline: scroll() (not in Firefox): the scroll position sets --a directly
+-->
+<style>
+:root {
+  --punch-red: #e63946;
+  --honeydew: #f1faee;
+  --frosted-blue: #a8dadc;
+  --pacific-blue: #77abbd;
+  --cerulean: #457b9d;
+  --baltic-blue: #31587a;
+  --oxford-navy: #1d3557;
+  /* lab knobs */
+  --turns: 2;      /* full rolls over the whole scroll */
+  --swing-k: 1;    /* multiplies every band's swing */
+  --rung: 8px;     /* pixel step of the bars */
+}
+
+@property --a   { syntax: "<angle>";  inherits: true;  initial-value: 0deg; }
+@property --amp { syntax: "<number>"; inherits: false; initial-value: 0.7; }
+@property --off { syntax: "<angle>";  inherits: false; initial-value: 0deg; }
+
+html { background: var(--punch-red); scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
+
+/* the red frame */
+html::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  border: 16px solid var(--punch-red);
+}
+
+body {
+  margin: 0;
+  height: 600vh;
+  background: radial-gradient(
+    circle 500vh at 50% 50vh,
+    var(--punch-red) 0 30vh,
+    var(--honeydew) 30.7vh,
+    var(--frosted-blue) 100vh,
+    var(--oxford-navy) 400vh
+  );
+}
+
+/* film grain: four dot grids at prime sizes, so the pattern never visibly repeats */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 16;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.35;
+  background-image:
+    radial-gradient(rgb(255 255 255 / 0.9) 0.6px, transparent 0.9px),
+    radial-gradient(rgb(255 255 255 / 0.7) 0.5px, transparent 0.8px),
+    radial-gradient(rgb(0 0 0 / 0.8) 0.6px, transparent 0.9px),
+    radial-gradient(rgb(0 0 0 / 0.6) 0.5px, transparent 0.8px);
+  background-size: 3px 3px, 5px 5px, 7px 7px, 11px 11px;
+  background-position: 1px 2px, 3px 1px, 5px 4px, 2px 8px;
+  transition: opacity 0.3s;
+}
+@supports (background-position: random(0px, 3px) 0px) {
+  body::after {
+    background-position:
+      random(0px, 3px) random(0px, 3px),
+      random(0px, 5px) random(0px, 5px),
+      random(0px, 7px) random(0px, 7px),
+      random(0px, 11px) random(0px, 11px);
+  }
+}
+html.no-grain body::after { opacity: 0; }
+
+.wave {
+  position: fixed;
+  inset: auto 0 0 0;
+  height: 70vh;
+  display: flex;
+  align-items: flex-end;
+}
+@supports (animation-timeline: scroll()) {
+  .wave {
+    animation: roll linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes roll {
+  to { --a: 360deg; }
+}
+
+.w1 { z-index: 1; --base: 46vh; --swing: 4vh; --speed: 1;  --step: 14deg; --c1: var(--frosted-blue); --c2: var(--pacific-blue); }
+.w2 { z-index: 2; --base: 38vh; --swing: 5vh; --speed: -1; --step: 18deg; --c1: var(--pacific-blue); --c2: var(--cerulean); }
+.w3 { z-index: 3; --base: 30vh; --swing: 6vh; --speed: 2;  --step: 22deg; --c1: var(--cerulean);     --c2: var(--baltic-blue); }
+.w4 { z-index: 4; --base: 22vh; --swing: 6vh; --speed: -2; --step: 26deg; --c1: var(--baltic-blue);  --c2: var(--oxford-navy); }
+
+.wave i {
+  --px: var(--rung);
+  flex: 1;
+  height: round(
+    down,
+    calc(
+      var(--base) +
+      sin(calc(var(--a) * var(--turns) * var(--speed) + var(--i) * var(--step) + var(--off)))
+      * var(--swing) * var(--swing-k) * var(--amp)
+    ),
+    var(--px)
+  );
+  background: linear-gradient(var(--c1), var(--c2));
+  -webkit-mask-image: repeating-linear-gradient(0deg, #000 0 calc(var(--px) - 2px), transparent 0 var(--px));
+  mask-image: repeating-linear-gradient(0deg, #000 0 calc(var(--px) - 2px), transparent 0 var(--px));
+}
+/* Native where the browser has them; the inline --i / --amp / --off cover the rest */
+@supports (width: calc(sibling-index() * 1px)) {
+  .wave i { --i: sibling-index(); }
+}
+@supports (width: random(0px, 1px)) {
+  .wave i { --amp: random(0.5, 0.9); --off: random(-5deg, 5deg); }
+}
+
+/* the scroll cue, inside the sun */
+.cue {
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  top: 38vh; /* inside the sun, above the highest crest */
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  font: 600 11px/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  letter-spacing: 0.32em;
+  color: var(--honeydew);
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.cue svg { width: 18px; height: 18px; animation: bob 1.6s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(6px); } }
+html.no-cue .cue, html.scrolled .cue { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cue svg { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="cue" aria-hidden="true">SCROLL<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+<div class="wave w1" aria-hidden="true"></div>
+<div class="wave w2" aria-hidden="true"></div>
+<div class="wave w3" aria-hidden="true"></div>
+<div class="wave w4" aria-hidden="true"></div>
+
+<script>
+/* Bars: 60 per band. Each also gets its index and a seeded jitter inline, used only
+   where sibling-index() and random() don't exist yet (@supports overrides them). */
+(() => {
+  const BARS = 60;
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  const nativeRandom = CSS.supports("width", "random(0px, 1px)");
+  document.querySelectorAll(".wave").forEach((wave) => {
+    const frag = document.createDocumentFragment();
+    for (let n = 1; n <= BARS; n++) {
+      const bar = document.createElement("i");
+      bar.style.setProperty("--i", n);
+      if (!nativeRandom) {
+        bar.style.setProperty("--amp", (0.5 + rnd() * 0.4).toFixed(3));
+        bar.style.setProperty("--off", (rnd() * 10 - 5).toFixed(2) + "deg");
+      }
+      frag.appendChild(bar);
+    }
+    wave.appendChild(frag);
+  });
+})();
+
+/* No scroll timelines (Firefox): the scroll sets the angle itself */
+const scrollProgress = () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  return max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+};
+if (!CSS.supports("animation-timeline", "scroll()")) {
+  const waves = document.querySelectorAll(".wave");
+  const set = () => waves.forEach((w) => w.style.setProperty("--a", scrollProgress() * 360 + "deg"));
+  addEventListener("scroll", set, { passive: true });
+  set();
+}
+addEventListener("scroll", () => document.documentElement.classList.toggle("scrolled", scrollY > 40), { passive: true });
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+scrollTo(0, 0);
+
+/* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The page works on its own; when it
+     is framed, the lab drives it with postMessage and it reports where
+     the scroll is.
+       { source: 'il-motion', type: 'speed', value: 1 }        how fast autoplay glides
+       { ..., type: 'step', value: 1 | -1 }    glide to the next / previous depth
+       { ..., type: 'turns', value: 2 }        full rolls of the waves over the whole scroll
+       { ..., type: 'swing', value: 1 }        multiplies every band's swing
+       { ..., type: 'rung', value: 8 }         pixel step of the bars, px
+       { ..., type: 'grain', value: true }     the film grain overlay
+       { ..., type: 'cue', value: true }       the SCROLL cue in the sun
+       { ..., type: 'autoplay', value: true }  glide down the whole scroll, hold, back to the top
+  ------------------------------------------------------------------ */
+;(() => {
+  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const root = document.documentElement;
+  const STOPS = [0, 0.25, 0.55, 1];
+  const NAMES = ["SUNRISE", "OPEN WATER", "SWELL", "DEEP NAVY"];
+  const maxScroll = () => root.scrollHeight - innerHeight;
+  const glide = (p) => scrollTo({ top: p * maxScroll(), behavior: REDUCED ? "auto" : "smooth" });
+  const step = (dir) => {
+    const p = scrollProgress();
+    const next = dir > 0 ? STOPS.find((x) => x > p + 0.01) : [...STOPS].reverse().find((x) => x < p - 0.01);
+    glide(next ?? (dir > 0 ? 0 : 1));
+  };
+  let speed = 1, glideRaf = 0, gliding = false, glideMs = 3600;
+  // Autoplay glides down the whole scroll (about 4 × ms for the trip at 1x), holds
+  // at the bottom, then jumps back to the top: the waves are always rolling.
+  const autoplay = (on, ms = glideMs) => {
+    cancelAnimationFrame(glideRaf);
+    gliding = on;
+    glideMs = ms;
+    if (!on) return;
+    let pos = scrollY, lastT = 0, hold = 0;
+    const tick = (t) => {
+      const dt = lastT ? Math.min(t - lastT, 50) : 16;
+      lastT = t;
+      if (!document.hidden) {
+        if (Math.abs(scrollY - pos) > 3) pos = scrollY; // someone scrolled by hand
+        if (hold > 0) {
+          hold -= dt;
+          if (hold <= 0) { pos = 0; scrollTo(0, 0); }
+        } else if (pos >= maxScroll() - 1) {
+          hold = 900;
+        } else {
+          pos = Math.min(maxScroll(), pos + (maxScroll() / (glideMs * 4)) * dt * speed);
+          scrollTo(0, pos);
+        }
+      }
+      glideRaf = requestAnimationFrame(tick);
+    };
+    glideRaf = requestAnimationFrame(tick);
+  };
+  const qs = new URLSearchParams(location.search);
+  if (qs.has("autoplay")) autoplay(true, Number(qs.get("autoplay")) || 3600);
+  addEventListener("message", (e) => {
+    const d = e.data;
+    if (!d || d.source !== 'il-motion') return;
+    if (d.type === 'speed') speed = Math.max(0.05, Number(d.value) || 1);
+    if (d.type === 'step') step(d.value > 0 ? 1 : -1);
+    if (d.type === 'turns') root.style.setProperty("--turns", Number(d.value) || 2);
+    if (d.type === 'swing') root.style.setProperty("--swing-k", Number(d.value));
+    if (d.type === 'rung') root.style.setProperty("--rung", Math.max(4, Number(d.value) || 8) + "px");
+    if (d.type === 'grain') root.classList.toggle("no-grain", !d.value);
+    if (d.type === 'cue') root.classList.toggle("no-cue", !d.value);
+    if (d.type === 'autoplay') autoplay(Boolean(d.value));
+  });
+  if (parent === window) return;
+  let last = "";
+  const report = () => {
+    const p = scrollProgress();
+    let k = 0;
+    for (let i = 0; i < STOPS.length; i++) if (p >= STOPS[i] - 0.01) k = i;
+    const turns = Number(getComputedStyle(root).getPropertyValue("--turns")) || 2;
+    const text = p < 0.005 ? "SUNRISE · SCROLL TO SWELL" : `${NAMES[k]} · ${Math.round(p * 100)}% · PHASE ${Math.round(p * 360 * turns)}°`;
+    if (text !== last) {
+      last = text;
+      parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, "*");
+    }
+    setTimeout(() => requestAnimationFrame(report), 90);
+  };
+  requestAnimationFrame(report);
+})();
+</script>
+</body>
+</html>

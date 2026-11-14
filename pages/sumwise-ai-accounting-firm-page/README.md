@@ -1,6 +1,6 @@
 # Sumwise AI Accounting Firm Page
 
-A print-shop page for an AI accounting firm: an ink cover opens to full screen as eight duotone illustration tiles fly out and back, a sample monthly close walks itself through, halftone dots resolve into each service, a chat replays an AI answering from the books, and the tax year scrolls past on a pinned track.
+A print-shop page for an AI accounting firm, where an ink cover opens as eight duotone tiles fly out and back and a sample monthly close walks itself through.
 
 ![Sumwise AI Accounting Firm Page](preview.jpg)
 

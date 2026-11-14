@@ -1,6 +1,6 @@
 # GEO/LAB Planetary Geography Page
 
-A cyan-on-black instrument page for a geography lab: live contour lines drift across the hero while a reticle and HUD read elevation, slope and a terrain profile under your cursor, then eight elevation bands separate in 3D as you scroll.
+A cyan-on-black instrument page for a geography lab, where live contour lines drift under a HUD that reads elevation and slope at your cursor.
 
 ![GEO/LAB Planetary Geography Page](preview.jpg)
 

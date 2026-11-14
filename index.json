@@ -7,7 +7,7 @@
     {
       "slug": "nimbus-ai-assistant-page",
       "title": "Nimbus AI Assistant Page",
-      "description": "A light, coral-accented page for an all-in-one AI assistant: a hero under a parallax sky of canvas-drawn clouds with two tilted CSS phones, a glass-pill nav that shrinks on scroll, a three-slide product carousel, a logo ticker, a dark integrations panel with tool tiles orbiting the logo on three rings, masonry testimonials, pricing with a shared annual switch, journal cards with SVG art, an FAQ accordion and a sky CTA that overlaps the footer",
+      "description": "A light, coral-accented page for an all-in-one AI assistant, with two tilted phones under a parallax sky of canvas clouds and tool tiles orbiting the logo on three rings",
       "category": "web",
       "theme": "light",
       "added": "Nov 8, 2026",
@@ -62,7 +62,7 @@
     {
       "slug": "bryo-ai-moss-cultivation-page",
       "title": "Bryo AI Moss Cultivation Page",
-      "description": "A misty sage-and-lime page for an AI that grows moss, painted entirely in code: a floating moss island with a fern under a scroll-driven camera that dollies down into a fogged conifer valley, telling a five-beat story (headline, word-by-word vision, an account with sensor hotspots, a field card with a coverage sparkline and a feature list), then use-case cards with generated aerial art, counting stats, four growth loops, a live moss-growth simulation with AI detection boxes, pricing, an FAQ and a waitlist CTA",
+      "description": "A misty sage-and-lime page for an AI that grows moss, painted in code, where a scroll-driven camera dollies from a floating moss island down into a fogged conifer valley",
       "category": "web",
       "theme": "light",
       "added": "Nov 8, 2026",
@@ -117,7 +117,7 @@
     {
       "slug": "landra-ai-landing-page-generator-page",
       "title": "Landra AI Landing Page Generator Page",
-      "description": "A black-and-lime page for an AI tool that turns one sentence into a landing page: a WebGL hero strip of eight generated pages that bends with drag speed and opens any one full screen through a pixel-mosaic dissolve, a giant LANDRA wordmark with a prompt box, and a live demo where a typed prompt builds a themed mock site step by step with a timer, then features, counting stats, a monthly / yearly pricing toggle, an FAQ and a prompt CTA",
+      "description": "A black-and-lime page for an AI that turns one sentence into a landing page, with a WebGL strip of generated pages that bends as you drag and a live demo that builds a mock site from your prompt",
       "category": "web",
       "theme": "dark",
       "added": "Nov 8, 2026",
@@ -183,7 +183,7 @@
     {
       "slug": "buttonzilla-glass-console-page",
       "title": "ButtonZilla Glass Console Page",
-      "description": "A dark hardware-style console for live 3D glass buttons: a WebGL monitor with a refracting, bevelled pill button that tilts on hover, squashes on press and sends a ripple through its surface, a solo or eight-up grid view, an amber LCD readout with signal meters, eight preset channels (Frosted, Crystal, Amber, Jelly, Bubble, Cobalt, Clay, Sea glass), and rotary knobs for shape, glass, liquid and scene, with Shuffle, Reset and Copy JSON",
+      "description": "A dark hardware-style console for live 3D glass buttons, with a refracting pill that tilts, squashes and ripples on press, an amber LCD readout and rotary knobs for shape, glass and scene",
       "category": "web",
       "theme": "dark",
       "added": "Nov 8, 2026",
@@ -251,7 +251,7 @@
     {
       "slug": "forgewave-vibe-manufacturing-studio-page",
       "title": "Forgewave Vibe-Manufacturing Studio Page",
-      "description": "A red-and-ink page for a studio that turns a described vibe into a real product, drawn entirely in animated SVG: a robot arm loading a conveyor in the hero, a typed brief pressed into a speaker, four sticky service cards with faders, linkages, a layer-by-layer printer and a units counter, a projects grid, a team switcher with blinking robot portraits, pricing, a scroll-grown assembly line, a testimonial switcher and a factory-belt footer",
+      "description": "A red-and-ink page for a studio that turns a described vibe into a real product, drawn entirely in animated SVG from a robot arm loading a conveyor to a factory-belt footer",
       "category": "web",
       "theme": "dark",
       "added": "Nov 8, 2026",
@@ -310,7 +310,7 @@
     {
       "slug": "kyma-ai-automation-agency-page",
       "title": "KYMA AI Automation Agency Page",
-      "description": "A brutalist black, paper and lime page for an AI automation agency, laid on a visible four-column grid: a hero with a live automation pipeline you can play, a sticky section where eight pain points fly off the screen as you scroll, an ROI calculator with sliders, an indexed services table, a six-week process ruler, a case study with drawn art, seeded halftone portraits for the team, an integrations grid, a pricing toggle and generative article covers",
+      "description": "A brutalist black, paper and lime page for an AI automation agency on a visible four-column grid, with a playable automation pipeline, pain points that fly off as you scroll and an ROI calculator",
       "category": "web",
       "theme": "dark",
       "added": "Nov 8, 2026",
@@ -374,7 +374,7 @@
     {
       "slug": "cutcrew-ai-video-agents-page",
       "title": "Cutcrew AI Video Agents Page",
-      "description": "A bright, playful page for five AI video-editing agents, each a candy-coloured robot mascot drawn in SVG that floats in place: a hero fan of agent cards, a sentence with the robots set inline, a dark timeline strip with hover tooltips, three ways to brief the agents (an accordion with a self-typing prompt and a TypeScript SDK card), a studio services index, a six-week gantt with a sweeping playhead, fanning project decks, an album gallery, a team card deck, auto-advancing stories, monthly/annual pricing and a spinning 3D ring of covers in the CTA",
+      "description": "A bright, playful page for five AI video-editing agents, each a candy-coloured SVG robot mascot, with a self-typing brief, a six-week gantt with a sweeping playhead and a spinning 3D ring of covers",
       "category": "web",
       "theme": "light",
       "added": "Nov 7, 2026",
@@ -442,7 +442,7 @@
     {
       "slug": "foldwise-ai-product-designer-page",
       "title": "Foldwise AI Product Designer Page",
-      "description": "A quiet grey page for an AI-native product designer, laid out as a folding book: twelve paper and dark-stock panels (a cover, contents, seven case studies, field notes, about and a business-card contact) concertina open in 3D as you scroll, shading as they turn. Every case study plate is drawn in SVG: an agent run with a live step, an approval queue, model routing on two phones, an autonomy dial, a design system sheet, a context-window selector and an undo gap. On phones the book lies flat as one tall stack",
+      "description": "A quiet grey page for an AI-native product designer, laid out as a folding book whose twelve panels of SVG case studies concertina open in 3D as you scroll",
       "category": "web",
       "theme": "light",
       "added": "Nov 7, 2026",
@@ -500,7 +500,7 @@
     {
       "slug": "fullday-ai-money-agent-page",
       "title": "Fullday AI Money Agent Page",
-      "description": "A soft blue-and-peach page for an AI money agent that works around your calendar: a hero with a live feed of tasks it just finished and a phone with sliding payment cards, a self-typing \"can I afford it\" prompt, sticky how-it-works steps, a results chart whose dashed line draws in, a story switcher, a snap-scrolling benefits row, monthly/yearly pricing toggles and rounded sections that tuck under each other",
+      "description": "A soft blue-and-peach page for an AI money agent that works around your calendar, with a live feed of finished tasks, sliding payment cards on a phone and a self-typing can I afford it prompt",
       "category": "web",
       "theme": "light",
       "added": "Nov 7, 2026",
@@ -559,7 +559,7 @@
     {
       "slug": "fortix-ai-money-copilot-app-page",
       "title": "Fortix AI Money Copilot App Page",
-      "description": "A bright, airy app page for an AI money copilot: a headline set with glossy gradient app icons, six dark glass phone screens drawn entirely in HTML and SVG (net worth, AI chat, autopilot rules, a forecast with a confidence band, a blocked-fraud alert), a turning 3D ring of stat cards, floating badges and chat bubbles, a landscape dashboard that tips up into view and a tap-through 3D feature carousel",
+      "description": "A bright, airy app page for an AI money copilot, with six dark glass phone screens drawn in HTML and SVG, a turning 3D ring of stat cards and a tap-through 3D feature carousel",
       "category": "web",
       "theme": "light",
       "added": "Nov 7, 2026",
@@ -613,7 +613,7 @@
     {
       "slug": "linnet-ai-housekeeping-swarm-page",
       "title": "Linnet AI Housekeeping Swarm Page",
-      "description": "A pine-and-brass page for a swarm of AI assistants that runs housekeeping: an illustrated housekeeper in the hero who pops in, blinks and follows the pointer, a manifesto that lights word by word before a diagonal wipe, four agents on a pinned scroll stage, flip-up plan cards, sticky stacked testimonials and an about section that unmasks from an arch, every picture drawn in SVG",
+      "description": "A pine-and-brass page for a swarm of AI housekeeping assistants, with an illustrated housekeeper who blinks and follows the pointer and four agents on a pinned scroll stage, all drawn in SVG",
       "category": "web",
       "theme": "dark",
       "added": "Oct 31, 2026",
@@ -679,7 +679,7 @@
     {
       "slug": "ditherform-ai-dither-generator-page",
       "title": "Ditherform AI Dither Generator Page",
-      "description": "A near-black, grid-ruled page for an AI that turns a prompt into a live 3D dither element: every picture on it is a raymarched shape morphing between a cube, sphere, torus and more, Bayer-dithered in two muted inks with a crisp outline, under fitted condensed headlines, a scroll-driven marquee, a logo wall and a cream changelog whose rows slide a plate in on hover",
+      "description": "A near-black, grid-ruled page for an AI that turns a prompt into a 3D dither element, where every picture is a raymarched shape morphing between solids, Bayer-dithered in two muted inks",
       "category": "web",
       "theme": "dark",
       "added": "Oct 30, 2026",
@@ -735,7 +735,7 @@
     {
       "slug": "peelo-ai-sticker-printer-page",
       "title": "Peelo AI Sticker Printer Page",
-      "description": "A warm-black subscription page for an AI sticker printer: a condensed SAY IT. STICK IT. headline that blurs in letter by letter under an orange glow with four die-cut stickers popping around it, a gallery of sticker sheets with their prompts on hover, five how-it-works rows that stack as you scroll, the printer and its refills on tilted cards, three plans and a drag-to-scroll review slider, every picture drawn in SVG",
+      "description": "A warm-black subscription page for an AI sticker printer, with a condensed headline that blurs in under an orange glow, die-cut stickers popping around it and every picture drawn in SVG",
       "category": "web",
       "theme": "dark",
       "added": "Oct 30, 2026",
@@ -789,7 +789,7 @@
     {
       "slug": "noctua-ai-night-owl-page",
       "title": "Noctua AI Night Owl Page",
-      "description": "A stark black-on-white page for an AI that works the night shift: a quartered loader with blinking owl eyes and a counter, a giant NIGHT ——◐ OWL headline whose moon slides through its phases, the viewer's own clock and a greeting for their hour, and four illustrated feature cards (a starlit draft, an overnight task queue, glowing owl eyes, a sunrise digest) drawn in SVG",
+      "description": "A stark black-on-white page for an AI that works the night shift, with a giant NIGHT OWL headline whose moon slides through its phases and a greeting for the viewer's own hour",
       "category": "web",
       "theme": "light",
       "added": "Oct 30, 2026",
@@ -841,7 +841,7 @@
     {
       "slug": "sidera-ai-astrology-page",
       "title": "Sidera AI Astrology Page",
-      "description": "A midnight-and-gold page for an AI astrologer: a Three.js orb of gold and violet glass sits on an obsidian podium inside a turning zodiac wheel and gold astrolabe rings, wrapped in nebula smoke and bloom, while the headline and CTA are redrawn as refracting 3D glass; below, a live natal chart per sun sign, today's real moon phase and a stars-to-pricing landing page",
+      "description": "A midnight-and-gold page for an AI astrologer, with a Three.js glass orb on an obsidian podium inside a turning zodiac wheel, a live natal chart per sun sign and today's real moon phase",
       "category": "web",
       "theme": "dark",
       "added": "Oct 29, 2026",
@@ -911,7 +911,7 @@
     {
       "slug": "linework-ai-architect-assistant-page",
       "title": "Linework AI Architect Assistant Page",
-      "description": "A quiet, paper-white page for an AI architect assistant where everything is drawn line by line in code: an amphitheatre in ink with a roaming blue blueprint lens, a skyline of nine procedural buildings you filter and open into a drawing-versus-render slider, a house that draws itself stage by stage as you scroll, and a harbour city footer",
+      "description": "A quiet, paper-white page for an AI architect assistant where everything is drawn line by line in code, from an ink amphitheatre under a blueprint lens to a house that draws itself as you scroll",
       "category": "web",
       "theme": "light",
       "added": "Oct 28, 2026",
@@ -967,7 +967,7 @@
     {
       "slug": "ai-conf-frontier-ai-conference-page",
       "title": "AI/CONF Frontier AI Conference Page",
-      "description": "A pink-and-cobalt bento page for a frontier AI conference: a huge outlined headline over slow orbit rings and a typed prompt, a sticky sidebar with a morphing glass orb agenda and a live countdown ticket, and navy scenes in liquid glass (a gooey neural net, a compute chip, an attention heatmap, test-tube benchmarks and server racks)",
+      "description": "A pink-and-cobalt bento page for a frontier AI conference, with a huge outlined headline over slow orbit rings, a live countdown ticket and navy scenes in liquid glass",
       "category": "web",
       "theme": "light",
       "added": "Oct 28, 2026",
@@ -1032,7 +1032,7 @@
     {
       "slug": "synthra-ai-workspace-page",
       "title": "Synthra AI Workspace Page",
-      "description": "A bright lime SaaS page for an AI workspace of specialist agents: a phone running a live chat stands over a ticker of generative art tiles, then dark grainy cards with mesh gradients and glass panels carry the features, six sticky customer stories, pricing, six glowing agent orbs and a rotating 3D ring of product tiles",
+      "description": "A bright lime SaaS page for an AI workspace of specialist agents, with a phone running a live chat over a ticker of generative art, six glowing agent orbs and a rotating 3D ring of product tiles",
       "category": "web",
       "theme": "light",
       "added": "Oct 27, 2026",
@@ -1088,7 +1088,7 @@
     {
       "slug": "quillo-ai-tutor-page",
       "title": "Quillo AI Tutor Page",
-      "description": "A bright, hand-made page for an AI tutor on a graph-paper grid: a giant QUILLO in a selection box with handles, sticky notes, cursor tags and owl avatars, a statement that lights word by word, draggable polaroids, four feature cards with folder tabs that stack as you scroll, and a googly-eyed blob that follows your cursor",
+      "description": "A bright, hand-made page for an AI tutor on a graph-paper grid, with a giant QUILLO in a selection box, draggable polaroids and a googly-eyed blob that follows your cursor",
       "category": "web",
       "theme": "light",
       "added": "Oct 27, 2026",
@@ -1139,7 +1139,7 @@
     {
       "slug": "auren-ai-meditation-guide-page",
       "title": "Auren AI Meditation Guide Page",
-      "description": "A hushed, near-black page for an AI meditation guide: a counting intro splits open on a full-width AUREN wordmark over three living tiles (misty dawn ridges, the app mid-session, a breathing glass orb), a WebGL aurora band, sticky stacked cards of paired art, marquee rows of seventeen generative scenes and a stories carousel",
+      "description": "A hushed, near-black landing page for an AI meditation guide, with a full-width AUREN wordmark, a WebGL aurora band and seventeen generative art scenes drawn in code",
       "category": "web",
       "theme": "dark",
       "added": "Oct 27, 2026",
@@ -1195,7 +1195,7 @@
     {
       "slug": "lumora-ai-home-solar-page",
       "title": "Lumora AI Home Solar Page",
-      "description": "A warm, sunlit page for an AI that runs a home's solar and battery: a 3D modernist villa built from CSS boxes sits in a golden landscape and turns to evening with one switch, a manifesto lights word by word, a working energy dashboard tilts up into view, and Forecast, Store and Save slide past on a pinned horizontal track",
+      "description": "A warm, sunlit page for an AI that runs a home's solar and battery, with a 3D villa built from CSS boxes that turns to evening with one switch and a working energy dashboard",
       "category": "web",
       "theme": "light",
       "added": "Oct 26, 2026",
@@ -1255,7 +1255,7 @@
     {
       "slug": "orrery-ai-services-ring-page",
       "title": "Orrery AI Services Ring Page",
-      "description": "A single-screen carousel for an AI platform of nine services: nine glass lenses with refracting edges turn on a ticked ring, each opening a full-screen world painted live in canvas (a neon city in rain, an aurora over a frozen lake, a synthwave horizon, a reef, Earth from orbit, cherry blossom, a circuit canyon, a crystal cave, a Mars base) as the accent colour drifts to match",
+      "description": "A single-screen carousel for an AI platform of nine services, where glass lenses on a ticked ring each open a full-screen world painted live in canvas",
       "category": "web",
       "theme": "dark",
       "added": "Oct 26, 2026",
@@ -1307,7 +1307,7 @@
     {
       "slug": "orvane-ai-lidar-drone-page",
       "title": "Orvane AI LiDAR Drone Page",
-      "description": "A pale survey-instrument page for an AI LiDAR drone: a point-cloud preloader splits open on a shaded 3D drone sweeping a laser line across scanned terrain, sticky scenes flag a sagging bridge, morph point clouds between industries and draw a mountain range line by line, and a working controller lets you fly the drone",
+      "description": "A pale survey-instrument page for an AI LiDAR drone, with a shaded 3D drone sweeping a laser across scanned terrain, morphing point clouds and a controller that lets you fly it",
       "category": "web",
       "theme": "light",
       "added": "Oct 26, 2026",
@@ -1365,7 +1365,7 @@
     {
       "slug": "kairo-ai-time-assistant-page",
       "title": "Kairo AI Time Assistant Page",
-      "description": "A near-black product page for an AI assistant that tracks your time: a huge glowing \"Meet Kairo.\" splits in letter by letter beside a tilting 3D phone whose live app types out the assistant's messages, bento cards draw timelines, focus rings and charts, integrations orbit a second phone, and a dark / light switch re-skins the app",
+      "description": "A near-black product page for an AI time-tracking assistant, with a glowing headline that splits in letter by letter beside a tilting 3D phone whose app types its own messages",
       "category": "web",
       "theme": "dark",
       "added": "Oct 26, 2026",
@@ -1420,7 +1420,7 @@
     {
       "slug": "plinth-ai-merchant-agents-page",
       "title": "Plinth AI Merchant Agents Page",
-      "description": "A gallery-quiet page for AI agents that run online stores: the store console stands on a marble and brass plinth in 3D, a pinned stack separates into the three layers every agent stands on, blueprint frames draw round each agent at work, and onboarding runs sideways along a lit wire",
+      "description": "A gallery-quiet page for AI agents that run online stores, with the store console on a 3D marble and brass plinth and onboarding running sideways along a lit wire",
       "category": "web",
       "theme": "light",
       "added": "Oct 25, 2026",
@@ -1490,7 +1490,7 @@
     {
       "slug": "sumwise-ai-accounting-firm-page",
       "title": "Sumwise AI Accounting Firm Page",
-      "description": "A print-shop page for an AI accounting firm: an ink cover opens to full screen as eight duotone illustration tiles fly out and back, a sample monthly close walks itself through, halftone dots resolve into each service, a chat replays an AI answering from the books, and the tax year scrolls past on a pinned track",
+      "description": "A print-shop page for an AI accounting firm, where an ink cover opens as eight duotone tiles fly out and back and a sample monthly close walks itself through",
       "category": "web",
       "theme": "light",
       "added": "Oct 25, 2026",
@@ -1558,7 +1558,7 @@
     {
       "slug": "infra-ai-thermal-agent-page",
       "title": "Infra AI Thermal Agent Page",
-      "description": "A thermal-camera page for an AI agent that sees heat: a giant condensed \"INFRA\" over a swirling WebGL heat plume, its letters stretching from the centre out as you scroll, every picture painted as a live heat field with a camera HUD, and a probe that reads the temperature under your cursor",
+      "description": "A thermal-camera page for an AI agent that sees heat, with a giant INFRA over a swirling WebGL heat plume and a probe that reads the temperature under your cursor",
       "category": "web",
       "theme": "dark",
       "added": "Oct 25, 2026",
@@ -1630,7 +1630,7 @@
     {
       "slug": "easel-ai-artist-assistant-page",
       "title": "Easel AI Artist Assistant Page",
-      "description": "A two-ink risograph page for an AI studio assistant for artists: four pink ink drums roll down the hero and print a panel as you scroll, blue and pink plates slide into register, every illustration is greyscale SVG turned duotone by a blend, and a live plan ticket prices as you pick",
+      "description": "A two-ink risograph page for an AI assistant for artists, where four pink ink drums roll down the hero and print a panel as you scroll",
       "category": "web",
       "theme": "dark",
       "added": "Oct 25, 2026",
@@ -1694,7 +1694,7 @@
     {
       "slug": "ochre-ai-meditation-app-page",
       "title": "Ochre AI Meditation App Page",
-      "description": "A sunset-poster page for an AI meditation app: a thin \"OCHRE\" is split ink-on-paper by a dark field that sweeps across as the sun sets, the hero phone breathes over a live WebGL ocean, a moon window opens into the night, and every landscape is painted on canvas",
+      "description": "A sunset-poster page for an AI meditation app, where a dark field sweeps across the title as the sun sets and the hero phone breathes over a live WebGL ocean",
       "category": "web",
       "theme": "light",
       "added": "Oct 24, 2026",
@@ -1766,7 +1766,7 @@
     {
       "slug": "tokenhaus-ai-design-system-academy-page",
       "title": "tokenhaus AI Design System Academy Page",
-      "description": "A four-ink Bauhaus page for an AI design-systems academy: the hero is a grid of quarter-circle tiles that turn as the next section slides over it, \"SYSTEM\" fans out into echoes in pink, amber and white, courses grow out of circles into pills, and every swatch, specimen and tutor portrait is drawn in SVG",
+      "description": "A four-ink Bauhaus page for an AI design-systems academy, with a hero grid of quarter-circle tiles that turn as you scroll and every swatch and tutor portrait drawn in SVG",
       "category": "web",
       "theme": "light",
       "added": "Oct 24, 2026",
@@ -1835,7 +1835,7 @@
     {
       "slug": "ostler-ai-hotel-concierge-page",
       "title": "Ostler AI Hotel Concierge Page",
-      "description": "A late-night oxblood page for an AI hotel concierge: a giant \"Ostler\" springs apart letter by letter over a guest's phone chat, six module covers slide past sideways, \"Awake\" zooms into a hotel facade at night, and every phone, dashboard and room is drawn in SVG",
+      "description": "A late-night oxblood page for an AI hotel concierge, with a giant Ostler that springs apart letter by letter over a guest's phone chat and every room drawn in SVG",
       "category": "web",
       "theme": "dark",
       "added": "Oct 24, 2026",
@@ -1906,7 +1906,7 @@
     {
       "slug": "wayfind-ai-travel-companion-page-v2",
       "title": "Wayfind AI Travel Companion Page V2",
-      "description": "A sand-and-sea expedition poster of a page for an AI travel companion: \"wayfind\" is cut out of a desert photo that opens to full bleed as you scroll, mode posters stack and tilt, a nine-day route draws itself sideways, and every photo is raymarched live in WebGL",
+      "description": "A sand-and-sea expedition poster for an AI travel companion, with wayfind cut out of a desert photo that opens to full bleed and every photo raymarched live in WebGL",
       "category": "web",
       "theme": "light",
       "added": "Oct 24, 2026",
@@ -1978,7 +1978,7 @@
     {
       "slug": "tarn-file-transfer-page",
       "title": "Tarn File Transfer Page",
-      "description": "A frosted steel-grey page for a heavy-file transfer service: the hero zooms out of a giant glass send button into its frame, a magnifying lens glides across the manifesto, a light sweeps the service tiles, and a send button you can try with your own file",
+      "description": "A frosted steel-grey page for a heavy-file transfer service, where the hero zooms out of a giant glass send button and a send button you can try with your own file",
       "category": "web",
       "theme": "dark",
       "added": "Oct 23, 2026",
@@ -2052,7 +2052,7 @@
     {
       "slug": "somatic-ai-wellness-companion-page",
       "title": "Somatic AI Wellness Companion Page",
-      "description": "An acid-lime page for an AI wellness companion: a breathing point-sphere orb sits behind \"SOMATIC SIGNALS\" stretched to the full width, a diamond window opens to fill the screen as you scroll, five programs slide past sideways, and every heart trace, sleep map and portrait is drawn in code",
+      "description": "An acid-lime page for an AI wellness companion, with a breathing point-sphere orb behind full-width SOMATIC SIGNALS and every heart trace and sleep map drawn in code",
       "category": "web",
       "theme": "light",
       "added": "Oct 23, 2026",
@@ -2127,7 +2127,7 @@
     {
       "slug": "latent-ai-fashion-atelier-page",
       "title": "Latent AI Fashion Atelier Page",
-      "description": "A dark, iridescent page for an AI fashion atelier: a wireframe cloth ripples toward the pointer under a giant \"Latent\" that scatters as the hero tilts away, six capsules slide past sideways, a \"Zero\" knockout zooms open onto a gradient, and every picture is generative SVG",
+      "description": "A dark, iridescent page for an AI fashion atelier, with a wireframe cloth that ripples toward the pointer under a giant Latent and every picture generated in SVG",
       "category": "web",
       "theme": "dark",
       "added": "Oct 22, 2026",
@@ -2202,7 +2202,7 @@
     {
       "slug": "rowline-agronomy-ai-page",
       "title": "Rowline Agronomy AI Page",
-      "description": "A dark-green landing page for a farm AI: a live NDVI scan wipes across a field rendered pixel by pixel, the scanner's lens opens into a dawn landscape with a drone flying in, five agents slide past sideways, and every field, crop map and device is drawn in code",
+      "description": "A dark-green page for a farm AI, where a live NDVI scan wipes across a field rendered pixel by pixel and the lens opens into a dawn landscape with a drone flying in",
       "category": "web",
       "theme": "dark",
       "added": "Oct 22, 2026",
@@ -2274,7 +2274,7 @@
     {
       "slug": "corvane-capital-private-equity-page",
       "title": "Corvane Capital Private Equity Page",
-      "description": "A quiet-money private equity page on a ruled four-column grid: a giant serif \"Compounding\" beside a window of live ridgelines that opens to full bleed as you scroll, a champagne principles field that fans six strokes into line, and a track record that flips between gross and net",
+      "description": "A quiet-money private equity page on a ruled four-column grid, with a giant serif Compounding beside a window of live ridgelines that opens to full bleed as you scroll",
       "category": "web",
       "theme": "dark",
       "added": "Oct 22, 2026",
@@ -2347,7 +2347,7 @@
     {
       "slug": "agentic-art-expo-page",
       "title": "Agentic Art Expo Page",
-      "description": "An editorial event page for an expo where AI agents exhibit: a giant wordmark that flies into the header, a satin hero with live particle trails, a programme that floods dark from a full stop, and every picture painted in code",
+      "description": "An editorial event page for an expo where AI agents exhibit, with a satin hero of live particle trails and a programme that floods dark from a full stop",
       "category": "web",
       "theme": "dark",
       "added": "Oct 22, 2026",
@@ -2422,7 +2422,7 @@
     {
       "slug": "geo-lab-planetary-geography-page",
       "title": "GEO/LAB Planetary Geography Page",
-      "description": "A cyan-on-black instrument page for a geography lab: live contour lines drift across the hero while a reticle and HUD read elevation, slope and a terrain profile under your cursor, then eight elevation bands separate in 3D as you scroll",
+      "description": "A cyan-on-black instrument page for a geography lab, where live contour lines drift under a HUD that reads elevation and slope at your cursor",
       "category": "web",
       "theme": "dark",
       "added": "Oct 22, 2026",
@@ -2481,7 +2481,7 @@
     {
       "slug": "tessel-ai-infrastructure-page",
       "title": "Tessel AI Infrastructure Page",
-      "description": "A pinned isometric journey for an AI infrastructure platform: a pixel-art engineer walks a glowing route past six code-drawn scenes, from blueprint table to rocket launch, as chapter cards and a rail follow the scroll",
+      "description": "A pinned isometric journey for an AI infrastructure platform, where a pixel-art engineer walks a glowing route past six code-drawn scenes as you scroll",
       "category": "web",
       "theme": "light",
       "added": "Oct 22, 2026",
@@ -2529,7 +2529,7 @@
     {
       "slug": "hearthly-ai-home-care-page",
       "title": "Hearthly AI Home Care Page",
-      "description": "A warm, illustrated page for an AI home assistant: a floating collage of glossy home-system cards that floods open into a night scene of the house, stacking service folders, arched system plates and a word-lit testimonial",
+      "description": "A warm, illustrated page for an AI home assistant, with a floating collage of glossy home-system cards that floods open into a night scene of the house",
       "category": "web",
       "theme": "light",
       "added": "Oct 22, 2026",
@@ -2600,7 +2600,7 @@
     {
       "slug": "nota-wearable-ai-page",
       "title": "NOTA Wearable AI Page",
-      "description": "A quiet-luxury catalogue for a titanium AI wearable: a live device you can use in the hero (hold to ask, turn the crown, flip the mic switch), close-ups that are clones of it, a seven-segment privacy ledger and a technical drawing",
+      "description": "A quiet-luxury catalogue for a titanium AI wearable, with a live device in the hero you can hold to ask, turn by the crown and mute with the mic switch",
       "category": "web",
       "theme": "light",
       "added": "Oct 22, 2026",
@@ -2660,7 +2660,7 @@
     {
       "slug": "mirai-ai-companion-page",
       "title": "Mirai AI Companion Page",
-      "description": "A purple, mint and charcoal page for an AI companion: an illustrated character peeks over giant type between clouds, follows your cursor with her eyes, blinks, perks up when you come close and frowns when you poke her",
+      "description": "A purple, mint and charcoal page for an AI companion, with an illustrated character who peeks over giant type, follows your cursor, blinks and frowns when you poke her",
       "category": "web",
       "theme": "dark",
       "added": "Oct 22, 2026",
@@ -2717,7 +2717,7 @@
     {
       "slug": "orvyn-autonomous-car-page",
       "title": "ORVYN Autonomous Car Page",
-      "description": "An AI-native grand tourer on a near-black page: a spectrum autonomy dial steps through five levels, unlocking pods as it goes, over a radar, live telemetry and a horizon of light",
+      "description": "An AI-native grand tourer on a near-black page, with a spectrum autonomy dial that steps through five levels over a radar, live telemetry and a horizon of light",
       "category": "web",
       "theme": "dark",
       "added": "Oct 21, 2026",
@@ -2773,7 +2773,7 @@
     {
       "slug": "myriad-agent-swarm-page",
       "title": "Myriad Agent Swarm Page",
-      "description": "An agent-select screen for an AI swarm: pick one of five agents and a 640-point particle swarm reforms into its shape while the whole page recolours to match",
+      "description": "An agent-select screen for an AI swarm, where picking one of five agents reforms a 640-point particle swarm into its shape and recolours the page",
       "category": "web",
       "theme": "dark",
       "added": "Oct 21, 2026",
@@ -2824,7 +2824,7 @@
     {
       "slug": "mirador-observability-page",
       "title": "Mirador Observability Page",
-      "description": "An observability platform in a framed night console: a WebGL ribbon of glowing fibers behind the hero, plates cut out of the frame with inverted corners, stacking feature cards with live trace mockups and a dark/light switch",
+      "description": "An observability platform in a framed night console, with a WebGL ribbon of glowing fibers behind the hero and stacking feature cards with live trace mockups",
       "category": "web",
       "theme": "dark",
       "added": "Oct 21, 2026",
@@ -2897,7 +2897,7 @@
     {
       "slug": "side-quest-adoption-center-page",
       "title": "Side Quest Adoption Center Page",
-      "description": "A butter-yellow adoption center for ideas you have no time for: a waving page mascot, six illustrated side quests to adopt with confetti, and a lifecycle from spark to archive",
+      "description": "A butter-yellow adoption center for ideas you have no time for, with a waving mascot, six illustrated side quests to adopt with confetti and a spark-to-archive lifecycle",
       "category": "web",
       "theme": "light",
       "added": "Oct 21, 2026",
@@ -2953,7 +2953,7 @@
     {
       "slug": "orrery-reasoning-engine-page",
       "title": "Orrery Reasoning Engine Page",
-      "description": "An AI reasoning engine that shows its work: a hero window opens onto a canvas orrery, and every picture on the page is a live rendering drawn in code",
+      "description": "An AI reasoning engine that shows its work, where the hero window opens onto a canvas orrery and every picture is a live rendering drawn in code",
       "category": "web",
       "theme": "dark",
       "added": "Oct 20, 2026",
@@ -3024,7 +3024,7 @@
     {
       "slug": "siliq-ai-hardware-lab-page",
       "title": "Siliq AI Hardware Lab Page",
-      "description": "A sticker-bright bento for a small-batch AI hardware lab and school: SVG chips and GPUs, a hero board that breaks apart into a honey flood and a gallery that folds into a grid",
+      "description": "A sticker-bright bento for a small-batch AI hardware lab and school, with SVG chips and GPUs and a hero board that breaks apart into a honey flood",
       "category": "web",
       "theme": "light",
       "added": "Oct 20, 2026",
@@ -3094,7 +3094,7 @@
     {
       "slug": "thorn-music-controller-page",
       "title": "Thorn Music Controller Page",
-      "description": "A desktop music controller built in CSS 3D from layered DOM: every dial, fader, joystick and tape key works, with clicks you can hear and three finishes",
+      "description": "A desktop music controller built in CSS 3D, where every dial, fader, joystick and tape key works with clicks you can hear",
       "category": "web",
       "theme": "light",
       "added": "Oct 20, 2026",
@@ -3146,7 +3146,7 @@
     {
       "slug": "corvel-hard-tech-capital-page",
       "title": "Corvel Hard-Tech Capital Page",
-      "description": "A risograph-print investment firm for fabs, satellites and fusion: halftone art drawn in code, a sunburst arch that blows apart on scroll and a two-plate misregistered print",
+      "description": "A risograph-print page for a firm investing in fabs, satellites and fusion, with halftone art drawn in code and a sunburst arch that blows apart on scroll",
       "category": "web",
       "theme": "light",
       "added": "Oct 20, 2026",
@@ -3218,7 +3218,7 @@
     {
       "slug": "corelane-build-cluster-page",
       "title": "Corelane Build Cluster Page",
-      "description": "An isometric dev-tool landing page: laptops and a core server on a glowing circuit field, plus a 96-machine fleet board you can put to sleep and run a build across",
+      "description": "An isometric dev-tool page with laptops and a core server on a glowing circuit field, and a 96-machine fleet board you can put to sleep and run a build across",
       "category": "web",
       "theme": "dark",
       "added": "Oct 20, 2026",
@@ -3272,7 +3272,7 @@
     {
       "slug": "halden-clinical-equipment-page",
       "title": "Halden Clinical Equipment Page",
-      "description": "A clinical equipment service in ink and paper: a dot-matrix wordmark that splits apart, a pinned 12-check inspection board, a rate card and a scroll-driven pre-owned shelf",
+      "description": "A clinical equipment service in ink and paper, with a dot-matrix wordmark that splits apart, a pinned 12-check inspection board and a scroll-driven pre-owned shelf",
       "category": "web",
       "theme": "dark",
       "added": "Oct 19, 2026",
@@ -3349,7 +3349,7 @@
     {
       "slug": "calibre-grading-bench-page",
       "title": "Calibre Grading Bench Page",
-      "description": "A glass grading bench on a planet horizon: it reads an AI answer claim by claim, highlights each one in its verdict colour and swings a needle to the score",
+      "description": "A glass grading bench on a planet horizon that reads an AI answer claim by claim, highlights each in its verdict colour and swings a needle to the score",
       "category": "web",
       "theme": "dark",
       "added": "Oct 19, 2026",
@@ -3403,7 +3403,7 @@
     {
       "slug": "cyber-bird-arcade-game-page",
       "title": "Cyber Bird Arcade Game Page",
-      "description": "A pixel-art arcade game launch page with the game playable right in the hero: a one-button flyer threading an armored cyber-pickup through stainless rocket stacks, night, dawn and day skies drawn by code, difficulty presets and a local mission log",
+      "description": "A pixel-art arcade game launch page with the game playable in the hero, where a one-button flyer threads an armored cyber-pickup through stainless rocket stacks",
       "category": "web",
       "theme": "dark",
       "added": "Oct 18, 2026",
@@ -3465,7 +3465,7 @@
     {
       "slug": "facetry-security-landing-page",
       "title": "Facetry Security Landing Page",
-      "description": "A black-and-chrome security platform page: an extruded metal logo on a rough stone pedestal in a CSS 3D scene, spring-morphing between three shapes, glass panels floating around it, a live spring tuner, and a footer with live region clocks",
+      "description": "A black-and-chrome security platform page, with an extruded metal logo spring-morphing between three shapes on a stone pedestal in a CSS 3D scene",
       "category": "web",
       "theme": "dark",
       "added": "Oct 18, 2026",
@@ -3517,7 +3517,7 @@
     {
       "slug": "kestrel-ai-finance-landing-page",
       "title": "Kestrel AI Finance Landing Page",
-      "description": "A bright fintech page for an AI finance platform: a 3D-tilting cash-runway dashboard with a self-drawing forecast chart and a live agent feed, orbiting integration chips, glossy diamond icon tiles, product rows with dark live panels, hover-flip agent cards and a demo booking widget",
+      "description": "A bright fintech page for an AI finance platform, with a 3D-tilting cash-runway dashboard, a self-drawing forecast chart and a live agent feed",
       "category": "web",
       "theme": "light",
       "added": "Oct 18, 2026",
@@ -3574,7 +3574,7 @@
     {
       "slug": "social-work-agent-swarm-landing-page",
       "title": "Social Work Agent Swarm Landing Page",
-      "description": "A loud neo-brutalist page for a swarm of AI agents that help social workers: huge stencil type over op-art ring patterns, animoji characters whose eyes follow the cursor, a filterable crew of eight agent cards, an approval queue, guardrails and pricing",
+      "description": "A loud neo-brutalist page for a swarm of AI agents that help social workers, with huge stencil type over op-art rings and animoji characters whose eyes follow the cursor",
       "category": "web",
       "theme": "light",
       "added": "Oct 17, 2026",
@@ -3631,7 +3631,7 @@
     {
       "slug": "starfork-game-studio-landing-page",
       "title": "Starfork Game Studio Landing Page",
-      "description": "A premium indie game studio page set in a cosmic toy world: eight sprite-rigged characters with real animation poses standing on a glowing planet, a character select with pose and frame-rate controls, a playable 30-second endless runner with coins and fireworks, live game cards, and a careers quiz",
+      "description": "A premium indie game studio page in a cosmic toy world, with eight sprite-rigged characters on a glowing planet and a playable 30-second endless runner",
       "category": "web",
       "theme": "dark",
       "added": "Oct 17, 2026",
@@ -3685,7 +3685,7 @@
     {
       "slug": "game-dev-agent-landing-page",
       "title": "Game Dev Agent Landing Page",
-      "description": "An AI agent for game studios whose hero is a playable three.js diorama: a toy biplane with a corgi pilot flying a low-poly cherry-blossom road under bloom and tilt-shift, a full-page loader, a crew picker that repaints the plane live, in-engine card stills and generated sound",
+      "description": "An AI agent for game studios whose hero is a playable three.js diorama of a corgi-piloted toy biplane flying a low-poly cherry-blossom road",
       "category": "web",
       "theme": "light",
       "added": "Oct 17, 2026",
@@ -3750,7 +3750,7 @@
     {
       "slug": "maasai-inspired-event-landing-page",
       "title": "Maasai-Inspired Event Landing Page",
-      "description": "A cultural events studio page on Maasai-inspired dusk: a Rive hero rebuilt in SVG where four warriors leap into the adumu, a scroll-driven frieze of leaping silhouettes, generated beadwork and gala art, and textures cut from the warriors' own shapes",
+      "description": "A cultural events studio page on a Maasai-inspired dusk, with a hero where four warriors leap into the adumu and a scroll-driven frieze of leaping silhouettes",
       "category": "web",
       "theme": "light",
       "added": "Oct 16, 2026",
@@ -3814,7 +3814,7 @@
     {
       "slug": "ai-work-assistant-chat-landing-page",
       "title": "AI Work Assistant Chat Landing Page",
-      "description": "A soft pastel AI-assistant launch page whose hero is a working chat: it types its own first question, streams answers with thread cards, drafts and calendar slots, and is ringed by agent badges that spin, tick and fail on their own",
+      "description": "A soft pastel AI-assistant launch page whose hero is a working chat that types its own first question and streams answers with drafts and calendar slots",
       "category": "web",
       "theme": "dark",
       "added": "Oct 16, 2026",
@@ -3870,7 +3870,7 @@
     {
       "slug": "peptide-skincare-store-landing-page",
       "title": "Peptide Skincare Store Landing Page",
-      "description": "A warm, cream-toned peptide skincare store whose hero is a spinning sphere of code-drawn product tiles behind a glass search bar that types its own queries, with springy lab-style product renders, a draggable Dose lab vial, bubble-popping add-to-bag and a day-to-night routine",
+      "description": "A warm, cream-toned peptide skincare store whose hero is a spinning sphere of code-drawn product tiles behind a glass search bar that types its own queries",
       "category": "web",
       "theme": "light",
       "added": "Oct 17, 2026",
@@ -3933,7 +3933,7 @@
     {
       "slug": "blackletter-biology-workbench",
       "title": "Blackletter Biology Workbench",
-      "description": "A computational biology platform set like an illuminated manuscript: blackletter headings lit by a WebGL shader, spinning conic frame borders, and hand-drawn lab sketches in the margins",
+      "description": "A computational biology platform set like an illuminated manuscript, with blackletter headings lit by a WebGL shader and hand-drawn lab sketches in the margins",
       "category": "web",
       "theme": "light",
       "added": "Oct 15, 2026",
@@ -4070,7 +4070,7 @@
     {
       "slug": "hazard-terminal-security-page",
       "title": "Hazard Terminal Security Page",
-      "description": "Antivirus as an amber hazard terminal: a spinning seal HUD, a live scan where three cores vote, and a searchable grid of 72 spirits, each guarding a threat",
+      "description": "Antivirus as an amber hazard terminal, with a spinning seal HUD, a live scan where three cores vote and a searchable grid of 72 spirits guarding threats",
       "category": "web",
       "theme": "dark",
       "added": "Oct 14, 2026",
@@ -4123,7 +4123,7 @@
     {
       "slug": "retro-messenger-agent-page",
       "title": "Retro Messenger Agent Page",
-      "description": "An AI agent pitched as your old instant-messenger buddy: a working chat window that plans and runs tasks, nudges that shake the screen, and a buddy-list footer",
+      "description": "An AI agent pitched as your old instant-messenger buddy, with a working chat window that plans and runs tasks and nudges that shake the screen",
       "category": "web",
       "theme": "dark",
       "added": "Oct 13, 2026",
@@ -4237,7 +4237,7 @@
     {
       "slug": "faceted-iceberg-platform-page",
       "title": "Faceted Iceberg Platform Page",
-      "description": "An AI agent platform drawn in low-poly crystal: a shape-mosaic hero, an iceberg whose waterline drops as the platform takes on the stack, and a faceted sunrise footer",
+      "description": "An AI agent platform drawn in low-poly crystal, with a shape-mosaic hero and an iceberg whose waterline drops as the platform takes on the stack",
       "category": "web",
       "theme": "dark",
       "added": "Oct 13, 2026",
@@ -4295,7 +4295,7 @@
     {
       "slug": "card-scanner-finance-page",
       "title": "Card Scanner Finance Page",
-      "description": "Autonomous finance agents: tilted cards in an orbit ring, a scroll-pinned scanner that turns cards into code, and a live control bento",
+      "description": "Autonomous finance agents with tilted cards in an orbit ring and a scroll-pinned scanner that turns cards into code",
       "category": "web",
       "theme": "dark",
       "added": "Oct 12, 2026",
@@ -4372,7 +4372,7 @@
     {
       "slug": "paper-sun-agent-page",
       "title": "Paper Sun Agent Page",
-      "description": "AI agents for the night shift: a paper-cut sunset panel you can slap stickers on, a dusk-to-daybreak arc, and a run log that stops to ask",
+      "description": "AI agents for the night shift, with a paper-cut sunset panel you can slap stickers on and a run log that stops to ask",
       "category": "web",
       "theme": "dark",
       "added": "Oct 12, 2026",
@@ -4494,7 +4494,7 @@
     {
       "slug": "manga-panel-dev-tool-page",
       "title": "Manga Panel Dev Tool Page",
-      "description": "A deploy CLI pitched as a black-and-white manga issue: a sliced retro sun over a city skyline, a typing terminal, three villains defeated and a reader-mail FAQ",
+      "description": "A deploy CLI pitched as a black-and-white manga issue, with a sliced retro sun over a city skyline and a typing terminal",
       "category": "web",
       "theme": "light",
       "added": "Oct 11, 2026",
@@ -4551,7 +4551,7 @@
     {
       "slug": "ghost-agent-landing-page",
       "title": "Ghost Agent Landing Page",
-      "description": "Invisible AI agents pitched as ghosts: pixel ghosts float up a curved hero, and three SVG ghosts clear a 100-task board live",
+      "description": "Invisible AI agents pitched as ghosts, where pixel ghosts float up a curved hero and three SVG ghosts clear a 100-task board live",
       "category": "web",
       "theme": "dark",
       "added": "Oct 11, 2026",
@@ -4605,7 +4605,7 @@
     {
       "slug": "sunset-scroll-story-page",
       "title": "Sunset Scroll Story Page",
-      "description": "A fusion company told as one long sunset: scroll and the sun goes down over a layered SVG landscape, night falls, then a live canvas tokamak takes over",
+      "description": "A fusion company told as one long sunset, where the sun goes down over a layered SVG landscape as you scroll and a live canvas tokamak takes over at night",
       "category": "web",
       "theme": "light",
       "added": "Oct 11, 2026",
@@ -4731,7 +4731,7 @@
     {
       "slug": "highlighter-markup-page",
       "title": "Highlighter Markup Page",
-      "description": "A marked-up document: every highlight is a real highlighter, rough-edged by an SVG displacement filter, with a colour per verdict",
+      "description": "A marked-up document where every highlight is a real highlighter, rough-edged by an SVG displacement filter, with a colour per verdict",
       "category": "web",
       "theme": "light",
       "added": "Sep 26, 2026",
@@ -4796,7 +4796,7 @@
     {
       "slug": "recessed-aperture-hero-page",
       "title": "Recessed Aperture Hero Page",
-      "description": "Soft UI in a violet palette: an aperture sunk into the page, tokens drifting across it, and a working run dial below",
+      "description": "Soft UI in a violet palette, with an aperture sunk into the page, tokens drifting across it and a working run dial below",
       "category": "web",
       "theme": "dark",
       "added": "Sep 26, 2026",
@@ -4856,7 +4856,7 @@
     {
       "slug": "stage-light-launch-page",
       "title": "Stage Light Launch Page",
-      "description": "A product announcement lit like a stage: conic spotlights, rising dust, a hairline grid and a light sweep running through the wordmark",
+      "description": "A product announcement lit like a stage, with conic spotlights, rising dust and a light sweep running through the wordmark",
       "category": "web",
       "theme": "dark",
       "added": "Sep 25, 2026",
@@ -4915,7 +4915,7 @@
     {
       "slug": "machine-front-panel-page",
       "title": "Machine Front Panel Page",
-      "description": "The landing page is the front panel: it boots itself on load, runs a needle self-test, then hands the switches to you",
+      "description": "A landing page that is the front panel, booting itself on load and running a needle self-test before it hands the switches to you",
       "category": "web",
       "theme": "dark",
       "added": "Sep 25, 2026",
@@ -5545,7 +5545,7 @@
     {
       "slug": "smartcare-clinical-ai-landing-page",
       "title": "SmartCare Clinical AI Landing Page",
-      "description": "Iridescence shader hero + CSS power switch: one light source for buttons, cards and charts",
+      "description": "An iridescent shader hero and a CSS power switch, with one light source shared by the buttons, cards and charts",
       "category": "web",
       "theme": "dark",
       "added": "Sep 22, 2026",

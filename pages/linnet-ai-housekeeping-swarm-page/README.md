@@ -1,6 +1,6 @@
 # Linnet AI Housekeeping Swarm Page
 
-A pine-and-brass page for a swarm of AI assistants that runs housekeeping: an illustrated housekeeper in the hero who pops in, blinks and follows the pointer, a manifesto that lights word by word before a diagonal wipe, four agents on a pinned scroll stage, flip-up plan cards, sticky stacked testimonials and an about section that unmasks from an arch, every picture drawn in SVG.
+A pine-and-brass page for a swarm of AI housekeeping assistants, with an illustrated housekeeper who blinks and follows the pointer and four agents on a pinned scroll stage, all drawn in SVG.
 
 ![Linnet AI Housekeeping Swarm Page](preview.jpg)
 

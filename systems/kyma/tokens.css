@@ -1,0 +1,85 @@
+/* InstaLanding design system · KYMA · kyma@1.0.0
+   Extracted from https://instalanding.ai/demos/kyma-ai-automation-agency.html
+   Fonts (Google Fonts): TASA Orbiter 400-800 (display and copy, Inter Tight as its fallback), Roboto Mono 400-600 (labels, data, kickers) */
+:root {
+  /* Color · core */
+  --ky-ink: #050505;
+  --ky-ink2: #0F0F11;
+  --ky-panel: #1C1E19;
+  --ky-paper: #F4F4E8;
+  --ky-paper2: #FFFFED;
+  --ky-lime: #D1FF00;
+  --ky-lime-hi: #E3FF58;
+
+  /* Color · greys */
+  --ky-g1: #686868;
+  --ky-g2: #BCBCBC;
+  --ky-g3: #3D3D3D;
+  --ky-g4: #999999;
+  --ky-line: rgba(156, 156, 156, 0.18);
+  --ky-lime-wash: rgba(209, 255, 0, 0.03);
+
+  /* Color · screens & signals */
+  --ky-screen: #0B0C0A;
+  --ky-screen-line: #1D1F1B;
+  --ky-art: #060706;
+  --ky-avatar: #222222;
+  --ky-thumb: #1F8BFF;
+  --ky-error: #FF4D2E;
+
+  /* Type · families */
+  --ky-font-head: "TASA Orbiter", "Inter Tight", Inter, "Helvetica Neue", Arial, sans-serif;
+  --ky-font-mono: "Roboto Mono", ui-monospace, Menlo, monospace;
+
+  /* Type · scale */
+  --ky-ghost: clamp(150px, 23vw, 330px);
+  --ky-giant: clamp(110px, 15vw, 220px);
+  --ky-menu: clamp(44px, 8vw, 110px);
+  --ky-display: clamp(40px, 4.9vw, 74px);
+  --ky-h2: clamp(40px, 4vw, 64px);
+  --ky-total: clamp(40px, 4.4vw, 64px);
+  --ky-h2-sm: clamp(36px, 3.8vw, 56px);
+  --ky-kpi: clamp(40px, 3.6vw, 56px);
+  --ky-h3: clamp(28px, 2.6vw, 38px);
+  --ky-lead: 19px;
+  --ky-text: 14px;
+  --ky-small: 13px;
+  --ky-ui: 12px;
+  --ky-label: 11px;
+  --ky-micro: 10px;
+  --ky-tiny: 9px;
+
+  /* Shape · radii */
+  --ky-round: 50%;
+
+  /* Shape · borders */
+  --ky-hair: 1px;
+  --ky-rule: 2px;
+  --ky-focus: 2px;
+
+  /* Depth · glow and grain */
+  --ky-glow: 0 0 8px var(--ky-lime);
+  --ky-ring: 0 0 0 2px var(--ky-ink);
+  --ky-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* Motion · easing */
+  --ky-ease-wipe: cubic-bezier(0.7, 0, 0.2, 1);
+  --ky-ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Motion · durations */
+  --ky-dur-quick: 250ms;
+  --ky-dur-hover: 300ms;
+  --ky-dur-nudge: 350ms;
+  --ky-dur-soft: 400ms;
+  --ky-dur-fill: 450ms;
+  --ky-dur-slide: 600ms;
+  --ky-dur-wipe: 700ms;
+  --ky-dur-zoom: 1.2s;
+
+  /* Space · layout */
+  --ky-max: 1360px;
+  --ky-pad: 40px;
+  --ky-bar: 60px;
+  --ky-sec: 130px;
+  --ky-sec-s: 110px;
+}

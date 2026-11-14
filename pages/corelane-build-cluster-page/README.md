@@ -1,6 +1,6 @@
 # Corelane Build Cluster Page
 
-An isometric dev-tool landing page: laptops and a core server on a glowing circuit field, plus a 96-machine fleet board you can put to sleep and run a build across.
+An isometric dev-tool page with laptops and a core server on a glowing circuit field, and a 96-machine fleet board you can put to sleep and run a build across.
 
 ![Corelane Build Cluster Page](preview.jpg)
 

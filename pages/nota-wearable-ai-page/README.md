@@ -1,6 +1,6 @@
 # NOTA Wearable AI Page
 
-A quiet-luxury catalogue for a titanium AI wearable: a live device you can use in the hero (hold to ask, turn the crown, flip the mic switch), close-ups that are clones of it, a seven-segment privacy ledger and a technical drawing.
+A quiet-luxury catalogue for a titanium AI wearable, with a live device in the hero you can hold to ask, turn by the crown and mute with the mic switch.
 
 ![NOTA Wearable AI Page](preview.jpg)
 

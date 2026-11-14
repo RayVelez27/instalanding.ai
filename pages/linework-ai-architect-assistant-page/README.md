@@ -1,6 +1,6 @@
 # Linework AI Architect Assistant Page
 
-A quiet, paper-white page for an AI architect assistant where everything is drawn line by line in code: an amphitheatre in ink with a roaming blue blueprint lens, a skyline of nine procedural buildings you filter and open into a drawing-versus-render slider, a house that draws itself stage by stage as you scroll, and a harbour city footer.
+A quiet, paper-white page for an AI architect assistant where everything is drawn line by line in code, from an ink amphitheatre under a blueprint lens to a house that draws itself as you scroll.
 
 ![Linework AI Architect Assistant Page](preview.jpg)
 

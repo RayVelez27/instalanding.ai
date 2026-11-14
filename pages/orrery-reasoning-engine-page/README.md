@@ -1,6 +1,6 @@
 # Orrery Reasoning Engine Page
 
-An AI reasoning engine that shows its work: a hero window opens onto a canvas orrery, and every picture on the page is a live rendering drawn in code.
+An AI reasoning engine that shows its work, where the hero window opens onto a canvas orrery and every picture is a live rendering drawn in code.
 
 ![Orrery Reasoning Engine Page](preview.jpg)
 

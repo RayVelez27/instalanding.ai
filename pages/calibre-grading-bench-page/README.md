@@ -1,6 +1,6 @@
 # Calibre Grading Bench Page
 
-A glass grading bench on a planet horizon: it reads an AI answer claim by claim, highlights each one in its verdict colour and swings a needle to the score.
+A glass grading bench on a planet horizon that reads an AI answer claim by claim, highlights each in its verdict colour and swings a needle to the score.
 
 ![Calibre Grading Bench Page](preview.jpg)
 

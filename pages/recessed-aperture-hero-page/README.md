@@ -1,6 +1,6 @@
 # Recessed Aperture Hero Page
 
-Soft UI in a violet palette: an aperture sunk into the page, tokens drifting across it, and a working run dial below.
+Soft UI in a violet palette, with an aperture sunk into the page, tokens drifting across it and a working run dial below.
 
 ![Recessed Aperture Hero Page](preview.jpg)
 

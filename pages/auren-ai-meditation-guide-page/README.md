@@ -1,6 +1,6 @@
 # Auren AI Meditation Guide Page
 
-A hushed, near-black page for an AI meditation guide: a counting intro splits open on a full-width AUREN wordmark over three living tiles (misty dawn ridges, the app mid-session, a breathing glass orb), a WebGL aurora band, sticky stacked cards of paired art, marquee rows of seventeen generative scenes and a stories carousel.
+A hushed, near-black landing page for an AI meditation guide, with a full-width AUREN wordmark, a WebGL aurora band and seventeen generative art scenes drawn in code.
 
 ![Auren AI Meditation Guide Page](preview.jpg)
 

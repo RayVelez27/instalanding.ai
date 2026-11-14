@@ -1,6 +1,6 @@
 # Peptide Skincare Store Landing Page
 
-A warm, cream-toned peptide skincare store whose hero is a spinning sphere of code-drawn product tiles behind a glass search bar that types its own queries, with springy lab-style product renders, a draggable Dose lab vial, bubble-popping add-to-bag and a day-to-night routine.
+A warm, cream-toned peptide skincare store whose hero is a spinning sphere of code-drawn product tiles behind a glass search bar that types its own queries.
 
 ![Peptide Skincare Store Landing Page](preview.jpg)
 

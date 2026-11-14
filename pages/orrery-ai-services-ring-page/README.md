@@ -1,6 +1,6 @@
 # Orrery AI Services Ring Page
 
-A single-screen carousel for an AI platform of nine services: nine glass lenses with refracting edges turn on a ticked ring, each opening a full-screen world painted live in canvas (a neon city in rain, an aurora over a frozen lake, a synthwave horizon, a reef, Earth from orbit, cherry blossom, a circuit canyon, a crystal cave, a Mars base) as the accent colour drifts to match.
+A single-screen carousel for an AI platform of nine services, where glass lenses on a ticked ring each open a full-screen world painted live in canvas.
 
 ![Orrery AI Services Ring Page](preview.jpg)
 

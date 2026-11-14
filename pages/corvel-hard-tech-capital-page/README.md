@@ -1,6 +1,6 @@
 # Corvel Hard-Tech Capital Page
 
-A risograph-print investment firm for fabs, satellites and fusion: halftone art drawn in code, a sunburst arch that blows apart on scroll and a two-plate misregistered print.
+A risograph-print page for a firm investing in fabs, satellites and fusion, with halftone art drawn in code and a sunburst arch that blows apart on scroll.
 
 ![Corvel Hard-Tech Capital Page](preview.jpg)
 

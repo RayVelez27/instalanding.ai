@@ -1,6 +1,6 @@
 # Nimbus AI Assistant Page
 
-A light, coral-accented page for an all-in-one AI assistant: a hero under a parallax sky of canvas-drawn clouds with two tilted CSS phones, a glass-pill nav that shrinks on scroll, a three-slide product carousel, a logo ticker, a dark integrations panel with tool tiles orbiting the logo on three rings, masonry testimonials, pricing with a shared annual switch, journal cards with SVG art, an FAQ accordion and a sky CTA that overlaps the footer.
+A light, coral-accented page for an all-in-one AI assistant, with two tilted phones under a parallax sky of canvas clouds and tool tiles orbiting the logo on three rings.
 
 ![Nimbus AI Assistant Page](preview.jpg)
 

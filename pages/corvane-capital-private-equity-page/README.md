@@ -1,6 +1,6 @@
 # Corvane Capital Private Equity Page
 
-A quiet-money private equity page on a ruled four-column grid: a giant serif "Compounding" beside a window of live ridgelines that opens to full bleed as you scroll, a champagne principles field that fans six strokes into line, and a track record that flips between gross and net.
+A quiet-money private equity page on a ruled four-column grid, with a giant serif Compounding beside a window of live ridgelines that opens to full bleed as you scroll.
 
 ![Corvane Capital Private Equity Page](preview.jpg)
 

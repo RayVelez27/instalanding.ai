@@ -1,6 +1,6 @@
 # Orvane AI LiDAR Drone Page
 
-A pale survey-instrument page for an AI LiDAR drone: a point-cloud preloader splits open on a shaded 3D drone sweeping a laser line across scanned terrain, sticky scenes flag a sagging bridge, morph point clouds between industries and draw a mountain range line by line, and a working controller lets you fly the drone.
+A pale survey-instrument page for an AI LiDAR drone, with a shaded 3D drone sweeping a laser across scanned terrain, morphing point clouds and a controller that lets you fly it.
 
 ![Orvane AI LiDAR Drone Page](preview.jpg)
 

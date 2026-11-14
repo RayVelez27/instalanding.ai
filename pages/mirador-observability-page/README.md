@@ -1,6 +1,6 @@
 # Mirador Observability Page
 
-An observability platform in a framed night console: a WebGL ribbon of glowing fibers behind the hero, plates cut out of the frame with inverted corners, stacking feature cards with live trace mockups and a dark/light switch.
+An observability platform in a framed night console, with a WebGL ribbon of glowing fibers behind the hero and stacking feature cards with live trace mockups.
 
 ![Mirador Observability Page](preview.jpg)
 

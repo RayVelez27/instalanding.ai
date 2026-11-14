@@ -1,6 +1,6 @@
 # Faceted Iceberg Platform Page
 
-An AI agent platform drawn in low-poly crystal: a shape-mosaic hero, an iceberg whose waterline drops as the platform takes on the stack, and a faceted sunrise footer.
+An AI agent platform drawn in low-poly crystal, with a shape-mosaic hero and an iceberg whose waterline drops as the platform takes on the stack.
 
 ![Faceted Iceberg Platform Page](preview.jpg)
 

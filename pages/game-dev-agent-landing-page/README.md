@@ -1,6 +1,6 @@
 # Game Dev Agent Landing Page
 
-An AI agent for game studios whose hero is a playable three.js diorama: a toy biplane with a corgi pilot flying a low-poly cherry-blossom road under bloom and tilt-shift, a full-page loader, a crew picker that repaints the plane live, in-engine card stills and generated sound.
+An AI agent for game studios whose hero is a playable three.js diorama of a corgi-piloted toy biplane flying a low-poly cherry-blossom road.
 
 ![Game Dev Agent Landing Page](preview.jpg)
 

@@ -1,6 +1,6 @@
 # Kairo AI Time Assistant Page
 
-A near-black product page for an AI assistant that tracks your time: a huge glowing "Meet Kairo." splits in letter by letter beside a tilting 3D phone whose live app types out the assistant's messages, bento cards draw timelines, focus rings and charts, integrations orbit a second phone, and a dark / light switch re-skins the app.
+A near-black product page for an AI time-tracking assistant, with a glowing headline that splits in letter by letter beside a tilting 3D phone whose app types its own messages.
 
 ![Kairo AI Time Assistant Page](preview.jpg)
 

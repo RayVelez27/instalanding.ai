@@ -1,6 +1,6 @@
 # Lumora AI Home Solar Page
 
-A warm, sunlit page for an AI that runs a home's solar and battery: a 3D modernist villa built from CSS boxes sits in a golden landscape and turns to evening with one switch, a manifesto lights word by word, a working energy dashboard tilts up into view, and Forecast, Store and Save slide past on a pinned horizontal track.
+A warm, sunlit page for an AI that runs a home's solar and battery, with a 3D villa built from CSS boxes that turns to evening with one switch and a working energy dashboard.
 
 ![Lumora AI Home Solar Page](preview.jpg)
 

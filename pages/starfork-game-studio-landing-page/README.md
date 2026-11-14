@@ -1,6 +1,6 @@
 # Starfork Game Studio Landing Page
 
-A premium indie game studio page set in a cosmic toy world: eight sprite-rigged characters with real animation poses standing on a glowing planet, a character select with pose and frame-rate controls, a playable 30-second endless runner with coins and fireworks, live game cards, and a careers quiz.
+A premium indie game studio page in a cosmic toy world, with eight sprite-rigged characters on a glowing planet and a playable 30-second endless runner.
 
 ![Starfork Game Studio Landing Page](preview.jpg)
 

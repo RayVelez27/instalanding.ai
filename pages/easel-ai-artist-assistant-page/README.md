@@ -1,6 +1,6 @@
 # Easel AI Artist Assistant Page
 
-A two-ink risograph page for an AI studio assistant for artists: four pink ink drums roll down the hero and print a panel as you scroll, blue and pink plates slide into register, every illustration is greyscale SVG turned duotone by a blend, and a live plan ticket prices as you pick.
+A two-ink risograph page for an AI assistant for artists, where four pink ink drums roll down the hero and print a panel as you scroll.
 
 ![Easel AI Artist Assistant Page](preview.jpg)
 

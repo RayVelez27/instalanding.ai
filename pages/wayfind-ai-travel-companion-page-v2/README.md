@@ -1,6 +1,6 @@
 # Wayfind AI Travel Companion Page V2
 
-A sand-and-sea expedition poster of a page for an AI travel companion: "wayfind" is cut out of a desert photo that opens to full bleed as you scroll, mode posters stack and tilt, a nine-day route draws itself sideways, and every photo is raymarched live in WebGL.
+A sand-and-sea expedition poster for an AI travel companion, with wayfind cut out of a desert photo that opens to full bleed and every photo raymarched live in WebGL.
 
 ![Wayfind AI Travel Companion Page V2](preview.jpg)
 

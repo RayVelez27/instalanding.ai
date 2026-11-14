@@ -1,0 +1,114 @@
+/* InstaLanding design system · Cutcrew · cutcrew@1.0.0
+   Extracted from https://instalanding.ai/demos/cutcrew-ai-video-agents.html
+   Fonts: Switzer 400-700 (Fontshare: https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap; falls back to Inter),
+          Inter 400-600 and Geist Mono 400/500 (Google Fonts) */
+/* Switzer isn't on Google Fonts, so a system entry's fontsHref can't carry it;
+   importing it here means anything that links cutcrew.css (the SYSTEMS dialog
+   included) gets the real face instead of the Inter fallback. */
+@import url("https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap");
+:root {
+  /* Color · core */
+  --cc-acc: #2BEE19;
+  --cc-d0: #0F0F0F;
+  --cc-bg: #FAFAFA;
+  --cc-white: #FFFFFF;
+  --cc-g1: #EDEDED;
+  --cc-g2: #E3E3E3;
+
+  /* Color · accent */
+  --cc-acc2: #24D613;
+  --cc-accl: #BFFABA;
+  --cc-accxl: #E2FDDF;
+
+  /* Color · dark surfaces */
+  --cc-d1: #1E1E1E;
+  --cc-d2: #2E2E2E;
+
+  /* Color · text */
+  --cc-t: #0F0F0F;
+  --cc-t60: rgba(15, 15, 15, 0.6);
+  --cc-t35: rgba(15, 15, 15, 0.35);
+  --cc-w: #FAFAFA;
+  --cc-w60: rgba(250, 250, 250, 0.6);
+
+  /* Color · lines */
+  --cc-line: rgba(15, 15, 15, 0.1);
+  --cc-line2: rgba(15, 15, 15, 0.2);
+  --cc-wline: rgba(250, 250, 250, 0.12);
+
+  /* Color · candy tints */
+  --cc-tint-purple: #D6C1FF;
+  --cc-tint-orange: #FFD2A8;
+  --cc-tint-blue: #BFE3FF;
+  --cc-tint-amber: #FFE2A3;
+  --cc-tint-pink: #FFC1DE;
+  --cc-sky: #5BB8FD;
+  --cc-violet: #9757F0;
+
+  /* Type · families */
+  --cc-font-sans: "Switzer", "Inter", system-ui, sans-serif;
+  --cc-font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* Type · scale */
+  --cc-h1: 104px;
+  --cc-h2: 60px;
+  --cc-h3: 44px;
+  --cc-h4: 32px;
+  --cc-h5: 24px;
+  --cc-h6: 20px;
+  --cc-lead: 20px;
+  --cc-p: 16px;
+  --cc-ps: 14px;
+  --cc-xs: 13px;
+  --cc-cap: 11px;
+
+  /* Shape · radii */
+  --cc-radius-tray: 32px;
+  --cc-radius-tile: 28px;
+  --cc-radius-card: 24px;
+  --cc-radius-inner: 16px;
+  --cc-radius-sm: 12px;
+  --cc-radius-btn: 10px;
+  --cc-radius-xs: 8px;
+  --cc-radius-pill: 999px;
+
+  /* Shape · borders */
+  --cc-hairline: 1px;
+  --cc-frame: 4px;
+
+  /* Depth · soft shadows */
+  --cc-shadow-chip: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 12px 24px -8px rgba(15, 15, 15, 0.35);
+  --cc-shadow-card: 0 30px 60px -30px rgba(15, 15, 15, 0.45);
+  --cc-shadow-deck: 0 24px 48px -20px rgba(15, 15, 15, 0.35);
+  --cc-shadow-tip: 0 16px 32px -12px rgba(15, 15, 15, 0.45);
+  --cc-shadow-panel: 0 40px 80px -32px rgba(15, 15, 15, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --cc-shadow-dark: 0 24px 48px -16px rgba(0, 0, 0, 0.6);
+  --cc-glow: 0 0 0 2px rgba(43, 238, 25, 0.35), 0 10px 24px -10px rgba(43, 238, 25, 0.7);
+
+  /* Motion · easing */
+  --cc-ease-swift: cubic-bezier(0.3, 0.8, 0.2, 1);
+  --cc-ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --cc-ease-slide: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --cc-ease-spring: cubic-bezier(0.3, 1.3, 0.5, 1);
+  --cc-ease-rise: cubic-bezier(0.2, 1.2, 0.4, 1);
+  --cc-ease-pop: cubic-bezier(0.3, 1.6, 0.5, 1);
+  --cc-ease-sweep: cubic-bezier(0.5, 0, 0.5, 1);
+
+  /* Motion · durations */
+  --cc-dur-quick: 0.2s;
+  --cc-dur-hover: 0.3s;
+  --cc-dur-slide: 0.5s;
+  --cc-dur-open: 0.6s;
+  --cc-dur-deck: 0.7s;
+  --cc-dur-clip: 0.8s;
+  --cc-dur-word: 0.9s;
+  --cc-dur-rise: 1.1s;
+  --cc-dur-float: 5s;
+  --cc-dur-playhead: 7s;
+  --cc-dur-marquee: 40s;
+  --cc-dur-ring: 60s;
+
+  /* Space · layout */
+  --cc-wrap: 1136px;
+  --cc-tray-pad: 8px;
+}

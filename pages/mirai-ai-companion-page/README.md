@@ -1,6 +1,6 @@
 # Mirai AI Companion Page
 
-A purple, mint and charcoal page for an AI companion: an illustrated character peeks over giant type between clouds, follows your cursor with her eyes, blinks, perks up when you come close and frowns when you poke her.
+A purple, mint and charcoal page for an AI companion, with an illustrated character who peeks over giant type, follows your cursor, blinks and frowns when you poke her.
 
 ![Mirai AI Companion Page](preview.jpg)
 

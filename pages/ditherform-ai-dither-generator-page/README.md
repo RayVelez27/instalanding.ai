@@ -1,6 +1,6 @@
 # Ditherform AI Dither Generator Page
 
-A near-black, grid-ruled page for an AI that turns a prompt into a live 3D dither element: every picture on it is a raymarched shape morphing between a cube, sphere, torus and more, Bayer-dithered in two muted inks with a crisp outline, under fitted condensed headlines, a scroll-driven marquee, a logo wall and a cream changelog whose rows slide a plate in on hover.
+A near-black, grid-ruled page for an AI that turns a prompt into a 3D dither element, where every picture is a raymarched shape morphing between solids, Bayer-dithered in two muted inks.
 
 ![Ditherform AI Dither Generator Page](preview.jpg)
 

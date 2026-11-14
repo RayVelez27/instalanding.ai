@@ -1,6 +1,6 @@
 # ORVYN Autonomous Car Page
 
-An AI-native grand tourer on a near-black page: a spectrum autonomy dial steps through five levels, unlocking pods as it goes, over a radar, live telemetry and a horizon of light.
+An AI-native grand tourer on a near-black page, with a spectrum autonomy dial that steps through five levels over a radar, live telemetry and a horizon of light.
 
 ![ORVYN Autonomous Car Page](preview.jpg)
 

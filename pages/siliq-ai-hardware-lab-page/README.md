@@ -1,6 +1,6 @@
 # Siliq AI Hardware Lab Page
 
-A sticker-bright bento for a small-batch AI hardware lab and school: SVG chips and GPUs, a hero board that breaks apart into a honey flood and a gallery that folds into a grid.
+A sticker-bright bento for a small-batch AI hardware lab and school, with SVG chips and GPUs and a hero board that breaks apart into a honey flood.
 
 ![Siliq AI Hardware Lab Page](preview.jpg)
 

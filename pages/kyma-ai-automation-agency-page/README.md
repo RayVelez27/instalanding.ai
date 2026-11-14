@@ -1,6 +1,6 @@
 # KYMA AI Automation Agency Page
 
-A brutalist black, paper and lime page for an AI automation agency, laid on a visible four-column grid: a hero with a live automation pipeline you can play, a sticky section where eight pain points fly off the screen as you scroll, an ROI calculator with sliders, an indexed services table, a six-week process ruler, a case study with drawn art, seeded halftone portraits for the team, an integrations grid, a pricing toggle and generative article covers.
+A brutalist black, paper and lime page for an AI automation agency on a visible four-column grid, with a playable automation pipeline, pain points that fly off as you scroll and an ROI calculator.
 
 ![KYMA AI Automation Agency Page](preview.jpg)
 

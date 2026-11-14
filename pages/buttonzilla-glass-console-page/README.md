@@ -1,6 +1,6 @@
 # ButtonZilla Glass Console Page
 
-A dark hardware-style console for live 3D glass buttons: a WebGL monitor with a refracting, bevelled pill button that tilts on hover, squashes on press and sends a ripple through its surface, a solo or eight-up grid view, an amber LCD readout with signal meters, eight preset channels (Frosted, Crystal, Amber, Jelly, Bubble, Cobalt, Clay, Sea glass), and rotary knobs for shape, glass, liquid and scene, with Shuffle, Reset and Copy JSON.
+A dark hardware-style console for live 3D glass buttons, with a refracting pill that tilts, squashes and ripples on press, an amber LCD readout and rotary knobs for shape, glass and scene.
 
 ![ButtonZilla Glass Console Page](preview.jpg)
 

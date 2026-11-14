@@ -1,6 +1,6 @@
 # Synthra AI Workspace Page
 
-A bright lime SaaS page for an AI workspace of specialist agents: a phone running a live chat stands over a ticker of generative art tiles, then dark grainy cards with mesh gradients and glass panels carry the features, six sticky customer stories, pricing, six glowing agent orbs and a rotating 3D ring of product tiles.
+A bright lime SaaS page for an AI workspace of specialist agents, with a phone running a live chat over a ticker of generative art, six glowing agent orbs and a rotating 3D ring of product tiles.
 
 ![Synthra AI Workspace Page](preview.jpg)
 

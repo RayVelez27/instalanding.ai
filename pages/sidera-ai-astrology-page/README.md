@@ -1,6 +1,6 @@
 # Sidera AI Astrology Page
 
-A midnight-and-gold page for an AI astrologer: a Three.js orb of gold and violet glass sits on an obsidian podium inside a turning zodiac wheel and gold astrolabe rings, wrapped in nebula smoke and bloom, while the headline and CTA are redrawn as refracting 3D glass; below, a live natal chart per sun sign, today's real moon phase and a stars-to-pricing landing page.
+A midnight-and-gold page for an AI astrologer, with a Three.js glass orb on an obsidian podium inside a turning zodiac wheel, a live natal chart per sun sign and today's real moon phase.
 
 ![Sidera AI Astrology Page](preview.jpg)
 

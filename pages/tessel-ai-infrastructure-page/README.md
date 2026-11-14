@@ -1,6 +1,6 @@
 # Tessel AI Infrastructure Page
 
-A pinned isometric journey for an AI infrastructure platform: a pixel-art engineer walks a glowing route past six code-drawn scenes, from blueprint table to rocket launch, as chapter cards and a rail follow the scroll.
+A pinned isometric journey for an AI infrastructure platform, where a pixel-art engineer walks a glowing route past six code-drawn scenes as you scroll.
 
 ![Tessel AI Infrastructure Page](preview.jpg)
 

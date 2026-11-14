@@ -1,6 +1,6 @@
 # Somatic AI Wellness Companion Page
 
-An acid-lime page for an AI wellness companion: a breathing point-sphere orb sits behind "SOMATIC SIGNALS" stretched to the full width, a diamond window opens to fill the screen as you scroll, five programs slide past sideways, and every heart trace, sleep map and portrait is drawn in code.
+An acid-lime page for an AI wellness companion, with a breathing point-sphere orb behind full-width SOMATIC SIGNALS and every heart trace and sleep map drawn in code.
 
 ![Somatic AI Wellness Companion Page](preview.jpg)
 

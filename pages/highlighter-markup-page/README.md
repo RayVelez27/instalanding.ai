@@ -1,6 +1,6 @@
 # Highlighter Markup Page
 
-A marked-up document: every highlight is a real highlighter, rough-edged by an SVG displacement filter, with a colour per verdict.
+A marked-up document where every highlight is a real highlighter, rough-edged by an SVG displacement filter, with a colour per verdict.
 
 ![Highlighter Markup Page](preview.jpg)
 

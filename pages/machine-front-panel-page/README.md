@@ -1,6 +1,6 @@
 # Machine Front Panel Page
 
-The landing page is the front panel: it boots itself on load, runs a needle self-test, then hands the switches to you.
+A landing page that is the front panel, booting itself on load and running a needle self-test before it hands the switches to you.
 
 ![Machine Front Panel Page](preview.jpg)
 

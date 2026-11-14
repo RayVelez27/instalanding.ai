@@ -1,6 +1,6 @@
 # Plinth AI Merchant Agents Page
 
-A gallery-quiet page for AI agents that run online stores: the store console stands on a marble and brass plinth in 3D, a pinned stack separates into the three layers every agent stands on, blueprint frames draw round each agent at work, and onboarding runs sideways along a lit wire.
+A gallery-quiet page for AI agents that run online stores, with the store console on a 3D marble and brass plinth and onboarding running sideways along a lit wire.
 
 ![Plinth AI Merchant Agents Page](preview.jpg)
 
