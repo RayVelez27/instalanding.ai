@@ -24,7 +24,12 @@ single HTML file, with the choreography written out (what moves, when, on which 
 that drive it, and the one-shot prompt that builds it. See [Motion](#motion).
 <!-- MOTION-INTRO -->
 
-Browse them live at **[instalanding.ai/pages](https://instalanding.ai/pages)**, **[instalanding.ai/systems](https://instalanding.ai/systems)** and **[instalanding.ai/motion](https://instalanding.ai/motion)**.
+Plus **videos** — short pieces that render live in the browser, sound and all, with no video file —
+and **products**: device and app concepts you can actually operate, every control wired. See
+[Videos](#videos) and [Products](#products).
+<!-- VIDEOS-PRODUCTS-INTRO -->
+
+Browse them live at **[instalanding.ai/pages](https://instalanding.ai/pages)**, **[instalanding.ai/systems](https://instalanding.ai/systems)**, **[instalanding.ai/motion](https://instalanding.ai/motion)**, **[instalanding.ai/videos](https://instalanding.ai/videos)** and **[instalanding.ai/products](https://instalanding.ai/products)**.
 
 ## New drops
 
@@ -227,8 +232,35 @@ choreography, or explore it live in the lab — slow motion, stepping and live k
 <tr><td width="260"><a href="motion/stretch-type"><img src="motion/stretch-type/preview.jpg" width="240" alt="Stretch Type"></a></td><td><b><a href="motion/stretch-type">Stretch Type</a></b> · <sub>loop</sub><br>MOTION in three stacked copies whose letters stretch and shrink against each other, each column on its own clock<br><sub>SVG 1.1 · no libraries · parametric glyphs · 4 tracks · <a href="https://instalanding.ai/motion/stretch-type">Open the lab</a> · <a href="motion/stretch-type/PROMPT.md">Prompt</a></sub></td></tr>
 <tr><td width="260"><a href="motion/t-minus"><img src="motion/t-minus/preview.jpg" width="240" alt="T−Minus"></a></td><td><b><a href="motion/t-minus">T−Minus</a></b> · <sub>loop</sub><br>A nine-to-zero countdown on a 5×5 grid of glass tiles, each pulse rippling out from the centre<br><sub>CSS 3 · no libraries · @property · text-box trim · 6 tracks · <a href="https://instalanding.ai/motion/t-minus">Open the lab</a> · <a href="motion/t-minus/PROMPT.md">Prompt</a></sub></td></tr>
 <tr><td width="260"><a href="motion/pixel-swell"><img src="motion/pixel-swell/preview.jpg" width="240" alt="Pixel Swell"></a></td><td><b><a href="motion/pixel-swell">Pixel Swell</a></b> · <sub>scroll wave</sub><br>Four pixelated wave bands roll under a red sun as you scroll, and the sky deepens from honeydew to navy<br><sub>CSS 3 · no libraries · scroll timelines · @property · sibling-index() · random() · 7 tracks · <a href="https://instalanding.ai/motion/pixel-swell">Open the lab</a> · <a href="motion/pixel-swell/PROMPT.md">Prompt</a></sub></td></tr>
+<tr><td width="260"><a href="motion/two-mercenaries"><img src="motion/two-mercenaries/preview.jpg" width="240" alt="Two Mercenaries"></a></td><td><b><a href="motion/two-mercenaries">Two Mercenaries</a></b> · <sub>character select</sub><br>A dark and a light mercenary split the screen: hover a side to light it, click to pick it, click again to push in close<br><sub>Canvas 2D + WebGL decoded .riv · no runtime · state machine · skinned meshes · 5 tracks · <a href="https://instalanding.ai/motion/two-mercenaries">Open the lab</a> · <a href="motion/two-mercenaries/PROMPT.md">Prompt</a></sub></td></tr>
+<tr><td width="260"><a href="motion/the-emperor"><img src="motion/the-emperor/preview.jpg" width="240" alt="The Emperor"></a></td><td><b><a href="motion/the-emperor">The Emperor</a></b> · <sub>living painting</sub><br>A golden emperor raises a glowing sword over a burning battlefield; the painting breathes, the wind moves through it, and a click ignites the blade<br><sub>Canvas 2D + WebGL decoded .riv · no runtime · skinned meshes · procedural particles · Web Audio · 5 tracks · <a href="https://instalanding.ai/motion/the-emperor">Open the lab</a> · <a href="motion/the-emperor/PROMPT.md">Prompt</a></sub></td></tr>
 </table>
 <!-- MOTION:END -->
+
+## Videos
+
+<!-- VIDEOS:START -->
+Each video is one HTML file that renders every frame live, with its models, images and soundtrack
+inlined: no video file, no install. Open `index.html` and press play, or watch them at
+[instalanding.ai/videos](https://instalanding.ai/videos).
+
+<table>
+<tr><td width="260"><a href="videos/canyon-run"><img src="videos/canyon-run/preview.jpg" width="240" alt="Canyon Run"></a></td><td><b><a href="videos/canyon-run">Canyon Run</a></b> · <sub>0:15</sub><br>A 15-second real-time video: a wooden biplane flies through a sunset canyon that turns into code, with the canyon, sky, light and score all generated in the browser<br><sub>Real-time 3D · generated score · <a href="https://instalanding.ai/videos/canyon-run">Watch</a> · <a href="videos/canyon-run/index.html">Code</a></sub></td></tr>
+<tr><td width="260"><a href="videos/geometry-madness"><img src="videos/geometry-madness/preview.jpg" width="240" alt="Geometry Madness"></a></td><td><b><a href="videos/geometry-madness">Geometry Madness</a></b> · <sub>0:14</sub><br>A 14-second beat-synced piece: a hand reaches in and taps a glowing square, which twists into a spiral tunnel, multiplies into a grid and shatters into prismatic light, cut to the soundtrack with a live HUD of spectrum, oscilloscope and binary beat counter<br><sub>Decoded Rive · Canvas 2D · soundtrack · <a href="https://instalanding.ai/videos/geometry-madness">Watch</a> · <a href="videos/geometry-madness/index.html">Code</a></sub></td></tr>
+<tr><td width="260"><a href="videos/brand-identity"><img src="videos/brand-identity/preview.jpg" width="240" alt="Brand Identity"></a></td><td><b><a href="videos/brand-identity">Brand Identity</a></b> · <sub>0:15</sub><br>A 15-second wordless brand reel: lime cards for type, palette, a cube, a face and a grid pop, flip and shatter under a moving camera, then gather into one identity board with its pieces in orbit<br><sub>Decoded Rive · Canvas 2D · soundtrack · <a href="https://instalanding.ai/videos/brand-identity">Watch</a> · <a href="videos/brand-identity/index.html">Code</a></sub></td></tr>
+</table>
+<!-- VIDEOS:END -->
+
+## Products
+
+<!-- PRODUCTS:START -->
+Each product is a device or app concept in one HTML file, and every control in it works. Open
+`index.html` and use it, or try them at [instalanding.ai/products](https://instalanding.ai/products).
+
+<table>
+<tr><td width="260"><a href="products/agent-terminal"><img src="products/agent-terminal/preview.jpg" width="240" alt="Agent Terminal"></a></td><td><b><a href="products/agent-terminal">Agent Terminal</a></b> · <sub>hardware concept</sub><br>A desk-radio controller for coding agents: three agent sessions run on its screen while real dials, sliders and tape keys set effort, autonomy, thinking budget, subagents and plan mode<br><sub>Decoded Rive · Canvas 2D · 8 controls · <a href="https://instalanding.ai/products/agent-terminal">Use it live</a> · <a href="products/agent-terminal/index.html">Code</a></sub></td></tr>
+</table>
+<!-- PRODUCTS:END -->
 
 ## Repo layout
 
@@ -250,6 +282,14 @@ motion/<slug>/
   PROMPT.md     the one-shot prompt that builds it
   README.md     its choreography, inputs, how it works, pages it pairs with
   preview.jpg   1200x600 poster
+videos/<slug>/
+  index.html    the video: renders live, models, images and sound inlined
+  README.md     what it is, its runtime and credits
+  preview.jpg   1200x600 still
+products/<slug>/
+  index.html    the product: every control works, one file, opens from disk
+  README.md     what it is, its controls and credits
+  preview.jpg   1200x600 still
 index.json      every page's metadata, for agents and scripts
 AGENTS.md       how an agent should use this repo
 ```

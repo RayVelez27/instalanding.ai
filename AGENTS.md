@@ -52,3 +52,15 @@ Live, with a copyable agent instruction: https://instalanding.ai/systems
 its README.md (the choreography: what moves, from when to when, on which ease, and the inputs),
 build from `PROMPT.md` in the project's own stack, or lift the motion from `index.html`.
 Live, with slow motion and live knobs: https://instalanding.ai/motion
+
+## Videos
+
+`videos/<slug>/` holds short videos that render live in the browser: one HTML file each, with models,
+images and sound inlined and no video file. Read its README.md for what it is and its credits; open
+`index.html` to watch it. Live: https://instalanding.ai/videos
+
+## Products
+
+`products/<slug>/` holds operable product concepts: a device or app in one HTML file where every
+control works. Its README.md lists the controls and what each does. Keep any **Built on** notes,
+including trademark disclaimers. Live: https://instalanding.ai/products
