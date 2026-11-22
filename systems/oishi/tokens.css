@@ -1,0 +1,82 @@
+/* InstaLanding design system · Oishi · oishi@1.0.0
+   Extracted from https://instalanding.ai/demos/oishi-taiyaki-ice-cream.html
+   Fonts: Josefin Sans 400/600/700 and Noto Sans JP 400-900 (Google Fonts) */
+:root {
+  /* Color · core */
+  --oi-cream: #F7F1D7;
+  --oi-ink: #09090A;
+  --oi-red: #F73939;
+  --oi-yolk: #FFD643;
+  --oi-tan: #DCD4B1;
+  --oi-tan-2: #EAE2C2;
+
+  /* Color · flavors */
+  --oi-flavor-red-beans: #F73939;
+  --oi-flavor-blueberry: #6E52FF;
+  --oi-flavor-green-tea: #468746;
+  --oi-flavor-bubblegum: #FF6DDF;
+  --oi-flavor-chocolate: #74492E;
+  --oi-flavor-peach: #FFB03B;
+  --oi-flavor: var(--oi-flavor-red-beans);
+
+  /* Color · text */
+  --oi-ink-muted: #4A463A;
+  --oi-ink-soft: #5B5646;
+  --oi-cream-dim: #E9E3C9;
+  --oi-slot-line: #2A2A2C;
+
+  /* Type · families */
+  --oi-font-display: "Josefin Sans", "Josefin", system-ui, sans-serif;
+  --oi-font-body: "Noto Sans JP", "NotoJP", system-ui, sans-serif;
+
+  /* Type · scale */
+  --oi-wordmark: clamp(4rem, 13vw, 11rem);
+  --oi-h1: clamp(2.7rem, 6.2vw, 5.6rem);
+  --oi-h2: clamp(2rem, 4.2vw, 3.25rem);
+  --oi-h3: clamp(1.9rem, 3vw, 2.6rem);
+  --oi-h4: 1.55rem;
+  --oi-lede: clamp(1.05rem, 1.5vw, 1.25rem);
+  --oi-body: 1.0625rem;
+  --oi-small: 0.9rem;
+  --oi-legal: 0.8rem;
+
+  /* Shape · radii */
+  --oi-radius-cabinet: 28px;
+  --oi-radius-card: 22px;
+  --oi-radius-base: 18px;
+  --oi-radius-pack: 16px;
+  --oi-radius-md: 14px;
+  --oi-radius-sm: 10px;
+  --oi-radius-xs: 8px;
+  --oi-radius-pill: 999px;
+
+  /* Shape · borders */
+  --oi-border: 3px;
+  --oi-border-btn: 2.5px;
+  --oi-border-pill: 2px;
+  --oi-underline: 5px;
+
+  /* Depth · hard shadows */
+  --oi-shadow-btn: 4px 4px 0 var(--oi-ink);
+  --oi-shadow-lift: 5px 5px 0 var(--oi-ink);
+  --oi-shadow-press: 1px 1px 0 var(--oi-ink);
+  /* the card's shadow takes --oi-flavor where the card sits, so only its offset is a token */
+  --oi-shadow-card-offset: 8px 8px 0;
+  --oi-shadow-cabinet: 10px 10px 0 var(--oi-ink);
+  --oi-shadow-btn-on-ink: 4px 4px 0 var(--oi-cream);
+  --oi-shadow-lift-on-ink: 5px 5px 0 var(--oi-cream);
+
+  /* Motion · easing */
+  --oi-ease: ease;
+
+  /* Motion · durations */
+  --oi-dur-press: 0.12s;
+  --oi-dur-hover: 0.15s;
+  --oi-dur-flavor: 0.3s;
+
+  /* Space · layout */
+  --oi-wrap: 1240px;
+  --oi-gutter: clamp(20px, 4vw, 56px);
+  --oi-section: clamp(64px, 9vw, 120px);
+  --oi-band-skew: -3.2deg;
+}

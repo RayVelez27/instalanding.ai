@@ -1,0 +1,113 @@
+/* InstaLanding design system · Sundune · sundune@1.0.0
+   Extracted from https://instalanding.ai/demos/maasai-event-hero.html
+   Fonts (Google Fonts): Instrument Serif 400 + italic (display), Jost 400-600 (copy, buttons, kickers),
+   Archivo Black (the giant knockout word behind the figures) */
+:root {
+  /* Color · core */
+  --sd-bg: #EAD5B8;
+  --sd-surface: #F2E3CD;
+  --sd-ink: #1C0B06;
+  --sd-ink-soft: #5E3D2C;
+  --sd-accent: #B3261E;
+  --sd-white: #FFFFFF;
+
+  /* Color · desert sky */
+  --sd-sky-1: #CF7F3C;
+  --sd-sky-2: #E19A57;
+  --sd-sky-3: #EFBD85;
+  --sd-sun: #F5C993;
+  --sd-umber: #4F1A0A;
+  --sd-bark: #2A1208;
+  --sd-cream: #FBEEE0;
+  --sd-dawn: #FFF4E6;
+  --sd-halo: #FFF3E2;
+
+  /* Color · shuka band */
+  --sd-red: #B3261E;
+  --sd-red-ink: #F8E9D4;
+  --sd-red-soft: #F3CDB8;
+  --sd-red-deep: #2A0D07;
+  --sd-red-line: rgba(248, 233, 212, 0.42);
+  --sd-red-tex: rgba(28, 8, 4, 0.24);
+
+  /* Color · beads */
+  --sd-bead-red: #C0281E;
+  --sd-bead-blue: #2350A8;
+  --sd-bead-orange: #E57A1F;
+
+  /* Color · lines */
+  --sd-line: rgba(28, 11, 6, 0.18);
+  --sd-line-strong: rgba(28, 11, 6, 0.38);
+  --sd-tex: rgba(28, 11, 6, 0.07);
+
+  /* Type · families */
+  --sd-font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --sd-font-text: "Jost", "Avenir Next", system-ui, sans-serif;
+  --sd-font-word: "Archivo Black", "Arial Black", sans-serif;
+
+  /* Type · scale */
+  --sd-wordmark: clamp(104px, 26vw, 430px);
+  --sd-frieze: clamp(72px, 10.5vw, 176px);
+  --sd-display: clamp(64px, 7.6vw, 128px);
+  --sd-h2: clamp(52px, 6.6vw, 108px);
+  --sd-ledger: clamp(42px, 5.8vw, 92px);
+  --sd-row: clamp(42px, 4.6vw, 72px);
+  --sd-statement: clamp(36px, 4.6vw, 70px);
+  --sd-quote: clamp(36px, 4.4vw, 66px);
+  --sd-sheet: clamp(48px, 13vw, 72px);
+  --sd-date: clamp(30px, 2.8vw, 40px);
+  --sd-numeral: 52px;
+  --sd-logo: 32px;
+  --sd-lead: 18px;
+  --sd-text: 17px;
+  --sd-button: 16px;
+  --sd-label: 15px;
+  --sd-small: 14px;
+  --sd-micro: 13px;
+
+  /* Shape · radii */
+  --sd-pill: 999px;
+  --sd-r-frame: 3px;
+  --sd-r-focus: 4px;
+
+  /* Shape · borders */
+  --sd-rule: 1px;
+  --sd-stroke: 1.5px;
+
+  /* Depth · shadow, glass and textures */
+  --sd-shadow-frame: 0 40px 70px -40px rgba(28, 11, 6, 0.6), 0 12px 24px -16px rgba(28, 11, 6, 0.4);
+  --sd-figure-shadow: rgba(60, 22, 8, 0.35);
+  --sd-glass: blur(14px) saturate(1.2);
+  --sd-m-shuka: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22360%22%20height%3D%22340%22%20viewBox%3D%220%200%20360%20340%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-opacity%3D%221%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M58%205%20L96%2023%20L80%20255%20L4%20183Z%22%2F%3E%3Cpath%20d%3D%22M96%2023%20L145%2043%20L180%20260%20L88%20135Z%22%20fill-opacity%3D%22.5%22%20fill%3D%22%23000%22%2F%3E%3Cpath%20d%3D%22M88%20135%20L142%20205%20L102%20330%20L80%20255Z%22%2F%3E%3Cg%20transform%3D%22translate(360%200)%20scale(-1%201)%22%3E%3Cpath%20d%3D%22M58%205%20L96%2023%20L80%20255%20L4%20183Z%22%2F%3E%3Cpath%20d%3D%22M96%2023%20L145%2043%20L180%20260%20L88%20135Z%22%20fill-opacity%3D%22.5%22%20fill%3D%22%23000%22%2F%3E%3Cpath%20d%3D%22M88%20135%20L142%20205%20L102%20330%20L80%20255Z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --sd-img-shuka: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22360%22%20height%3D%22340%22%20viewBox%3D%220%200%20360%20340%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%231c0b06%22%20stroke-opacity%3D%220.6%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M58%205%20L96%2023%20L80%20255%20L4%20183Z%22%2F%3E%3Cpath%20d%3D%22M96%2023%20L145%2043%20L180%20260%20L88%20135Z%22%20fill-opacity%3D%22.5%22%20fill%3D%22%231c0b06%22%2F%3E%3Cpath%20d%3D%22M88%20135%20L142%20205%20L102%20330%20L80%20255Z%22%2F%3E%3Cg%20transform%3D%22translate(360%200)%20scale(-1%201)%22%3E%3Cpath%20d%3D%22M58%205%20L96%2023%20L80%20255%20L4%20183Z%22%2F%3E%3Cpath%20d%3D%22M96%2023%20L145%2043%20L180%20260%20L88%20135Z%22%20fill-opacity%3D%22.5%22%20fill%3D%22%231c0b06%22%2F%3E%3Cpath%20d%3D%22M88%20135%20L142%20205%20L102%20330%20L80%20255Z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --sd-m-spear: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22340%22%20viewBox%3D%220%200%20120%20340%22%3E%3Cpath%20d%3D%22M60%200%20L67%2030%20L60%2044%20L53%2030Z%22%2F%3E%3Crect%20x%3D%2258.5%22%20y%3D%2242%22%20width%3D%223%22%20height%3D%22252%22%2F%3E%3Cpath%20d%3D%22M60%20296%20L63%20312%20L60%20334%20L57%20312Z%22%2F%3E%3C%2Fsvg%3E");
+  --sd-m-collar: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2224%22%20viewBox%3D%220%200%2040%2024%22%3E%3Cpath%20d%3D%22M3%203%20L19%2021%20L37%203%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%223.4%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
+
+  /* Motion · easing */
+  --sd-ease: cubic-bezier(.2, .8, .2, 1);
+
+  /* Motion · durations */
+  --sd-dur-quick: .25s;
+  --sd-dur-fade: .3s;
+  --sd-dur-line: .35s;
+  --sd-dur-link: .4s;
+  --sd-dur-state: .45s;
+  --sd-dur-bead: .5s;
+  --sd-dur-slide: .6s;
+  --sd-dur-art: .8s;
+  --sd-dur-fade-in: 1s;
+  --sd-dur-draw: 1.1s;
+  --sd-dur-line-in: 1.3s;
+  --sd-dur-zoom: 1.4s;
+  --sd-dur-rise: 1.8s;
+  --sd-dur-sun: 12s;
+  --sd-dur-flock: 34s;
+  --sd-dur-cloud: 120s;
+
+  /* Space · layout */
+  --sd-wrap: 1280px;
+  --sd-gut: clamp(20px, 3.2vw, 56px);
+  --sd-nav-h: 84px;
+  --sd-hero-h: max(660px, 100svh);
+  --sd-sec: clamp(90px, 10vw, 150px);
+}

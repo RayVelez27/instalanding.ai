@@ -1,0 +1,159 @@
+/* InstaLanding design system · Mnemo · mnemo@1.0.0
+   Extracted from https://instalanding.ai/demos/mnemo-context-window.html
+   Fonts: Barlow 300-900 and Barlow Condensed 400-700 (Google Fonts) */
+:root {
+  /* Color · core */
+  --mn-bg-1: #5531B8;
+  --mn-bg-2: #2A0F6E;
+  --mn-bg-3: #1A0B4A;
+  --mn-white: #FFFFFF;
+  --mn-coral: #FF6B7D;
+  --mn-cream: #FFE8A3;
+
+  /* Color · soft UI light & shade */
+  --mn-nm-lit: #7254DC;
+  --mn-nm-dim: #3A1C92;
+
+  /* Color · accent */
+  --mn-ember: #FF7A5C;
+  --mn-indigo: #6F63FF;
+  --mn-magenta: #F25CFF;
+  --mn-amber: #FFAD5C;
+  --mn-lilac: #A48AF0;
+  --mn-mauve: #C9B8FF;
+  --mn-gold: #FFC56A;
+  --mn-rose: #FFB0BD;
+  --mn-lime: #C6FF4A;
+  --mn-ink-deep: #2A0F5E;
+  --mn-badge-dot: #FFB35C;
+
+  /* Color · gradients */
+  --mn-g-warm: linear-gradient(90deg, #FFE8A3 0%, #FF7A5C 100%);
+  --mn-g-cool: linear-gradient(90deg, #6F63FF 10%, #F25CFF 95%);
+
+  /* Color · drifting pills */
+  --mn-pill-cool-a: #5B5CFF;
+  --mn-pill-cool-b: #E25CFF;
+  --mn-pill-warm-a: #FFC98A;
+  --mn-pill-warm-b: #FF6F91;
+  --mn-pill-coral-a: #FF9468;
+  --mn-pill-coral-b: #FF5FA8;
+  --mn-pill-peach: #FFBF8A;
+  --mn-pill-ember: #FF8A6B;
+  --mn-pill-pink-a: #FF6F9A;
+  --mn-pill-pink-b: #E55CFF;
+
+  /* Color · aperture */
+  --mn-disc-hi: #6A45D6;
+  --mn-disc-lo: #4A28A6;
+  --mn-lens-hi: #6040CC;
+  --mn-lens-lo: #5230B2;
+  --mn-mark-hi: #6A45E0;
+
+  /* Color · headline & send */
+  --mn-hl-1: #FFE08A;
+  --mn-hl-2: #FFB27A;
+  --mn-hl-3: #FF6FA0;
+  --mn-hl-4: #E65CFF;
+  --mn-go-a: #FFBF5C;
+  --mn-go-b: #FF6F7D;
+  --mn-em-b: #FF7D8F;
+  --mn-em-c: #FF5FB0;
+  --mn-cta-a: #FFC35E;
+  --mn-cta-b: #FF8A7A;
+
+  /* Color · finale dome */
+  --mn-finale-mid: #4A28A8;
+  --mn-finale-deep: #3C1D95;
+  --mn-dome-1: #B48CFF;
+  --mn-dome-2: #8A5CF5;
+  --mn-dome-3: #6A3FE0;
+  --mn-dome-4: #4F2BB8;
+  --mn-orbit-1: #E2DDFF;
+  --mn-orbit-2: #FF9070;
+  --mn-orbit-3: #FFE0FF;
+  --mn-orbit-4: #FF6FE0;
+  --mn-orbit-5: #FF7A70;
+
+  /* Type · families */
+  --mn-font-sans: "Barlow", system-ui, sans-serif;
+  --mn-font-cond: "Barlow Condensed", "Barlow", sans-serif;
+  --mn-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Type · scale */
+  --mn-display: clamp(44px, 7.6vw, 96px);
+  --mn-h2-card: clamp(34px, 4.6vw, 52px);
+  --mn-h2: clamp(30px, 4vw, 44px);
+  --mn-stat: 42px;
+  --mn-h3: 21px;
+  --mn-lead: 19px;
+  --mn-body: 15.5px;
+  --mn-eyebrow: 15px;
+  --mn-code: 13px;
+
+  /* Shape · radii */
+  --mn-radius-pill: 999px;
+  --mn-radius-piece: 80px;
+  --mn-radius-xl: 32px;
+  --mn-radius-nav: 30px;
+  --mn-radius-panel: 26px;
+  --mn-radius-plan: 24px;
+  --mn-radius-card: 22px;
+  --mn-radius-stat: 20px;
+  --mn-radius-well: 18px;
+  --mn-radius-strip: 16px;
+  --mn-radius-control: 14px;
+  --mn-radius-sm: 12px;
+  --mn-radius-tab: 10px;
+  --mn-radius-xs: 6px;
+
+  /* Shape · borders */
+  --mn-hairline: 1px;
+
+  /* Depth · soft UI */
+  --mn-raise: -10px -10px 30px 0 var(--mn-nm-lit), 10px 10px 30px 0 rgba(22, 6, 72, 0.55);
+  --mn-raise-sm: -4px -4px 10px 0 var(--mn-nm-lit), 4px 4px 10px 0 rgba(22, 6, 72, 0.5);
+  --mn-raise-xs: -3px -3px 6px 0 var(--mn-nm-lit), 3px 3px 6px 0 rgba(22, 6, 72, 0.5);
+  --mn-press: inset -10px -10px 10px 0 rgba(130, 100, 240, 0.5), inset 10px 10px 10px 0 var(--mn-nm-dim);
+  --mn-press-sm: inset -4px -4px 6px 0 rgba(130, 100, 240, 0.45), inset 4px 4px 6px 0 var(--mn-nm-dim);
+  --mn-well: inset -6px -6px 8px 0 rgba(130, 100, 240, 0.42), inset 6px 6px 8px 0 var(--mn-nm-dim);
+  --mn-inner: inset -10px -10px 10px 0 rgba(22, 6, 72, 0.4), inset 10px 10px 10px 0 var(--mn-nm-lit);
+
+  /* Depth · aperture */
+  --mn-aperture: inset 0 2px 0 rgba(200, 170, 255, 0.35), inset 0 0 0 1px rgba(190, 160, 255, 0.18), inset -18px -18px 40px 0 rgba(22, 6, 72, 0.35), inset 18px 18px 40px 0 rgba(150, 120, 255, 0.25), 0 30px 90px -20px rgba(22, 6, 72, 0.55);
+  --mn-lens: inset 0 0 0 1px rgba(190, 160, 255, 0.12), inset 0 20px 50px -10px rgba(22, 6, 72, 0.45), inset 0 -10px 40px -10px rgba(150, 120, 255, 0.25);
+  --mn-blur-mid: blur(10px);
+  --mn-blur-far: blur(16px);
+
+  /* Depth · glass & glow */
+  --mn-glass: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 24px 60px -18px rgba(22, 6, 72, 0.75), 0 0 50px -10px rgba(170, 110, 255, 0.35);
+  --mn-glass-card: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 40px 90px -30px rgba(15, 3, 55, 0.85), 0 0 70px -20px rgba(200, 110, 255, 0.45);
+  --mn-badge-glow: 0 0 24px -4px rgba(180, 120, 255, 0.45);
+  --mn-go-glow: 0 10px 24px -6px rgba(255, 110, 120, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  --mn-lift: 0 15px 20px rgba(43, 12, 85, 0.5);
+  --mn-frost: blur(16px) saturate(1.3);
+  --mn-frost-nav: blur(18px) saturate(1.4);
+  --mn-frost-card: blur(22px) saturate(1.35);
+
+  /* Motion · easing */
+  --mn-cubic: cubic-bezier(0.4, 0.35, 0, 1.53);
+  --mn-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --mn-iris: cubic-bezier(1, 0.06, 0.25, 1);
+
+  /* Motion · durations */
+  --mn-dur-quick: 0.25s;
+  --mn-dur-press: 0.35s;
+  --mn-dur-surface: 0.4s;
+  --mn-dur-lift: 0.7s;
+  --mn-dur-iris: 0.8s;
+  --mn-dur-rise: 0.9s;
+  --mn-dur-breathe: 7s;
+  --mn-dur-sway: 13s;
+  --mn-dur-orbit: 90s;
+
+  /* Space · layout */
+  --mn-wrap: 1140px;
+  --mn-gutter: 44px;
+  --mn-sec: 104px;
+  --mn-stage-top: 132px;
+}
