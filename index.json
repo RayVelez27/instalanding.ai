@@ -2,8 +2,58 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 95,
+  "count": 96,
   "pages": [
+    {
+      "slug": "oishi-taiyaki-ice-cream-page",
+      "title": "Oishi Taiyaki Ice Cream Page",
+      "description": "A cream-and-red page for taiyaki ice cream sold from a vending machine, with the machine's real touchscreen playable in the hero, a six-flavor picker whose art and accent recolor live, and a guess-the-flavor mini game",
+      "category": "web",
+      "theme": "light",
+      "added": "Nov 22, 2026",
+      "bestFor": [
+        "food and dessert brands",
+        "vending and kiosk products",
+        "Japanese and Asian food concepts",
+        "playful consumer launches"
+      ],
+      "style": [
+        "light",
+        "retro",
+        "hard-shadows",
+        "japanese-type",
+        "rive",
+        "interactive"
+      ],
+      "sections": [
+        "nav",
+        "hero",
+        "flavors",
+        "how-it-works",
+        "game",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [],
+        "features": [
+          "canvas-2d",
+          "inlined-fonts",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/oishi-taiyaki-ice-cream-page/index.html",
+        "prompt": "pages/oishi-taiyaki-ice-cream-page/PROMPT.md",
+        "preview": "pages/oishi-taiyaki-ice-cream-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/oishi-taiyaki-ice-cream.html",
+      "page": "https://instalanding.ai/prompt/oishi-taiyaki-ice-cream-page"
+    },
     {
       "slug": "nimbus-ai-assistant-page",
       "title": "Nimbus AI Assistant Page",
