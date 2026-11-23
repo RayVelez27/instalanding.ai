@@ -1,0 +1,94 @@
+/* InstaLanding design system · Linework · linework@1.0.0
+   Extracted from https://instalanding.ai/demos/linework-architect-assistant.html
+   Fonts: Instrument Sans 400-600, Urbanist 400-600, IBM Plex Mono 400/500 (Google Fonts) */
+:root {
+  /* Color · core */
+  --lw-paper: #F5F5F1;
+  --lw-ink: #121212;
+  --lw-blue: #4353FF;
+  --lw-blue-soft: #EEF0FF;
+  --lw-rule: #E1E1DA;
+  --lw-sheet: #FFFFFF;
+
+  /* Color · text & drawing */
+  --lw-muted: #86867F;
+  --lw-graphite: #4B4B46;
+  --lw-ink-drawing: #1C1C1A;
+  --lw-pencil: #55554F;
+  --lw-on-ink: #FFFFFF;
+
+  /* Color · surfaces */
+  --lw-tile: #F3F3F0;
+  --lw-fig: #E6E6E1;
+  --lw-dot: color-mix(in srgb, var(--lw-ink) 12%, transparent);
+
+  /* Type · families */
+  --lw-font-display: "Instrument Sans", system-ui, sans-serif;
+  --lw-font-body: "Urbanist", system-ui, sans-serif;
+  --lw-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Type · scale */
+  --lw-display: clamp(2.8rem, 9vw, 4.75rem);
+  --lw-display-xl: clamp(4.25rem, 5.6vw, 5.75rem);
+  --lw-h2: clamp(2.4rem, 5vw, 4.25rem);
+  --lw-h2-sheet: clamp(2.2rem, 4.4vw, 3.6rem);
+  --lw-h2-studio: clamp(2.2rem, 4.4vw, 3.75rem);
+  --lw-h3: clamp(2rem, 3.4vw, 2.9rem);
+  --lw-quote: clamp(1.75rem, 3.6vw, 3rem);
+  --lw-stat: 48px;
+  --lw-stat-md: 56px;
+  --lw-lead: 17px;
+  --lw-body: 16px;
+  --lw-label: 11px;
+
+  /* Shape · radii */
+  --lw-r-btn: 6px;
+  --lw-r-tile: 4px;
+  --lw-r-bar: 9px;
+  --lw-r-pill: 999px;
+
+  /* Shape · borders */
+  --lw-hair: 1px;
+
+  /* Drawing · line weights */
+  --lw-stroke-outline: 1.5px;
+  --lw-stroke-line: 1.05px;
+  --lw-stroke-entourage: 0.8px;
+  --lw-stroke-window: 0.75px;
+  --lw-stroke-detail: 0.7px;
+  --lw-stroke-guide: 0.65px;
+  --lw-stroke-axis: 0.6px;
+  --lw-stroke-surface: 0.55px;
+  --lw-stroke-hatch: 0.5px;
+
+  /* Depth · shadows */
+  --lw-shadow-btn: 0 10px 30px -12px color-mix(in srgb, var(--lw-ink) 60%, transparent);
+  --lw-shadow-btn-hover: 0 14px 34px -12px color-mix(in srgb, var(--lw-blue) 75%, transparent);
+  --lw-shadow-sheet: 0 1px 0 rgba(0, 0, 0, .02), 0 40px 80px -50px color-mix(in srgb, var(--lw-ink) 35%, transparent);
+  --lw-shadow-tag: 0 10px 26px -10px color-mix(in srgb, var(--lw-blue) 85%, transparent);
+  --lw-shadow-knob: 0 6px 18px -6px rgba(0, 0, 0, .3);
+
+  /* Motion · easing */
+  --lw-ease: cubic-bezier(.2, .8, .2, 1);
+  --lw-ease-draw: cubic-bezier(.65, .05, .25, 1);
+
+  /* Motion · durations */
+  --lw-dur-quick: .2s;
+  --lw-dur-hover: .25s;
+  --lw-dur-state: .3s;
+  --lw-dur-fade: .5s;
+  --lw-dur-swap: .55s;
+  --lw-dur-draw: 800ms;
+  --lw-dur-reveal: .9s;
+  --lw-dur-intro: 1s;
+  --lw-dur-scan: 2.4s;
+  --lw-dur-walk: 14s;
+
+  /* Space · layout */
+  --lw-wrap: 1400px;
+  --lw-gutter: 20px;
+  --lw-gutter-md: 32px;
+  --lw-hdr: 64px;
+  --lw-hdr-md: 72px;
+  --lw-grid: 22px;
+}

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<!--
+  Surprise Keys · InstaLanding Motion
+  slug:  surprise-keys
+  lab:   https://instalanding.ai/motion/surprise-keys
+  A lowercase "a" built from 229 isometric keys, decoded from a Rive file
+  (suprise.riv) and replayed by the small runtime below: one 600 x 589 main
+  artboard holding 229 instances of a 200 x 200 "buttozn" artboard, each with
+  its own copy of a three-state machine (idle, hover, click). No libraries.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surprise Keys · InstaLanding Motion</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #fff; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; width: 100dvw; height: 100dvh; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+</style>
+</head>
+<body>
+<canvas id="c" role="img" aria-label="A lowercase letter a built from 229 blue isometric keys that breathe in and out. Hover a key to pop it up, press to push it flush."></canvas>
+<script>
+(() => {
+"use strict";
+// ---- Data extracted 1:1 from suprise.riv ----------------------------------
+// Main artboard "kez bou buttel": 600 x 589, white fill, clipped.
+const MAIN_W = 600, MAIN_H = 589;
+// 229 nested instances (5 parked off-canvas extras removed) of artboard "buttozn" [x, y, scaleX, scaleY], file order.
+const NESTED = [[532.5905,426.8784,0.2597052,0.2597052],[506.62,454.8895,0.2597052,0.2597052],[480.6495,482.9446,0.2597052,0.2597052],[455.2149,511.0102,0.2597052,0.2597052],[455.2149,485.0396,0.2597052,0.2597052],[480.6495,456.9741,0.2597052,0.2597052],[455.2149,459.0691,0.2597052,0.2597052],[506.62,428.919,0.2597052,0.2597052],[480.6495,431.0036,0.2597052,0.2597052],[455.2149,433.0985,0.2597052,0.2597052],[532.5905,400.8527,0.2597052,0.2597052],[506.62,402.8933,0.2597052,0.2597052],[480.6495,404.9779,0.2597052,0.2597052],[455.2149,407.0728,0.2597052,0.2597052],[532.1379,374.8822,0.2597052,0.2597052],[506.1673,376.9228,0.2597052,0.2597052],[480.1969,379.0074,0.2597052,0.2597052],[454.7623,381.1023,0.2597052,0.2597052],[532.1379,349.5234,0.2597052,0.2597052],[506.1673,351.564,0.2597052,0.2597052],[480.1969,353.6486,0.2597052,0.2597052],[454.7623,355.7435,0.2597052,0.2597052],[532.1379,323.5529,0.2597052,0.2597052],[506.1673,325.5934,0.2597052,0.2597052],[480.1969,327.678,0.2597052,0.2597052],[454.7623,329.7729,0.2597052,0.2597052],[532.1379,301.0874,0.2597052,0.2597052],[506.1673,303.128,0.2597052,0.2597052],[480.1969,305.2126,0.2597052,0.2597052],[454.7623,307.3075,0.2597052,0.2597052],[532.1379,275.0617,0.2597052,0.2597052],[506.1673,277.1022,0.2597052,0.2597052],[480.1969,279.1868,0.2597052,0.2597052],[454.7623,281.2818,0.2597052,0.2597052],[532.1379,249.0911,0.2597052,0.2597052],[506.1673,251.1317,0.2597052,0.2597052],[480.1969,253.2163,0.2597052,0.2597052],[454.7623,255.3112,0.2597052,0.2597052],[532.2979,223.0169,0.2597052,0.2597052],[506.1673,225.7729,0.2597052,0.2597052],[480.1969,227.8575,0.2597052,0.2597052],[454.7623,229.9525,0.2597052,0.2597052],[532.2979,197.0464,0.2597052,0.2597052],[506.3274,199.0869,0.2597052,0.2597052],[480.3569,201.1715,0.2597052,0.2597052],[454.9222,203.2665,0.2597052,0.2597052],[325.7712,526.2191,0.2597052,0.2597052],[299.5645,528.3584,0.2597052,0.2597052],[273.594,530.443,0.2597052,0.2597052],[247.481,532.5379,0.2597052,0.2597052],[221.5104,534.6226,0.2597052,0.2597052],[376.8061,496.0061,0.2597052,0.2597052],[350.8356,498.0907,0.2597052,0.2597052],[324.9293,500.116,0.2597052,0.2597052],[298.7225,502.2553,0.2597052,0.2597052],[272.752,504.34,0.2597052,0.2597052],[247.189,506.5125,0.2597052,0.2597052],[221.2185,508.597,0.2597052,0.2597052],[195.3915,510.692,0.2597052,0.2597052],[169.421,512.7766,0.2597052,0.2597052],[428.572,465.8158,0.2597052,0.2597052],[402.6926,467.6015,0.2597052,0.2597052],[402.3606,441.5298,0.2597052,0.2597052],[375.9818,469.794,0.2597052,0.2597052],[350.0969,472.1356,0.2597052,0.2597052],[324.1264,474.1762,0.2597052,0.2597052],[376.3901,444.0237,0.2597052,0.2597052],[298.1559,476.2608,0.2597052,0.2597052],[272.7213,478.3557,0.2597052,0.2597052],[247.028,480.2234,0.2597052,0.2597052],[221.0574,482.264,0.2597052,0.2597052],[195.1725,484.6056,0.2597052,0.2597052],[169.202,486.6461,0.2597052,0.2597052],[506.5803,172.9747,0.2597052,0.2597052],[480.6098,175.0152,0.2597052,0.2597052],[454.6394,177.0999,0.2597052,0.2597052],[429.2048,179.1948,0.2597052,0.2597052],[143.2314,488.7307,0.2597052,0.2597052],[117.7969,490.8257,0.2597052,0.2597052],[247.028,480.2234,0.2597052,0.2597052],[221.0574,482.264,0.2597052,0.2597052],[195.1725,484.6056,0.2597052,0.2597052],[169.202,486.6461,0.2597052,0.2597052],[143.2314,488.7307,0.2597052,0.2597052],[117.7969,490.8257,0.2597052,0.2597052],[350.4196,446.0643,0.2597052,0.2597052],[506.5158,146.8302,0.2597052,0.2597052],[480.8543,148.925,0.2597052,0.2597052],[454.8838,151.0096,0.2597052,0.2597052],[429.4492,153.1046,0.2597052,0.2597052],[478.9909,122.6381,0.2597052,0.2597052],[455.0204,124.6787,0.2597052,0.2597052],[429.0498,126.7633,0.2597052,0.2597052],[403.6152,128.8582,0.2597052,0.2597052],[478.7421,96.76566,0.2597052,0.2597052],[453.7716,99.10453,0.2597052,0.2597052],[428.8011,101.4009,0.2597052,0.2597052],[403.0405,103.5387,0.2597052,0.2597052],[377.07,105.6233,0.2597052,0.2597052],[350.957,107.7183,0.2597052,0.2597052],[454.2364,75.41077,0.2597052,0.2597052],[428.2659,77.45132,0.2597052,0.2597052],[402.2954,79.53592,0.2597052,0.2597052],[376.8608,81.63086,0.2597052,0.2597052],[350.8904,83.71548,0.2597052,0.2597052],[376.3901,418.2125,0.2597052,0.2597052],[350.4196,420.2531,0.2597052,0.2597052],[324.5347,448.4059,0.2597052,0.2597052],[298.5642,450.4464,0.2597052,0.2597052],[272.5937,452.531,0.2597052,0.2597052],[247.1591,454.626,0.2597052,0.2597052],[221.4657,456.4937,0.2597052,0.2597052],[195.4952,458.5343,0.2597052,0.2597052],[169.6103,460.8759,0.2597052,0.2597052],[143.6398,462.9164,0.2597052,0.2597052],[117.6693,465.001,0.2597052,0.2597052],[92.23474,467.0959,0.2597052,0.2597052],[221.4657,456.4937,0.2597052,0.2597052],[195.4952,458.5343,0.2597052,0.2597052],[169.6103,460.8759,0.2597052,0.2597052],[143.6398,462.9164,0.2597052,0.2597052],[117.6693,465.001,0.2597052,0.2597052],[92.23474,467.0959,0.2597052,0.2597052],[195.2788,432.167,0.2597052,0.2597052],[169.3083,434.2076,0.2597052,0.2597052],[143.4234,436.5492,0.2597052,0.2597052],[117.4529,438.5897,0.2597052,0.2597052],[91.48242,440.6743,0.2597052,0.2597052],[66.04773,442.7693,0.2597052,0.2597052],[395.9618,-60.81826,0.2597052,0.2597052],[143.3434,410.5579,0.2597052,0.2597052],[117.3729,412.5984,0.2597052,0.2597052],[91.40247,414.683,0.2597052,0.2597052],[65.9679,416.778,0.2597052,0.2597052],[117.9088,386.9559,0.2597052,0.2597052],[91.93835,388.9965,0.2597052,0.2597052],[65.9679,391.0811,0.2597052,0.2597052],[40.53326,393.176,0.2597052,0.2597052],[117.9088,360.9302,0.2597052,0.2597052],[91.93835,362.9707,0.2597052,0.2597052],[65.9679,365.0553,0.2597052,0.2597052],[40.53326,367.1503,0.2597052,0.2597052],[91.92383,337.9719,0.2597052,0.2597052],[65.95325,340.0124,0.2597052,0.2597052],[39.98273,342.097,0.2597052,0.2597052],[14.54816,344.192,0.2597052,0.2597052],[91.92383,311.9461,0.2597052,0.2597052],[91.92383,285.9756,0.2597052,0.2597052],[91.92383,285.9756,0.2597052,0.2597052],[91.92383,311.9461,0.2597052,0.2597052],[65.95325,313.9867,0.2597052,0.2597052],[39.98273,316.0713,0.2597052,0.2597052],[91.92383,285.9756,0.2597052,0.2597052],[91.92383,260.6168,0.2597052,0.2597052],[91.92383,285.9756,0.2597052,0.2597052],[14.54816,318.1662,0.2597052,0.2597052],[65.95325,288.0162,0.2597052,0.2597052],[39.98273,290.1008,0.2597052,0.2597052],[14.54816,292.1957,0.2597052,0.2597052],[91.92383,260.6168,0.2597052,0.2597052],[65.95325,262.6574,0.2597052,0.2597052],[39.98273,264.742,0.2597052,0.2597052],[14.54816,266.8369,0.2597052,0.2597052],[91.92383,234.6463,0.2597052,0.2597052],[65.95325,236.6868,0.2597052,0.2597052],[39.98273,238.7714,0.2597052,0.2597052],[14.54816,240.8664,0.2597052,0.2597052],[117.9495,206.3965,0.2597052,0.2597052],[91.979,208.4371,0.2597052,0.2597052],[66.00854,210.5217,0.2597052,0.2597052],[40.57391,212.6166,0.2597052,0.2597052],[117.9495,180.426,0.2597052,0.2597052],[91.979,182.4666,0.2597052,0.2597052],[66.00854,184.5512,0.2597052,0.2597052],[40.57391,186.6461,0.2597052,0.2597052],[144.0088,152.0557,0.2597052,0.2597052],[118.0383,154.0962,0.2597052,0.2597052],[92.06775,156.1808,0.2597052,0.2597052],[66.63318,158.2758,0.2597052,0.2597052],[428.1771,51.94057,0.2597052,0.2597052],[196.1729,122.3938,0.2597052,0.2597052],[402.2066,54.02516,0.2597052,0.2597052],[376.7721,56.1201,0.2597052,0.2597052],[350.8015,58.20471,0.2597052,0.2597052],[170.2024,124.4343,0.2597052,0.2597052],[144.2318,126.5189,0.2597052,0.2597052],[118.7972,128.6139,0.2597052,0.2597052],[92.82678,130.6985,0.2597052,0.2597052],[376.8054,30.57269,0.2597052,0.2597052],[350.835,32.65728,0.2597052,0.2597052],[66.71375,132.7934,0.2597052,0.2597052],[324.9902,85.29622,0.2597052,0.2597052],[324.9902,60.29951,0.2597052,0.2597052],[324.9902,73.34026,0.2597052,0.2597052],[324.9902,34.25774,0.2597052,0.2597052],[324.9902,9.180803,0.2597052,0.2597052],[299.4079,87.3428,0.2597052,0.2597052],[273.4374,89.42741,0.2597052,0.2597052],[247.8744,91.59992,0.2597052,0.2597052],[221.9039,93.68452,0.2597052,0.2597052],[196.0769,95.77946,0.2597052,0.2597052],[170.1064,97.86408,0.2597052,0.2597052],[143.9933,100.2805,0.2597052,0.2597052],[118.0228,102.3651,0.2597052,0.2597052],[299.4079,62.3461,0.2597052,0.2597052],[273.4374,64.43073,0.2597052,0.2597052],[247.8744,66.60323,0.2597052,0.2597052],[221.9039,68.68784,0.2597052,0.2597052],[196.0769,70.78278,0.2597052,0.2597052],[170.1064,72.86739,0.2597052,0.2597052],[299.4079,75.38685,0.2597052,0.2597052],[273.4374,77.47144,0.2597052,0.2597052],[247.8744,79.64396,0.2597052,0.2597052],[221.9039,81.72858,0.2597052,0.2597052],[196.0769,83.82349,0.2597052,0.2597052],[170.1064,85.90812,0.2597052,0.2597052],[299.4079,36.30433,0.2597052,0.2597052],[273.4374,38.38894,0.2597052,0.2597052],[247.8744,40.56144,0.2597052,0.2597052],[221.9039,42.64606,0.2597052,0.2597052],[299.4079,11.22739,0.2597052,0.2597052],[273.4374,13.312,0.2597052,0.2597052],[196.0769,44.74099,0.2597052,0.2597052],[170.1064,46.8256,0.2597052,0.2597052],[247.8744,15.4845,0.2597052,0.2597052],[143.9933,75.28382,0.2597052,0.2597052],[118.0228,77.36845,0.2597052,0.2597052],[92.49573,104.4057,0.2597052,0.2597052],[221.9039,17.56913,0.2597052,0.2597052]];
+
+// ---- 2D affine helpers (Rive Mat2D layout: [xx, xy, yx, yy, tx, ty]) -------
+const mul = (a, b) => [
+  a[0]*b[0] + a[2]*b[1],        a[1]*b[0] + a[3]*b[1],
+  a[0]*b[2] + a[2]*b[3],        a[1]*b[2] + a[3]*b[3],
+  a[0]*b[4] + a[2]*b[5] + a[4], a[1]*b[4] + a[3]*b[5] + a[5]];
+const inv = (m) => {
+  const d = m[0]*m[3] - m[1]*m[2];
+  return [m[3]/d, -m[1]/d, -m[2]/d, m[0]/d,
+          (m[2]*m[5] - m[3]*m[4])/d, (m[1]*m[4] - m[0]*m[5])/d];
+};
+const trs = (x, y, r = 0) => { const c = Math.cos(r), s = Math.sin(r); return [c, s, -s, c, x, y]; };
+const app = (m, x, y) => [m[0]*x + m[2]*y + m[4], m[1]*x + m[3]*y + m[5]];
+
+// ---- "buttozn" artboard (200 x 200, clip off) -----------------------------
+const SQUARE = [[-50, -50], [50.20272, -58.30956], [50.20272, 41.69044], [-50, 50]];
+const HITBOX_T = trs(142.4454, 39.92999);
+const HITBOX_POLY = SQUARE.map(p => app(HITBOX_T, p[0], p[1]));
+const FACE_NODE_Y0 = 72.74791;
+const FACE_BONE_LOCAL = trs(-0.6423073, 0.09078217, -2.356194);
+const FACE_SHAPE_LOCAL = trs(-0.1013718, 4.154781);
+const EXT_NODE = trs(108.1298, 107.7894);
+const EXT_BONE_WORLD = mul(EXT_NODE, trs(69.71762, 62.08807, 0.7853982));
+// Skinned extrusion path: vertices, bone index (1 = face bone, 2 = extrusion bone)
+const EXT_VERTS = [[-16.43511, -110.1797, 1], [50.20272, -58.30956, 2], [50.20272, 41.69044, 2],
+                   [-50, 50, 2], [-116.6378, -1.870155, 1]];
+const SKIN_WORLD = [1, 0, 0, 1, 127.9418, 117.4376];
+const FACE_INV_BIND = inv([-0.7071068, -0.7071068, 0.7071068, -0.7071068, 60.76307, 61.50341]);
+const EXT_INV_BIND  = inv([0.7071068, 0.7071068, -0.7071068, 0.7071068, 177.8474, 158.5421]);
+const EXT_BONE_T = mul(EXT_BONE_WORLD, EXT_INV_BIND);
+const EXT_SKINNED_LOCAL = EXT_VERTS.map(v => [app(SKIN_WORLD, v[0], v[1]), v[2]]);
+const EXT_STATIC = EXT_SKINNED_LOCAL.map(([p, b]) => b === 2 ? app(EXT_BONE_T, p[0], p[1]) : null);
+
+const C_FACE_FILL = "#317ae7", C_FACE_STROKE = "#4c3cc5", C_EXT = "#1b0d83";
+
+// ---- Cubic ease interpolators (artboard objects 47..52) -------------------
+function cubicEase(x1, y1, x2, y2) {
+  const A = (a1, a2) => 1 - 3*a2 + 3*a1, B = (a1, a2) => 3*a2 - 6*a1, C = a1 => 3*a1;
+  const calc = (t, a1, a2) => ((A(a1, a2)*t + B(a1, a2))*t + C(a1))*t;
+  const slope = (t, a1, a2) => 3*A(a1, a2)*t*t + 2*B(a1, a2)*t + C(a1);
+  const tForX = (x) => {
+    let t = x;
+    for (let i = 0; i < 8; i++) {
+      const s = slope(t, x1, x2);
+      if (Math.abs(s) < 1e-7) break;
+      const cx = calc(t, x1, x2) - x;
+      t -= cx / s;
+    }
+    if (t >= 0 && t <= 1 && Math.abs(calc(t, x1, x2) - x) < 1e-6) return t;
+    let lo = 0, hi = 1; t = x;
+    for (let i = 0; i < 40; i++) {
+      const cx = calc(t, x1, x2);
+      if (Math.abs(cx - x) < 1e-7) break;
+      if (cx < x) lo = t; else hi = t;
+      t = (lo + hi) / 2;
+    }
+    return t;
+  };
+  return x => (x <= 0 ? 0 : x >= 1 ? 1 : calc(tForX(x), y1, y2));
+}
+const I47 = cubicEase(0.3357143, 0.007103825, 0.35, 0.973224);       // idle keys
+const I48 = cubicEase(0, 0.7939891, 0.2285714, 0.9688525);          // idle -> hower
+const I49 = cubicEase(0.7892857, -0.01038251, 0.2, 0.9863388);      // hower -> idle
+const I50 = cubicEase(0, 0.8092896, 0.2285714, 1.014754);           // hower -> click
+const I51 = cubicEase(0.7285714, 0.00273224, 0.2964286, 1.008197);  // click -> hower
+const I52 = cubicEase(0.7285714, 0.007103825, 0.275, 1.003825);     // click -> idle
+
+// ---- Lab state: a scene clock and the lab's controls ------------------------
+// The idle breath reads one shared clock (offset per key by spread), so the
+// letter stays in step after a hover; speed scales every dt.
+const LAB = { speed: 1, spread: 0, breathe: true, amt: 1, clock: 0 };
+const IDLE_PERIOD = 2 * 41 / 60;                         // one in-and-out breath
+// ---- Animations (keying "face" node x/y) -----------------------------------
+const FPS = 60;
+const ANIMS = {
+  click: { pose: [128.0432, 124.8925] },
+  hower: { pose: [49.28872, 48.6152] },
+  // pingPong over work area 0..41 frames; keys at 0 and 40 (cubic I47)
+  idle:  { start: 0, end: 41 / FPS, k0: [61.40538, 61.41263], k1: [128.0432, 124.6181], kt: 40 / FPS },
+};
+function sample(state, inst, b) {
+  const a = ANIMS[state];
+  if (a.pose) return a.pose;
+  // ping-pong on the shared clock, shifted by this key's place on the diagonal
+  const p = ((LAB.clock - LAB.spread * b.off * IDLE_PERIOD) % IDLE_PERIOD + IDLE_PERIOD) % IDLE_PERIOD;
+  const t = p <= a.end ? p : IDLE_PERIOD - p;
+  if (LAB.amt < 1) {
+    const q = t <= 0 ? 0 : t >= a.kt ? 1 : I47(t / a.kt), f = q * LAB.amt;
+    return [a.k0[0] + (a.k1[0] - a.k0[0]) * f, a.k0[1] + (a.k1[1] - a.k0[1]) * f];
+  }
+  if (t <= 0) return a.k0;
+  if (t >= a.kt) return a.k1;
+  const f = I47(t / a.kt);
+  return [a.k0[0] + (a.k1[0] - a.k0[0]) * f, a.k0[1] + (a.k1[1] - a.k0[1]) * f];
+}
+function advanceAnim(state, inst, dt) {
+  if (state !== "idle") { inst.time += dt; return; }
+  const a = ANIMS.idle;
+  inst.time += dt * inst.dir;
+  for (let g = 0; g < 8; g++) {
+    if (inst.dir > 0 && inst.time >= a.end) { inst.time = a.end - (inst.time - a.end); inst.dir = -1; }
+    else if (inst.dir < 0 && inst.time <= a.start) { inst.time = a.start + (a.start - inst.time); inst.dir = 1; }
+    else break;
+  }
+}
+
+// ---- State machine "State Machine 1" / layer "intereactuons" --------------
+// idle -> hower  [hower == true]                     70ms  I48
+// hower -> idle  [hower == false]                   300ms  I49
+// hower -> click [click == true]                     50ms  I50
+// click -> hower [click == false && hower == true]  250ms  I51
+// click -> idle  [click == false && hower == false] 250ms  I52
+const TRANSITIONS = {
+  idle:  [{ to: "hower", ok: s => s.hower, dur: 0.07, ease: I48 }],
+  hower: [{ to: "idle", ok: s => !s.hower, dur: 0.30, ease: I49 },
+          { to: "click", ok: s => s.click, dur: 0.05, ease: I50 }],
+  click: [{ to: "hower", ok: s => !s.click && s.hower, dur: 0.25, ease: I51 },
+          { to: "idle", ok: s => !s.click && !s.hower, dur: 0.25, ease: I52 }],
+};
+
+class Button {
+  constructor([x, y, sx, sy]) {
+    this.world = [sx, 0, 0, sy, x, y];
+    this.inv = inv(this.world);
+    this.click = false; this.hower = false; this.over = false;
+    this.state = "idle"; this.inst = { time: 0, dir: 1 };
+    this.from = null; this.fromInst = null; this.trans = null; this.mix = 1; this.mixFrom = 1;
+    this.reset = null;
+    this.face = [61.4054, FACE_NODE_Y0]; this.off = 0;
+    this.apply();
+  }
+  changeState(tr) {
+    const interrupted = this.trans && this.mix < 1;
+    this.reset = this.face.slice();           // values the new mix starts from
+    this.from = this.state; this.fromInst = this.inst;
+    this.mixFrom = interrupted ? 0 : this.mix;
+    this.state = tr.to; this.inst = { time: 0, dir: 1 };
+    this.trans = tr; this.mix = 0;
+  }
+  tryChange() {
+    for (const tr of TRANSITIONS[this.state]) if (tr.ok(this)) { this.changeState(tr); return true; }
+    return false;
+  }
+  advance(dt) {
+    advanceAnim(this.state, this.inst, dt);
+    if (this.from && this.mix < 1) advanceAnim(this.from, this.fromInst, dt);
+    if (this.trans && this.mix < 1) this.mix = Math.min(1, this.mix + dt / this.trans.dur);
+    for (let i = 0; i < 100 && this.tryChange(); i++) {}
+    this.apply();
+  }
+  apply() {
+    let v = this.face;
+    if (this.trans && this.mix < 1) {
+      v = this.reset.slice();
+      if (this.mixFrom > 0) {
+        const f = this.trans.ease(this.mixFrom), p = sample(this.from, this.fromInst, this);
+        v = [v[0] + (p[0] - v[0]) * f, v[1] + (p[1] - v[1]) * f];
+      }
+      const m = this.trans.ease(this.mix), p = sample(this.state, this.inst, this);
+      v = [v[0] + (p[0] - v[0]) * m, v[1] + (p[1] - v[1]) * m];
+    } else {
+      v = sample(this.state, this.inst, this).slice();
+    }
+    this.face = v;
+  }
+  // Listeners on "hitbox": enter -> hower=true, exit -> hower=false,
+  // down -> click=true, up -> click=false
+  hit(px, py) {
+    const [x, y] = app(this.inv, px, py), P = HITBOX_POLY;
+    let w = 0;
+    for (let i = 0, j = P.length - 1; i < P.length; j = i++) {
+      const [xi, yi] = P[i], [xj, yj] = P[j];
+      if (yj <= y) { if (yi > y && (xi - xj) * (y - yj) - (x - xj) * (yi - yj) > 0) w++; }
+      else if (yi <= y && (xi - xj) * (y - yj) - (x - xj) * (yi - yj) < 0) w--;
+    }
+    return w !== 0;
+  }
+  pointer(type, px, py) {
+    const over = px !== null && this.hit(px, py);
+    if (over !== this.over) { this.over = over; this.hower = over; }
+    if (type === "down" && over) this.click = true;
+    if (type === "up" && over) this.click = false;
+    for (let i = 0; i < 100 && this.tryChange(); i++) {}
+  }
+  draw(ctx) {
+    const faceNode = trs(this.face[0], this.face[1]);
+    const faceBone = mul(mul(faceNode, FACE_BONE_LOCAL), FACE_INV_BIND);
+    ctx.save();
+    ctx.transform(...this.world);
+    // extrusion ("extruyen") — drawn first (bottom)
+    ctx.beginPath();
+    EXT_SKINNED_LOCAL.forEach(([p, b], i) => {
+      const q = b === 2 ? EXT_STATIC[i] : app(faceBone, p[0], p[1]);
+      i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]);
+    });
+    ctx.closePath();
+    ctx.fillStyle = C_EXT; ctx.fill("nonzero");
+    ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.strokeStyle = C_EXT; ctx.stroke();
+    // face
+    const fm = mul(faceNode, FACE_SHAPE_LOCAL);
+    ctx.beginPath();
+    SQUARE.forEach((p, i) => { const q = app(fm, p[0], p[1]); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); });
+    ctx.closePath();
+    ctx.fillStyle = C_FACE_FILL; ctx.fill("nonzero");
+    ctx.strokeStyle = C_FACE_STROKE; ctx.stroke();
+    // hitbox: fill alpha 0, strokes hidden -> nothing visible
+    ctx.restore();
+  }
+}
+
+const buttons = NESTED.map(n => new Button(n));
+{
+  const d = buttons.map(b => b.world[4] + b.world[5]), lo = Math.min(...d), hi = Math.max(...d);
+  buttons.forEach((b, i) => { b.off = (d[i] - lo) / (hi - lo); });
+}
+// ---- Press waves: each key is pressed and released in turn, on the scene clock
+const queue = [];
+function wave(dir) {
+  const xs = buttons.map(b => b.world[4]), lo = Math.min(...xs), hi = Math.max(...xs);
+  for (const b of buttons) {
+    const u = (b.world[4] - lo) / (hi - lo), at = LAB.clock + 0.9 * (dir > 0 ? u : 1 - u);
+    queue.push({ at, b, down: true }, { at: at + 0.16, b, down: false });
+  }
+  queue.sort((a, c) => a.at - c.at);
+}
+function runQueue() {
+  while (queue.length && queue[0].at <= LAB.clock) {
+    const { b, down } = queue.shift();
+    if (down) { b.hower = true; b.click = true; }
+    else { b.click = false; b.hower = b.over; }
+    for (let i = 0; i < 100 && b.tryChange(); i++) {}
+  }
+}
+window.__keys = { buttons, wave, queue, LAB };
+// Rive draws the first drawable in the hierarchy on top, so paint in reverse.
+const drawOrder = buttons.slice().reverse();
+
+// ---- Canvas, layout (Fit.contain, Alignment.center) -----------------------
+const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+let view = [1, 0, 0, 1, 0, 0], viewInv = view;
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  const s = Math.min(w / MAIN_W, h / MAIN_H);
+  view = [s, 0, 0, s, (w - MAIN_W * s) / 2, (h - MAIN_H * s) / 2];
+  viewInv = inv(view);
+}
+window.addEventListener("resize", resize); resize();
+
+function toArtboard(e) {
+  const r = canvas.getBoundingClientRect();
+  return app(viewInv, e.clientX - r.left, e.clientY - r.top);
+}
+function dispatch(type, p) {
+  // Points outside the main artboard are clipped away.
+  const inside = p && p[0] >= 0 && p[1] >= 0 && p[0] <= MAIN_W && p[1] <= MAIN_H;
+  for (const b of buttons) b.pointer(type, inside ? p[0] : null, inside ? p[1] : null);
+}
+canvas.addEventListener("pointermove", e => dispatch("move", toArtboard(e)));
+canvas.addEventListener("pointerdown", e => { canvas.setPointerCapture?.(e.pointerId); dispatch("down", toArtboard(e)); });
+canvas.addEventListener("pointerup", e => dispatch("up", toArtboard(e)));
+canvas.addEventListener("pointercancel", () => dispatch("up", null));
+canvas.addEventListener("pointerleave", () => dispatch("move", null));
+
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.1, (now - last) / 1000) * LAB.speed; last = now;
+  LAB.clock += dt;
+  LAB.amt += ((LAB.breathe ? 1 : 0) - LAB.amt) * Math.min(1, dt * 6);
+  if (Math.abs(LAB.amt - (LAB.breathe ? 1 : 0)) < 1e-3) LAB.amt = LAB.breathe ? 1 : 0;
+  runQueue();
+  for (const b of buttons) b.advance(dt);
+  const dpr = canvas.width / canvas.clientWidth;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.transform(...view);
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0, 0, MAIN_W, MAIN_H); ctx.clip();
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, MAIN_W, MAIN_H);
+  for (const b of drawOrder) b.draw(ctx);
+  ctx.restore();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+<script>
+/* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The letter works on its own; when it
+     is framed, the lab drives it with postMessage and it reports what the
+     keys are doing.
+       { source: 'il-motion', type: 'speed', value: 0.25 }   the scene clock (breath, transitions, waves)
+       { ..., type: 'step', value: 1 | -1 }    a press wave, left to right (1) or right to left (-1)
+       { ..., type: 'spread', value: 0 }       offsets each key's breath along the diagonal, 0..1
+       { ..., type: 'breathe', value: true }   the idle in-and-out breath
+       { ..., type: 'autoplay', value: true }  alternating press waves every few seconds
+  ------------------------------------------------------------------ */
+(function () {
+  const K = window.__keys;
+  if (!K) return;
+  let auto = 0, dir = 1;
+  const autoplay = (on, ms = 2600) => {
+    clearInterval(auto);
+    if (on) {
+      K.wave(dir); dir = -dir;
+      auto = setInterval(() => { if (!document.hidden) { K.wave(dir); dir = -dir; } }, ms / Math.max(K.LAB.speed, 0.25));
+    }
+  };
+  const qs = new URLSearchParams(location.search);
+  if (qs.has('autoplay')) autoplay(true, Number(qs.get('autoplay')) || 2600);
+  addEventListener('message', (e) => {
+    const d = e.data;
+    if (!d || d.source !== 'il-motion') return;
+    if (d.type === 'speed') K.LAB.speed = Math.max(0.05, Number(d.value) || 1);
+    if (d.type === 'step') { clearInterval(auto); K.wave(d.value > 0 ? 1 : -1); }
+    if (d.type === 'spread') K.LAB.spread = Math.min(1, Math.max(0, Number(d.value) || 0));
+    if (d.type === 'breathe') K.LAB.breathe = Boolean(d.value);
+    if (d.type === 'autoplay') autoplay(Boolean(d.value));
+  });
+  // a press on the letter takes over from autoplay
+  document.getElementById('c').addEventListener('pointerdown', () => clearInterval(auto));
+  if (parent !== window) {
+    let lastText = '';
+    const report = () => {
+      const pressed = K.buttons.filter(b => b.state === 'click').length;
+      const raised = K.buttons.filter(b => b.state === 'hower').length;
+      const text = K.queue.length ? `PRESS WAVE · ${pressed + raised} KEYS MOVING`
+        : pressed ? `${pressed} KEY${pressed > 1 ? 'S' : ''} PRESSED`
+        : raised ? `${raised} KEY${raised > 1 ? 'S' : ''} RAISED`
+        : `229 KEYS · ${K.LAB.breathe ? (K.LAB.spread > 0 ? 'BREATHING IN A WAVE' : 'BREATHING IN UNISON') : 'AT REST'}`;
+      if (text !== lastText) { lastText = text; parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*'); }
+      setTimeout(() => requestAnimationFrame(report), 120);
+    };
+    requestAnimationFrame(report);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+/* InstaLanding design system · Murmur · murmur@1.0.0
+   Extracted from https://instalanding.ai/demos/murmur-swarm-tickets.html
+   Font: Oswald 200-700 (Google Fonts) */
+:root {
+  /* Color · core */
+  --mu-paper: #FBFAFF;
+  --mu-ink: #101117;
+  --mu-white: #FFFFFF;
+  --mu-blush: #F6E4E4;
+  --mu-petal: #F2C4C4;
+  --mu-albedo: #C7A5A5;
+  --mu-rose: #B76E79;
+  --mu-red: #E0435A;
+  --mu-live: #D6405A;
+  --mu-haze: #ECF0FB;
+
+  /* Color · holographic */
+  --mu-holo-pink: #F4A7C0;
+  --mu-holo-violet: #9B7FD1;
+  --mu-holo-cyan: #7CC3DD;
+  --mu-peach: #F7DCCF;
+  --mu-clay: #DCA79C;
+  --mu-copper: #D39A8D;
+
+  /* Color · foil */
+  --mu-foil-blush: #FBE3EA;
+  --mu-foil-pink: #FFB8CF;
+  --mu-foil-lilac: #EADAFF;
+  --mu-foil-cream: #FFF4F0;
+  --mu-foil-candy: #FFC9DC;
+  --mu-foil-sky: #DCEFFF;
+  --mu-ring-pink: #FFC2D8;
+  --mu-ring-lilac: #F6ECFF;
+
+  /* Color · spheres */
+  --mu-orb-hi: #FFF1F1;
+  --mu-orb-light: #FFB3B3;
+  --mu-orb-pink: #F26D6D;
+  --mu-orb-shade: #C23B4A;
+  --mu-gold-hi: #FFF6EF;
+  --mu-gold-light: #F4D3C4;
+  --mu-gold-mid: #D8A092;
+  --mu-gold-shade: #9C5A63;
+  --mu-pearl-light: #FBF6FF;
+  --mu-pearl-mid: #E6DAF0;
+  --mu-pearl-shade: #B9A6C6;
+  --mu-inkorb-mid: #8A6A78;
+  --mu-inkorb-deep: #2B2533;
+  --mu-inkorb-shade: #0B0B10;
+  --mu-sphere-hi: #FFF0F0;
+  --mu-sphere: #FFC4C4;
+  --mu-sphere-shade: #F09CA2;
+
+  /* Color · lines */
+  --mu-line: rgba(16, 17, 23, 0.12);
+  --mu-tear: rgba(16, 17, 23, 0.25);
+  --mu-tear-on-ink: rgba(251, 250, 255, 0.3);
+  --mu-mail-line: rgba(16, 17, 23, 0.3);
+  --mu-tag-bg: rgba(16, 17, 23, 0.88);
+  --mu-title-ink: rgba(16, 17, 23, 0.9);
+
+  /* Color · gradients */
+  --mu-page: linear-gradient(to right, var(--mu-paper) 0%, 40%, var(--mu-paper) 80%, 90%, var(--mu-haze) 100%);
+  --mu-gold: linear-gradient(135deg, var(--mu-peach) 0%, var(--mu-clay) 45%, var(--mu-rose) 100%);
+  --mu-holo: linear-gradient(115deg, var(--mu-rose) 0%, var(--mu-red) 16%, var(--mu-holo-pink) 30%, var(--mu-holo-violet) 45%, var(--mu-holo-cyan) 57%, var(--mu-peach) 69%, var(--mu-copper) 82%, var(--mu-rose) 100%);
+  --mu-holo-rule: linear-gradient(90deg, var(--mu-rose), var(--mu-red), var(--mu-holo-violet), var(--mu-holo-cyan));
+  --mu-orb: radial-gradient(circle at 32% 28%, var(--mu-orb-hi) 0%, var(--mu-orb-light) 20%, var(--mu-orb-pink) 58%, var(--mu-orb-shade) 100%);
+  --mu-sphere-fill: radial-gradient(circle at 36% 30%, var(--mu-sphere-hi) 0%, var(--mu-sphere) 36%, var(--mu-sphere-shade) 100%);
+  --mu-orb-gold: radial-gradient(circle at 32% 28%, var(--mu-gold-hi) 0%, var(--mu-gold-light) 22%, var(--mu-gold-mid) 58%, var(--mu-gold-shade) 100%);
+
+  /* Type · families */
+  --mu-font-display: "Oswald", "Arial Narrow", sans-serif;
+  --mu-font-text: "Oswald", "Arial Narrow", sans-serif;
+
+  /* Type · scale */
+  --mu-display-numeral: 160px;
+  --mu-display-cta: 132px;
+  --mu-display-section: 104px;
+  --mu-display-step: 80px;
+  --mu-display-quote: 68px;
+  --mu-display-marquee: 56px;
+  --mu-display-stat: 52px;
+  --mu-statement: 46px;
+  --mu-display-ticket: 44px;
+  --mu-display-brand: 42px;
+  --mu-h2: 34px;
+  --mu-lede: 17px;
+  --mu-body: 16px;
+  --mu-caption: 13px;
+  --mu-micro: 10px;
+
+  /* Shape · radii */
+  --mu-radius-wide: 20px;
+  --mu-radius-ticket: 16px;
+  --mu-radius-stub: 12px;
+  --mu-radius-rule: 6px;
+  --mu-radius-pill: 50px;
+  --mu-radius-tag: 999px 0;
+
+  /* Shape · borders */
+  --mu-hair: 1px;
+  --mu-tear-w: 2px;
+  --mu-rule: 3px;
+
+  /* Shape · die-cut */
+  --mu-ticket-stub: 96px;
+  --mu-ticket-notch: 13px;
+  --mu-ticket-perf: 6px;
+  --mu-ticket-stub-wide: 320px;
+  --mu-ticket-notch-wide: 16px;
+  --mu-perf-pitch: 20px;
+
+  /* Depth · foil, spheres and glow */
+  --mu-shadow-ticket-1: 0 2px 2px rgba(120, 40, 60, 0.1);
+  --mu-shadow-ticket-2: 0 10px 12px rgba(120, 40, 60, 0.12);
+  --mu-shadow-ticket-3: 0 30px 40px rgba(120, 40, 60, 0.16);
+  --mu-shadow-orb: 0 30px 50px -22px rgba(194, 59, 74, 0.5);
+  --mu-shadow-orb-gold: 0 30px 50px -22px rgba(156, 90, 99, 0.5);
+  --mu-shadow-orb-pearl: 0 30px 50px -22px rgba(120, 90, 140, 0.45);
+  --mu-shadow-orb-ink: 0 30px 50px -22px rgba(0, 0, 0, 0.7);
+  --mu-shadow-swarm: 0 24px 36px rgba(194, 59, 74, 0.14);
+  --mu-glow-numeral: 0 8px 18px rgba(183, 110, 121, 0.25);
+  --mu-ring-dot: 0 0 0 3px rgba(183, 110, 121, 0.2);
+
+  /* Motion · easing */
+  --mu-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --mu-ease: ease-in-out;
+
+  /* Motion · durations */
+  --mu-dur-sheen: 0.3s;
+  --mu-dur-fade: 0.5s;
+  --mu-dur-wipe: 0.5s;
+  --mu-dur-open: 0.7s;
+  --mu-dur-draw: 0.8s;
+  --mu-dur-orb: 0.9s;
+  --mu-dur-swarm-in: 1.1s;
+  --mu-dur-breathe: 1.6s;
+  --mu-dur-intro: 2.4s;
+  --mu-dur-float: 4.5s;
+  --mu-dur-sweep: 6s;
+  --mu-dur-holo: 7s;
+  --mu-dur-drift: 9s;
+  --mu-dur-marquee: 32s;
+
+  /* Motion · swarm */
+  --mu-breathe: 5px;
+  --mu-swarm-stagger: 14ms;
+  --mu-push: 26px;
+
+  /* Space · layout */
+  --mu-gutter: 20px;
+  --mu-section: 140px;
+  --mu-head-gap: 70px;
+  --mu-hero-h: min(100dvh, 900px);
+}
