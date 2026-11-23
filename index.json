@@ -2,8 +2,68 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 96,
+  "count": 97,
   "pages": [
+    {
+      "slug": "seam-ai-tennis-coach-page",
+      "title": "Seam AI Tennis Coach Page",
+      "description": "A near-black page for an AI tennis coach told from the ball's point of view: a 1300vh scroll-driven three.js film dives through the felt, the seam and the strings, rides a serve over the net with a live speed-and-spin readout and calls it in, then hands over to tennis-lime product sections",
+      "category": "web",
+      "theme": "dark",
+      "added": "Nov 23, 2026",
+      "bestFor": [
+        "sports tech and fitness apps",
+        "AI products with a computer-vision story",
+        "consumer hardware and app launches",
+        "scroll-story product reveals"
+      ],
+      "style": [
+        "dark",
+        "webgl",
+        "scroll-driven",
+        "serif-display",
+        "lime-accent",
+        "cinematic"
+      ],
+      "sections": [
+        "nav",
+        "story",
+        "manifesto",
+        "showcase",
+        "how-it-works",
+        "features",
+        "stats",
+        "app",
+        "pricing",
+        "faq",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Instrument Serif",
+          "Inter Tight",
+          "JetBrains Mono"
+        ],
+        "features": [
+          "webgl",
+          "canvas-2d",
+          "inline-svg",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/seam-ai-tennis-coach-page/index.html",
+        "prompt": "pages/seam-ai-tennis-coach-page/PROMPT.md",
+        "preview": "pages/seam-ai-tennis-coach-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/seam-ai-tennis-coach.html",
+      "page": "https://instalanding.ai/prompt/seam-ai-tennis-coach-page"
+    },
     {
       "slug": "oishi-taiyaki-ice-cream-page",
       "title": "Oishi Taiyaki Ice Cream Page",
