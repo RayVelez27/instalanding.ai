@@ -480,7 +480,7 @@
 :where(.mu) .mu-btn--nav { padding: 9px 16px; font-size: 12px; gap: 7px; }
 }
 :where(.mu) .mu-swarm { position: relative; width: 100%; aspect-ratio: 1.804; pointer-events: none; filter: drop-shadow(var(--mu-shadow-swarm)); }
-:where(.mu) .mu-swarm i { position: absolute; left: var(--mu-x); top: var(--mu-y); width: var(--mu-s); aspect-ratio: 1; border-radius: 50%; background: var(--mu-sphere-fill); pointer-events: auto; transform: translate(calc(-50% + var(--mu-px, 0px)), calc(-50% + var(--mu-py, 0px))); transition: transform var(--mu-dur-orb) var(--mu-ease-out); animation: mu-swarm-in var(--mu-dur-swarm-in) var(--mu-ease-out) calc(var(--mu-i) * var(--mu-swarm-stagger)) both, swarm-breathe var(--mu-dur-breathe) var(--mu-ease) calc(var(--mu-i) * var(--mu-dur-breathe) / -16) infinite alternate; }
+:where(.mu) .mu-swarm i { position: absolute; left: var(--mu-x); top: var(--mu-y); width: var(--mu-s); aspect-ratio: 1; border-radius: 50%; background: var(--mu-sphere-fill); pointer-events: auto; transform: translate(calc(-50% + var(--mu-px, 0px)), calc(-50% + var(--mu-py, 0px))); transition: transform var(--mu-dur-orb) var(--mu-ease-out); animation: mu-swarm-in var(--mu-dur-swarm-in) var(--mu-ease-out) calc(var(--mu-i) * var(--mu-swarm-stagger)) both, mu-swarm-breathe var(--mu-dur-breathe) var(--mu-ease) calc(var(--mu-i) * var(--mu-dur-breathe) / -16) infinite alternate; }
 :where(.mu) .mu-swarm i.mu-gold { background: var(--mu-orb-gold); }
 :where(.mu) .mu-swarm.mu-paused i { animation-play-state: running, paused; }
 @keyframes mu-swarm-in {from { top: 135%; opacity: 0; scale: 0.6; }}

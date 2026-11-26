@@ -1,0 +1,102 @@
+/* InstaLanding design system · Nimbus · nimbus@1.0.0
+   Extracted from https://instalanding.ai/demos/nimbus-ai-assistant.html
+   Fonts (Google Fonts): Instrument Serif (h1, h2, prices, menu, wordmark), Inter 400-700 (everything else) */
+:root {
+  /* Color · core */
+  --nb-bg: #F6F6F6;
+  --nb-white: #FFFFFF;
+  --nb-ink: #0C0C0C;
+  --nb-grey: #4D4D4D;
+  --nb-muted: #BFBFBF;
+  --nb-line: #EBEBEB;
+
+  /* Color · coral */
+  --nb-accent: #FF462E;
+  --nb-coral: #FF6B4A;
+  --nb-accent-08: color-mix(in srgb, var(--nb-accent) 8%, transparent);
+  --nb-accent-16: color-mix(in srgb, var(--nb-accent) 16%, transparent);
+  --nb-accent-soft: color-mix(in srgb, var(--nb-accent) 5%, #FFFFFF);
+
+  /* Color · sky */
+  --nb-sky-top: #07588A;
+  --nb-sky-bottom: #E1F6F4;
+  --nb-sky: linear-gradient(180deg, var(--nb-sky-top) 0%, var(--nb-sky-bottom) 100%);
+  --nb-frost: #BFE3EF;
+
+  /* Color · night and status */
+  --nb-night: #07090C;
+  --nb-phone: #111111;
+  --nb-live: #3DDC97;
+  --nb-up: #18A058;
+
+  /* Type · families */
+  --nb-font-serif: "Instrument Serif", Georgia, serif;
+  --nb-font-sans: "Inter", system-ui, sans-serif;
+
+  /* Type · scale */
+  --nb-wordmark: clamp(110px, 27vw, 400px);
+  --nb-h1: 72px;
+  --nb-h1-tablet: 60px;
+  --nb-h1-phone: 48px;
+  --nb-display-int: 66px;
+  --nb-display-int-phone: 44px;
+  --nb-h2: 58px;
+  --nb-h2-tablet: 48px;
+  --nb-h2-phone: 38px;
+  --nb-price: 58px;
+  --nb-tagline: 52px;
+  --nb-tagline-phone: 40px;
+  --nb-menu: 34px;
+  --nb-h3: 30px;
+  --nb-h3-tablet: 26px;
+  --nb-h3-phone: 24px;
+  --nb-h4: 22px;
+  --nb-lead: 19px;
+  --nb-body: 16px;
+  --nb-small: 14px;
+  --nb-tag: 13px;
+
+  /* Shape · radii */
+  --nb-r: 10px;
+  --nb-r-tag: 15px;
+  --nb-r-card: 22px;
+  --nb-r-sheet: 30px;
+  --nb-r-panel: 32px;
+  --nb-r-screen: 36px;
+  --nb-r-footer: 40px;
+  --nb-r-phone: 46px;
+  --nb-r-pill: 999px;
+
+  /* Shape · borders */
+  --nb-hairline: 1px;
+
+  /* Depth · shadow and glass */
+  --nb-shadow: 0 16px 40px rgba(0,0,0,.05);
+  --nb-shadow-phone: 0 30px 60px rgba(0,0,0,.25);
+  --nb-shadow-panel: 0 50px 90px -40px rgba(0,0,0,.45);
+  --nb-glass: rgba(255,255,255,.1);
+  --nb-blur: blur(22px) saturate(170%);
+  --nb-tilt: 6deg;
+
+  /* Motion · easing */
+  --nb-ease: cubic-bezier(.2,.8,.2,1);
+
+  /* Motion · durations */
+  --nb-dur-quick: .25s;
+  --nb-dur: .5s;
+  --nb-dur-slide: .6s;
+  --nb-dur-carousel: 5s;
+  --nb-dur-drift: 14s;
+  --nb-dur-ticker: 30s;
+  --nb-orbit-1: 46s;
+  --nb-orbit-2: 70s;
+  --nb-orbit-3: 100s;
+
+  /* Space · layout */
+  --nb-maxw: 1300px;
+  --nb-gutter: 40px;
+  --nb-gutter-phone: 20px;
+  --nb-sec: 100px;
+  --nb-sec-phone: 40px;
+  --nb-gap: 8px;
+}

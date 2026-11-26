@@ -2,8 +2,66 @@
   "name": "InstaLanding.ai",
   "url": "https://instalanding.ai",
   "license": "MIT",
-  "count": 97,
+  "count": 98,
   "pages": [
+    {
+      "slug": "paste-up-travel-journal-page",
+      "title": "Paste-Up Travel Journal Page",
+      "description": "A cobalt scrapbook page for a travel journal app that pastes itself: three taped photo prints and a postage stamp that fly onto loose paper sheets and drift with the pointer, ransom-note titles cut letter by letter from six typefaces, and a tilted tape marquee",
+      "category": "web",
+      "theme": "dark",
+      "added": "Nov 25, 2026",
+      "bestFor": [
+        "travel and photo apps",
+        "journaling and memory-keeping products",
+        "consumer mobile app launches",
+        "playful creative tools"
+      ],
+      "style": [
+        "scrapbook",
+        "collage",
+        "ransom-note-type",
+        "cobalt",
+        "editorial",
+        "css-only-motion"
+      ],
+      "sections": [
+        "hero",
+        "nav",
+        "how",
+        "details",
+        "trip",
+        "pricing",
+        "cta",
+        "footer"
+      ],
+      "stack": {
+        "format": "single-file-html",
+        "buildStep": false,
+        "libraries": [],
+        "fonts": [
+          "Abril Fatface",
+          "Alfa Slab One",
+          "Anton",
+          "Archivo Black",
+          "Courier Prime",
+          "Playfair Display"
+        ],
+        "features": [
+          "inline-svg",
+          "inlined-images",
+          "reduced-motion"
+        ]
+      },
+      "credits": [],
+      "files": {
+        "html": "pages/paste-up-travel-journal-page/index.html",
+        "prompt": "pages/paste-up-travel-journal-page/PROMPT.md",
+        "preview": "pages/paste-up-travel-journal-page/preview.jpg"
+      },
+      "liveDemo": "https://instalanding.ai/demos/paste-up-travel-journal.html",
+      "page": "https://instalanding.ai/prompt/paste-up-travel-journal-page"
+    },
     {
       "slug": "seam-ai-tennis-coach-page",
       "title": "Seam AI Tennis Coach Page",

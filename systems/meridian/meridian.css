@@ -362,7 +362,8 @@ em.md-serif,
 }
 .md-s1 h3 em { background-image: linear-gradient(0deg, #dfe5ee 0%, #fffaf6 50%); filter: url(#md-glow-warm); }
 .md-ballot-copy h4 em { background: linear-gradient(0deg, var(--md-green) 0%, #d9f7df 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: url(#md-glow-green); padding: 0 0.06em; }
-:where(.md) h1 em { display: inline-block; animation: accent-in 1.2s ease-out both; animation-delay: 0.9s; }
+:where(.md) h1 em { display: inline-block; animation: md-accent-in 1.2s ease-out both; animation-delay: 0.9s; }
+@keyframes md-accent-in { 0% { scale: 0.985; opacity: 0.85; } 100% { scale: 1; opacity: 1; } }
 .md-hero-sub,
 .md-section-sub,
 .md-travel-copy p,

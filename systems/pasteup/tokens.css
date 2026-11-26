@@ -1,0 +1,110 @@
+/* InstaLanding design system · Paste-Up · pasteup@1.0.0
+   Extracted from https://instalanding.ai/demos/paste-up-travel-journal.html
+   Fonts: Anton, Alfa Slab One, Abril Fatface, Archivo Black, Playfair Display italic 900
+   and Courier Prime 700 (Google Fonts). Textures: tex-*.png/jpg beside pasteup.css */
+:root {
+  /* Color · core */
+  --pu-cobalt: #1B3FD0;
+  --pu-yellow: #FFD21E;
+  --pu-paper: #F6F5F1;
+  --pu-ink: #16130F;
+  --pu-pink: #FF9AB5;
+  --pu-red: #E23A26;
+  --pu-white: #FFFFFF;
+
+  /* Color · paper & text */
+  --pu-photo-blank: #D8D2C6;
+  --pu-ink-soft: #3A342C;
+  --pu-ink-copy: #2D2822;
+  --pu-spent: #C9CEDE;
+  --pu-spent-ink: #4A5270;
+  --pu-print: #F8F6F0;
+
+  /* Shade · rgb channels (used as rgb(var(--pu-shade) / alpha)) */
+  --pu-shade: 4 10 60;
+  --pu-shade-deep: 3 8 52;
+  --pu-glow-hi: 120 155 255;
+  --pu-glow-lo: 70 110 255;
+
+  /* Type · families */
+  --pu-font-body: "Courier Prime", ui-monospace, monospace;
+  --pu-font-anton: "Anton", Impact, sans-serif;
+  --pu-font-slab: "Alfa Slab One", Rockwell, serif;
+  --pu-font-fat: "Abril Fatface", Didot, serif;
+  --pu-font-black: "Archivo Black", "Arial Black", sans-serif;
+  --pu-font-italic: "Playfair Display", Georgia, serif;
+
+  /* Type · scale */
+  --pu-serif: clamp(58px, 6.6vw, 92px);
+  --pu-h2-scrap: 56px;
+  --pu-h3-card: 24px;
+  --pu-h3: 22px;
+  --pu-price: 48px;
+  --pu-lead: 19px;
+  --pu-body: 17px;
+  --pu-copy: 16px;
+  --pu-label: 15px;
+  --pu-marquee-size: 17px;
+
+  /* Shape · radii */
+  --pu-radius: 0;
+  --pu-radius-round: 50%;
+
+  /* Shape · borders */
+  --pu-rule: 1.5px;
+  --pu-rule-bold: 2px;
+
+  /* Shape · cuts (clip-path edges) */
+  --pu-cut-0: polygon(3% 5%,97% 0%,100% 94%,5% 100%);
+  --pu-cut-1: polygon(0% 4%,52% 0%,100% 6%,96% 100%,4% 95%);
+  --pu-cut-2: polygon(5% 0%,100% 4%,95% 100%,48% 97%,0% 99%);
+  --pu-cut-3: polygon(1% 7%,98% 2%,100% 58%,97% 100%,3% 94%);
+  --pu-rag-1: polygon(.5% 1.4%,31% 0%,68% 1.1%,99.5% .2%,100% 47%,99% 99.2%,61% 100%,27% 98.6%,.2% 99.7%,0% 52%);
+  --pu-rag-2: polygon(1.2% .3%,52% .9%,98.6% 0%,100% 38%,99.2% 99.6%,44% 100%,0% 98.8%,.8% 55%);
+  --pu-rag-3: polygon(0% .9%,43% 0%,99.7% 1.6%,99% 51%,100% 98.8%,57% 100%,1% 99.1%,.4% 44%);
+
+  /* Depth · shadows */
+  --pu-shadow-paper: 0 1px 2px rgb(var(--pu-shade) / .45), 0 22px 48px -10px rgb(var(--pu-shade-deep) / .6);
+  --pu-shadow-print: 0 1px 2px rgb(var(--pu-shade) / .45), 0 4px 8px rgb(var(--pu-shade) / .25), 0 28px 56px -14px rgb(var(--pu-shade-deep) / .65);
+  --pu-shadow-marquee: 0 2px 3px rgb(var(--pu-shade) / .5), 0 12px 26px rgb(var(--pu-shade-deep) / .45);
+
+  /* Lift · drop-shadow filters (paper casts its shadow by its cut outline) */
+  --pu-drop-scrap: drop-shadow(0 1px .6px rgb(var(--pu-shade) / .5)) drop-shadow(0 3px 5px rgb(var(--pu-shade) / .34));
+  --pu-drop-print: drop-shadow(0 1px 1px rgb(var(--pu-shade) / .5)) drop-shadow(0 5px 9px rgb(var(--pu-shade) / .38));
+  --pu-drop-label: drop-shadow(0 1px .6px rgb(var(--pu-shade) / .45)) drop-shadow(0 2px 3px rgb(var(--pu-shade) / .3));
+  --pu-drop-stamp: drop-shadow(0 2px 2px rgb(var(--pu-shade) / .45)) drop-shadow(0 10px 16px rgb(var(--pu-shade) / .4));
+  --pu-tape-filter: sepia(.35) saturate(1.5) brightness(1.07) contrast(1.06) drop-shadow(0 1px 1px rgb(var(--pu-shade) / .32));
+  --pu-glow-serif: 0 3px 18px rgb(var(--pu-shade-deep) / .45);
+
+  /* Motion · easing */
+  --pu-ease-print: cubic-bezier(.3,.6,.3,1);
+  --pu-ease-stick: cubic-bezier(.2,.9,.3,1.2);
+  --pu-ease-land: cubic-bezier(.2,.9,.3,1.25);
+  --pu-ease-rise: cubic-bezier(.2,.8,.2,1);
+  --pu-ease-draw: cubic-bezier(.6,0,.2,1);
+  --pu-ease-layer: cubic-bezier(.2,.7,.2,1);
+
+  /* Motion · durations */
+  --pu-dur-hover: 160ms;
+  --pu-dur-stick: .2s;
+  --pu-dur-land: .5s;
+  --pu-dur-layer: .5s;
+  --pu-dur-drop: .7s;
+  --pu-dur-rise: .8s;
+  --pu-dur-sheet: .9s;
+  --pu-dur-print: .9s;
+  --pu-dur-draw: .9s;
+  --pu-dur-marquee: 38s;
+  --pu-land-stagger: 70ms;
+
+  /* Space · layout */
+  --pu-wrap: 1240px;
+  --pu-wrap-hero: 1320px;
+  --pu-gutter: 32px;
+  --pu-section-top: 90px;
+  --pu-section-bottom: 110px;
+  --pu-grain-size: 1080px;
+  --pu-paper-tile: 128px 80px;
+  --pu-marquee-tilt: -1.6deg;
+  --pu-hover-lift: -3px;
+}
