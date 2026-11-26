@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<!--
+  Lintel L1 Agent Terminal (InstaLanding.ai PRODUCTS)
+  page:    https://instalanding.ai/products/lintel-terminal
+  licence: MIT for this file. Lintel is a fictional brand.
+
+  MAP
+  - One SVG drawn in code: an isometric projection P(x, y, z) builds the case, the display
+    wedge, the speaker grille, the knob and the four keys (Run, Talk, Approve, Reject).
+  - STATES: the agent session on the screen (review -> applied -> building -> serial log ->
+    committed; reject -> hold Talk -> revised). ON maps each key to the next state.
+  - Keys travel with the original key-press easing curves; the click is the original
+    sample (AUDIO_B64, FLAC), played through Web Audio after the first press.
+  - The knob scrolls the screen in detents: drag it, use the wheel, or the arrow keys.
+  - Fonts: Space Grotesk and JetBrains Mono from Google Fonts.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lintel L1 — interactive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; height: 100%; background: #898FFF; color: #000; font-family: 'Space Grotesk', system-ui, sans-serif; }
+  body { display: flex; flex-direction: column; min-height: 100vh; }
+  header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 22px 32px 0; }
+  .brand { font-weight: 700; letter-spacing: .08em; font-size: 18px; display: flex; gap: 10px; align-items: center; }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: .08em; }
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 16px; min-height: 0; }
+  #dev { width: min(100%, 1200px); height: auto; max-height: calc(100vh - 150px); overflow: visible; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+  .key { cursor: pointer; outline: none; }
+  .knob { cursor: grab; outline: none; }
+  .knob.dragging { cursor: grabbing; }
+  footer { padding: 0 32px 24px; display: flex; flex-wrap: wrap; gap: 10px 22px; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  @media (max-height: 460px) {
+    header { padding: 10px 14px 0; }
+    .brand { font-size: 14px; }
+    .tag { font-size: 10px; }
+    footer { display: none; }
+    main { padding: 4px 8px; }
+    #dev { max-height: calc(100vh - 46px); }
+  }
+  kbd { font-family: inherit; background: #F8F8F8; border: 2px solid #000; box-shadow: 0 3px 0 #000; padding: 1px 7px; margin-right: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <svg width="30" height="24" viewBox="0 0 30 24" aria-hidden="true"><path d="M2 9 L14 3 L28 5 L16 11 Z" fill="#F8F8F8" stroke="#000" stroke-width="2" stroke-linejoin="round"/><path d="M2 9 L16 11 L16 19 L2 17 Z" fill="#8F8DFA" stroke="#000" stroke-width="2" stroke-linejoin="round"/><path d="M16 11 L28 5 L28 13 L16 19 Z" fill="#7F7DEA" stroke="#000" stroke-width="2" stroke-linejoin="round"/></svg>
+    LINTEL
+  </div>
+  <div class="tag">AGENT TERMINAL · MODEL L1</div>
+</header>
+<main>
+  <svg id="dev" xmlns="http://www.w3.org/2000/svg" role="application" aria-label="Interactive Lintel L1 terminal">
+    <defs>
+      <clipPath id="keyClip" clipPathUnits="userSpaceOnUse"><path id="keyClipPath"/></clipPath>
+      <clipPath id="glassClip" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="315" height="193"/></clipPath>
+      <clipPath id="bodyClip" clipPathUnits="userSpaceOnUse"><rect x="0" y="30" width="315" height="123"/></clipPath>
+    </defs>
+    <g id="static"></g>
+    <g id="screen"></g>
+    <g id="led"></g>
+    <g id="knob" class="knob" tabindex="0" role="slider" aria-label="Scroll knob" aria-valuemin="0" aria-valuenow="0"></g>
+    <g id="keys" clip-path="url(#keyClip)"></g>
+  </svg>
+</main>
+<footer>
+  <span><kbd>A</kbd>approve</span>
+  <span><kbd>X</kbd>reject</span>
+  <span><kbd>R</kbd>run</span>
+  <span><kbd>Space</kbd>hold to talk</span>
+  <span><kbd>↑</kbd><kbd>↓</kbd>or drag the knob to scroll</span>
+</footer>
+
+<script>
+const AUDIO_B64 = "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";
+(() => {
+/* ---------- projection (axes measured from the original .riv key geometry) ---------- */
+const U = [0.98949, 0.14485], V = [0.87650, -0.48138];
+const P = (x, y, z) => [x*U[0] + y*V[0], x*U[1] + y*V[1] - z];
+const f = n => Math.round(n * 10) / 10;
+const pathD = pts => 'M' + pts.map(p => f(p[0]) + ' ' + f(p[1])).join(' L') + 'Z';
+const poly = (pts, fill, sw = 2, extra = '') =>
+  `<path d="${pathD(pts)}" fill="${fill}" stroke="#000" stroke-width="${sw}" stroke-linejoin="round" ${extra}/>`;
+const line = (a, b, sw = 2) => `<path d="M${f(a[0])} ${f(a[1])} L${f(b[0])} ${f(b[1])}" stroke="#000" stroke-width="${sw}" stroke-linecap="round" fill="none"/>`;
+function box(x0, y0, z0, w, d, h, top = '#F8F8F8', front = '#898FFC', right = '#7F7DEA', band) {
+  const x1 = x0 + w, y1 = y0 + d, z1 = z0 + h;
+  let s = poly([P(x0,y0,z0), P(x1,y0,z0), P(x1,y0,z1), P(x0,y0,z1)], front) +
+          poly([P(x1,y0,z0), P(x1,y1,z0), P(x1,y1,z1), P(x1,y0,z1)], right) +
+          poly([P(x0,y0,z1), P(x1,y0,z1), P(x1,y1,z1), P(x0,y1,z1)], top, 2, 'data-top="1"');
+  if (band) { const zb = z0 + band; s += line(P(x0,y0,zb), P(x1,y0,zb)) + line(P(x1,y0,zb), P(x1,y1,zb)); }
+  return s;
+}
+function hull(pts) {
+  pts = pts.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const cr = (o, a, b) => (a[0]-o[0])*(b[1]-o[1]) - (a[1]-o[1])*(b[0]-o[0]);
+  const lo = [], up = [];
+  for (const p of pts) { while (lo.length >= 2 && cr(lo[lo.length-2], lo[lo.length-1], p) <= 0) lo.pop(); lo.push(p); }
+  for (const p of pts.slice().reverse()) { while (up.length >= 2 && cr(up[up.length-2], up[up.length-1], p) <= 0) up.pop(); up.push(p); }
+  return lo.slice(0, -1).concat(up.slice(0, -1));
+}
+const circle = (cx, cy, z, r, n = 48) => Array.from({length: n}, (_, i) => { const t = i * 2 * Math.PI / n; return P(cx + r*Math.cos(t), cy + r*Math.sin(t), z); });
+
+/* ---------- device geometry (same as the landing-page hero) ---------- */
+const W = 640, D = 330, H = 40;
+const WELL = { x: 396, y: 26, w: 222, d: 276 };
+const DISP = { x: 24, y: 150, w: 346, d: 160, h0: 16, h1: 128 };
+const KNOB = { x: 120, y: 72, r: 46, h: 18 };
+const KW = 94, KD = 118, KG = 14, TRAVEL = 16, DEPTH = 11;
+
+const svg = document.getElementById('dev');
+const $ = id => document.getElementById(id);
+
+let st = '';
+st += poly([P(-34,-10,-46), P(W-34,-10,-46), P(W-34,D-10,-46), P(-34,D-10,-46)], '#000');
+st += box(0, 0, 0, W, D, H, '#F8F8F8', '#898FFC', '#7F7DEA', H/2);
+st += poly([P(W, D*.30, H*.35), P(W, D*.30+46, H*.35), P(W, D*.30+46, H*.65), P(W, D*.30, H*.65)], '#F8F8F8');
+const wq = [P(WELL.x,WELL.y,H), P(WELL.x+WELL.w,WELL.y,H), P(WELL.x+WELL.w,WELL.y+WELL.d,H), P(WELL.x,WELL.y+WELL.d,H)];
+st += poly(wq, '#000');
+// display wedge
+const {x: dx, y: dy, w: dw, d: dd, h0, h1} = DISP;
+st += poly([P(dx,dy,H), P(dx+dw,dy,H), P(dx+dw,dy,H+h0), P(dx,dy,H+h0)], '#898FFC');
+st += poly([P(dx+dw,dy,H), P(dx+dw,dy+dd,H), P(dx+dw,dy+dd,H+h1), P(dx+dw,dy,H+h0)], '#7F7DEA');
+st += poly([P(dx,dy,H+h0), P(dx+dw,dy,H+h0), P(dx+dw,dy+dd,H+h1), P(dx,dy+dd,H+h1)], '#F8F8F8');
+const fp = (u, v) => P(dx + u*dw, dy + v*dd, H + h0 + v*(h1 - h0));
+const M = 0.045;
+st += poly([fp(M,.1), fp(1-M,.1), fp(1-M,.92), fp(M,.92)], '#141418');
+// speaker grille
+for (let i = 0; i < 6; i++) st += line(P(206+i*14, 40, H), P(206+i*14, 104, H), 2.4);
+$('static').innerHTML = st;
+
+// clip so sunken keys stay inside the well opening
+$('keyClipPath').setAttribute('d', pathD(hull(wq.concat(wq.map(p => [p[0], p[1] - 600])))));
+
+/* ---------- screen plane ---------- */
+const up = [dd*V[0], dd*V[1] - (h1 - h0)], upL = Math.hypot(up[0], up[1]);
+const dn = [-up[0]/upL, -up[1]/upL];
+const so = fp(M, .92);
+$('screen').setAttribute('transform', `matrix(${U[0]} ${U[1]} ${dn[0]} ${dn[1]} ${so[0]} ${so[1]})`);
+
+/* ---------- keys ---------- */
+const ICONS = {
+  check: '<path d="M-11 0 L-3 8 L12 -9"/>',
+  x: '<path d="M-9 -9 L9 9 M9 -9 L-9 9"/>',
+  run: '<path d="M-7 -10 L10 0 L-7 10 Z"/>',
+  talk: '<path d="M-15 -2 v4 M-7.5 -7 v14 M0 -11 v22 M7.5 -5 v10 M15 -1 v2"/>'
+};
+const KEYS = [   // drawn back to front
+  { id: 'run',     icon: 'run',   label: 'Run: build and flash', x: WELL.x+KG,        y: WELL.y+KG+KD+KG },
+  { id: 'talk',    icon: 'talk',  label: 'Talk: hold to speak',  x: WELL.x+KG+KW+KG,  y: WELL.y+KG+KD+KG },
+  { id: 'approve', icon: 'check', label: 'Approve',              x: WELL.x+KG,        y: WELL.y+KG },
+  { id: 'reject',  icon: 'x',     label: 'Reject',               x: WELL.x+KG+KW+KG,  y: WELL.y+KG }
+];
+const keysG = $('keys');
+for (const k of KEYS) {
+  k.g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  k.g.setAttribute('class', 'key'); k.g.setAttribute('tabindex', '0');
+  k.g.setAttribute('role', 'button'); k.g.setAttribute('aria-label', k.label);
+  keysG.appendChild(k.g);
+  k.p = 0; k.from = 0; k.to = 0; k.t0 = 0; k.dur = 1; k.ease = null; k.hover = false; k.held = false;
+}
+function drawKey(k) {
+  const top = H - 2 + TRAVEL - DEPTH * k.p;
+  const fill = k.held ? '#E4E3FF' : k.hover ? '#FFFFFF' : '#F8F8F8';
+  let s = box(k.x, k.y, H - 34, KW, KD, top - (H - 34), fill, '#8F8DFA', '#7F7DEA');
+  const c = P(k.x + KW/2, k.y + KD/2, top);
+  s += `<g transform="matrix(${U[0]} ${U[1]} ${-V[0]} ${-V[1]} ${f(c[0])} ${f(c[1])}) scale(1.45)" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[k.icon].replace('<path ', '<path vector-effect="non-scaling-stroke" ')}</g>`;
+  if (k.focus) s += poly([P(k.x+6,k.y+6,top), P(k.x+KW-6,k.y+6,top), P(k.x+KW-6,k.y+KD-6,top), P(k.x+6,k.y+KD-6,top)], 'none', 2, 'stroke-dasharray="5 4"');
+  k.g.innerHTML = s;
+}
+
+/* ---------- easing (curves from the original key-press animation) ---------- */
+function bezier(x1, y1, x2, y2) {
+  return x => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let lo = 0, hi = 1, t = x;
+    for (let i = 0; i < 30; i++) {
+      const bx = 3*(1-t)*(1-t)*t*x1 + 3*(1-t)*t*t*x2 + t*t*t;
+      if (Math.abs(bx - x) < 1e-5) break;
+      if (bx < x) lo = t; else hi = t; t = (lo + hi) / 2;
+    }
+    return 3*(1-t)*(1-t)*t*y1 + 3*(1-t)*t*t*y2 + t*t*t;
+  };
+}
+const EASE_DOWN = bezier(0.42, 0, 1, 0.0728), EASE_UP = bezier(1, 0.007, 0.58, 1);
+const FRAME = 1000 / 60;
+function tween(k, to) {
+  k.from = k.p; k.to = to; k.t0 = performance.now();
+  k.dur = (to > k.from ? 7 : 12) * FRAME * Math.max(0.35, Math.abs(to - k.from));
+  k.ease = to > k.from ? EASE_DOWN : EASE_UP;
+  loop();
+}
+
+/* ---------- sound (the click from the original .riv) ---------- */
+let actx = null, clickBuf = null;
+const bytes = Uint8Array.from(atob(AUDIO_B64), c => c.charCodeAt(0));
+function unlock() {
+  if (actx) { if (actx.state === 'suspended') actx.resume(); return; }
+  try {
+    actx = new (window.AudioContext || window.webkitAudioContext)();
+    actx.decodeAudioData(bytes.buffer.slice(0), b => { clickBuf = b; }, () => {});
+  } catch (e) {}
+}
+function click(gain = 1, rate = 1) {
+  if (!actx || !clickBuf) return;
+  const s = actx.createBufferSource(), g = actx.createGain();
+  s.buffer = clickBuf; s.playbackRate.value = rate; g.gain.value = gain;
+  s.connect(g).connect(actx.destination); s.start();
+}
+
+/* ---------- agent session ---------- */
+const C = { W: '#F8F8F8', G: '#9A9AA8', ADD: '#C9CBFF', DEL: '#FF9E9E', HEAD: '#8F8DFA' };
+const L = (t, c = C.W) => ({ t, c });
+const diff = step => [
+  L('  void motor_init(void) {', C.G),
+  L('    gpio_init(MOTOR_EN);', C.G),
+  L('    pwm_init(MOTOR_A, 20000);', C.G),
+  L('-   pwm_set_duty(MOTOR_A, 40);', C.DEL),
+  L('+   /* ramp: avoid boot stall */', C.ADD),
+  L(`+   for (int d=0; d<=40; d+=${step}) {`, C.ADD),
+  L('+     pwm_set_duty(MOTOR_A, d);', C.ADD),
+  L('+     sleep_ms(10);', C.ADD),
+  L('+   }', C.ADD),
+  L('    gpio_set(MOTOR_EN, 1);', C.G),
+  L('  }', C.G)
+];
+const STATES = {
+  review:    { head: 'EDIT · src/motor.c  +6 -1', body: diff(5), prompt: '✓ apply  ✕ reject' },
+  rejected:  { head: 'REJECTED', body: [L('Edit discarded.', C.G), L('Nothing was written.', C.G), L(''), L('Tell the agent what to change.')], prompt: 'hold ≋ talk and say why' },
+  listening: { head: 'LISTENING', body: [], prompt: 'release to send' },
+  revised:   { head: 'REVISED · src/motor.c  +6 -1', body: diff(2), prompt: '✓ apply  ✕ reject' },
+  approved:  { head: 'APPLIED', body: [L('wrote src/motor.c', C.G), L('target  rover-fw (debug)', C.G), L('board   /dev/ttyACM0', C.G), L(''), L('Ready to build and flash.')], prompt: '▶ run to build + flash' },
+  running:   { head: 'BUILDING', body: [L('$ make flash', C.G), L('[cc] src/motor.c'), L('[ld] rover-fw.elf  41.2 KB')], prompt: 'flashing…' },
+  done:      { head: 'SERIAL · 115200', body: [L('flash ok  rover-fw@a41c', C.ADD), L('[boot] motor ramp 0..40%'), L('[boot] stall check   pass'), L('[boot] ready'), L(''), L('agent: stall fixed. Commit?', C.ADD)], prompt: '✓ commit  ✕ keep editing' },
+  committed: { head: 'COMMITTED', body: [L('a41c motor: ramp PWM on boot', C.ADD), L(''), L('Session done.', C.G), L('Ask for the next thing.', C.G)], prompt: 'hold ≋ talk for a new task' }
+};
+const ON = { approve: { review: 'approved', revised: 'approved', done: 'committed' },
+             reject:  { review: 'rejected', revised: 'rejected', done: 'rejected' },
+             run:     { approved: 'running' } };
+let state = 'review', scroll = 0, stateT0 = performance.now(), talkFrom = null, runTimer = 0;
+function setState(s) {
+  state = s; scroll = 0; stateT0 = performance.now();
+  clearTimeout(runTimer);
+  if (s === 'running') runTimer = setTimeout(() => setState('done'), 1800);
+  loop();
+}
+const LH = 17, BODY_TOP = 34, VISIBLE = 7;
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const txt = (x, y, s, fill, w = 400, size = 12.5) =>
+  `<text x="${x}" y="${y}" fill="${fill}" font-size="${size}" font-weight="${w}" font-family="JetBrains Mono, ui-monospace, monospace" xml:space="preserve">${esc(s)}</text>`;
+function maxScroll() { return Math.max(0, STATES[state].body.length - VISIBLE); }
+function drawScreen(now) {
+  const S = STATES[state], t = (now - stateT0) / 1000;
+  let s = `<g clip-path="url(#glassClip)">`;
+  s += txt(12, 20, S.head, C.HEAD, 600, 11.5);
+  s += `<rect x="12" y="27" width="291" height="1" fill="#34344A"/>`;
+  s += `<g clip-path="url(#bodyClip)">`;
+  S.body.forEach((l, i) => {
+    const y = BODY_TOP + 13 + (i - scroll) * LH;
+    if (l.c === C.ADD && l.t.startsWith('+')) s += `<rect x="8" y="${y - 12}" width="299" height="${LH}" fill="#23233A"/>`;
+    if (l.c === C.DEL) s += `<rect x="8" y="${y - 12}" width="299" height="${LH}" fill="#2E1E24"/>`;
+    s += txt(12, y, l.t, l.c);
+  });
+  if (state === 'listening') {
+    for (let i = 0; i < 26; i++) {
+      const h = 6 + 40 * Math.abs(Math.sin(i * 0.7 + t * 9) * Math.cos(i * 0.23 + t * 4));
+      s += `<rect x="${20 + i * 10.5}" y="${92 - h/2}" width="6" height="${h}" fill="#C9CBFF"/>`;
+    }
+    s += txt(12, 56, '"Use smaller steps, the driver', C.W);
+    s += txt(12, 140, ' browns out above 10% a step."', C.W);
+  }
+  if (state === 'running') {
+    const p = Math.min(1, t / 1.7);
+    s += `<rect x="12" y="104" width="291" height="12" fill="none" stroke="#C9CBFF" stroke-width="1"/>`;
+    s += `<rect x="14" y="106" width="${287 * p}" height="8" fill="#C9CBFF"/>`;
+    s += txt(12, 134, `[flash] ${Math.round(p * 100)}%`, C.ADD);
+  }
+  s += `</g>`;
+  if (maxScroll() > 0) {
+    const trackH = 128, thumbH = trackH * VISIBLE / S.body.length;
+    const ty = 32 + (trackH - thumbH) * (scroll / maxScroll());
+    s += `<rect x="307" y="32" width="3" height="${trackH}" fill="#2A2A3C"/><rect x="307" y="${ty}" width="3" height="${thumbH}" fill="#8F8DFA"/>`;
+  }
+  s += `<rect x="12" y="167" width="291" height="1" fill="#34344A"/>`;
+  s += txt(12, 184, S.prompt, '#C9CBFF', 600, 12);
+  if (state !== 'running' && state !== 'listening' && Math.floor(t * 2) % 2 === 0)
+    s += `<rect x="${14 + S.prompt.length * 7.25}" y="174" width="7" height="13" fill="#C9CBFF"/>`;
+  s += `</g>`;
+  $('screen').innerHTML = s;
+}
+
+/* ---------- status LED ---------- */
+function drawLed(now) {
+  let fill = '#898FFF';
+  const t = (now - stateT0) / 1000;
+  if (state === 'running') fill = Math.floor(t * 8) % 2 ? '#F8F8F8' : '#141418';
+  else if (state === 'listening') fill = Math.floor(t * 3) % 2 ? '#C9CBFF' : '#F8F8F8';
+  else if (state === 'done' || state === 'committed') fill = '#F8F8F8';
+  $('led').innerHTML = poly(circle(320, 62, H, 7, 20), fill, 1.6);
+}
+
+/* ---------- knob ---------- */
+let knobAngle = 0, knobAcc = 0;
+function drawKnob() {
+  const {x, y, r, h} = KNOB, top = H + h;
+  const topPts = circle(x, y, top, r, 72);
+  let s = poly(hull(topPts.concat(circle(x, y, H, r, 72))), '#8F8DFA') + poly(topPts, '#F8F8F8');
+  for (let i = 0; i < 12; i++) {
+    const t = knobAngle + i * Math.PI / 6;
+    s += line(P(x + r*.62*Math.cos(t), y + r*.62*Math.sin(t), top), P(x + r*.82*Math.cos(t), y + r*.82*Math.sin(t), top), i === 0 ? 3 : 1.6);
+  }
+  s += poly(circle(x, y, top, r*.18, 24), '#000', 1);
+  $('knob').innerHTML = s;
+  $('knob').setAttribute('aria-valuenow', scroll);
+  $('knob').setAttribute('aria-valuemax', maxScroll());
+}
+function turnKnob(delta) {               // delta in radians
+  knobAngle += delta; knobAcc += delta;
+  const step = Math.PI / 7;
+  while (Math.abs(knobAcc) >= step) {
+    const dir = Math.sign(knobAcc); knobAcc -= dir * step;
+    const next = Math.min(maxScroll(), Math.max(0, scroll + dir));
+    if (next !== scroll) { scroll = next; click(0.25, 1.7); }
+  }
+  loop();
+}
+// screen point -> world (x,y) on the knob's top plane
+function toPlane(e) {
+  const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse());
+  const zx = p.x, zy = p.y + H + KNOB.h;
+  const det = U[0]*V[1] - V[0]*U[1];
+  return [(zx*V[1] - V[0]*zy) / det, (U[0]*zy - zx*U[1]) / det];
+}
+let drag = null;
+$('knob').addEventListener('pointerdown', e => {
+  unlock();
+  const [x, y] = toPlane(e);
+  drag = { a: Math.atan2(y - KNOB.y, x - KNOB.x), id: e.pointerId };
+  $('knob').setPointerCapture(e.pointerId); $('knob').classList.add('dragging');
+});
+$('knob').addEventListener('pointermove', e => {
+  if (!drag) return;
+  const [x, y] = toPlane(e), a = Math.atan2(y - KNOB.y, x - KNOB.x);
+  let d = a - drag.a; if (d > Math.PI) d -= 2*Math.PI; if (d < -Math.PI) d += 2*Math.PI;
+  drag.a = a; turnKnob(d);
+});
+const endDrag = () => { drag = null; $('knob').classList.remove('dragging'); };
+$('knob').addEventListener('pointerup', endDrag);
+$('knob').addEventListener('pointercancel', endDrag);
+$('knob').addEventListener('wheel', e => { e.preventDefault(); turnKnob(Math.sign(e.deltaY) * Math.PI / 7); }, { passive: false });
+
+/* ---------- key input ---------- */
+function press(k) {
+  if (k.held) return;
+  unlock(); k.held = true; tween(k, 1);
+  click(1, 0.96 + Math.random() * 0.08);
+  if (k.id === 'talk') {
+    if (state === 'rejected' || state === 'committed') { talkFrom = state; setState('listening'); }
+  } else {
+    const to = ON[k.id][state]; if (to) setState(to);
+  }
+}
+function release(k) {
+  if (!k.held) return;
+  k.held = false; tween(k, 0);
+  if (k.id === 'talk' && state === 'listening') {
+    const held = performance.now() - stateT0;
+    setState(held < 400 ? talkFrom : (talkFrom === 'committed' ? 'review' : 'revised'));
+  }
+}
+for (const k of KEYS) {
+  k.g.addEventListener('pointerdown', e => { e.preventDefault(); k.g.setPointerCapture(e.pointerId); press(k); });
+  k.g.addEventListener('pointerup', () => release(k));
+  k.g.addEventListener('pointercancel', () => release(k));
+  k.g.addEventListener('pointerenter', () => { k.hover = true; loop(); });
+  k.g.addEventListener('pointerleave', () => { k.hover = false; loop(); });
+  k.g.addEventListener('focus', () => { k.focus = true; loop(); });
+  k.g.addEventListener('blur', () => { k.focus = false; release(k); loop(); });
+  k.g.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) { e.preventDefault(); e.stopPropagation(); press(k); } });
+  k.g.addEventListener('keyup', e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); release(k); } });
+}
+const SHORT = { a: 'approve', x: 'reject', r: 'run', ' ': 'talk' };
+const byId = id => KEYS.find(k => k.id === id);
+document.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const id = SHORT[e.key.toLowerCase()];
+  if (id) { e.preventDefault(); if (!e.repeat) press(byId(id)); return; }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); unlock(); turnKnob((e.key === 'ArrowDown' ? 1 : -1) * Math.PI / 7); }
+});
+document.addEventListener('keyup', e => { const id = SHORT[e.key.toLowerCase()]; if (id) release(byId(id)); });
+
+/* ---------- render loop ---------- */
+let raf = 0;
+function frame(now) {
+  raf = 0;
+  let busy = state === 'running' || state === 'listening';
+  for (const k of KEYS) {
+    if (k.p !== k.to) {
+      const x = Math.min(1, (now - k.t0) / k.dur);
+      k.p = k.from + (k.to - k.from) * k.ease(x);
+      if (x >= 1) k.p = k.to; else busy = true;
+    }
+    drawKey(k);
+  }
+  drawScreen(now); drawLed(now); drawKnob();
+  clearTimeout(idleT);
+  if (busy) raf = requestAnimationFrame(frame);
+  else idleT = setTimeout(loop, 250);          // cursor blink while idle
+}
+let idleT = 0;
+function loop() { if (!raf) { clearTimeout(idleT); raf = requestAnimationFrame(frame); } }
+
+frame(performance.now());
+const bb = svg.getBBox(), pad = 24;
+svg.setAttribute('viewBox', `${bb.x - pad} ${bb.y - pad} ${bb.width + pad*2} ${bb.height + pad*2}`);
+})();
+</script>
+</body>
+</html>
