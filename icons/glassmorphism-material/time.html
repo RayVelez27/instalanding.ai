@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<!--
+  Clock icon · Glassmorphism Material
+  set:     Glassmorphism Material (InstaLanding.ai ICONS)
+  page:    https://instalanding.ai/icons/glassmorphism-material
+  licence: MIT for this file. Decoded from a Rive file and rendered by a small
+           Canvas 2D engine inlined below: no Rive runtime, no libraries.
+
+  One icon: Clock. The canvas is transparent (the purple is the page background);
+  hover it for the glass lift, spotlight and sheen. Size the <canvas> to place it.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clock · Glassmorphism Material icon</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(120% 120% at 20% 0%,#5b3f9c 0%,#2a1d5e 55%,#170f3a 100%)}
+canvas{display:block;width:100vw;height:100vh;touch-action:none}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script>
+"use strict";
+/* Scene data decoded from the original .riv file (artboards, shapes,
+   paints, animations, state machines and listeners). Rendered below by a
+   small purpose-built Canvas 2D engine - no Rive runtime involved. */
+const SCENE = [{"name":"Artboard","objs":[{"t":"Artboard","width":240,"height":240,"defaultStateMachineId":0,"name":"Artboard","clip":0},{"t":"NestedArtboard","parentId":0,"x":30,"y":30,"artboardId":1},{"t":"NestedStateMachine","parentId":1,"animationId":0},{"t":"NestedBool","parentId":2,"inputId":0}],"anims":[{"name":"Timeline 1","keyed":[]}],"sms":[{"name":"State Machine 1","inputs":[],"layers":[{"name":"Layer 1","states":[{"t":"AnyState","anim":null,"trans":[]},{"t":"ExitState","anim":null,"trans":[]},{"t":"EntryState","anim":null,"trans":[{"to":3,"dur":0,"flags":0,"interp":null,"conds":[]}]},{"t":"AnimationState","anim":0,"trans":[]}]}],"listeners":[]}]},{"name":"time","objs":[{"t":"Artboard","x":860.0,"y":320.0,"clip":0,"width":180.0,"height":180.0,"styleId":1,"defaultStateMachineId":0,"name":"time"},{"t":"LayoutComponentStyle","parentId":0,"marginLeftUnitsValue":1,"marginRightUnitsValue":1,"marginTopUnitsValue":1,"marginBottomUnitsValue":1,"paddingLeftUnitsValue":1,"paddingRightUnitsValue":1,"paddingTopUnitsValue":1,"paddingBottomUnitsValue":1,"gapHorizontalUnitsValue":1,"gapVerticalUnitsValue":1},{"t":"Shape","parentId":0,"x":88.5,"y":90.0},{"t":"Rectangle","parentId":2,"width":320.0,"height":320.0},{"t":"Node","parentId":0,"x":90.0,"y":90.0},{"t":"Node","parentId":0,"x":90.05,"y":89.75},{"t":"Shape","parentId":5,"x":-0.200027,"y":-8.35001},{"t":"PointsPath","parentId":6,"isClosed":1},{"t":"CubicDetachedVertex","parentId":7,"x":16.0,"y":17.85,"outRotation":2.63449,"outDistance":1.02956},{"t":"CubicDetachedVertex","parentId":7,"x":13.1,"y":18.25,"inRotation":0.291457,"inDistance":1.04403},{"t":"StraightVertex","parentId":7,"x":-2.1,"y":14.15},{"t":"CubicDetachedVertex","parentId":7,"x":-17.3,"y":-12.15,"outRotation":-2.11935,"outDistance":2.1095},{"t":"CubicDetachedVertex","parentId":7,"x":-15.9,"y":-17.45,"inRotation":2.59304,"inDistance":2.1095,"outRotation":-0.548549,"outDistance":2.1095},{"t":"CubicDetachedVertex","parentId":7,"x":-10.6,"y":-16.05,"inRotation":-2.11935,"inDistance":2.1095},{"t":"StraightVertex","parentId":7,"x":3.0,"y":7.55},{"t":"CubicDetachedVertex","parentId":7,"x":15.1,"y":10.85,"outRotation":0.2783,"outDistance":2.18403},{"t":"CubicDetachedVertex","parentId":7,"x":17.8,"y":15.55,"inRotation":-1.27934,"inDistance":2.08806,"outRotation":1.86225,"outDistance":1.04403},{"t":"CubicDetachedVertex","parentId":7,"x":16.0,"y":17.85,"inRotation":-0.507098,"inDistance":1.02956},{"t":"LinearGradient","parentId":203,"startX":-20.3419,"startY":-5.25672,"endX":20.4522,"endY":5.60084},{"t":"GradientStop","parentId":18,"colorValue":"#ff30f3d7"},{"t":"GradientStop","parentId":18,"colorValue":"#ff0367ed","position":1.0},{"t":"Shape","parentId":5,"x":-2.28882e-05},{"t":"PointsPath","parentId":21,"pathFlags":2,"isClosed":1},{"t":"CubicDetachedVertex","parentId":22,"x":2.84217e-14,"y":-38.7,"outRotation":3.14159,"outDistance":21.4},{"t":"CubicDetachedVertex","parentId":22,"x":-38.7,"inRotation":-1.5708,"inDistance":21.4,"outRotation":1.5708,"outDistance":21.4},{"t":"CubicDetachedVertex","parentId":22,"y":38.7,"inRotation":3.14159,"inDistance":21.4,"outRotation":0.0,"outDistance":21.4},{"t":"CubicDetachedVertex","parentId":22,"x":38.7,"inRotation":1.5708,"inDistance":21.4,"outRotation":-1.5708,"outDistance":21.4},{"t":"CubicDetachedVertex","parentId":22,"y":-38.7,"inRotation":0.0,"inDistance":21.4},{"t":"LinearGradient","parentId":204,"startX":19.4,"startY":33.6,"endX":-19.4,"endY":-33.5},{"t":"GradientStop","parentId":28,"colorValue":"#00ffffff"},{"t":"GradientStop","parentId":28,"colorValue":"#00ffffff","position":0.2},{"t":"GradientStop","parentId":28,"colorValue":"#00ffffff","position":0.4},{"t":"GradientStop","parentId":28,"colorValue":"#1affffff","position":0.6},{"t":"GradientStop","parentId":28,"colorValue":"#33ffffff","position":0.8},{"t":"GradientStop","parentId":28,"colorValue":"#66ffffff","position":1.0},{"t":"LinearGradient","parentId":205,"startX":2.84217e-14,"startY":39.3,"endX":2.84217e-14,"endY":-39.2},{"t":"GradientStop","parentId":35,"colorValue":"#00ffffff"},{"t":"GradientStop","parentId":35,"colorValue":"#00ffffff","position":0.1},{"t":"GradientStop","parentId":35,"colorValue":"#1affffff","position":0.3},{"t":"GradientStop","parentId":35,"colorValue":"#33ffffff","position":0.5},{"t":"GradientStop","parentId":35,"colorValue":"#66ffffff","position":0.7},{"t":"GradientStop","parentId":35,"colorValue":"#99ffffff","position":0.9},{"t":"GradientStop","parentId":35,"colorValue":"#b3ffffff","position":1.0},{"t":"TranslationConstraint","parentId":5,"strength":0.01,"targetId":4},{"t":"Node","parentId":0,"x":90.0,"y":90.0},{"t":"Shape","parentId":44,"rotation":1.11022e-16,"x":-38.75,"y":1.45},{"t":"Rectangle","parentId":45,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":206,"startX":-6.3,"startY":-5.09998,"endX":1.61334,"endY":5.38663},{"t":"GradientStop","parentId":47,"colorValue":"#ff30f3d7"},{"t":"GradientStop","parentId":47,"colorValue":"#ff0367ed","position":1.0},{"t":"Feather","parentId":206},{"t":"Shape","parentId":44,"rotation":1.5708,"x":0.250015,"y":38.45},{"t":"Rectangle","parentId":51,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":207,"startX":-6.9,"startY":6.8838,"endX":5.8449,"endY":-3.45282},{"t":"GradientStop","parentId":53,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":53,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":207},{"t":"Shape","parentId":44,"rotation":1.11022e-16,"x":38.75,"y":1.45},{"t":"Rectangle","parentId":57,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":208,"startX":-2.29905,"startY":-7.54828,"endX":6.80736,"endY":5.13023},{"t":"GradientStop","parentId":59,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":59,"colorValue":"#ff30f3d7","position":1.0},{"t":"Feather","parentId":208},{"t":"Shape","parentId":44,"rotation":1.5708,"x":0.450012,"y":-38.45},{"t":"Rectangle","parentId":63,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":209,"startX":-11.9,"startY":9.4,"endX":2.89149,"endY":-6.49999},{"t":"GradientStop","parentId":65,"colorValue":"#ff8328f2"},{"t":"GradientStop","parentId":65,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":209},{"t":"ClippingShape","parentId":44,"sourceId":21},{"t":"TranslationConstraint","parentId":44,"strength":-0.01,"targetId":4},{"t":"Node","parentId":0,"x":90.0,"y":90.0},{"t":"Shape","parentId":71,"rotation":1.11022e-16,"x":-38.75,"y":1.45},{"t":"Rectangle","parentId":72,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":210,"startX":-6.3,"startY":-5.09998,"endX":1.61334,"endY":5.38663},{"t":"GradientStop","parentId":74,"colorValue":"#ff30f3d7"},{"t":"GradientStop","parentId":74,"colorValue":"#ff0367ed","position":1.0},{"t":"Feather","parentId":210,"strength":8.0},{"t":"Shape","parentId":71,"rotation":1.5708,"x":0.250015,"y":38.45},{"t":"Rectangle","parentId":78,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":211,"startX":-6.9,"startY":6.8838,"endX":5.8449,"endY":-3.45282},{"t":"GradientStop","parentId":80,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":80,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":211,"strength":8.0},{"t":"Shape","parentId":71,"rotation":1.11022e-16,"x":38.75,"y":1.45},{"t":"Rectangle","parentId":84,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":212,"startX":-2.29905,"startY":-7.54828,"endX":6.80736,"endY":5.13023},{"t":"GradientStop","parentId":86,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":86,"colorValue":"#ff30f3d7","position":1.0},{"t":"Feather","parentId":212,"strength":8.0},{"t":"Shape","parentId":71,"rotation":1.5708,"x":0.450012,"y":-38.45},{"t":"Rectangle","parentId":90,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":213,"startX":-11.9,"startY":9.4,"endX":2.89149,"endY":-6.49999},{"t":"GradientStop","parentId":92,"colorValue":"#ff8328f2"},{"t":"GradientStop","parentId":92,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":213,"strength":8.0},{"t":"ClippingShape","parentId":71,"sourceId":21},{"t":"TranslationConstraint","parentId":71,"strength":-0.01,"targetId":4},{"t":"Node","parentId":0,"x":90.0,"y":90.0},{"t":"Shape","parentId":98,"rotation":1.11022e-16,"x":-38.75,"y":1.45},{"t":"Rectangle","parentId":99,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":214,"startX":-6.3,"startY":-5.09998,"endX":1.61334,"endY":5.38663},{"t":"GradientStop","parentId":101,"colorValue":"#ff30f3d7"},{"t":"GradientStop","parentId":101,"colorValue":"#ff0367ed","position":1.0},{"t":"Feather","parentId":214,"strength":6.0},{"t":"Shape","parentId":98,"rotation":1.5708,"x":0.250015,"y":38.45},{"t":"Rectangle","parentId":105,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":215,"startX":-6.9,"startY":6.8838,"endX":5.8449,"endY":-3.45282},{"t":"GradientStop","parentId":107,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":107,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":215,"strength":6.0},{"t":"Shape","parentId":98,"rotation":1.11022e-16,"x":38.75,"y":1.45},{"t":"Rectangle","parentId":111,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":216,"startX":-2.29905,"startY":-7.54828,"endX":6.80736,"endY":5.13023},{"t":"GradientStop","parentId":113,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":113,"colorValue":"#ff30f3d7","position":1.0},{"t":"Feather","parentId":216,"strength":6.0},{"t":"Shape","parentId":98,"rotation":1.5708,"x":0.450012,"y":-38.45},{"t":"Rectangle","parentId":117,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":217,"startX":-11.9,"startY":9.4,"endX":2.89149,"endY":-6.49999},{"t":"GradientStop","parentId":119,"colorValue":"#ff8328f2"},{"t":"GradientStop","parentId":119,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":217,"strength":6.0},{"t":"ClippingShape","parentId":98,"sourceId":21},{"t":"TranslationConstraint","parentId":98,"strength":-0.01,"targetId":4},{"t":"Node","parentId":0,"x":90.0,"y":90.0},{"t":"Shape","parentId":125,"rotation":1.11022e-16,"x":-38.75,"y":1.45},{"t":"Rectangle","parentId":126,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":218,"startX":-6.3,"startY":-5.09998,"endX":1.61334,"endY":5.38663},{"t":"GradientStop","parentId":128,"colorValue":"#ff30f3d7"},{"t":"GradientStop","parentId":128,"colorValue":"#ff0367ed","position":1.0},{"t":"Feather","parentId":218,"strength":4.0},{"t":"Shape","parentId":125,"rotation":1.5708,"x":0.250015,"y":38.45},{"t":"Rectangle","parentId":132,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":219,"startX":-6.9,"startY":6.8838,"endX":5.8449,"endY":-3.45282},{"t":"GradientStop","parentId":134,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":134,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":219,"strength":4.0},{"t":"Shape","parentId":125,"rotation":1.11022e-16,"x":38.75,"y":1.45},{"t":"Rectangle","parentId":138,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":220,"startX":-2.29905,"startY":-7.54828,"endX":6.80736,"endY":5.13023},{"t":"GradientStop","parentId":140,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":140,"colorValue":"#ff30f3d7","position":1.0},{"t":"Feather","parentId":220,"strength":4.0},{"t":"Shape","parentId":125,"rotation":1.5708,"x":0.450012,"y":-38.45},{"t":"Rectangle","parentId":144,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":221,"startX":-11.9,"startY":9.4,"endX":2.89149,"endY":-6.49999},{"t":"GradientStop","parentId":146,"colorValue":"#ff8328f2"},{"t":"GradientStop","parentId":146,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":221,"strength":4.0},{"t":"ClippingShape","parentId":125,"sourceId":21},{"t":"TranslationConstraint","parentId":125,"strength":-0.01,"targetId":4},{"t":"Node","parentId":0,"x":90.0,"y":90.0},{"t":"Shape","parentId":152,"rotation":1.11022e-16,"x":-38.75,"y":1.45},{"t":"Rectangle","parentId":153,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":222,"startX":-6.3,"startY":-5.09998,"endX":1.61334,"endY":5.38663},{"t":"GradientStop","parentId":155,"colorValue":"#ff30f3d7"},{"t":"GradientStop","parentId":155,"colorValue":"#ff0367ed","position":1.0},{"t":"Feather","parentId":222,"strength":2.0},{"t":"Shape","parentId":152,"rotation":1.5708,"x":0.250015,"y":38.45},{"t":"Rectangle","parentId":159,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":223,"startX":-6.9,"startY":6.8838,"endX":5.8449,"endY":-3.45282},{"t":"GradientStop","parentId":161,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":161,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":223,"strength":2.0},{"t":"Shape","parentId":152,"rotation":1.11022e-16,"x":38.75,"y":1.45},{"t":"Rectangle","parentId":165,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":224,"startX":-2.29905,"startY":-7.54828,"endX":6.80736,"endY":5.13023},{"t":"GradientStop","parentId":167,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":167,"colorValue":"#ff30f3d7","position":1.0},{"t":"Feather","parentId":224,"strength":2.0},{"t":"Shape","parentId":152,"rotation":1.5708,"x":0.450012,"y":-38.45},{"t":"Rectangle","parentId":171,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":225,"startX":-11.9,"startY":9.4,"endX":2.89149,"endY":-6.49999},{"t":"GradientStop","parentId":173,"colorValue":"#ff8328f2"},{"t":"GradientStop","parentId":173,"colorValue":"#ffde1a86","position":1.0},{"t":"Feather","parentId":225,"strength":2.0},{"t":"ClippingShape","parentId":152,"sourceId":21},{"t":"TranslationConstraint","parentId":152,"strength":-0.01,"targetId":4},{"t":"Shape","parentId":0,"rotation":1.11022e-16,"x":51.25,"y":91.45},{"t":"Rectangle","parentId":179,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":226,"startX":-6.3,"startY":-5.09998,"endX":1.61334,"endY":5.38663},{"t":"GradientStop","parentId":181,"colorValue":"#ff30f3d7"},{"t":"GradientStop","parentId":181,"colorValue":"#ff0367ed","position":1.0},{"t":"TranslationConstraint","parentId":179,"strength":-0.01,"targetId":4},{"t":"Shape","parentId":0,"rotation":1.5708,"x":90.25,"y":128.45},{"t":"Rectangle","parentId":185,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":227,"startX":-6.9,"startY":6.8838,"endX":5.8449,"endY":-3.45282},{"t":"GradientStop","parentId":187,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":187,"colorValue":"#ffde1a86","position":1.0},{"t":"TranslationConstraint","parentId":185,"strength":-0.01,"targetId":4},{"t":"Shape","parentId":0,"rotation":1.11022e-16,"x":128.75,"y":91.45},{"t":"Rectangle","parentId":191,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":228,"startX":-2.29905,"startY":-7.54828,"endX":6.80736,"endY":5.13023},{"t":"GradientStop","parentId":193,"colorValue":"#fffab917"},{"t":"GradientStop","parentId":193,"colorValue":"#ff30f3d7","position":1.0},{"t":"TranslationConstraint","parentId":191,"strength":-0.01,"targetId":4},{"t":"Shape","parentId":0,"rotation":1.5708,"x":90.45,"y":51.55},{"t":"Rectangle","parentId":197,"width":18.0,"height":13.0,"cornerRadiusTL":8.0},{"t":"LinearGradient","parentId":229,"startX":-11.9,"startY":9.4,"endX":2.89149,"endY":-6.49999},{"t":"GradientStop","parentId":199,"colorValue":"#ff8328f2"},{"t":"GradientStop","parentId":199,"colorValue":"#ffde1a86","position":1.0},{"t":"TranslationConstraint","parentId":197,"strength":-0.01,"targetId":4},{"t":"Fill","parentId":6},{"t":"Fill","parentId":21},{"t":"Stroke","parentId":21,"cap":1,"join":1},{"t":"Fill","parentId":45,"fillRule":2},{"t":"Fill","parentId":51,"fillRule":2},{"t":"Fill","parentId":57,"fillRule":2},{"t":"Fill","parentId":63,"fillRule":2},{"t":"Fill","parentId":72,"fillRule":2},{"t":"Fill","parentId":78,"fillRule":2},{"t":"Fill","parentId":84,"fillRule":2},{"t":"Fill","parentId":90,"fillRule":2},{"t":"Fill","parentId":99,"fillRule":2},{"t":"Fill","parentId":105,"fillRule":2},{"t":"Fill","parentId":111,"fillRule":2},{"t":"Fill","parentId":117,"fillRule":2},{"t":"Fill","parentId":126,"fillRule":2},{"t":"Fill","parentId":132,"fillRule":2},{"t":"Fill","parentId":138,"fillRule":2},{"t":"Fill","parentId":144,"fillRule":2},{"t":"Fill","parentId":153,"fillRule":2},{"t":"Fill","parentId":159,"fillRule":2},{"t":"Fill","parentId":165,"fillRule":2},{"t":"Fill","parentId":171,"fillRule":2},{"t":"Fill","parentId":179},{"t":"Fill","parentId":185},{"t":"Fill","parentId":191},{"t":"Fill","parentId":197},{"t":"ElasticInterpolator"}],"anims":[{"name":"OFF","keyed":[{"o":196,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":43,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":151,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":178,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":124,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":184,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":97,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":70,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":190,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]},{"o":202,"props":[{"p":172,"kf":[{"f":0,"v":0.0,"i":1,"ii":null}]}]}]},{"name":"ON","keyed":[{"o":43,"props":[{"p":172,"kf":[{"f":0,"v":0.01,"i":1,"ii":null}]}]},{"o":196,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]},{"o":151,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]},{"o":178,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]},{"o":124,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]},{"o":97,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]},{"o":184,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]},{"o":70,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]},{"o":202,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]},{"o":190,"props":[{"p":172,"kf":[{"f":0,"v":-0.01,"i":1,"ii":null}]}]}]}],"sms":[{"name":"time","inputs":[{"t":"StateMachineBool","name":"hover","v":0}],"layers":[{"name":"Layer 1","states":[{"t":"AnimationState","anim":1,"trans":[{"to":1,"dur":600,"flags":0,"interp":230,"conds":[{"t":"TransitionBoolCondition","input":0,"op":1}]}]},{"t":"AnimationState","anim":0,"trans":[{"to":0,"dur":600,"flags":0,"interp":230,"conds":[{"t":"TransitionBoolCondition","input":0,"op":0}]}]},{"t":"EntryState","anim":null,"trans":[{"to":1,"dur":0,"flags":0,"interp":null,"conds":[]}]},{"t":"ExitState","anim":null,"trans":[]},{"t":"AnyState","anim":null,"trans":[]}]}],"listeners":[{"name":"hoverOFF","target":2,"type":1,"actions":[{"t":"ListenerBoolChange","inputId":0,"value":0}]},{"name":"hoverON","target":2,"type":0,"actions":[{"t":"ListenerBoolChange","inputId":0}]},{"name":"hitbox","target":2,"type":4,"actions":[{"t":"ListenerAlignTarget","targetId":4}]}]}]}];
+const FONT_FAMILIES = [];
+const PROP_NAMES = {"172": "strength"};
+const MAIN_ARTBOARD = 0;
+
+/* ---------- 2D affine matrices: [a,b,c,d,e,f] ---------- */
+const M = {
+  id: () => [1, 0, 0, 1, 0, 0],
+  mul: (m, n) => [
+    m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1],
+    m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3],
+    m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5]],
+  inv: (m) => {
+    const det = m[0] * m[3] - m[1] * m[2];
+    if (!det) return null;
+    const i = 1 / det;
+    return [m[3] * i, -m[1] * i, -m[2] * i, m[0] * i,
+      (m[2] * m[5] - m[3] * m[4]) * i, (m[1] * m[4] - m[0] * m[5]) * i];
+  },
+  apply: (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]],
+  local: (o) => {
+    const r = o.rotation || 0, sx = o.scaleX ?? 1, sy = o.scaleY ?? 1;
+    const c = Math.cos(r), s = Math.sin(r);
+    return [c * sx, s * sx, -s * sy, c * sy, o.x || 0, o.y || 0];
+  },
+  dom: (m) => new DOMMatrix(m),
+};
+
+const TRANSFORM_TYPES = new Set(["Artboard", "Node", "Shape", "Text", "NestedArtboard", "PointsPath", "Rectangle", "Ellipse"]);
+const PATH_TYPES = new Set(["PointsPath", "Rectangle", "Ellipse"]);
+const VERTEX_TYPES = new Set(["StraightVertex", "CubicDetachedVertex", "CubicMirroredVertex", "CubicAsymmetricVertex"]);
+const DRAWABLE_TYPES = new Set(["Shape", "Text", "NestedArtboard"]);
+const BLEND = { 3: "source-over", 14: "screen", 15: "overlay", 16: "darken", 17: "lighten", 18: "color-dodge", 19: "color-burn", 20: "hard-light", 21: "soft-light", 22: "difference", 23: "exclusion", 24: "multiply", 25: "hue", 26: "saturation", 27: "color", 28: "luminosity" };
+const CAPS = ["butt", "round", "square"];
+const JOINS = ["miter", "round", "bevel"];
+
+function argb(hex, opacity = 1) {
+  const v = parseInt(hex.slice(1), 16);
+  const a = ((v >>> 24) & 255) / 255 * opacity;
+  return `rgba(${(v >>> 16) & 255},${(v >>> 8) & 255},${v & 255},${a})`;
+}
+
+/* ---------- Path geometry ---------- */
+function vertexControls(v) {
+  const x = v.x || 0, y = v.y || 0;
+  switch (v.t) {
+    case "CubicDetachedVertex": {
+      const ir = v.inRotation || 0, id = v.inDistance || 0, or = v.outRotation || 0, od = v.outDistance || 0;
+      return { x, y, cubic: true, ix: x + Math.cos(ir) * id, iy: y + Math.sin(ir) * id, ox: x + Math.cos(or) * od, oy: y + Math.sin(or) * od };
+    }
+    case "CubicMirroredVertex": {
+      const r = v.rotation || 0, d = v.distance || 0, c = Math.cos(r) * d, s = Math.sin(r) * d;
+      return { x, y, cubic: true, ix: x - c, iy: y - s, ox: x + c, oy: y + s };
+    }
+    case "CubicAsymmetricVertex": {
+      const r = v.rotation || 0, c = Math.cos(r), s = Math.sin(r), id = v.inDistance || 0, od = v.outDistance || 0;
+      return { x, y, cubic: true, ix: x - c * id, iy: y - s * id, ox: x + c * od, oy: y + s * od };
+    }
+    default:
+      return { x, y, cubic: false, ix: x, iy: y, ox: x, oy: y };
+  }
+}
+
+/* Contour as list of segments starting at pts[0]. */
+function pointsContour(verts, closed) {
+  const pts = verts.map(vertexControls);
+  const segs = [];
+  const n = pts.length;
+  const count = closed ? n : n - 1;
+  for (let i = 0; i < count; i++) {
+    const a = pts[i], b = pts[(i + 1) % n];
+    if (a.cubic || b.cubic) segs.push({ c: [a.ox, a.oy, b.ix, b.iy], p: [b.x, b.y] });
+    else segs.push({ p: [b.x, b.y] });
+  }
+  return { start: [pts[0].x, pts[0].y], segs, closed };
+}
+
+function reverseContour(ct) {
+  // walk backwards; segment i goes P_i -> P_{i+1} with ctrl c1,c2
+  const P = [ct.start, ...ct.segs.map(s => s.p)];
+  const segs = [];
+  for (let i = ct.segs.length - 1; i >= 0; i--) {
+    const s = ct.segs[i];
+    const to = P[i];
+    if (s.c) segs.push({ c: [s.c[2], s.c[3], s.c[0], s.c[1]], p: to });
+    else segs.push({ p: to });
+  }
+  return { start: P[P.length - 1], segs, closed: ct.closed };
+}
+
+function contourArea(ct) {
+  // signed area of the polygon through endpoints and control points (orientation test)
+  const pts = [ct.start];
+  for (const s of ct.segs) { if (s.c) { pts.push([s.c[0], s.c[1]], [s.c[2], s.c[3]]); } pts.push(s.p); }
+  let a = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i], q = pts[(i + 1) % pts.length];
+    a += p[0] * q[1] - q[0] * p[1];
+  }
+  return a / 2;
+}
+
+function addContour(path, ct, m) {
+  const tp = (x, y) => M.apply(m, x, y);
+  let [x, y] = tp(ct.start[0], ct.start[1]);
+  path.moveTo(x, y);
+  for (const s of ct.segs) {
+    const [px, py] = tp(s.p[0], s.p[1]);
+    if (s.c) {
+      const [ax, ay] = tp(s.c[0], s.c[1]), [bx, by] = tp(s.c[2], s.c[3]);
+      path.bezierCurveTo(ax, ay, bx, by, px, py);
+    } else path.lineTo(px, py);
+  }
+  if (ct.closed) path.closePath();
+}
+
+const CIRCLE_K = 0.552284749831;
+function rectContour(o) {
+  const w = o.width || 0, h = o.height || 0;
+  const ox = -(o.originX ?? 0.5) * w, oy = -(o.originY ?? 0.5) * h;
+  const link = o.linkCornerRadius ?? 1;
+  const tl = o.cornerRadiusTL || 0;
+  const rs = [tl, link ? tl : (o.cornerRadiusTR || 0), link ? tl : (o.cornerRadiusBR || 0), link ? tl : (o.cornerRadiusBL || 0)];
+  const corners = [[ox, oy], [ox + w, oy], [ox + w, oy + h], [ox, oy + h]];
+  // Same construction as Rive: straight vertices with radius -> cubic corner arcs.
+  const segs = [];
+  let start = null;
+  const n = 4;
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const prev = corners[(i + n - 1) % n], cur = corners[i], next = corners[(i + 1) % n];
+    let r = rs[i];
+    if (r > 0) {
+      const tpx = prev[0] - cur[0], tpy = prev[1] - cur[1], tnx = next[0] - cur[0], tny = next[1] - cur[1];
+      const lp = Math.hypot(tpx, tpy), ln = Math.hypot(tnx, tny);
+      r = Math.min(r, lp / 2, ln / 2);
+      const ux = tpx / lp, uy = tpy / lp, vx = tnx / ln, vy = tny / ln;
+      const a = [cur[0] + ux * r, cur[1] + uy * r], b = [cur[0] + vx * r, cur[1] + vy * r];
+      const ia = [cur[0] + ux * r * (1 - CIRCLE_K), cur[1] + uy * r * (1 - CIRCLE_K)];
+      const ob = [cur[0] + vx * r * (1 - CIRCLE_K), cur[1] + vy * r * (1 - CIRCLE_K)];
+      pts.push({ p: a, arc: [ia, ob, b] });
+    } else pts.push({ p: cur });
+  }
+  start = pts[0].p;
+  for (let i = 0; i < n; i++) {
+    const cur = pts[i];
+    if (cur.arc) segs.push({ c: [cur.arc[0][0], cur.arc[0][1], cur.arc[1][0], cur.arc[1][1]], p: cur.arc[2] });
+    segs.push({ p: pts[(i + 1) % n].p });
+  }
+  return { start, segs, closed: true };
+}
+
+function ellipseContour(o) {
+  const w = o.width || 0, h = o.height || 0;
+  const ox = -(o.originX ?? 0.5) * w, oy = -(o.originY ?? 0.5) * h;
+  const rx = w / 2, ry = h / 2, cx = ox + rx, cy = oy + ry;
+  const kx = rx * CIRCLE_K, ky = ry * CIRCLE_K;
+  return {
+    start: [cx, cy - ry], closed: true, segs: [
+      { c: [cx + kx, cy - ry, cx + rx, cy - ky], p: [cx + rx, cy] },
+      { c: [cx + rx, cy + ky, cx + kx, cy + ry], p: [cx, cy + ry] },
+      { c: [cx - kx, cy + ry, cx - rx, cy + ky], p: [cx - rx, cy] },
+      { c: [cx - rx, cy - ky, cx - kx, cy - ry], p: [cx, cy - ry] },
+    ]
+  };
+}
+
+/* ---------- Elastic easing (matches Rive's ElasticEase) ---------- */
+function makeElastic(o) {
+  const amp = o.amplitude ?? 1, period = o.period ?? 1, easing = o.easingValue ?? 1;
+  const s = amp < 1 ? period / 4 : period / (2 * Math.PI) * Math.asin(1 / amp);
+  const actual = (time) => {
+    if (amp < 1) { const t = Math.abs(s), at = Math.abs(time); if (at < t) { const l = at / t; return amp * l + (1 - l); } }
+    return amp;
+  };
+  const out = (f) => actual(f) * Math.pow(2, -10 * f) * Math.sin((f - s) * 2 * Math.PI / period) + 1;
+  const inn = (f) => { const t = f - 1; return -(actual(t) * Math.pow(2, 10 * t) * Math.sin((-t - s) * 2 * Math.PI / period)); };
+  const io = (f) => {
+    const t = f * 2 - 1, a = actual(t);
+    return t < 0 ? -0.5 * a * Math.pow(2, 10 * t) * Math.sin((-t - s) * 2 * Math.PI / period)
+      : 0.5 * (a * Math.pow(2, -10 * t) * Math.sin((t - s) * 2 * Math.PI / period)) + 1;
+  };
+  return easing === 0 ? inn : easing === 2 ? io : out;
+}
+
+/* ---------- Artboard instance ---------- */
+let sceneVersion = 0;
+
+class ArtboardInstance {
+  constructor(index) {
+    const def = SCENE[index];
+    this.def = def;
+    this.objs = def.objs.map(o => Object.assign({}, o));
+    const objs = this.objs;
+    objs.forEach((o, i) => { o.i = i; o.kids = []; });
+    objs.forEach((o, i) => { if (i > 0) { const p = objs[o.parentId || 0]; o.parent = p; p.kids.push(o); } });
+    this.root = objs[0];
+
+    // Paths per shape (cached, in shape-local space)
+    for (const o of objs) {
+      if (o.t === "Shape") this.buildShape(o);
+      if (o.t === "NestedArtboard") {
+        o.instance = new ArtboardInstance(o.artboardId);
+        const nsm = o.kids.find(k => k.t === "NestedStateMachine");
+        if (nsm) o.instance.startStateMachine(nsm.animationId || 0);
+      }
+    }
+    // Clipping: each drawable collects ClippingShapes on itself and its ancestors.
+    this.drawables = objs.filter(o => DRAWABLE_TYPES.has(o.t));
+    for (const d of this.drawables) {
+      d.clips = [];
+      for (let a = d; a; a = a.parent) for (const k of a.kids) if (k.t === "ClippingShape" && (k.isVisible ?? 1)) d.clips.push(k);
+    }
+    for (const o of objs) if (o.t === "ClippingShape") {
+      const src = objs[o.sourceId];
+      o.shapes = [];
+      const walk = (n) => { if (n.t === "Shape") o.shapes.push(n); n.kids.forEach(walk); };
+      walk(src);
+    }
+    // Rive draws the drawable list back to front: last in file order is painted first.
+    this.drawOrder = this.drawables.slice().reverse();
+    this.interps = {};
+    objs.forEach(o => { if (o.t === "ElasticInterpolator") this.interps[o.i] = makeElastic(o); });
+    this.sm = null;
+  }
+
+  buildShape(s) {
+    const raw = new Path2D(), cw = new Path2D();
+    const contours = [];
+    for (const p of s.kids) {
+      if (!PATH_TYPES.has(p.t)) continue;
+      let ct;
+      if (p.t === "PointsPath") ct = pointsContour(p.kids.filter(v => VERTEX_TYPES.has(v.t)), !!(p.isClosed ?? 0));
+      else if (p.t === "Rectangle") ct = rectContour(p);
+      else ct = ellipseContour(p);
+      const m = M.local(p);
+      contours.push({ ct, m, path: p });
+      addContour(raw, ct, m);
+      // "clockwise" fill rule: every non-hole contour is wound clockwise, holes counter-clockwise.
+      const hole = !!p.isHole;
+      const isCW = contourArea(ct) * (m[0] * m[3] - m[1] * m[2]) > 0;
+      addContour(cw, (isCW === !hole) ? ct : reverseContour(ct), m);
+    }
+    s.rawPath = raw; s.cwPath = cw; s.contours = contours;
+    s.paints = s.kids.filter(k => k.t === "Fill" || k.t === "Stroke");
+    for (const p of s.paints) {
+      p.mutator = p.kids.find(k => k.t === "SolidColor" || k.t === "LinearGradient" || k.t === "RadialGradient");
+      p.feather = p.kids.find(k => k.t === "Feather");
+      if (p.mutator && p.mutator.t !== "SolidColor") {
+        p.mutator.stops = p.mutator.kids.filter(k => k.t === "GradientStop").sort((a, b) => (a.position || 0) - (b.position || 0));
+      }
+    }
+  }
+
+  startStateMachine(idx) {
+    const def = this.def.sms[idx];
+    if (!def) return;
+    this.sm = {
+      def,
+      inputs: def.inputs.map(i => (i.v ? true : false)),
+      layers: def.layers.map(l => ({
+        def: l,
+        state: l.states.findIndex(s => s.t === "EntryState"),
+        time: 0,
+        mix: null,
+      })),
+      hover: new Map(),
+      changed: true,
+    };
+  }
+
+  /* --- animation helpers --- */
+  animValues(animIdx, time) {
+    const anim = this.def.anims[animIdx];
+    const out = [];
+    if (!anim) return out;
+    const fps = anim.fps || 60;
+    const frame = time * fps;
+    for (const ko of anim.keyed) for (const kp of ko.props) {
+      const kf = kp.kf;
+      let v = kf[0].v;
+      if (frame >= kf[kf.length - 1].f) v = kf[kf.length - 1].v;
+      else for (let i = 0; i < kf.length - 1; i++) {
+        const a = kf[i], b = kf[i + 1];
+        if (frame >= a.f && frame < b.f) {
+          v = a.i === 0 ? a.v : a.v + (b.v - a.v) * ((frame - a.f) / (b.f - a.f));
+          break;
+        }
+      }
+      out.push([ko.o, PROP_NAMES[kp.p], v]);
+    }
+    return out;
+  }
+
+  setProp(oi, name, v) {
+    const o = this.objs[oi];
+    if (o[name] !== v) { o[name] = v; sceneVersion++; }
+  }
+
+  conditionsPass(tr) {
+    for (const c of tr.conds) {
+      if (c.t === "TransitionBoolCondition") {
+        const val = this.sm.inputs[c.input];
+        if (!((val && c.op === 0) || (!val && c.op === 1))) return false;
+      }
+    }
+    return true;
+  }
+
+  advance(dt) {
+    let busy = false;
+    for (const o of this.objs) if (o.t === "NestedArtboard") busy = o.instance.advance(dt) || busy;
+    const sm = this.sm;
+    if (!sm) return busy;
+    for (const L of sm.layers) {
+      // state changes (up to a few hops per frame, like Rive)
+      for (let hop = 0; hop < 10; hop++) {
+        const st = L.def.states[L.state];
+        const any = L.def.states.find(s => s.t === "AnyState");
+        const cands = [...(st ? st.trans : []), ...(any && any !== st ? any.trans : [])];
+        const tr = cands.find(t => t.to !== L.state && this.conditionsPass(t));
+        if (!tr) break;
+        const to = L.def.states[tr.to];
+        // snapshot values of everything the incoming animation keys
+        let snapshot = null;
+        if (to.anim != null && tr.dur > 0) {
+          snapshot = this.animValues(to.anim, 0).map(([oi, name]) => [oi, name, this.objs[oi][name]]);
+        }
+        L.state = tr.to; L.time = 0;
+        L.mix = snapshot ? { t: 0, dur: tr.dur / 1000, ease: tr.interp != null && this.interps[tr.interp] ? this.interps[tr.interp] : (x) => x, snapshot } : null;
+        sm.changed = true;
+      }
+      const st = L.def.states[L.state];
+      if (st && st.t === "AnimationState") {
+        const anim = this.def.anims[st.anim];
+        const dur = (anim.duration ?? 60) / (anim.fps || 60);
+        L.time = Math.min(L.time + dt * (anim.speed ?? 1), dur);
+        const vals = this.animValues(st.anim, L.time);
+        if (L.mix) {
+          L.mix.t = Math.min(1, L.mix.t + dt / L.mix.dur);
+          const k = L.mix.t >= 1 ? 1 : L.mix.ease(L.mix.t);
+          const snap = new Map(L.mix.snapshot.map(([oi, n, v]) => [oi + ":" + n, v]));
+          for (const [oi, name, v] of vals) {
+            const from = snap.get(oi + ":" + name);
+            this.setProp(oi, name, from === undefined ? v : from + (v - from) * k);
+          }
+          if (L.mix.t >= 1) L.mix = null; else busy = true;
+        } else {
+          for (const [oi, name, v] of vals) this.setProp(oi, name, v);
+        }
+        if (L.time < dur && this.def.anims[st.anim].keyed.length) busy = true;
+      }
+    }
+    return busy;
+  }
+
+  /* --- transforms --- */
+  computeWorld() {
+    const done = new Set();
+    const world = (o) => {
+      if (done.has(o)) return o.world;
+      if (!o.parent) { o.world = M.id(); o.opacity_ = 1; done.add(o); return o.world; }
+      const pw = world(o.parent);
+      o.opacity_ = o.parent.opacity_ * (o.opacity ?? 1);
+      if (TRANSFORM_TYPES.has(o.t)) {
+        let w = M.mul(pw, M.local(o));
+        for (const c of o.kids) if (c.t === "TranslationConstraint") w = this.applyTranslation(c, o, w, world);
+        o.world = w;
+      } else o.world = pw;
+      done.add(o);
+      return o.world;
+    };
+    for (const o of this.objs) world(o);
+  }
+
+  applyTranslation(c, comp, w, world) {
+    // Hover parallax is authored at ±1%; the premium hover deepens it.
+    const strength = (c.strength ?? 1) * (this.parallaxBoost || 1);
+    if (c.targetId == null) return w;
+    const tgt = this.objs[c.targetId];
+    const tw = world(tgt);
+    let bx = tw[4], by = tw[5];
+    const ax = w[4], ay = w[5];
+    // defaults: world space, copies x & y, factor 1, no min/max
+    const doesCopy = c.doesCopy ?? 1, doesCopyY = c.doesCopyY ?? 1;
+    if (!doesCopy) bx = ax; else bx *= c.copyFactor ?? 1;
+    if (!doesCopyY) by = ay; else by *= c.copyFactorY ?? 1;
+    const t = strength, ti = 1 - t;
+    const out = w.slice();
+    out[4] = ax * ti + bx * t;
+    out[5] = ay * ti + by * t;
+    return out;
+  }
+
+  /* --- rendering --- */
+  draw(ctx, view, pxScale) {
+    this.computeWorld();
+    const root = this.root;
+    ctx.save();
+    ctx.setTransform(M.dom(view));
+    if (root.clip ?? 1) {
+      ctx.beginPath();
+      ctx.rect(-(root.originX || 0) * root.width, -(root.originY || 0) * root.height, root.width, root.height);
+      ctx.clip();
+    }
+    // artboard background paints
+    for (const f of root.kids) if (f.t === "Fill") {
+      const m = f.kids.find(k => k.t === "SolidColor");
+      if (m) { ctx.fillStyle = argb(m.colorValue || "#ff747474"); ctx.fillRect(-(root.originX || 0) * root.width, -(root.originY || 0) * root.height, root.width, root.height); }
+    }
+    for (const d of this.drawOrder) {
+      if (d.opacity_ <= 0) continue;
+      ctx.save();
+      // clip paths (world space of this artboard)
+      for (const cs of d.clips) {
+        const cp = new Path2D();
+        for (const s of cs.shapes) cp.addPath(s.rawPath, M.dom(s.world));
+        ctx.setTransform(M.dom(view));
+        ctx.clip(cp, cs.fillRule === 1 ? "evenodd" : "nonzero");
+      }
+      const full = M.mul(view, d.world);
+      ctx.setTransform(M.dom(full));
+      if (d.t === "Shape") this.drawShape(ctx, d, pxScale);
+      else if (d.t === "Text") this.drawText(ctx, d);
+      else if (d.t === "NestedArtboard") {
+        if (d.fx && d.fx.h > 0.001) {
+          const fxm = HoverFX.matrix(d);
+          HoverFX.under(ctx, view, d, pxScale);
+          const nested = M.mul(view, M.mul(d.world, fxm));
+          d.instance.draw(ctx, nested, pxScale * HoverFX.scale(d));
+          HoverFX.over(ctx, nested, d);
+        } else d.instance.draw(ctx, full, pxScale);
+      }
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  paintStyle(ctx, p, alpha) {
+    const m = p.mutator;
+    if (!m) return "transparent";
+    if (m.t === "SolidColor") return argb(m.colorValue || "#ff747474", alpha);
+    const g = ctx.createLinearGradient(m.startX || 0, m.startY || 0, m.endX || 0, m.endY || 0);
+    const op = (m.opacity ?? 1) * alpha;
+    for (const s of m.stops) g.addColorStop(Math.min(1, Math.max(0, s.position || 0)), argb(s.colorValue || "#ffffffff", op));
+    return g;
+  }
+
+  drawShape(ctx, s, pxScale) {
+    ctx.globalCompositeOperation = BLEND[s.blendModeValue ?? 3] || "source-over";
+    const alpha = s.opacity_;
+    const w = s.world;
+    const scale = Math.sqrt(Math.abs(w[0] * w[3] - w[1] * w[2])) * pxScale;
+    for (const p of s.paints) {
+      if (!(p.isVisible ?? 1)) continue;
+      const style = this.paintStyle(ctx, p, alpha);
+      if (p.t === "Fill") {
+        const rule = p.fillRule === 1 ? "evenodd" : "nonzero";
+        const path = p.fillRule === 2 ? s.cwPath : s.rawPath;
+        ctx.fillStyle = style;
+        if (p.feather) {
+          const sigma = (p.feather.strength ?? 12) / 2 * scale;
+          ctx.filter = sigma > 0 ? `blur(${sigma}px)` : "none";
+          ctx.fill(path, rule);
+          ctx.filter = "none";
+        } else ctx.fill(path, rule);
+      } else {
+        ctx.strokeStyle = style;
+        ctx.lineWidth = p.thickness ?? 1;
+        ctx.lineCap = CAPS[p.cap || 0];
+        ctx.lineJoin = JOINS[p.join || 0];
+        ctx.stroke(s.rawPath);
+      }
+    }
+  }
+
+  drawText(ctx, t) {
+    ctx.globalCompositeOperation = BLEND[t.blendModeValue ?? 3] || "source-over";
+    let x = 0;
+    for (const run of t.kids.filter(k => k.t === "TextValueRun")) {
+      const style = this.objs[run.styleId];
+      const axis = style.kids.find(k => k.t === "TextStyleAxis" && k.tag === 2003265652);
+      const weight = axis ? axis.axisValue : 400;
+      ctx.font = `${weight} ${style.fontSize ?? 12}px "${FONT_FAMILIES[style.fontAssetId ?? 0]}"`;
+      ctx.letterSpacing = `${style.letterSpacing || 0}px`;
+      ctx.textBaseline = "alphabetic";
+      ctx.textAlign = "left";
+      const fill = style.kids.find(k => k.t === "Fill");
+      if (fill) {
+        fill.mutator = fill.mutator || fill.kids.find(k => k.t === "SolidColor" || k.t === "LinearGradient");
+        if (fill.mutator && fill.mutator.t !== "SolidColor" && !fill.mutator.stops)
+          fill.mutator.stops = fill.mutator.kids.filter(k => k.t === "GradientStop").sort((a, b) => (a.position || 0) - (b.position || 0));
+        ctx.fillStyle = this.paintStyle(ctx, fill, t.opacity_);
+        ctx.fillText(run.text, x, 0);
+      }
+      x += ctx.measureText(run.text).width;
+    }
+  }
+
+  /* --- pointer handling (listeners) --- */
+  hitShape(s, x, y) {
+    const p = new Path2D();
+    p.addPath(s.rawPath, M.dom(s.world));
+    return hitCtx.isPointInPath(p, x, y);
+  }
+
+  pointer(x, y, prevX, prevY) {
+    this.computeWorld();
+    for (const o of this.objs) if (o.t === "NestedArtboard") {
+      const inv = M.inv(o.world);
+      if (!inv) continue;
+      const [lx, ly] = M.apply(inv, x, y);
+      const [px, py] = M.apply(inv, prevX, prevY);
+      o.instance.pointer(lx, ly, px, py);
+      if (o.fx) { o.fx.tx = lx; o.fx.ty = ly; }
+    }
+    if (this === main) HoverFX.pointer(this, x, y);
+    const sm = this.sm;
+    if (!sm) return;
+    const targets = new Map();
+    for (const l of sm.def.listeners) {
+      if (l.target == null) continue;
+      if (!targets.has(l.target)) targets.set(l.target, isFinite(x) && this.hitShape(this.objs[l.target], x, y));
+    }
+    for (const [target, over] of targets) {
+      const was = sm.hover.get(target) || false;
+      for (const l of sm.def.listeners) {
+        if (l.target !== target) continue;
+        const fire = (l.type === 0 && over && !was) || (l.type === 1 && !over && was) || (l.type === 4 && over);
+        if (fire) this.perform(l, x, y, prevX, prevY);
+      }
+      sm.hover.set(target, over);
+    }
+  }
+
+  perform(l, x, y, px, py) {
+    for (const a of l.actions) {
+      if (a.t === "ListenerBoolChange") {
+        const cur = this.sm.inputs[a.inputId || 0];
+        const v = (a.value ?? 1);
+        this.sm.inputs[a.inputId || 0] = v === 2 ? !cur : v === 1;
+      } else if (a.t === "ListenerAlignTarget") {
+        const tgt = this.objs[a.targetId];
+        const inv = M.inv(tgt.parent.world) || M.id();
+        if (a.preserveOffset) {
+          const [lx, ly] = M.apply(inv, x, y), [qx, qy] = M.apply(inv, px, py);
+          this.setProp(tgt.i, "x", (tgt.x || 0) + lx - qx);
+          this.setProp(tgt.i, "y", (tgt.y || 0) + ly - qy);
+        } else {
+          const [lx, ly] = M.apply(inv, x, y);
+          this.setProp(tgt.i, "x", lx);
+          this.setProp(tgt.i, "y", ly);
+        }
+      }
+    }
+  }
+}
+
+/* ---------- Premium hover layer ----------
+   Sits on top of the original state machines. With nothing hovered every
+   value is at rest, so the icons render exactly as authored. */
+const HoverFX = (() => {
+  const CFG = {
+    scale: 0.075,        // lift scale
+    lift: 5,             // px upward
+    magnet: 4,           // px pull toward cursor
+    tilt: 0.05,          // rad max lean
+    parallax: 5,         // multiplies the authored ±1% layer parallax
+    sheenTime: 1.1,      // s for the light sweep
+  };
+  const glassPathCache = new WeakMap();
+  let active = null;
+
+  function boundsOf(inst) {
+    inst.computeWorld();
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    const add = (x, y) => { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); };
+    for (const s of inst.objs) {
+      if (s.t !== "Shape" || !s.paints.length) continue;
+      for (const { ct, m } of s.contours) {
+        const mm = M.mul(s.world, m);
+        const pts = [ct.start];
+        for (const g of ct.segs) { if (g.c) pts.push([g.c[0], g.c[1]], [g.c[2], g.c[3]]); pts.push(g.p); }
+        for (const p of pts) add(...M.apply(mm, p[0], p[1]));
+      }
+    }
+    return { x0, y0, x1, y1, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, w: x1 - x0, h: y1 - y0 };
+  }
+
+  // Glass = painted shapes that the file pulls toward the pointer (positive parallax).
+  function glassShapes(inst) {
+    const pos = (o) => o.kids.some(k => k.t === "TranslationConstraint" && (k.strength ?? 1) > 0 && k.targetId != null);
+    return inst.objs.filter(s => {
+      if (s.t !== "Shape" || !s.paints.length || (s.blendModeValue ?? 3) !== 3) return false;
+      for (let a = s; a && a.parent; a = a.parent) if (pos(a)) return true;
+      return false;
+    });
+  }
+
+  function init(root) {
+    for (const o of root.objs) if (o.t === "NestedArtboard") {
+      const inst = o.instance;
+      inst.parallaxBoost = CFG.parallax;
+      o.bounds = boundsOf(inst);
+      o.glass = glassShapes(inst);
+      o.hoverInput = inst.sm ? inst.sm.def.inputs.findIndex(i => i.name === "hover") : -1;
+      o.fx = { h: 0, hv: 0, rot: 0, rv: 0, mx: 0, mxv: 0, my: 0, myv: 0, press: 0, pv: 0,
+               lx: o.bounds.cx, ly: o.bounds.cy, tx: o.bounds.cx, ty: o.bounds.cy, sheen: -1, down: false };
+    }
+  }
+
+  function spring(f, k, v, target, stiff, damp, dt) {
+    const n = Math.max(1, Math.ceil(dt / (1 / 240))), h = dt / n;
+    for (let i = 0; i < n; i++) { f[v] += (stiff * (target - f[k]) - damp * f[v]) * h; f[k] += f[v] * h; }
+  }
+
+  function pointer(root, x, y) {
+    let best = null, bestD = Infinity;
+    for (const o of root.objs) if (o.fx) {
+      const inv = M.inv(o.world); if (!inv) continue;
+      const [lx, ly] = M.apply(inv, x, y);
+      const b = o.bounds, pad = 16;
+      if (lx >= b.x0 - pad && lx <= b.x1 + pad && ly >= b.y0 - pad && ly <= b.y1 + pad) {
+        const d = Math.hypot(lx - b.cx, ly - b.cy);
+        if (d < bestD) { bestD = d; best = o; }
+      }
+    }
+    if (best !== active) {
+      if (best) best.fx.sheen = 0;
+      if (active) active.fx.down = false;
+      active = best;
+    }
+    // One icon at a time drives its "hover" state (the authored hit areas overlap neighbours).
+    for (const o of root.objs) if (o.fx && o.hoverInput >= 0) o.instance.sm.inputs[o.hoverInput] = (o === active);
+    canvas.style.cursor = active ? "pointer" : "default";
+  }
+
+  function press(down) { if (active) active.fx.down = down; }
+
+  function advance(root, dt) {
+    let moving = false;
+    for (const o of root.objs) if (o.fx) {
+      const f = o.fx, on = o === active, b = o.bounds;
+      const nx = on ? Math.max(-1, Math.min(1, (f.tx - b.cx) / (b.w / 2 + 16))) : 0;
+      const ny = on ? Math.max(-1, Math.min(1, (f.ty - b.cy) / (b.h / 2 + 16))) : 0;
+      spring(f, "h", "hv", on ? 1 : 0, 220, 17, dt);
+      spring(f, "rot", "rv", nx * CFG.tilt, 160, 14, dt);
+      spring(f, "mx", "mxv", nx * CFG.magnet, 180, 16, dt);
+      spring(f, "my", "myv", ny * CFG.magnet, 180, 16, dt);
+      spring(f, "press", "pv", f.down ? 1 : 0, 500, 26, dt);
+      const ease = Math.min(1, dt * 14);
+      if (on) { f.lx += (f.tx - f.lx) * ease; f.ly += (f.ty - f.ly) * ease; }
+      if (f.sheen >= 0) { f.sheen += dt / CFG.sheenTime; if (f.sheen > 1) f.sheen = -1; }
+      const still = Math.abs(f.hv) + Math.abs(f.rv) + Math.abs(f.mxv) + Math.abs(f.myv) + Math.abs(f.pv) < 1e-3 &&
+        Math.abs(f.h - (on ? 1 : 0)) < 1e-3;
+      if (!still || f.sheen >= 0 || (on && (Math.abs(f.tx - f.lx) + Math.abs(f.ty - f.ly)) > 0.05)) moving = true;
+      if (!on && Math.abs(f.h) < 1e-3 && Math.abs(f.hv) < 1e-3) { f.h = 0; f.hv = 0; }
+    }
+    if (moving) sceneVersion++;
+  }
+
+  const scale = (o) => 1 + CFG.scale * o.fx.h - 0.04 * o.fx.press;
+
+  function matrix(o) {
+    const f = o.fx, b = o.bounds, s = scale(o);
+    const c = Math.cos(f.rot), sn = Math.sin(f.rot);
+    const tx = b.cx + f.mx, ty = b.cy + f.my - CFG.lift * f.h;
+    const R = [c * s, sn * s, -sn * s, c * s, tx, ty];
+    return M.mul(R, [1, 0, 0, 1, -b.cx, -b.cy]);
+  }
+
+  // Soft contact shadow + ambient halo, drawn beneath the icon in the parent artboard.
+  function under(ctx, view, o, pxScale) {
+    const f = o.fx, b = o.bounds, h = Math.max(0, Math.min(1.2, f.h));
+    ctx.save();
+    ctx.setTransform(M.dom(M.mul(view, o.world)));
+    const r = Math.max(b.w, b.h) * 0.85;
+    const halo = ctx.createRadialGradient(b.cx + f.mx, b.cy, 0, b.cx + f.mx, b.cy, r);
+    halo.addColorStop(0, `rgba(178,150,255,${0.22 * h})`);
+    halo.addColorStop(0.55, `rgba(120,90,230,${0.08 * h})`);
+    halo.addColorStop(1, "rgba(120,90,230,0)");
+    ctx.fillStyle = halo;
+    ctx.fillRect(b.cx - r + f.mx, b.cy - r, r * 2, r * 2);
+    ctx.filter = `blur(${7 * pxScale}px)`;
+    ctx.fillStyle = `rgba(8,4,30,${0.42 * h})`;
+    ctx.beginPath();
+    ctx.ellipse(b.cx + f.mx * 0.5, b.y1 + 7, b.w * 0.36 * (1 - 0.08 * h), 5.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Specular light on the glass: cursor spotlight, a one-shot sweep, and a rim catch-light.
+  function over(ctx, full, o) {
+    const f = o.fx, b = o.bounds, h = Math.max(0, Math.min(1, f.h));
+    if (!o.glass.length || h < 0.01) return;
+    const clip = new Path2D();
+    for (const s of o.glass) clip.addPath(s.rawPath, M.dom(s.world));
+    ctx.save();
+    ctx.setTransform(M.dom(full));
+    ctx.clip(clip);
+    ctx.globalCompositeOperation = "screen";
+    const R = Math.max(b.w, b.h) * 0.75;
+    const spot = ctx.createRadialGradient(f.lx, f.ly, 0, f.lx, f.ly, R);
+    spot.addColorStop(0, `rgba(255,255,255,${0.26 * h})`);
+    spot.addColorStop(0.45, `rgba(255,255,255,${0.07 * h})`);
+    spot.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = spot;
+    ctx.fillRect(b.x0 - 20, b.y0 - 20, b.w + 40, b.h + 40);
+    if (f.sheen >= 0) {
+      const t = f.sheen, e = 1 - Math.pow(1 - t, 3);
+      const dx = 0.8, dy = 0.6, span = b.w + b.h;
+      const px = b.x0 - span * 0.35 + (span * 1.1) * e * dx, py = b.y0 - span * 0.35 + (span * 1.1) * e * dy;
+      const bw = 26;
+      const g = ctx.createLinearGradient(px - dx * bw, py - dy * bw, px + dx * bw, py + dy * bw);
+      const a = 0.38 * Math.sin(Math.PI * Math.min(1, t * 1.15)) * h;
+      g.addColorStop(0, "rgba(255,255,255,0)");
+      g.addColorStop(0.42, `rgba(255,255,255,${a * 0.6})`);
+      g.addColorStop(0.5, `rgba(255,255,255,${a})`);
+      g.addColorStop(0.58, `rgba(255,255,255,${a * 0.6})`);
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(b.x0 - 20, b.y0 - 20, b.w + 40, b.h + 40);
+    }
+    ctx.restore();
+    // rim light following the cursor along the glass edges
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    for (const s of o.glass) {
+      const inv = M.inv(s.world); if (!inv) continue;
+      const [sx, sy] = M.apply(inv, f.lx, f.ly);
+      ctx.setTransform(M.dom(M.mul(full, s.world)));
+      const rg = ctx.createRadialGradient(sx, sy, 0, sx, sy, R * 0.9);
+      rg.addColorStop(0, `rgba(255,255,255,${0.75 * h})`);
+      rg.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.strokeStyle = rg;
+      ctx.lineWidth = 1.1;
+      ctx.lineJoin = "round";
+      ctx.stroke(s.rawPath);
+    }
+    ctx.restore();
+  }
+
+  return { init, pointer, press, advance, matrix, scale, under, over };
+})();
+
+/* ---------- Stage ---------- */
+const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+const hitCtx = document.createElement("canvas").getContext("2d");
+const main = new ArtboardInstance(MAIN_ARTBOARD);
+main.startStateMachine(main.root.defaultStateMachineId || 0);
+HoverFX.init(main);
+
+let view = M.id(), pxScale = 1, lastPointer = [-1e9, -1e9];
+function layout() {
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  const ab = main.root;
+  const s = Math.min(w / ab.width, h / ab.height); // Fit.contain, centered
+  const tx = (w - ab.width * s) / 2, ty = (h - ab.height * s) / 2;
+  view = [s * dpr, 0, 0, s * dpr, tx * dpr, ty * dpr];
+  pxScale = s * dpr;
+  sceneVersion++;
+}
+window.addEventListener("resize", layout);
+
+function toArtboard(e) {
+  const r = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const inv = M.inv(view);
+  return M.apply(inv, (e.clientX - r.left) * dpr, (e.clientY - r.top) * dpr);
+}
+function onPointer(x, y) {
+  main.pointer(x, y, lastPointer[0], lastPointer[1]);
+  lastPointer = [x, y];
+}
+canvas.addEventListener("pointermove", (e) => { const [x, y] = toArtboard(e); onPointer(x, y); });
+canvas.addEventListener("pointerdown", (e) => { const [x, y] = toArtboard(e); onPointer(x, y); HoverFX.press(true); });
+canvas.addEventListener("pointerup", (e) => { HoverFX.press(false); if (e.pointerType !== "mouse") onPointer(-1e9, -1e9); });
+canvas.addEventListener("pointerleave", () => { HoverFX.press(false); onPointer(-1e9, -1e9); });
+
+let last = performance.now(), drawnVersion = -1;
+function frame(now) {
+  const dt = Math.min(0.1, (now - last) / 1000);
+  last = now;
+  main.advance(dt);
+  HoverFX.advance(main, dt);
+  if (drawnVersion !== sceneVersion) {
+    drawnVersion = sceneVersion;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    main.draw(ctx, view, pxScale);
+  }
+  requestAnimationFrame(frame);
+}
+
+Promise.all(FONT_FAMILIES.map(f => document.fonts.load(`400 12px "${f}"`))).catch(() => { }).then(() => {
+  layout();
+  main.advance(0);
+  requestAnimationFrame((t) => { last = t; frame(t); });
+});
+</script>
+</body>
+</html>

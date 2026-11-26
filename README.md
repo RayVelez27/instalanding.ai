@@ -25,16 +25,21 @@ that drive it, and the one-shot prompt that builds it. See [Motion](#motion).
 <!-- MOTION-INTRO -->
 
 Plus **videos** — short pieces that render live in the browser, sound and all, with no video file —
-and **products**: device and app concepts you can actually operate, every control wired. See
-[Videos](#videos) and [Products](#products).
+**icons**: animated icon sets where every icon is its own file to copy — and **products**: device
+and app concepts you can actually operate, every control wired. See [Videos](#videos),
+[Icons](#icons) and [Products](#products).
 <!-- VIDEOS-PRODUCTS-INTRO -->
 
-Browse them live at **[instalanding.ai/pages](https://instalanding.ai/pages)**, **[instalanding.ai/systems](https://instalanding.ai/systems)**, **[instalanding.ai/motion](https://instalanding.ai/motion)**, **[instalanding.ai/videos](https://instalanding.ai/videos)** and **[instalanding.ai/products](https://instalanding.ai/products)**.
+Browse them live at **[instalanding.ai/pages](https://instalanding.ai/pages)**, **[instalanding.ai/systems](https://instalanding.ai/systems)**, **[instalanding.ai/motion](https://instalanding.ai/motion)**, **[instalanding.ai/videos](https://instalanding.ai/videos)**, **[instalanding.ai/icons](https://instalanding.ai/icons)** and **[instalanding.ai/products](https://instalanding.ai/products)**.
 
 ## New drops
 
 <!-- NEW-DROPS:START -->
-**Updated Nov 26, 2026 · 98 pages · 36 design systems · 17 motion studies · 3 videos · 9 products.** Everything new lands here first: pages, design systems, motion studies, videos and products. Each one is also listed in its own section below.
+**Updated Nov 26, 2026 · 98 pages · 36 design systems · 17 motion studies · 3 videos · 1 icon set · 9 products.** Everything new lands here first: pages, design systems, motion studies, videos, icons and products. Each one is also listed in its own section below.
+
+<p><a href="icons/glassmorphism-material"><img src="icons/glassmorphism-material/preview.jpg" width="400" alt="Glassmorphism Material Icons"></a></p>
+<p><b><a href="icons/glassmorphism-material">Glassmorphism Material Icons</a></b> · <sub>ICONS · Nov 26, 2026</sub><br>Nine frosted-glass icons on a deep violet field (account, lock, picture, location pin, plant, credit card, calendar, clock and documents), each lit by a neon gradient behind the glass, that lift, glow and catch a sheen of light as the pointer passes over them<br><sub>9 icons · Decoded Rive · Canvas 2D · no libraries · <a href="https://instalanding.ai/icons/glassmorphism-material">Copy one live</a> · <a href="icons/glassmorphism-material/index.html">Code</a></sub></p>
+<br>
 
 <p><a href="products/lintel-terminal"><img src="products/lintel-terminal/preview.jpg" width="400" alt="Lintel L1 Agent Terminal"></a></p>
 <p><b><a href="products/lintel-terminal">Lintel L1 Agent Terminal</a></b> · <sub>PRODUCT · Nov 26, 2026</sub><br>A periwinkle desk terminal for a coding agent, drawn in isometric SVG: approve or reject its edit to a rover's motor firmware on the tilted screen, hold the talk key to ask for a revision, then run it to build and flash and watch the serial log, with keys that sink and click and a knob that scrolls the screen<br><sub>Isometric SVG · Web Audio · no libraries · 7 controls · <a href="https://instalanding.ai/products/lintel-terminal">Use it live</a> · <a href="products/lintel-terminal/index.html">Code</a></sub></p>
@@ -873,6 +878,17 @@ inlined: no video file, no install. Open `index.html` and press play, or watch t
 <p><b><a href="videos/brand-identity">Brand Identity</a></b> · <sub>0:15</sub><br>A 15-second wordless brand reel: lime cards for type, palette, a cube, a face and a grid pop, flip and shatter under a moving camera, then gather into one identity board with its pieces in orbit<br><sub>Decoded Rive · Canvas 2D · soundtrack · <a href="https://instalanding.ai/videos/brand-identity">Watch</a> · <a href="videos/brand-identity/index.html">Code</a></sub></p>
 <!-- VIDEOS:END -->
 
+## Icons
+
+<!-- ICONS:START -->
+Each icon set is one HTML file with every icon, plus one standalone file per icon, so you can take a single
+icon or the set. Open any file from disk, or copy them at [instalanding.ai/icons](https://instalanding.ai/icons).
+
+<p><a href="icons/glassmorphism-material"><img src="icons/glassmorphism-material/preview.jpg" width="400" alt="Glassmorphism Material Icons"></a></p>
+<p><b><a href="icons/glassmorphism-material">Glassmorphism Material Icons</a></b> · <sub>icon set</sub><br>Nine frosted-glass icons on a deep violet field (account, lock, picture, location pin, plant, credit card, calendar, clock and documents), each lit by a neon gradient behind the glass, that lift, glow and catch a sheen of light as the pointer passes over them<br><sub>9 icons · Decoded Rive · Canvas 2D · no libraries · <a href="https://instalanding.ai/icons/glassmorphism-material">Copy one live</a> · <a href="icons/glassmorphism-material/index.html">Code</a></sub></p>
+<br>
+<!-- ICONS:END -->
+
 ## Products
 
 <!-- PRODUCTS:START -->
@@ -938,6 +954,11 @@ motion/<slug>/
 videos/<slug>/
   index.html    the video: renders live, models, images and sound inlined
   README.md     what it is, its runtime and credits
+  preview.jpg   1200x600 still
+icons/<slug>/
+  index.html    the whole set, every icon live
+  <icon>.html   one standalone file per icon, transparent canvas
+  README.md     the icons, how they move, how to use one
   preview.jpg   1200x600 still
 products/<slug>/
   index.html    the product: every control works, one file, opens from disk

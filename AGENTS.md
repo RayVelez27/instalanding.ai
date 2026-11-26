@@ -59,6 +59,12 @@ Live, with slow motion and live knobs: https://instalanding.ai/motion
 images and sound inlined and no video file. Read its README.md for what it is and its credits; open
 `index.html` to watch it. Live: https://instalanding.ai/videos
 
+## Icons
+
+`icons/<slug>/` holds animated icon sets: `index.html` shows every icon, and each icon also has its
+own standalone file (`<icon>.html`, transparent canvas) so you can use one icon without the rest. Its
+README.md lists the icons and their files. Live: https://instalanding.ai/icons
+
 ## Products
 
 `products/<slug>/` holds operable product concepts: a device or app in one HTML file where every
