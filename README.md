@@ -35,7 +35,19 @@ Browse them live at **[instalanding.ai/pages](https://instalanding.ai/pages)**, 
 ## New drops
 
 <!-- NEW-DROPS:START -->
-**Updated Nov 27, 2026 · 98 pages · 36 design systems · 18 motion studies · 9 videos · 3 icon sets · 11 products.** Everything new lands here first: pages, design systems, motion studies, videos, icons and products. Each one is also listed in its own section below.
+**Updated Nov 27, 2026 · 98 pages · 36 design systems · 18 motion studies · 12 videos · 3 icon sets · 11 products.** Everything new lands here first: pages, design systems, motion studies, videos, icons and products. Each one is also listed in its own section below.
+
+<p><a href="videos/mobius-knot"><img src="videos/mobius-knot/preview.jpg" width="400" alt="Mobius Knot"></a></p>
+<p><b><a href="videos/mobius-knot">Mobius Knot</a></b> · <sub>VIDEO · Nov 27, 2026</sub><br>A 13-second loop on black: a twisting Möbius ribbon tied into a knot turns slowly in a raymarched shader, its layered bands catching soft shadows and an iridescent sweep of blue, gold and violet<br><sub>WebGL2 · one fragment shader · GSAP timeline · <a href="https://instalanding.ai/videos/mobius-knot">Watch</a> · <a href="videos/mobius-knot/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/iso-city-day-night"><img src="videos/iso-city-day-night/preview.jpg" width="400" alt="Iso City Day & Night"></a></p>
+<p><b><a href="videos/iso-city-day-night">Iso City Day & Night</a></b> · <sub>VIDEO · Nov 27, 2026</sub><br>An 11-second day-to-night cycle on an isometric apartment tower built in CSS 3D: a sun-and-moon toggle flips, the sun sets as a crescent moon and stars rise, hundreds of windows warm from blue to magenta, and a frosted weather card swaps Sunny 98° for Clear 73° before it all turns back to day<br><sub>CSS 3D · GSAP timeline · <a href="https://instalanding.ai/videos/iso-city-day-night">Watch</a> · <a href="videos/iso-city-day-night/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/clay-cube-terrain"><img src="videos/clay-cube-terrain/preview.jpg" width="400" alt="Clay Cube Terrain"></a></p>
+<p><b><a href="videos/clay-cube-terrain">Clay Cube Terrain</a></b> · <sub>VIDEO · Nov 27, 2026</sub><br>A 15-second drift over an endless field of rounded clay blocks rising and falling, raymarched in a single shader with fog, soft shadows and shallow depth of field, crossfading every three seconds through ember, porcelain, bioluminescent night, steel and molten-magma looks<br><sub>WebGL2 · raymarched terrain · GSAP timeline · <a href="https://instalanding.ai/videos/clay-cube-terrain">Watch</a> · <a href="videos/clay-cube-terrain/index.html">Code</a></sub></p>
+<br>
 
 <p><a href="products/dx-coder-console"><img src="products/dx-coder-console/preview.jpg" width="400" alt="DX-Coder Decoder Console"></a></p>
 <p><b><a href="products/dx-coder-console">DX-Coder Decoder Console</a></b> · <sub>PRODUCT · Nov 27, 2026</sub><br>A teal-on-black ops console for a prompt-decoding service, with five live sections: rolling-digit KPIs and a token-throughput chart, a decoder fleet with a scrolling bitstream and hex frame inspector, three regional streams and a request heatmap, model routing with its latency histogram, and a filterable decode log<br><sub>HTML + CSS + SVG · no libraries · 8 controls · <a href="https://instalanding.ai/products/dx-coder-console">Use it live</a> · <a href="products/dx-coder-console/index.html">Code</a></sub></p>
@@ -914,6 +926,18 @@ choreography, or explore it live in the lab — slow motion, stepping and live k
 Each video is one HTML file that renders every frame live, with its models, images and soundtrack
 inlined: no video file, no install. Open `index.html` and press play, or watch them at
 [instalanding.ai/videos](https://instalanding.ai/videos).
+
+<p><a href="videos/mobius-knot"><img src="videos/mobius-knot/preview.jpg" width="400" alt="Mobius Knot"></a></p>
+<p><b><a href="videos/mobius-knot">Mobius Knot</a></b> · <sub>0:13</sub><br>A 13-second loop on black: a twisting Möbius ribbon tied into a knot turns slowly in a raymarched shader, its layered bands catching soft shadows and an iridescent sweep of blue, gold and violet<br><sub>WebGL2 · one fragment shader · GSAP timeline · <a href="https://instalanding.ai/videos/mobius-knot">Watch</a> · <a href="videos/mobius-knot/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/iso-city-day-night"><img src="videos/iso-city-day-night/preview.jpg" width="400" alt="Iso City Day & Night"></a></p>
+<p><b><a href="videos/iso-city-day-night">Iso City Day & Night</a></b> · <sub>0:11</sub><br>An 11-second day-to-night cycle on an isometric apartment tower built in CSS 3D: a sun-and-moon toggle flips, the sun sets as a crescent moon and stars rise, hundreds of windows warm from blue to magenta, and a frosted weather card swaps Sunny 98° for Clear 73° before it all turns back to day<br><sub>CSS 3D · GSAP timeline · <a href="https://instalanding.ai/videos/iso-city-day-night">Watch</a> · <a href="videos/iso-city-day-night/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/clay-cube-terrain"><img src="videos/clay-cube-terrain/preview.jpg" width="400" alt="Clay Cube Terrain"></a></p>
+<p><b><a href="videos/clay-cube-terrain">Clay Cube Terrain</a></b> · <sub>0:15</sub><br>A 15-second drift over an endless field of rounded clay blocks rising and falling, raymarched in a single shader with fog, soft shadows and shallow depth of field, crossfading every three seconds through ember, porcelain, bioluminescent night, steel and molten-magma looks<br><sub>WebGL2 · raymarched terrain · GSAP timeline · <a href="https://instalanding.ai/videos/clay-cube-terrain">Watch</a> · <a href="videos/clay-cube-terrain/index.html">Code</a></sub></p>
+<br>
 
 <p><a href="videos/medusa-naga"><img src="videos/medusa-naga/preview.jpg" width="400" alt="Medusa Naga"></a></p>
 <p><b><a href="videos/medusa-naga">Medusa Naga</a></b> · <sub>0:15</sub><br>A 15-second talking ad for InstaLanding: a 3D snake-tailed Medusa in sunglasses waves, sways and speaks her lines in a synthesized voice, then stays live, watching your cursor, reacting when tapped and spinning when dragged<br><sub>Real-time 3D · Web Audio · speech synthesis · <a href="https://instalanding.ai/videos/medusa-naga">Watch</a> · <a href="videos/medusa-naga/index.html">Code</a></sub></p>
