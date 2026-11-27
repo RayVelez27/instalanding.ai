@@ -35,10 +35,14 @@ Browse them live at **[instalanding.ai/pages](https://instalanding.ai/pages)**, 
 ## New drops
 
 <!-- NEW-DROPS:START -->
-**Updated Nov 27, 2026 · 98 pages · 36 design systems · 18 motion studies · 12 videos · 3 icon sets · 11 products.** Everything new lands here first: pages, design systems, motion studies, videos, icons and products. Each one is also listed in its own section below.
+**Updated Nov 27, 2026 · 98 pages · 36 design systems · 18 motion studies · 12 videos · 3 icon sets · 12 products.** Everything new lands here first: pages, design systems, motion studies, videos, icons and products. Each one is also listed in its own section below.
 
-<p><a href="videos/mobius-knot"><img src="videos/mobius-knot/preview.jpg" width="400" alt="Mobius Knot"></a></p>
-<p><b><a href="videos/mobius-knot">Mobius Knot</a></b> · <sub>VIDEO · Nov 27, 2026</sub><br>A 13-second loop on black: a twisting Möbius ribbon tied into a knot turns slowly in a raymarched shader, its layered bands catching soft shadows and an iridescent sweep of blue, gold and violet<br><sub>WebGL2 · one fragment shader · GSAP timeline · <a href="https://instalanding.ai/videos/mobius-knot">Watch</a> · <a href="videos/mobius-knot/index.html">Code</a></sub></p>
+<p><a href="products/nineal-console"><img src="products/nineal-console/preview.jpg" width="400" alt="Nineal Support Agent Console"></a></p>
+<p><b><a href="products/nineal-console">Nineal Support Agent Console</a></b> · <sub>PRODUCT · Nov 27, 2026</sub><br>A soft, slate-blue console for running an AI support agent in production: a fine-tune run on a dial of twelve epochs you can pause or stop, live requests, latency, tokens and error rate, an output-tokens chart, a GPU fleet, deployments with their share of traffic and a streaming request log, all switchable between production and staging<br><sub>HTML + CSS + SVG · no libraries · 6 controls · <a href="https://instalanding.ai/products/nineal-console">Use it live</a> · <a href="products/nineal-console/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/mobius-knot"><img src="videos/mobius-knot/preview.jpg" width="400" alt="Mobius Knot V2"></a></p>
+<p><b><a href="videos/mobius-knot">Mobius Knot V2</a></b> · <sub>VIDEO · Nov 27, 2026</sub><br>A 13-second piece on black: a twisting Möbius ribbon tied into a knot turns full-frame in a raymarched shader, catching soft shadows and an iridescent sweep of blue, gold and violet, then pulls back and shrinks until it becomes the O in MOTION<br><sub>WebGL2 · one fragment shader · GSAP timeline · <a href="https://instalanding.ai/videos/mobius-knot">Watch</a> · <a href="videos/mobius-knot/index.html">Code</a></sub></p>
 <br>
 
 <p><a href="videos/iso-city-day-night"><img src="videos/iso-city-day-night/preview.jpg" width="400" alt="Iso City Day & Night"></a></p>
@@ -927,8 +931,8 @@ Each video is one HTML file that renders every frame live, with its models, imag
 inlined: no video file, no install. Open `index.html` and press play, or watch them at
 [instalanding.ai/videos](https://instalanding.ai/videos).
 
-<p><a href="videos/mobius-knot"><img src="videos/mobius-knot/preview.jpg" width="400" alt="Mobius Knot"></a></p>
-<p><b><a href="videos/mobius-knot">Mobius Knot</a></b> · <sub>0:13</sub><br>A 13-second loop on black: a twisting Möbius ribbon tied into a knot turns slowly in a raymarched shader, its layered bands catching soft shadows and an iridescent sweep of blue, gold and violet<br><sub>WebGL2 · one fragment shader · GSAP timeline · <a href="https://instalanding.ai/videos/mobius-knot">Watch</a> · <a href="videos/mobius-knot/index.html">Code</a></sub></p>
+<p><a href="videos/mobius-knot"><img src="videos/mobius-knot/preview.jpg" width="400" alt="Mobius Knot V2"></a></p>
+<p><b><a href="videos/mobius-knot">Mobius Knot V2</a></b> · <sub>0:13</sub><br>A 13-second piece on black: a twisting Möbius ribbon tied into a knot turns full-frame in a raymarched shader, catching soft shadows and an iridescent sweep of blue, gold and violet, then pulls back and shrinks until it becomes the O in MOTION<br><sub>WebGL2 · one fragment shader · GSAP timeline · <a href="https://instalanding.ai/videos/mobius-knot">Watch</a> · <a href="videos/mobius-knot/index.html">Code</a></sub></p>
 <br>
 
 <p><a href="videos/iso-city-day-night"><img src="videos/iso-city-day-night/preview.jpg" width="400" alt="Iso City Day & Night"></a></p>
@@ -1042,6 +1046,10 @@ Each product is a device or app concept in one HTML file, and every control in i
 
 <p><a href="products/dx-coder-console"><img src="products/dx-coder-console/preview.jpg" width="400" alt="DX-Coder Decoder Console"></a></p>
 <p><b><a href="products/dx-coder-console">DX-Coder Decoder Console</a></b> · <sub>web app ui</sub><br>A teal-on-black ops console for a prompt-decoding service, with five live sections: rolling-digit KPIs and a token-throughput chart, a decoder fleet with a scrolling bitstream and hex frame inspector, three regional streams and a request heatmap, model routing with its latency histogram, and a filterable decode log<br><sub>HTML + CSS + SVG · no libraries · 8 controls · <a href="https://instalanding.ai/products/dx-coder-console">Use it live</a> · <a href="products/dx-coder-console/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="products/nineal-console"><img src="products/nineal-console/preview.jpg" width="400" alt="Nineal Support Agent Console"></a></p>
+<p><b><a href="products/nineal-console">Nineal Support Agent Console</a></b> · <sub>web app ui</sub><br>A soft, slate-blue console for running an AI support agent in production: a fine-tune run on a dial of twelve epochs you can pause or stop, live requests, latency, tokens and error rate, an output-tokens chart, a GPU fleet, deployments with their share of traffic and a streaming request log, all switchable between production and staging<br><sub>HTML + CSS + SVG · no libraries · 6 controls · <a href="https://instalanding.ai/products/nineal-console">Use it live</a> · <a href="products/nineal-console/index.html">Code</a></sub></p>
 
 <!-- PRODUCTS:END -->
 

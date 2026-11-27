@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- Mobius Knot · InstaLanding.ai VIDEOS · adapted from a Vault Engine (Hyperframes) template: plays live, no renderer needed -->
+<!-- Mobius Knot V2 · InstaLanding.ai VIDEOS · adapted from a Vault Engine (Hyperframes) template: plays live, no renderer needed -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mobius Knot · InstaLanding.ai</title>
+    <title>Mobius Knot V2 · InstaLanding.ai</title>
     <script>/* GSAP 3.15.0, GreenSock standard licence (gsap.com/standard-license) */
 /*!
  * GSAP 3.15.0
@@ -213,7 +213,7 @@ void main() {
         const oslot = wordWrap.querySelector(".oslot");
         const ZOOM_START = 5.0, ZOOM_DUR = 2.9, TEXT_START = 6.4, TEXT_DUR = 1.1, SFINAL = 0.176;
         let oCx = 960, oCy = 540;
-        function measureO() { const r = oslot.getBoundingClientRect(); if (r.width) { oCx = r.left + r.width / 2; oCy = r.top + r.height / 2; } }
+        const stage = document.getElementById("root"); function measureO() { const r = oslot.getBoundingClientRect(), R = stage.getBoundingClientRect(), k = R.width / 1920 || 1; if (r.width) { oCx = (r.left - R.left + r.width / 2) / k; oCy = (r.top - R.top + r.height / 2) / k; } } // stage pixels, whatever the fit scale
         function layout(t) {
           measureO();
           const z = smooth(clamp01((t - ZOOM_START) / ZOOM_DUR));
