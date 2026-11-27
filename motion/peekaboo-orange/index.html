@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peekaboo Orange · InstaLanding.ai Motion</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #212121; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+  /* Fredoka Bold (SIL OFL), subset to the title glyphs. */
+  @font-face { font-family: 'Instalanding'; font-weight: 700;
+    src: url(data:font/woff2;base64,d09GMgABAAAAAAV0ABAAAAAACgAAAAUYAAIAQgAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbgjocMAZgP1NUQVRAAGQRCAqHIIVdATYCJAMkCxQABCAFg2gHIAwHGxUIUVRyQgJ8cWATmX6BHSDQhDLGNhZY24L2spdRsn8Dy7vc4avg6dvv9c7shoBfoMBgP/L+AmsWrjqnQiFJFr51FSbAQ/yhvn8ZggENSDARnatj6hrK5Qh0bGy1N5DbGtrDnMcEMwf2jGw8IyMv3xHd/wDAsANw4HTaebgCe1ckijDAbd1DeXa+3cNhVoBhdM7TwN4FC8sCCoR7GyP5ilkWNU0N3hoCqgGAEqKcEFBp1k7aPnj8PLVrn0vTzgLW/8dzLAJkFcqnKQcKhCr1jCqnKh0mGllg9Ro2ySMsocqUE+XZQfQj65YhuYR0H1+WP5THgu0OsyzWzxDS+kPzCUuVKFVGlDCEglq09QAUgEE4T/oo4WkbqUNJPlXWrZkF/YYJxZqkCqJhyQpEL6dHnTbL+DbPQ/48vWeI79UDg230xGsl0Ie4DBzjS5EuC2UaERZLFQ6DId4De5yvbLMZ5t2KHRn51dfq/jw10hUAzCGGlzqNRJ2Aq2MXlYKw6n3RdVg/r5ZaggAUGNDMEP67rNOgXj0D9tjvkCOOO+l8rr+Ic6/1fGvFskULZhLkF4RkVgdEBYBGUAlpQuYAgAUASsm9+SMIVDisNoQXMuAOb2wdEFo4kiU7jRyo9A21c7o3L2OLewcJTo5Ye/uipTYMdWb7soJacQsAcGMAHeRKDx5gMu/uQNCz6K4BmMwHsE1H8d5F4F7DvYEFsKhPpG5ujgU9DMCaB7Z4fp4dM9cYwmQOz2Oxs4OtABtKPQc3QcBLsQhFbEbLwlToJ3p2FLg3MgMWDBKcKd08wKI52I9C6OhZdHc2Bg+1jUsOzy+KDy5aVZ5vxmQu7d2hfUtLY10oztW8OIhzdkdGdlTq6vpGw56aGuDe4O6uQu/hapGW+OLZwbAmkCIAHFtByWnmCvibk7FvCevvv0l7DLr030+TfvbunPD2F+38GwL0pj7i4xfT5l7TZuBKmaRzI54aTiRfjBimKni4oamGxmi6h0caamw+Z000RRATEgkxNUVIVkAWZJSm7OmL5poZK6Z5eWSiJnzGWAN8pbkUnmF5XNKJFRukasv1ikPKHCGaS8tI2VjIkiB+3I6DCfRNU1TUHcc6HvHLF3fK9Sun5MKADogrJ5KT4ASsJJJJIruQAyjRd9r5wibsISoSIcIGFMsR8uxFC8cHEpGvGz8teeF8Z6KdisrBQ0BincIelu4IYILU7bidJgWV8g3zfWf60SQI5uT6hWOFQnVZGBUdmZJ2BdTV3IMU9WT0mXfzAozk/sdNjrH/hjhB9HE5Pe6b6W/6AU4XWEtKW4ZsgTrhgeFpNly4qIiHMFvREZxgTELIAfBhMSSiP4lwBQgIAHfPCFB7G97BJ7261l+5Mf8Af8yfPgT8JeXfupVl9oJ5A6UUgOAXN9h9C8I/mAdBpqmIPgvxjY0nuuO7If958hYL8fS9elXFPXUEVLitTJDdx98QUOU+hlQrgGUMuui0TFe1PtINz49sa0cv0VlQljZMJ59AdVmiC5VlN72U8nJUWdue6yz7ZGRdlxcTEeX0W+CZt1G/86JC+h2UFxKUkeDT77S8jLiQAKffHkVOVEZeQb9xUY6TVbDVnDkRsf5tRX6zAjJS5kT5hGWkOTE+c9HKn3FKWshEFvrjOSvPrpEjipK+eQtmeTWwb1NQEBS0LXtmB8RFcd7qWCZZ/Xsk64e4FC2TY4Icea+MpPrkSShT8PIkA4D1lhYA8X5e1q9nHwEAAA==) format('woff2'); }
+</style>
+</head>
+<body>
+<canvas id="stage" role="img" aria-label="A cartoon orange in a top hat hides in a purple hole under a bobbing INSTALANDING arrow; hover and he pops out and follows your cursor"></canvas>
+<script>
+// Scene data decoded from the original .riv file (hierarchy, geometry, paints, animations, state machine).
+const DATA = [["Backboard"],["Artboard",{"clip":0,"width":500.0,"height":500.0,"styleId":535,"defaultStateMachineId":0,"name":"Artboard"}],["Shape",{"parentId":0,"x":250.978,"y":249.007}],["Rectangle",{"parentId":1,"width":497.226,"height":497.226}],["SolidColor",{"parentId":538}],["Node",{"parentId":0,"x":102.978,"y":77.6005}],["Shape",{"parentId":4,"drawableFlags":1}],["Ellipse",{"parentId":5,"pathFlags":1,"width":38.8339,"height":38.8339}],["SolidColor",{"parentId":539}],["Shape",{"parentId":4,"scaleX":8.8,"scaleY":8.8,"drawableFlags":1}],["Ellipse",{"parentId":8,"pathFlags":1,"width":144.827,"height":144.827}],["SolidColor",{"parentId":540}],["Node",{"parentId":0,"x":247.415,"y":388.33}],["Node",{"parentId":11,"x":4.19815,"y":-68.2827}],["Node",{"parentId":12,"x":-9.98946,"y":-91.0046}],["Node",{"parentId":13,"x":-0.0136719,"y":12.7299}],["Shape",{"parentId":14,"x":-23.8179,"y":-41.3581}],["PointsPath",{"parentId":15,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":16,"x":2.12477,"y":-1.11298,"rotation":-0.660883,"distance":5.45419}],["CubicMirroredVertex",{"parentId":16,"x":23.353,"y":-10.8177,"rotation":-0.296099,"distance":5.0555}],["CubicMirroredVertex",{"parentId":16,"x":17.7923,"y":-24.2862,"rotation":2.97171,"distance":7.52339}],["CubicMirroredVertex",{"parentId":16,"x":-3.98213,"y":-11.2309,"rotation":2.10771,"distance":3.93727}],["RadialGradient",{"parentId":541,"startX":17.3304,"startY":-24.8742,"endX":5.8506,"endY":-11.765}],["GradientStop",{"parentId":21,"colorValue":4284660877}],["GradientStop",{"parentId":21,"colorValue":4281502043,"position":1.0}],["Shape",{"parentId":14,"x":-19.6256,"y":24.8276}],["PointsPath",{"parentId":24}],["CubicMirroredVertex",{"parentId":25,"x":5.00666,"y":-2.51807,"rotation":-0.540768,"distance":15.5415}],["CubicMirroredVertex",{"parentId":25,"x":48.0063,"y":-15.0576,"distance":18.2557}],["LinearGradient",{"parentId":542,"startX":-3.62411,"startY":-4.80316,"endX":36.0469,"endY":-63.3635}],["GradientStop",{"parentId":28,"colorValue":4291656754}],["GradientStop",{"parentId":28,"colorValue":4294361457,"position":1.0}],["PointsPath",{"parentId":24,"x":5.04075,"y":-2.76489}],["CubicMirroredVertex",{"parentId":31,"x":3.31221,"y":-2.03828,"rotation":-2.15743,"distance":34.3666}],["CubicMirroredVertex",{"parentId":31,"x":4.41628,"y":-60.8087,"rotation":-0.381155,"distance":16.8947}],["CubicMirroredVertex",{"parentId":31,"x":38.9821,"y":-12.2927,"rotation":1.50362,"distance":42.3268}],["Node",{"parentId":14,"x":-3.42608,"y":8.22711}],["Shape",{"parentId":35,"rotation":-0.0243959,"y":-1.52588e-05}],["PointsPath",{"parentId":36,"rotation":-0.126666,"scaleX":1.0,"scaleY":1.0,"x":9.33356e-05,"y":4.77529e-05,"isClosed":1}],["CubicDetachedVertex",{"parentId":37,"x":-19.6261,"y":-7.61141,"outRotation":-1.5708,"outDistance":10.8392}],["CubicDetachedVertex",{"parentId":37,"y":-27.2375,"inRotation":3.14159,"inDistance":10.8392}],["CubicDetachedVertex",{"parentId":37,"y":-27.2375,"outRotation":0.0,"outDistance":10.8392}],["CubicDetachedVertex",{"parentId":37,"x":19.6261,"y":-7.61141,"inRotation":-1.5708,"inDistance":10.8392}],["StraightVertex",{"parentId":37,"x":-5.69147,"y":-3.3737}],["StraightVertex",{"parentId":37,"x":19.6261,"y":0.00394619}],["StraightVertex",{"parentId":37,"x":19.6261,"y":27.2375}],["StraightVertex",{"parentId":37,"x":-19.6261,"y":27.2375}],["RadialGradient",{"parentId":543,"startX":12.4561,"startY":-16.5533,"endX":-2.26999,"endY":-2.96851}],["GradientStop",{"parentId":46,"colorValue":4286278740}],["GradientStop",{"parentId":46,"colorValue":4280095749,"position":1.0}],["ClippingShape",{"parentId":36,"sourceId":50}],["Shape",{"parentId":14,"x":-11.5307,"y":20.0244}],["PointsPath",{"parentId":50,"isClosed":1}],["CubicDetachedVertex",{"parentId":51,"x":4.56969e-06,"inRotation":-0.406822,"inDistance":8.83235,"outRotation":-2.05498,"outDistance":42.7702}],["CubicMirroredVertex",{"parentId":51,"x":1.32261,"y":-58.7374,"rotation":-0.410224,"distance":13.4399}],["CubicDetachedVertex",{"parentId":51,"x":35.928,"y":-10.2545,"inRotation":-1.6306,"inDistance":45.119,"outRotation":2.91665,"outDistance":7.80225}],["CubicMirroredVertex",{"parentId":51,"x":17.1547,"y":-6.59871,"rotation":2.80813,"distance":9.57034}],["SolidColor",{"parentId":544,"colorValue":4294635479}],["Node",{"parentId":12,"x":37.2112,"y":-75.0723}],["Node",{"parentId":57,"x":-3.26321,"y":3.92512}],["Shape",{"parentId":58,"x":-6.82788,"y":-6.17531}],["PointsPath",{"parentId":59}],["CubicMirroredVertex",{"parentId":60,"x":1.14342e-05,"y":-5.35945e-06,"rotation":-0.705568,"distance":13.4802}],["CubicMirroredVertex",{"parentId":60,"x":20.8325,"y":-3.11652,"rotation":1.25266,"distance":4.60097}],["CubicMirroredVertex",{"parentId":60,"x":5.20963,"y":11.0002,"rotation":-3.28626,"distance":16.8728}],["LinearGradient",{"parentId":545,"startX":1.30939,"startY":4.22039,"endX":18.7961,"endY":-6.50018}],["GradientStop",{"parentId":64,"colorValue":4293961050}],["GradientStop",{"parentId":64,"colorValue":4294756242,"position":1.0}],["Shape",{"parentId":58,"x":-6.82788,"y":-6.17531}],["PointsPath",{"parentId":67,"isClosed":1}],["CubicDetachedVertex",{"parentId":68,"x":1.14342e-05,"y":-5.35945e-06,"inRotation":2.3817,"inDistance":3.26634,"outRotation":-0.705568,"outDistance":13.4802}],["CubicMirroredVertex",{"parentId":68,"x":20.8325,"y":-3.11652,"rotation":1.25266,"distance":4.60097}],["CubicDetachedVertex",{"parentId":68,"x":5.20963,"y":11.0002,"inRotation":-0.144665,"inDistance":16.8728,"outRotation":3.13166,"outDistance":6.66321}],["RadialGradient",{"parentId":546,"startX":15.7674,"startY":-4.45976,"endX":-0.512787,"endY":7.88182}],["GradientStop",{"parentId":72,"colorValue":4294294894,"position":0.250611}],["GradientStop",{"parentId":72,"colorValue":4293828180,"position":1.0}],["GradientStop",{"parentId":72,"colorValue":4294570211}],["Shape",{"parentId":58,"x":-7.34067,"y":-5.80623}],["PointsPath",{"parentId":76,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":77,"x":-0.366085,"y":-0.366089,"rotation":2.3568,"distance":6.22601}],["CubicMirroredVertex",{"parentId":77,"x":-5.3067,"y":16.9117,"rotation":0.878266,"distance":7.51717}],["StraightVertex",{"parentId":77,"x":8.33369,"y":10.6315}],["StraightVertex",{"parentId":77,"x":6.56725,"y":0.911746}],["SolidColor",{"parentId":547,"colorValue":4294094430}],["Node",{"parentId":12,"x":52.9461,"y":-97.3132}],["Node",{"parentId":83,"rotation":0.22112,"scaleX":0.866666,"scaleY":0.866666,"x":2.43802,"y":11.4185}],["Shape",{"parentId":84,"rotation":-0.22112,"scaleX":1.15385,"scaleY":1.15385,"x":-31.2676,"y":-51.8847}],["PointsPath",{"parentId":85,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":86,"y":0.634209,"distance":3.27353}],["CubicMirroredVertex",{"parentId":86,"x":17.9498,"y":4.17739,"rotation":0.408149,"distance":3.19575}],["CubicMirroredVertex",{"parentId":86,"x":16.5383,"y":-5.24747,"rotation":-2.51165,"distance":4.51296}],["CubicMirroredVertex",{"parentId":86,"y":-11.0266,"rotation":-3.14159,"distance":4.85955}],["RadialGradient",{"parentId":548,"startX":15.0683,"startY":-11.0266,"endX":4.72962,"endY":2.67681}],["GradientStop",{"parentId":91,"colorValue":4284660877}],["GradientStop",{"parentId":91,"colorValue":4281502043,"position":1.0}],["PointsPath",{"parentId":85,"x":-4.28536,"y":0.634209}],["StraightVertex",{"parentId":94,"x":1.08083e-05,"y":-7.00355e-06}],["Shape",{"parentId":84,"x":-19.6256,"y":24.8276}],["PointsPath",{"parentId":96}],["CubicMirroredVertex",{"parentId":97,"x":5.08474,"y":-2.09951,"rotation":-0.619464,"distance":13.1631}],["CubicMirroredVertex",{"parentId":97,"x":44.9014,"y":-14.2506,"rotation":-0.0211781,"distance":18.2361}],["LinearGradient",{"parentId":549,"startX":-1.15697,"startY":-7.35683,"endX":24.6945,"endY":-64.3915}],["GradientStop",{"parentId":100,"colorValue":4291920953}],["GradientStop",{"parentId":100,"colorValue":4294493814,"position":1.0}],["PointsPath",{"parentId":96,"x":5.04075,"y":-2.76489}],["CubicMirroredVertex",{"parentId":103,"x":3.31221,"y":-2.03828,"rotation":-2.15743,"distance":34.3666}],["CubicMirroredVertex",{"parentId":103,"x":-5.35223,"y":-62.162,"rotation":-0.381155,"distance":16.8947}],["CubicMirroredVertex",{"parentId":103,"x":36.7204,"y":-12.0995,"rotation":1.44103,"distance":42.8341}],["Node",{"parentId":84,"x":-3.42609,"y":8.2271}],["Shape",{"parentId":107,"rotation":-0.202632,"scaleX":1.0,"scaleY":1.0,"x":1.76416e-06,"y":1.25317e-05}],["PointsPath",{"parentId":108,"rotation":-0.118843,"scaleX":1.0,"scaleY":1.0,"x":-5.25752e-05,"y":-5.63411e-05,"isClosed":1}],["CubicDetachedVertex",{"parentId":109,"x":-19.6261,"y":-7.61141,"outRotation":-1.5708,"outDistance":10.8392}],["CubicDetachedVertex",{"parentId":109,"y":-27.2375,"inRotation":3.14159,"inDistance":10.8392}],["CubicDetachedVertex",{"parentId":109,"y":-27.2375,"outRotation":0.0,"outDistance":10.8392}],["CubicDetachedVertex",{"parentId":109,"x":19.6261,"y":-7.61141,"inRotation":-1.5708,"inDistance":10.8392}],["StraightVertex",{"parentId":109,"x":-5.69147,"y":-3.3737}],["StraightVertex",{"parentId":109,"x":19.6261,"y":0.00394619}],["StraightVertex",{"parentId":109,"x":19.6261,"y":27.2375}],["StraightVertex",{"parentId":109,"x":-19.6261,"y":27.2375}],["RadialGradient",{"parentId":550,"startX":11.0265,"startY":-20.5067,"endX":-4.71328,"endY":-0.620383}],["GradientStop",{"parentId":118,"colorValue":4286015569}],["GradientStop",{"parentId":118,"colorValue":4280095749,"position":1.0}],["ClippingShape",{"parentId":108,"sourceId":122}],["Shape",{"parentId":84,"x":-11.5307,"y":20.0244}],["PointsPath",{"parentId":122,"isClosed":1}],["CubicDetachedVertex",{"parentId":123,"x":4.56969e-06,"inRotation":-0.406822,"inDistance":8.83235,"outRotation":-2.14126,"outDistance":40.0805}],["CubicMirroredVertex",{"parentId":123,"x":-8.95731,"y":-60.1728,"rotation":-0.410224,"distance":13.4399}],["CubicDetachedVertex",{"parentId":123,"x":34.0146,"y":-9.79379,"inRotation":-1.72111,"inDistance":48.2812,"outRotation":2.91665,"outDistance":7.80225}],["CubicMirroredVertex",{"parentId":123,"x":17.1547,"y":-6.59871,"rotation":2.80813,"distance":9.57034}],["SolidColor",{"parentId":551,"colorValue":4294635479}],["Node",{"parentId":12,"rotation":0.208296,"x":17.8136,"y":-36.9161}],["Node",{"parentId":129,"rotation":-0.195238,"x":7.97332,"y":1.17341}],["Node",{"parentId":130,"x":-7.36223,"y":-5.27017}],["Shape",{"parentId":131,"rotation":0.195238,"scaleX":0.999999,"scaleY":0.999999,"x":0.0541391,"y":-0.00364373}],["PointsPath",{"parentId":132,"isClosed":1}],["StraightVertex",{"parentId":133,"x":-6.53664e-06,"y":1.47149e-05}],["StraightVertex",{"parentId":133,"x":31.3828,"y":-15.59}],["CubicMirroredVertex",{"parentId":133,"x":33.114,"y":-14.3653,"rotation":1.14596,"distance":1.69797}],["StraightVertex",{"parentId":133,"x":33.114,"y":-11.6764}],["LinearGradient",{"parentId":552,"startX":1.54274,"startY":-0.287659,"endX":32.3387,"endY":-13.1711}],["GradientStop",{"parentId":138,"colorValue":4281404995}],["GradientStop",{"parentId":138,"colorValue":4290474468,"position":1.0}],["Shape",{"parentId":130,"rotation":0.195238,"scaleX":0.999999,"scaleY":0.999999,"x":-19.1144,"y":-12.1666}],["PointsPath",{"parentId":141}],["CubicMirroredVertex",{"parentId":142,"x":-3.73026e-06,"y":-2.36928e-06,"rotation":-0.124062,"distance":6.47912}],["CubicMirroredVertex",{"parentId":142,"x":26.2764,"y":-6.40851,"rotation":-0.305012,"distance":5.42166}],["PointsPath",{"parentId":141,"x":2.37605,"y":1.95675,"pathFlags":2}],["CubicMirroredVertex",{"parentId":145,"x":2.93512,"y":-2.75851,"rotation":2.0008,"distance":4.84377}],["CubicMirroredVertex",{"parentId":145,"x":10.9577,"y":10.7678,"rotation":-0.184784,"distance":7.60709}],["CubicMirroredVertex",{"parentId":145,"x":18.2543,"y":-6.51078,"rotation":-1.84502,"distance":4.3498}],["LinearGradient",{"parentId":553,"startX":21.3991,"startY":-6.89514,"endX":3.87932,"endY":18.3539}],["GradientStop",{"parentId":149,"colorValue":4292714329}],["GradientStop",{"parentId":149,"colorValue":4289489197,"position":1.0}],["PointsPath",{"parentId":141,"x":1.23314,"y":-3.75611}],["CubicMirroredVertex",{"parentId":152,"x":1.94116e-05,"y":1.16771e-05,"rotation":1.67151,"distance":2.16365}],["CubicMirroredVertex",{"parentId":152,"x":-3.26119,"y":7.12729,"rotation":2.29678,"distance":2.51718}],["PointsPath",{"parentId":141,"x":24.2954,"y":-9.37243}],["StraightVertex",{"parentId":155,"x":-1.84514e-06,"y":9.85048e-06}],["CubicMirroredVertex",{"parentId":155,"x":4.70437,"y":4.83617,"rotation":0.217607,"distance":3.19544}],["Shape",{"parentId":130,"rotation":0.195238,"scaleX":0.999999,"scaleY":0.999999,"x":-3.29533,"y":-15.0554}],["PointsPath",{"parentId":158,"pathFlags":2,"isClosed":1}],["StraightVertex",{"parentId":159,"x":-1.47025e-05,"y":-9.07977e-06}],["StraightVertex",{"parentId":159,"x":-19.3012,"y":4.11557}],["StraightVertex",{"parentId":159,"x":-18.6335,"y":14.4976}],["StraightVertex",{"parentId":159,"x":-0.0481222,"y":10.0356}],["SolidColor",{"parentId":554,"colorValue":4294304181}],["ClippingShape",{"parentId":158,"sourceId":174}],["Shape",{"parentId":130,"rotation":0.195238,"scaleX":0.999999,"scaleY":0.999999,"x":-3.29533,"y":-15.0554}],["SolidColor",{"parentId":555,"colorValue":4294568648}],["PointsPath",{"parentId":166,"x":-13.3495,"y":36.0993,"pathFlags":2,"isClosed":1}],["StraightVertex",{"parentId":168,"x":1.17022,"y":-13.1309}],["StraightVertex",{"parentId":168,"x":17.8047,"y":-17.3247}],["StraightVertex",{"parentId":168,"x":13.2155,"y":-26.226}],["StraightVertex",{"parentId":168,"x":-4.8421,"y":-22.1782}],["ClippingShape",{"parentId":166,"sourceId":174}],["Shape",{"parentId":130,"rotation":0.195238,"scaleX":0.999999,"scaleY":0.999999,"x":-14.0457,"y":-11.9815}],["PointsPath",{"parentId":174,"pathFlags":2,"isClosed":1}],["CubicDetachedVertex",{"parentId":175,"inRotation":-0.275058,"inDistance":5.71299,"outRotation":1.60522,"outDistance":5.06534}],["CubicMirroredVertex",{"parentId":175,"x":8.54694,"y":13.6066,"rotation":-0.181735,"distance":8.20683}],["CubicDetachedVertex",{"parentId":175,"x":15.413,"y":-3.75226,"inRotation":0.695228,"inDistance":1.05502,"outRotation":-3.14159,"outDistance":1.81321}],["SolidColor",{"parentId":556,"colorValue":4278190080}],["Node",{"parentId":12,"x":-57.1189,"y":-37.9232}],["Node",{"parentId":180,"scaleX":1.04662,"x":-0.110443,"y":-9.80516}],["Shape",{"parentId":181,"x":0.520752,"y":-9.20972}],["PointsPath",{"parentId":182,"pathFlags":2}],["CubicMirroredVertex",{"parentId":183,"x":-1.80304e-06,"rotation":3.14159,"distance":7.20948}],["CubicMirroredVertex",{"parentId":183,"x":-8.60989,"y":14.4241,"rotation":0.946928,"distance":7.66859}],["CubicMirroredVertex",{"parentId":183,"x":5.08294,"y":14.9428,"rotation":-0.821878,"distance":5.02787}],["StraightVertex",{"parentId":183,"x":9.12855,"y":8.09636}],["SolidColor",{"parentId":557,"colorValue":4288963112}],["PointsPath",{"parentId":182,"x":-0.520752,"y":4.62128}],["CubicMirroredVertex",{"parentId":189,"y":7.87278e-06,"rotation":1.5708,"distance":1.68822}],["CubicMirroredVertex",{"parentId":189,"x":2.83644,"y":3.6496,"distance":1.61152}],["PointsPath",{"parentId":182,"x":-3.11201,"y":9.20973}],["CubicMirroredVertex",{"parentId":192,"x":5.28991e-06,"y":1.52588e-05,"rotation":-1.78603,"distance":2.09532}],["CubicMirroredVertex",{"parentId":192,"x":2.59188,"y":-3.60296,"distance":1.14128}],["Shape",{"parentId":181,"x":6.40096,"y":-5.06262}],["PointsPath",{"parentId":195,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":196,"x":0.695358,"y":0.347671,"rotation":-1.99068,"distance":4.2644}],["CubicMirroredVertex",{"parentId":196,"x":-8.83101,"y":-3.89399,"rotation":-3.42632,"distance":2.97056}],["CubicMirroredVertex",{"parentId":196,"x":-14.6025,"y":8.831,"rotation":1.17967,"distance":7.29593}],["CubicMirroredVertex",{"parentId":196,"x":-2.78142,"y":12.6555,"rotation":-0.54042,"distance":4.05458}],["LinearGradient",{"parentId":558,"startX":-13.3786,"startY":11.1543,"endX":-1.54343,"endY":-1.53653}],["GradientStop",{"parentId":201,"colorValue":4289751077}],["GradientStop",{"parentId":201,"colorValue":4292906822,"position":1.0}],["Shape",{"parentId":181,"x":9.64931,"y":-0.938843}],["PointsPath",{"parentId":204,"isClosed":1}],["CubicDetachedVertex",{"parentId":205,"inRotation":-2.98843,"inDistance":5.65427,"outRotation":1.41099,"outDistance":9.58164}],["CubicMirroredVertex",{"parentId":205,"x":-11.7878,"y":13.1567,"rotation":-2.83876,"distance":6.58751}],["CubicDetachedVertex",{"parentId":205,"x":-12.3076,"y":-5.62517,"inRotation":2.33052,"inDistance":7.10391,"outRotation":0.671114,"outDistance":4.07341}],["SolidColor",{"parentId":559,"colorValue":4291590962}],["ClippingShape",{"parentId":204,"sourceId":225}],["Node",{"parentId":12,"x":-21.5427,"y":-42.1127}],["Shape",{"parentId":211,"x":-1.8992,"y":-2.58151}],["Ellipse",{"parentId":212,"scaleY":0.930565,"x":-4.07465,"y":5.82272,"width":1.90515,"height":1.90515}],["Ellipse",{"parentId":212,"x":7.87305,"y":-0.445145,"width":1.90515,"height":1.90515}],["Ellipse",{"parentId":212,"width":3.09221,"height":3.09221}],["SolidColor",{"parentId":560,"colorValue":4291919927}],["ClippingShape",{"parentId":212,"sourceId":239}],["Node",{"parentId":12,"x":71.1608,"y":-60.9809}],["Shape",{"parentId":218,"x":-94.6027,"y":16.2867}],["Ellipse",{"parentId":219,"rotation":0.662092,"scaleY":0.930565,"x":87.9523,"y":-16.147,"width":1.90515,"height":1.90515}],["Ellipse",{"parentId":219,"rotation":0.662092,"x":101.229,"y":-13.7455,"width":1.90515,"height":1.90515}],["Ellipse",{"parentId":219,"rotation":0.662092,"x":94.7456,"y":-18.2345,"width":3.09221,"height":3.09221}],["SolidColor",{"parentId":561,"colorValue":4293039699}],["ClippingShape",{"parentId":219,"sourceId":239}],["Node",{"parentId":12,"x":-1.61276,"y":-79.0476}],["Shape",{"parentId":225}],["Ellipse",{"parentId":226,"width":162.0,"height":162.0}],["LinearGradient",{"parentId":562,"startX":-71.6943,"startY":43.0064,"endX":58.3701,"endY":-58.5185}],["GradientStop",{"parentId":228,"colorValue":4291788341}],["GradientStop",{"parentId":228,"colorValue":4294494328,"position":0.912698}],["Shape",{"parentId":225}],["Ellipse",{"parentId":231,"width":162.0,"height":162.0}],["RadialGradient",{"parentId":563,"startX":38.8239,"startY":-49.6104,"endX":-56.9454,"endY":55.5992}],["GradientStop",{"parentId":233,"colorValue":4293827923,"position":0.734127}],["GradientStop",{"parentId":233,"colorValue":4293827923,"position":1.0}],["GradientStop",{"parentId":233,"colorValue":4291590962,"position":0.924614}],["GradientStop",{"parentId":233,"colorValue":4294896842}],["GradientStop",{"parentId":233,"colorValue":4294628230,"position":0.123016}],["Shape",{"parentId":225}],["Ellipse",{"parentId":239,"width":162.0,"height":162.0}],["SolidColor",{"parentId":564,"colorValue":4294627454}],["Node",{"parentId":12,"x":0.726501,"y":-70.6278}],["Node",{"parentId":242,"x":-19.8435,"y":-79.6159}],["Node",{"parentId":243,"x":3.34698,"y":6.36741}],["Node",{"parentId":244,"x":-5.27423,"y":-2.18411}],["Shape",{"parentId":245,"x":4.25606,"y":-34.339}],["PointsPath",{"parentId":246,"pathFlags":2}],["CubicMirroredVertex",{"parentId":247,"x":-0.629852,"y":-0.157467,"rotation":-2.2696,"distance":6.50236}],["CubicMirroredVertex",{"parentId":247,"x":5.18023,"y":-8.75701,"rotation":0.339293,"distance":5.25123}],["CubicMirroredVertex",{"parentId":247,"x":6.56041,"y":5.23272,"rotation":2.14857,"distance":5.12185}],["CubicMirroredVertex",{"parentId":247,"x":-7.47634,"y":18.1568,"rotation":2.49809,"distance":7.76762}],["StraightVertex",{"parentId":247,"x":-19.1278,"y":31.9443}],["CubicMirroredVertex",{"parentId":247,"x":-6.06808,"y":39.5413,"rotation":0.0451238,"distance":18.0215}],["CubicMirroredVertex",{"parentId":247,"x":31.9328,"y":11.2689,"rotation":-1.32599,"distance":18.6243}],["CubicMirroredVertex",{"parentId":247,"x":11.9351,"y":-28.8833,"rotation":-3.05406,"distance":18.6956}],["CubicMirroredVertex",{"parentId":247,"x":-14.9385,"y":-7.52089,"rotation":1.45962,"distance":11.2493}],["CubicMirroredVertex",{"parentId":247,"x":6.56041,"y":4.82083,"rotation":-0.417819,"distance":12.1571}],["LinearGradient",{"parentId":565,"startX":-6.61424,"startY":16.5112,"endX":28.1156,"endY":-19.5328}],["GradientStop",{"parentId":258,"colorValue":4280511300}],["GradientStop",{"parentId":258,"colorValue":4286572463,"position":0.984127}],["Shape",{"parentId":245,"x":-10.7937,"y":5.20227}],["PointsPath",{"parentId":261,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":262,"x":1.84481,"y":3.10705,"rotation":0.649231,"distance":6.70422}],["CubicMirroredVertex",{"parentId":262,"x":31.6207,"y":-4.05319,"rotation":-0.662631,"distance":12.7451}],["CubicMirroredVertex",{"parentId":262,"x":47.226,"y":-50.0535,"rotation":-1.82534,"distance":19.459}],["CubicMirroredVertex",{"parentId":262,"x":9.4222,"y":-65.5628,"rotation":2.55767,"distance":13.7374}],["CubicMirroredVertex",{"parentId":262,"x":4.84212,"y":-36.5617,"rotation":0.679162,"distance":8.50165}],["StraightVertex",{"parentId":262,"x":20.8834,"y":-34.1388}],["CubicMirroredVertex",{"parentId":262,"x":12.234,"y":-24.3945,"rotation":2.54962,"distance":6.78626}],["CubicMirroredVertex",{"parentId":262,"x":-1.77301,"y":-11.1608,"rotation":1.94925,"distance":6.23845}],["RadialGradient",{"parentId":566,"startX":35.6623,"startY":-61.122,"endX":3.97379,"endY":-19.9424}],["GradientStop",{"parentId":271,"colorValue":4287690688}],["GradientStop",{"parentId":271,"colorValue":4280783962,"position":1.0}],["Node",{"parentId":242,"x":-59.3328,"y":-78.5877}],["Node",{"parentId":274,"x":8.8456,"y":10.8958}],["Shape",{"parentId":275,"rotation":-0.789461,"x":1.45087,"y":-0.915359}],["PointsPath",{"parentId":276,"y":1.09356e-05,"isClosed":1}],["CubicDetachedVertex",{"parentId":277,"y":-15.9877,"inRotation":3.14159,"inDistance":24.8528,"outRotation":0.0,"outDistance":24.8528}],["CubicDetachedVertex",{"parentId":277,"x":45.0,"inRotation":-1.5708,"inDistance":8.82978,"outRotation":1.5708,"outDistance":8.82978}],["CubicDetachedVertex",{"parentId":277,"y":15.9877,"inRotation":0.0,"inDistance":24.8528,"outRotation":3.14159,"outDistance":24.8528}],["CubicDetachedVertex",{"parentId":277,"x":-45.0,"inRotation":1.5708,"inDistance":8.82978,"outRotation":-1.5708,"outDistance":8.82978}],["RadialGradient",{"parentId":567,"startX":-0.0420812,"startY":9.46732,"endX":29.1,"endY":0.434428}],["GradientStop",{"parentId":282,"colorValue":4281930063}],["GradientStop",{"parentId":282,"colorValue":4283373421,"position":1.0}],["LinearGradient",{"parentId":568,"startX":-45.0,"startY":3.14713e-05,"endX":45.0,"endY":3.14713e-05}],["GradientStop",{"parentId":285,"colorValue":4283111016}],["GradientStop",{"parentId":285,"colorValue":4288369346,"position":1.0}],["Node",{"parentId":275,"rotation":-0.789461,"x":-6.53883,"y":-7.9982}],["Shape",{"parentId":288,"rotation":1.83641e-09,"scaleX":1.00694,"x":-1.49998,"y":-7.87494}],["PointsPath",{"parentId":289,"isClosed":1}],["CubicMirroredVertex",{"parentId":290,"x":-0.110838,"y":-3.78536,"rotation":-0.0207491,"distance":26.1157}],["CubicMirroredVertex",{"parentId":290,"x":37.7059,"y":5.57598,"rotation":0.972719,"distance":2.32829}],["CubicMirroredVertex",{"parentId":290,"x":34.8819,"y":15.6543,"rotation":2.15379,"distance":3.46647}],["StraightVertex",{"parentId":290,"x":1.30663,"y":18.0979}],["CubicMirroredVertex",{"parentId":290,"x":-32.3654,"y":15.5964,"rotation":4.18399,"distance":3.35087}],["CubicMirroredVertex",{"parentId":290,"x":-34.9451,"y":3.68447,"rotation":-0.939425,"distance":2.31877}],["SolidColor",{"parentId":569,"colorValue":4291989496}],["Shape",{"parentId":288,"x":0.100645,"y":-30.625}],["PointsPath",{"parentId":298,"isClosed":1}],["CubicDetachedVertex",{"parentId":299,"y":-10.0,"inRotation":3.14159,"inDistance":19.0538,"outRotation":0.0,"outDistance":19.0538}],["CubicDetachedVertex",{"parentId":299,"x":34.5,"inRotation":-1.83944,"inDistance":5.7283,"outRotation":1.20392,"outDistance":2.3548}],["CubicAsymmetricVertex",{"parentId":299,"x":35.877,"y":18.1314,"rotation":1.5708,"inDistance":8.83511,"outDistance":5.41823}],["CubicAsymmetricVertex",{"parentId":299,"x":31.563,"y":40.4489,"rotation":3.14159,"inDistance":1.71407,"outDistance":10.502}],["CubicDetachedVertex",{"parentId":299,"x":-1.60487,"y":42.3568,"inRotation":-2.15797e-07,"inDistance":6.90518,"outRotation":3.14159,"outDistance":10.5048}],["CubicAsymmetricVertex",{"parentId":299,"x":-32.5567,"y":41.8149,"rotation":3.14159,"inDistance":7.21124,"outDistance":1.52098}],["CubicAsymmetricVertex",{"parentId":299,"x":-36.0782,"y":18.1314,"rotation":4.71239,"inDistance":3.74957,"outDistance":9.63381}],["CubicDetachedVertex",{"parentId":299,"x":-34.5,"inRotation":2.11584,"inDistance":2.76963,"outRotation":-1.05584,"outDistance":6.3458}],["LinearGradient",{"parentId":570,"startX":-36.0782,"startY":16.1784,"endX":27.1668,"endY":13.2248}],["GradientStop",{"parentId":308,"colorValue":4284753032}],["GradientStop",{"parentId":308,"colorValue":4288300233,"position":0.824543}],["GradientStop",{"parentId":308,"colorValue":4288300233,"position":1.0}],["GradientStop",{"parentId":308,"colorValue":4291398890,"position":0.916667}],["GradientStop",{"parentId":308,"colorValue":4285475734,"position":0.424603}],["LinearGradient",{"parentId":571,"startX":-36.0782,"startY":16.1784,"endX":35.877,"endY":16.1784}],["GradientStop",{"parentId":314,"colorValue":4285212817}],["GradientStop",{"parentId":314,"colorValue":4289815771,"position":1.0}],["Node",{"parentId":11,"x":2.58539,"y":-7.06158}],["Node",{"parentId":317,"x":3.98943,"y":-33.7614}],["Node",{"parentId":318,"x":1.03644,"y":-1.47491}],["Shape",{"parentId":319,"x":-15.482,"y":-4.19327}],["Ellipse",{"parentId":320,"x":-1.57318,"y":10.4529,"width":5.24396,"height":5.24396}],["Ellipse",{"parentId":320,"x":8.35538,"y":5.13908,"width":5.24396,"height":5.24396}],["Ellipse",{"parentId":320,"width":6.99194,"height":6.99194}],["SolidColor",{"parentId":572,"colorValue":4283569778}],["Shape",{"parentId":319,"x":1.79753,"y":-0.679138}],["PointsPath",{"parentId":325,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":326,"rotation":-1.5708,"distance":3.17879}],["CubicMirroredVertex",{"parentId":326,"x":-18.6399,"y":-10.9984,"rotation":-3.01044,"distance":7.63982}],["CubicMirroredVertex",{"parentId":326,"x":-18.6399,"y":12.3803,"rotation":-0.0573082,"distance":7.58666}],["RadialGradient",{"parentId":573,"startX":-2.62639,"startY":-6.02032,"endX":-23.1532,"endY":9.5102}],["GradientStop",{"parentId":330,"colorValue":4287098551}],["GradientStop",{"parentId":330,"colorValue":4280717143,"position":1.0}],["Shape",{"parentId":319,"x":3.03462,"y":-0.679138}],["Ellipse",{"parentId":333,"width":9.58292,"height":9.58292}],["RadialGradient",{"parentId":574,"startX":2.56007,"startY":-4.10942,"endX":-3.59259,"endY":2.7878}],["GradientStop",{"parentId":335,"colorValue":4286572207}],["GradientStop",{"parentId":335,"colorValue":4281375073,"position":1.0}],["Shape",{"parentId":319,"scaleX":0.9,"scaleY":0.9,"x":12.5976,"y":-4.19327}],["Ellipse",{"parentId":338,"x":5.71823,"y":11.9869,"width":5.24396,"height":5.24396}],["Ellipse",{"parentId":338,"x":6.37087,"y":-1.92935,"width":5.24396,"height":5.24396}],["Ellipse",{"parentId":338,"x":-0.538584,"y":4.42113,"width":6.99194,"height":6.99194}],["SolidColor",{"parentId":575,"colorValue":4283569778}],["Shape",{"parentId":319,"rotation":-3.14159,"scaleX":0.852179,"scaleY":-1.0,"x":1.79753,"y":-0.679138}],["PointsPath",{"parentId":343,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":344,"rotation":-1.5708,"distance":3.17879}],["CubicMirroredVertex",{"parentId":344,"x":-18.6399,"y":-10.9984,"rotation":-3.01044,"distance":7.63982}],["CubicMirroredVertex",{"parentId":344,"x":-18.6399,"y":12.3803,"rotation":-0.0573082,"distance":7.58666}],["RadialGradient",{"parentId":576,"startX":-23.5358,"startY":-7.58928,"endX":-5.91803e-06,"endY":0.679114}],["GradientStop",{"parentId":348,"colorValue":4287098551}],["GradientStop",{"parentId":348,"colorValue":4281703782,"position":1.0}],["Shape",{"parentId":317,"x":-6.0746,"y":-62.8654}],["PointsPath",{"parentId":351,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":352,"x":-2.38419e-06,"y":-5.40415e-06,"rotation":1.5708,"distance":12.69}],["CubicMirroredVertex",{"parentId":352,"x":-5.14781,"y":77.9355,"rotation":1.73397,"distance":19.8978}],["CubicMirroredVertex",{"parentId":352,"x":14.4857,"y":76.2594,"rotation":-1.5708,"distance":27.2954}],["CubicMirroredVertex",{"parentId":352,"x":14.4857,"y":-5.40415e-06,"rotation":-1.5708,"distance":7.42243}],["StraightVertex",{"parentId":352,"x":6.50673,"y":-12.69}],["SolidColor",{"parentId":577,"colorValue":4291854134}],["ClippingShape",{"parentId":351,"sourceId":410}],["Node",{"parentId":317,"x":3.33496,"y":-27.7108}],["Node",{"parentId":360,"x":0.518654,"y":-4.79506}],["Shape",{"parentId":361,"x":1.27887,"y":4.11594}],["PointsPath",{"parentId":362,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":363,"rotation":-1.5708,"distance":3.17879}],["CubicMirroredVertex",{"parentId":363,"x":-18.6399,"y":-10.9984,"rotation":-3.01044,"distance":7.63982}],["CubicMirroredVertex",{"parentId":363,"x":-18.6399,"y":12.3803,"rotation":-0.0573082,"distance":7.58666}],["SolidColor",{"parentId":578,"colorValue":4290407977}],["Shape",{"parentId":361,"x":2.51596,"y":4.11594}],["Ellipse",{"parentId":368,"width":9.58292,"height":9.58292}],["SolidColor",{"parentId":579,"colorValue":4290407977}],["Shape",{"parentId":361,"rotation":-3.14159,"scaleX":0.852179,"scaleY":-1.0,"x":1.27887,"y":4.11594}],["PointsPath",{"parentId":371,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":372,"rotation":-1.5708,"distance":3.17879}],["CubicMirroredVertex",{"parentId":372,"x":-18.6399,"y":-10.9984,"rotation":-3.01044,"distance":7.63982}],["CubicMirroredVertex",{"parentId":372,"x":-18.6399,"y":12.3803,"rotation":-0.0573082,"distance":7.58666}],["SolidColor",{"parentId":580,"colorValue":4290407977}],["TransformConstraint",{"parentId":360,"strength":0.7925,"targetId":318,"originY":0.0025}],["ClippingShape",{"parentId":360,"sourceId":400}],["Shape",{"parentId":317,"rotation":3.13403,"x":27.3014,"y":-20.5334}],["PointsPath",{"parentId":379,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":380,"x":-3.99351e-06,"rotation":0.386991,"distance":12.044}],["CubicMirroredVertex",{"parentId":380,"x":49.0818,"rotation":-0.346745,"distance":13.3753}],["StraightVertex",{"parentId":380,"x":45.5464,"y":-32.0237}],["StraightVertex",{"parentId":380,"x":7.15346,"y":-32.0237}],["LinearGradient",{"parentId":581,"startX":21.0712,"startY":1.7018,"endX":21.1564,"endY":-9.56649}],["GradientStop",{"parentId":385,"colorValue":4293827923}],["GradientStop",{"parentId":385,"colorValue":4290407977,"position":0.996032}],["ClippingShape",{"parentId":379,"sourceId":400}],["ClippingShape",{"parentId":379,"sourceId":526}],["Shape",{"parentId":317,"x":-18.9699,"y":-46.9138}],["PointsPath",{"parentId":390,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":391,"x":-3.99351e-06,"rotation":0.386991,"distance":12.044}],["CubicMirroredVertex",{"parentId":391,"x":49.0818,"rotation":-0.346745,"distance":13.3753}],["StraightVertex",{"parentId":391,"x":45.5464,"y":-32.0237}],["StraightVertex",{"parentId":391,"x":7.15346,"y":-32.0237}],["LinearGradient",{"parentId":582,"startX":21.4277,"startY":1.89568,"endX":21.4277,"endY":-5.46028}],["GradientStop",{"parentId":396,"colorValue":4293827923}],["GradientStop",{"parentId":396,"colorValue":4290407977,"position":0.996032}],["ClippingShape",{"parentId":390,"sourceId":400}],["Shape",{"parentId":317,"x":-6.0746,"y":-62.8654}],["PointsPath",{"parentId":400,"pathFlags":2,"isClosed":1}],["CubicMirroredVertex",{"parentId":401,"x":-2.38419e-06,"y":-5.40415e-06,"rotation":1.5708,"distance":12.69}],["CubicMirroredVertex",{"parentId":401,"x":-5.14781,"y":77.9355,"rotation":1.73397,"distance":19.8978}],["CubicMirroredVertex",{"parentId":401,"x":14.4857,"y":76.2594,"rotation":-1.5708,"distance":27.2954}],["CubicMirroredVertex",{"parentId":401,"x":14.4857,"y":-5.40415e-06,"rotation":-1.5708,"distance":7.42243}],["StraightVertex",{"parentId":401,"x":6.50673,"y":-12.69}],["SolidColor",{"parentId":583,"colorValue":4293827923}],["ClippingShape",{"parentId":400,"sourceId":410}],["ClippingShape",{"parentId":11,"sourceId":410}],["Shape",{"parentId":0,"x":258.411,"y":351.469}],["Ellipse",{"parentId":410,"width":254.397,"height":34.229}],["SolidColor",{"parentId":584,"colorValue":4278190080}],["PointsPath",{"parentId":410,"x":-127.198,"isClosed":1}],["StraightVertex",{"parentId":413}],["StraightVertex",{"parentId":413,"x":-75.5917,"y":-321.027}],["CubicMirroredVertex",{"parentId":413,"x":123.976,"y":-354.102,"rotation":0.0849965,"distance":131.707}],["StraightVertex",{"parentId":413,"x":299.744,"y":-334.105}],["StraightVertex",{"parentId":413,"x":254.397}],["StraightVertex",{"parentId":413,"x":120.206,"y":8.24499}],["TransformConstraint",{"parentId":410,"targetId":526}],["Shape",{"parentId":0,"x":258.411,"y":351.469}],["Ellipse",{"parentId":421,"width":254.397,"height":34.229}],["SolidColor",{"parentId":585,"colorValue":4278190080}],["PointsPath",{"parentId":421,"x":-127.198,"isClosed":1}],["StraightVertex",{"parentId":424}],["StraightVertex",{"parentId":424,"x":-75.5917,"y":-321.027}],["CubicMirroredVertex",{"parentId":424,"x":123.976,"y":-354.102,"rotation":0.0849965,"distance":131.707}],["StraightVertex",{"parentId":424,"x":299.744,"y":-334.105}],["StraightVertex",{"parentId":424,"x":254.397}],["StraightVertex",{"parentId":424,"x":120.206,"y":8.24499}],["Node",{"parentId":0,"x":254.798,"y":342.676}],["Node",{"parentId":431,"x":4.96819,"y":-43.7616}],["Node",{"parentId":432,"x":-12.143,"y":-29.8324}],["Shape",{"parentId":433,"x":22.4762,"y":-19.1038}],["PointsPath",{"parentId":434,"pathFlags":2,"isClosed":1}],["StraightVertex",{"parentId":435,"x":32.685,"y":4.745}],["CubicDetachedVertex",{"parentId":435,"x":32.685,"y":-48.085,"outRotation":-1.5708,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":435,"x":30.665,"y":-50.105,"inRotation":0.0,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":435,"x":-30.675,"y":-50.105,"outRotation":3.14159,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":435,"x":-32.695,"y":-48.085,"inRotation":-1.5708,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":435,"x":-32.695,"y":4.745,"outRotation":1.5708,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":435,"x":-34.715,"y":6.765,"inRotation":0.0,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":435,"x":-41.495,"y":6.765,"outRotation":3.14159,"outDistance":1.83}],["CubicDetachedVertex",{"parentId":435,"x":-42.875,"y":10.255,"inRotation":-2.38321,"inDistance":1.83208}],["CubicDetachedVertex",{"parentId":435,"x":-1.385,"y":49.375,"outRotation":0.752298,"outDistance":1.06832}],["CubicDetachedVertex",{"parentId":435,"x":1.385,"y":49.375,"inRotation":2.38929,"inDistance":1.06832}],["CubicDetachedVertex",{"parentId":435,"x":42.875,"y":10.255,"outRotation":-0.7544,"outDistance":1.82521}],["CubicDetachedVertex",{"parentId":435,"x":41.495,"y":6.765,"inRotation":0.0,"inDistance":1.82}],["CubicDetachedVertex",{"parentId":435,"x":34.715,"y":6.765,"outRotation":3.14159,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":435,"x":32.695,"y":4.745,"inRotation":1.5708,"inDistance":1.12}],["SolidColor",{"parentId":586,"colorValue":4284753032}],["Shape",{"parentId":433,"rotation":-2.45646,"x":-27.8644,"y":41.2034}],["Rectangle",{"parentId":452,"x":-8.56774e-06,"y":-29.676,"width":136.795,"height":3.71294}],["Rectangle",{"parentId":452,"y":25.263,"width":136.795,"height":3.71294}],["Rectangle",{"parentId":452,"y":-3.70598,"width":136.795,"height":35.5809}],["SolidColor",{"parentId":587,"colorValue":4294965226}],["Feather",{"parentId":587,"strength":3.0}],["ClippingShape",{"parentId":452,"sourceId":459}],["Shape",{"parentId":433,"x":22.4762,"y":-19.1038}],["PointsPath",{"parentId":459,"pathFlags":2,"isClosed":1}],["StraightVertex",{"parentId":460,"x":32.685,"y":4.745}],["CubicDetachedVertex",{"parentId":460,"x":32.685,"y":-48.085,"outRotation":-1.5708,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":460,"x":30.665,"y":-50.105,"inRotation":0.0,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":460,"x":-30.675,"y":-50.105,"outRotation":3.14159,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":460,"x":-32.695,"y":-48.085,"inRotation":-1.5708,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":460,"x":-32.695,"y":4.745,"outRotation":1.5708,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":460,"x":-34.715,"y":6.765,"inRotation":0.0,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":460,"x":-41.495,"y":6.765,"outRotation":3.14159,"outDistance":1.83}],["CubicDetachedVertex",{"parentId":460,"x":-42.875,"y":10.255,"inRotation":-2.38321,"inDistance":1.83208}],["CubicDetachedVertex",{"parentId":460,"x":-1.385,"y":49.375,"outRotation":0.752298,"outDistance":1.06832}],["CubicDetachedVertex",{"parentId":460,"x":1.385,"y":49.375,"inRotation":2.38929,"inDistance":1.06832}],["CubicDetachedVertex",{"parentId":460,"x":42.875,"y":10.255,"outRotation":-0.7544,"outDistance":1.82521}],["CubicDetachedVertex",{"parentId":460,"x":41.495,"y":6.765,"inRotation":0.0,"inDistance":1.82}],["CubicDetachedVertex",{"parentId":460,"x":34.715,"y":6.765,"outRotation":3.14159,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":460,"x":32.695,"y":4.745,"inRotation":1.5708,"inDistance":1.12}],["LinearGradient",{"parentId":588,"startX":-34.6416,"startY":50.0008,"endX":8.01901,"endY":-18.1244}],["GradientStop",{"parentId":476,"colorValue":4287243227}],["GradientStop",{"parentId":476,"colorValue":4294952552,"position":1.0}],["Shape",{"parentId":432,"x":-57.1176,"y":-59.0101}],["Rectangle",{"parentId":479,"x":-39.9842,"y":-9.10051,"width":125.269,"height":142.77}],["SolidColor",{"parentId":589}],["TransformConstraint",{"parentId":479,"targetId":433}],["Node",{"parentId":432,"x":-12.6029,"y":-48.9602}],["Shape",{"parentId":483,"x":-11.4847}],["PointsPath",{"parentId":484,"pathFlags":2,"isClosed":1}],["StraightVertex",{"parentId":485,"x":51.4173,"y":6.855}],["CubicDetachedVertex",{"parentId":485,"x":51.4173,"y":-47.995,"outRotation":-1.5708,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":485,"x":49.3973,"y":-50.015,"inRotation":0.0,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":485,"x":-24.915,"y":-50.015,"outRotation":3.14159,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":485,"x":-26.935,"y":-47.995,"inRotation":-1.5708,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":485,"x":-26.935,"y":4.835,"outRotation":1.5708,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":485,"x":-28.955,"y":6.855,"inRotation":0.0,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":485,"x":-35.735,"y":6.855,"outRotation":3.14159,"outDistance":1.83}],["CubicDetachedVertex",{"parentId":485,"x":-37.115,"y":10.345,"inRotation":-2.38321,"inDistance":1.83208}],["CubicDetachedVertex",{"parentId":485,"x":5.105,"y":49.405,"outRotation":0.748378,"outDistance":0.573149}],["CubicDetachedVertex",{"parentId":485,"x":6.655,"y":50.015,"inRotation":3.14159,"inDistance":0.58}],["CubicDetachedVertex",{"parentId":485,"x":47.5773,"y":50.015,"outRotation":0.0,"outDistance":1.2}],["CubicDetachedVertex",{"parentId":485,"x":49.8473,"y":47.885,"inRotation":1.62906,"inDistance":1.20204}],["StraightVertex",{"parentId":485,"x":51.4173,"y":6.865}],["SolidColor",{"parentId":590,"colorValue":4284753032}],["Shape",{"parentId":483,"y":28.4767}],["Rectangle",{"parentId":501,"width":136.795,"height":42.9928}],["LinearGradient",{"parentId":591,"startX":-32.4267,"startY":-19.456,"endX":-29.6741,"endY":20.8134}],["GradientStop",{"parentId":503,"colorValue":4286267561}],["GradientStop",{"parentId":503,"colorValue":4284425332,"position":1.0}],["ClippingShape",{"parentId":501,"sourceId":507}],["Shape",{"parentId":483,"x":-11.4847}],["PointsPath",{"parentId":507,"pathFlags":2,"isClosed":1}],["StraightVertex",{"parentId":508,"x":48.9542,"y":6.855}],["CubicDetachedVertex",{"parentId":508,"x":48.9542,"y":-47.995,"outRotation":-1.5708,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":508,"x":46.9342,"y":-50.015,"inRotation":0.0,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":508,"x":-24.915,"y":-50.015,"outRotation":3.14159,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":508,"x":-26.935,"y":-47.995,"inRotation":-1.5708,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":508,"x":-26.935,"y":4.835,"outRotation":1.5708,"outDistance":1.11}],["CubicDetachedVertex",{"parentId":508,"x":-28.955,"y":6.855,"inRotation":0.0,"inDistance":1.12}],["CubicDetachedVertex",{"parentId":508,"x":-35.735,"y":6.855,"outRotation":3.14159,"outDistance":1.83}],["CubicDetachedVertex",{"parentId":508,"x":-37.115,"y":10.345,"inRotation":-2.38321,"inDistance":1.83208}],["CubicDetachedVertex",{"parentId":508,"x":5.105,"y":49.405,"outRotation":0.748378,"outDistance":0.573149}],["CubicDetachedVertex",{"parentId":508,"x":6.655,"y":50.015,"inRotation":3.14159,"inDistance":0.58}],["CubicDetachedVertex",{"parentId":508,"x":45.1142,"y":50.015,"outRotation":0.0,"outDistance":1.2}],["CubicDetachedVertex",{"parentId":508,"x":47.3842,"y":47.885,"inRotation":1.62906,"inDistance":1.20204}],["StraightVertex",{"parentId":508,"x":48.9542,"y":6.865}],["SolidColor",{"parentId":592,"colorValue":4286924981}],["ClippingShape",{"parentId":483,"sourceId":479}],["ClippingShape",{"parentId":431,"sourceId":421}],["Shape",{"parentId":0,"x":258.411,"y":351.469}],["Ellipse",{"parentId":526,"width":254.397,"height":34.229}],["LinearGradient",{"parentId":593,"startX":-7.51523,"startY":-11.0347,"endX":-7.51523,"endY":17.1145}],["GradientStop",{"parentId":528,"colorValue":4287312571}],["GradientStop",{"parentId":528,"colorValue":4291375817,"position":1.0}],["Shape",{"parentId":0,"x":250.0,"y":250.0}],["Rectangle",{"parentId":531,"width":500.0,"height":500.0}],["SolidColor",{"parentId":594,"colorValue":4280361249}],["SolidColor",{"parentId":537,"colorValue":4281413937}],["LayoutComponentStyle",{"parentId":0,"marginLeftUnitsValue":1,"marginRightUnitsValue":1,"marginTopUnitsValue":1,"marginBottomUnitsValue":1,"paddingLeftUnitsValue":1,"paddingRightUnitsValue":1,"paddingTopUnitsValue":1,"paddingBottomUnitsValue":1,"gapHorizontalUnitsValue":1,"gapVerticalUnitsValue":1}],["Joystick",{"parentId":0,"posX":253.122,"posY":249.6,"width":500.0,"height":500.0,"xId":1,"yId":2,"joystickFlags":4,"handleSourceId":4}],["Fill",{"parentId":0}],["Fill",{"parentId":1,"isVisible":0}],["Fill",{"parentId":5}],["Fill",{"parentId":8,"isVisible":0}],["Fill",{"parentId":15}],["Stroke",{"parentId":24,"thickness":2.0,"cap":1,"join":1}],["Fill",{"parentId":36}],["Fill",{"parentId":50}],["Stroke",{"parentId":59,"thickness":2.0,"cap":1,"join":1}],["Fill",{"parentId":67}],["Fill",{"parentId":76}],["Fill",{"parentId":85}],["Stroke",{"parentId":96,"thickness":2.0,"cap":1,"join":1}],["Fill",{"parentId":108}],["Fill",{"parentId":122}],["Fill",{"parentId":132}],["Stroke",{"parentId":141,"thickness":2.0,"cap":1,"join":1}],["Fill",{"parentId":158}],["Fill",{"parentId":166}],["Fill",{"parentId":174}],["Stroke",{"parentId":182,"thickness":2.0,"cap":1,"join":1}],["Fill",{"parentId":195}],["Fill",{"parentId":204}],["Fill",{"parentId":212}],["Fill",{"parentId":219}],["Stroke",{"parentId":226,"thickness":2.0}],["Fill",{"parentId":231}],["Fill",{"parentId":239}],["Stroke",{"parentId":246,"thickness":2.0,"cap":1,"join":1}],["Fill",{"parentId":261}],["Fill",{"parentId":276}],["Stroke",{"parentId":276}],["Fill",{"parentId":289}],["Fill",{"parentId":298}],["Stroke",{"parentId":298,"thickness":2.0,"join":1}],["Fill",{"parentId":320}],["Fill",{"parentId":325}],["Fill",{"parentId":333}],["Fill",{"parentId":338}],["Fill",{"parentId":343}],["Stroke",{"parentId":351,"thickness":2.0,"join":1}],["Fill",{"parentId":362}],["Fill",{"parentId":368}],["Fill",{"parentId":371}],["Fill",{"parentId":379}],["Fill",{"parentId":390}],["Fill",{"parentId":400}],["Fill",{"parentId":410,"isVisible":0}],["Fill",{"parentId":421,"isVisible":0}],["Stroke",{"parentId":434,"thickness":3.0,"transformAffectsStroke":0}],["Fill",{"parentId":452,"fillRule":2}],["Fill",{"parentId":459}],["Fill",{"parentId":479,"isVisible":0}],["Stroke",{"parentId":484,"thickness":3.0,"transformAffectsStroke":0}],["Fill",{"parentId":501}],["Fill",{"parentId":507}],["Fill",{"parentId":526}],["Fill",{"parentId":531}],["CubicValueInterpolator",{"y2":0.395608}],["CubicValueInterpolator",{"x1":0.382733,"y1":0.987611,"y2":0.98}],["CubicValueInterpolator",{"y1":0.98,"x2":0.338128,"y2":1.1}],["CubicValueInterpolator",{"x1":0.563681,"y1":1.1,"x2":0.586316,"y2":1.03504}],["CubicValueInterpolator",{"y1":1.0}],["CubicValueInterpolator",{"y1":1.0,"y2":1.05}],["CubicValueInterpolator",{"y1":1.05,"y2":0.9}],["CubicValueInterpolator",{"y1":0.9}],["CubicValueInterpolator",{"x1":0.558279,"y1":-47.58,"x2":0.522943,"y2":-20.72}],["CubicValueInterpolator",{"x1":0.7293,"y1":-20.72,"x2":0.588265,"y2":-37.5899}],["CubicValueInterpolator",{"x1":0.369423,"y1":-49.2458,"x2":0.689733,"y2":-50.9657}],["CubicValueInterpolator",{"x1":0.329656,"y1":-50.9657,"x2":0.645808,"y2":-44.8457}],["CubicValueInterpolator",{"x1":0.305481,"y1":-44.8457,"x2":0.619282,"y2":-47.5842}],["CubicValueInterpolator",{"y1":-47.5842,"y2":-53.7641}],["CubicEaseInterpolator"],["CubicValueInterpolator",{"y2":0.36395}],["CubicEaseInterpolator",{"x1":0.149606,"y1":0.719092,"x2":0.784777,"y2":0.390454}],["CubicEaseInterpolator",{"x1":0.231017,"x2":0.186256}],["CubicEaseInterpolator",{"x2":0.117015}],["CubicValueInterpolator",{"y1":647.193,"y2":372.35}],["CubicValueInterpolator",{"y2":0.0523599}],["CubicEaseInterpolator",{"x1":0.330787,"x2":0.13348}],["CubicEaseInterpolator",{"x1":0.587971,"x2":0.475046}],["CubicEaseInterpolator",{"x1":0.330787,"x2":0.13348,"y2":1.0}],["CubicEaseInterpolator",{"x1":0.587971,"x2":0.475046,"y2":1.0}],["CubicEaseInterpolator",{"x2":0.191579}],["CubicValueInterpolator",{"y2":0.395608}],["CubicValueInterpolator",{"y1":0.395608,"y2":-0.116355}],["CubicValueInterpolator",{"y1":-0.116355,"y2":0.0745808}],["CubicValueInterpolator",{"y1":0.0745808,"y2":-0.0443097}],["CubicValueInterpolator",{"y1":-0.0443097,"y2":0.0}],["CubicValueInterpolator",{"y2":0.0}],["CubicValueInterpolator",{"y1":0.36395,"x2":0.338605,"y2":-0.100531}],["CubicValueInterpolator",{"x1":0.42,"y1":-0.100531,"y2":0.0321663}],["CubicValueInterpolator",{"y1":0.0321663,"x2":0.563936,"y2":-0.0437827}],["CubicValueInterpolator",{"x1":0.476208,"y1":-0.0437827,"x2":0.584787,"y2":-0.0232303}],["CubicEaseInterpolator",{"x2":0.117015,"y2":1.0}],["CubicValueInterpolator",{"x1":0.22964,"y1":647.189,"x2":0.370246,"y2":370.931}],["CubicValueInterpolator",{"x1":0.42,"y1":370.93,"x2":0.578695,"y2":413.06}],["CubicValueInterpolator",{"x1":0.417423,"y1":413.06,"x2":0.560699,"y2":386.345}],["CubicValueInterpolator",{"x1":0.42,"y1":385.727,"y2":388.33}],["CubicValueInterpolator",{"y1":388.33,"y2":388.33}],["CubicValueInterpolator",{"y2":0.0523599}],["CubicValueInterpolator",{"y1":0.0523599,"y2":-0.0523599}],["CubicValueInterpolator",{"y1":-0.0523599,"y2":0.0114296}],["CubicValueInterpolator",{"y1":0.0114296,"y2":-0.00268477}],["CubicValueInterpolator",{"y1":-0.0174533,"y2":-0.00911278}],["CubicEaseInterpolator",{"x2":0.191579}],["CubicEaseInterpolator",{"x1":0.231017,"x2":0.186256,"y2":1.0}],["CubicValueInterpolator",{"y2":-0.0807476}],["CubicValueInterpolator",{"y1":-0.0807476,"x2":0.702354,"y2":-0.00170344}],["CubicValueInterpolator",{"y1":0.232765,"y2":0.232765}],["CubicEaseInterpolator",{"x2":0.866142,"y2":0.0555556}],["CubicValueInterpolator",{"y1":-0.0174533,"y2":-0.0174533}],["CubicValueInterpolator",{"y1":1.0,"x2":0.611513,"y2":0.980272}],["CubicValueInterpolator",{"x1":0.412652,"y1":0.794284,"y2":0.266667}],["CubicValueInterpolator",{"y1":0.266667,"y2":0.55}],["CubicValueInterpolator",{"y1":0.55,"y2":0.45}],["CubicValueInterpolator",{"y1":0.45,"y2":0.47}],["CubicValueInterpolator",{"y1":0.47,"y2":0.47}],["CubicValueInterpolator",{"y1":1.0,"x2":0.593507,"y2":1.02974}],["CubicValueInterpolator",{"x1":0.422625,"y1":0.765033,"y2":0.266667}],["LinearAnimation",{"name":"Idle"}],["LinearAnimation",{"name":"Xaxis"}],["KeyedObject",{"objectId":134}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-6.53664e-06}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-6.53664e-06}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":1.47149e-05}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.47149e-05}],["KeyedProperty",{"propertyKey":26}],["KeyFrameDouble",{"interpolationType":1}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedObject",{"objectId":303}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":31.563}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":31.563}],["KeyedProperty",{"propertyKey":80}],["KeyFrameDouble",{"interpolationType":1,"value":1.71407}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.71407}],["KeyedProperty",{"propertyKey":81}],["KeyFrameDouble",{"interpolationType":1,"value":10.502}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":10.502}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":40.4489}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":40.4489}],["KeyedProperty",{"propertyKey":79}],["KeyFrameDouble",{"interpolationType":1,"value":3.14159}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.14159}],["KeyedObject",{"objectId":250}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":3.68803}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.56041}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":4.58285}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":5.23272}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":1.74953}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.14857}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":3.70085}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":5.12185}],["KeyedObject",{"objectId":244}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-2.22739}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":12.5661}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.36742}],["KeyedObject",{"objectId":296}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-35.5283}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-34.9451}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":10.0282}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.68447}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":-0.939425}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-0.939425}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":2.31877}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.31877}],["KeyedObject",{"objectId":249}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":0.297335}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":5.18023}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-5.57389}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-8.75701}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":0.623308}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.339293}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":3.6979}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":5.25123}],["KeyedObject",{"objectId":319}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-3.86736}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.5405}],["KeyedObject",{"objectId":251}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-5.17807}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-7.47634}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":21.8452}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":18.1568}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":2.06747}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.49809}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":8.86797}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":7.76762}],["KeyedObject",{"objectId":295}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-31.1846}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-31.1846}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":18.3013}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":18.3013}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":3.76263}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.76263}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":6.28637}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.28637}],["KeyedObject",{"objectId":275}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":21.2807}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":9.70319}],["KeyedObject",{"objectId":248}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-2.74377}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-0.629852}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":1.75936}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-0.157467}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":-2.2696}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-2.2696}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":6.50236}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.50236}],["KeyedObject",{"objectId":269}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":13.1548}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":12.234}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-23.5903}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-24.3945}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":2.08877}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.54962}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":6.54357}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.78626}],["KeyedObject",{"objectId":298}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":0.100645}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.100643}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-25.6054}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-28.954}],["KeyedObject",{"objectId":132}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":1,"value":0.866666}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":1,"value":0.866666}],["KeyedObject",{"objectId":181}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-16.7877}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.09003}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-9.80518}],["KeyedObject",{"objectId":281}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-44.4659}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-45.0}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-0.882055}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":1,"value":1.5708}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.5708}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":1,"value":8.82978}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":8.82978}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":1,"value":-1.5708}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.5708}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":1,"value":8.82978}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":8.82978}],["KeyedObject",{"objectId":137}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":18.2231}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":33.114}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-7.17355}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-11.6764}],["KeyedProperty",{"propertyKey":26}],["KeyFrameDouble",{"interpolationType":1}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedObject",{"objectId":254}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":36.2917}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":31.9328}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":11.588}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":11.2689}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":-1.32599}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.32599}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":18.6243}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":18.6243}],["KeyedObject",{"objectId":212}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-19.5528}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":4.25461}],["KeyedObject",{"objectId":219}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-105.348}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-83.8396}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":16.2867}],["KeyedObject",{"objectId":278}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-4.03507}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-23.9622}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-15.9877}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":1,"value":3.12355}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.14159}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":1,"value":28.5733}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":24.8528}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":1,"value":-0.02999}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":1,"value":28.9368}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":24.8528}],["KeyedObject",{"objectId":306}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-36.9213}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-36.0782}],["KeyedProperty",{"propertyKey":80}],["KeyFrameDouble",{"interpolationType":1,"value":3.74957}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.74957}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":27.5608}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":18.1314}],["KeyedProperty",{"propertyKey":81}],["KeyFrameDouble",{"interpolationType":1,"value":3.36744}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":9.63381}],["KeyedProperty",{"propertyKey":79}],["KeyFrameDouble",{"interpolationType":1,"value":4.78589}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":4.71239}],["KeyedObject",{"objectId":294}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":2.6189}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.6189}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":25.1535}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":25.1535}],["KeyedProperty",{"propertyKey":26}],["KeyFrameDouble",{"interpolationType":1}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedObject",{"objectId":304}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-1.60487}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.60487}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":42.3568}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":42.3568}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":1,"value":-2.15797e-07}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-2.15797e-07}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":1,"value":6.90518}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.90518}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":1,"value":3.14159}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.14159}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":1,"value":10.5048}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":10.5048}],["KeyedObject",{"objectId":267}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":6.72246}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":4.84212}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-37.9732}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-36.5617}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.679162}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":8.50165}],["KeyedObject",{"objectId":257}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":3.57544}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.56041}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":4.7855}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":4.82083}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":-0.346317}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-0.417819}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":6.64971}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":12.1571}],["KeyedObject",{"objectId":307}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-35.0967}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-34.5}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":15.914}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":1,"value":2.11584}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.11584}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":1,"value":2.76963}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.76963}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":1,"value":-1.05584}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.05584}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":1,"value":6.3458}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.3458}],["KeyedObject",{"objectId":108}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-8.95583}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.43758}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":1.84003}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-0.500746}],["KeyedObject",{"objectId":293}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":36.5018}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":36.5018}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":20.311}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":20.311}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":2.16328}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.16328}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":5.83249}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":5.83249}],["KeyedObject",{"objectId":14}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-12.0123}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":4.57712}],["KeyedObject",{"objectId":266}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":9.4222}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-65.5628}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.55767}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":13.7374}],["KeyedObject",{"objectId":263}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":15.4909}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.84481}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":4.25869}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.10705}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.649231}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.70422}],["KeyedObject",{"objectId":301}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":38.9186}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":34.5}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":16.5616}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":1,"value":-1.83944}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.83944}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":1,"value":5.7283}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":5.7283}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":1,"value":1.36712}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.20392}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":1,"value":3.63175}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.3548}],["KeyedObject",{"objectId":255}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":11.9343}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":11.9351}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-29.485}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-28.8833}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":-3.05406}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-3.05406}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":18.6956}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":18.6956}],["KeyedObject",{"objectId":280}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":15.9877}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":15.9877}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":1}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":1,"value":24.8528}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":24.8528}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":1,"value":3.14159}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.14159}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":1,"value":24.8528}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":24.8528}],["KeyedObject",{"objectId":292}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":37.1227}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":37.7059}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":11.9197}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":5.57598}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":0.972719}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.972719}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":2.32829}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.32829}],["KeyedObject",{"objectId":36}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-11.5789}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":10.6412}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":0.139845}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.0210927}],["KeyedObject",{"objectId":361}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-4.38513}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.02273}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-4.79507}],["KeyedObject",{"objectId":130}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-2.23982}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":21.9231}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":3.19314}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.58522}],["KeyedObject",{"objectId":300}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-0.177317}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-1.24086}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-10.0}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":1,"value":3.14159}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.14159}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":1,"value":19.0538}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":19.0538}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":1}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":1,"value":19.0538}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":19.0538}],["KeyedObject",{"objectId":135}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":15.4489}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":31.3828}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-12.8152}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-15.59}],["KeyedProperty",{"propertyKey":26}],["KeyFrameDouble",{"interpolationType":1}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedObject",{"objectId":58}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-19.0357}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":2.08654}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":3.92513}],["KeyedObject",{"objectId":268}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":18.4484}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":20.8834}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-34.391}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-34.1388}],["KeyedProperty",{"propertyKey":26}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedObject",{"objectId":302}],["KeyedProperty",{"propertyKey":80}],["KeyFrameDouble",{"interpolationType":1,"value":3.43193}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":8.83511}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":37.123}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":35.877}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":27.9875}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":18.1314}],["KeyedProperty",{"propertyKey":81}],["KeyFrameDouble",{"interpolationType":1,"value":5.41823}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":5.41823}],["KeyedProperty",{"propertyKey":79}],["KeyFrameDouble",{"interpolationType":1,"value":1.861}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.5708}],["KeyedObject",{"objectId":252}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-10.0128}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-19.1278}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":37.4608}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":31.9443}],["KeyedProperty",{"propertyKey":26}],["KeyFrameDouble",{"interpolationType":1}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedObject",{"objectId":136}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":19.2979}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":33.114}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-11.191}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-14.3653}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":1.10014}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.14596}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":3.00445}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.69797}],["KeyedObject",{"objectId":264}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":36.2249}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":31.6207}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-2.7912}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-4.05319}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-0.662631}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":12.7451}],["KeyedObject",{"objectId":84}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-9.56063}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":7.02879}],["KeyedObject",{"objectId":279}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":44.9148}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":45.0}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-0.796148}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":1,"value":-1.5708}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.5708}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":1,"value":8.82978}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":8.82978}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":1,"value":1.5708}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.5708}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":1,"value":8.82978}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":8.82978}],["KeyedObject",{"objectId":305}],["KeyedProperty",{"propertyKey":80}],["KeyFrameDouble",{"interpolationType":1,"value":7.21124}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":7.21124}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-32.5567}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-32.5567}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":41.8149}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":41.8149}],["KeyedProperty",{"propertyKey":81}],["KeyFrameDouble",{"interpolationType":1,"value":1.52098}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.52098}],["KeyedProperty",{"propertyKey":79}],["KeyFrameDouble",{"interpolationType":1,"value":3.14159}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":3.14159}],["KeyedObject",{"objectId":291}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-1.82523}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-0.110838}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-4.78165}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-3.78536}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":-0.0207491}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-0.0207491}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":26.1157}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":26.1157}],["KeyedObject",{"objectId":270}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":6.37953}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.77301}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-7.70833}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-11.1608}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.94925}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":6.23845}],["KeyedObject",{"objectId":256}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":-13.2545}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-14.9385}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-8.72734}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-7.52089}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":1.45962}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.45962}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":11.2493}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":11.2493}],["KeyedObject",{"objectId":253}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":0.294562}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-6.06808}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":42.297}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":39.5413}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":1,"value":0.0451238}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.0451238}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":1,"value":18.0215}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":18.0215}],["KeyedObject",{"objectId":265}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":1,"value":50.513}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":47.226}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":1,"value":-48.7083}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-50.0535}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-1.82534}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":19.459}],["LinearAnimation",{"name":"Yaxis"}],["KeyedObject",{"objectId":131}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":1,"value":-0.360701}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.709767}],["KeyedObject",{"objectId":83}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":52.9461}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-108.167}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-90.1902}],["KeyedObject",{"objectId":57}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-85.9264}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-67.9492}],["KeyedObject",{"objectId":13}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-9.98947}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-101.859}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-83.8816}],["KeyedObject",{"objectId":180}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-57.1189}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-48.7773}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-30.8002}],["KeyedObject",{"objectId":107}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-6.25419}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-3.05716}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-4.35365}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":11.7857}],["KeyedObject",{"objectId":218}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":71.1608}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-71.8351}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-53.8579}],["KeyedObject",{"objectId":129}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-47.7703}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-29.7931}],["KeyedObject",{"objectId":211}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-52.9668}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":-34.9896}],["KeyedObject",{"objectId":242}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":1,"value":-0.232711}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":0.20944}],["KeyedObject",{"objectId":35}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-3.42609}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-9.02283}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":13.9106}],["LinearAnimation",{"name":"ArrowIdle","duration":150,"loopValue":1}],["KeyedObject",{"objectId":244}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":595}],["KeyedObject",{"objectId":432}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":596,"value":1.0}],["KeyFrameDouble",{"frame":14,"interpolationType":3,"interpolatorId":597,"value":0.98}],["KeyFrameDouble",{"frame":37,"interpolationType":3,"interpolatorId":598,"value":1.1}],["KeyFrameDouble",{"frame":64,"interpolationType":3,"interpolatorId":599,"value":1.0}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":600,"value":1.0}],["KeyFrameDouble",{"frame":14,"interpolationType":3,"interpolatorId":601,"value":1.05}],["KeyFrameDouble",{"frame":37,"interpolationType":3,"interpolatorId":602,"value":0.9}],["KeyFrameDouble",{"frame":64,"interpolationType":3,"interpolatorId":599,"value":1.0}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":603,"value":-47.5842}],["KeyFrameDouble",{"frame":28,"interpolationType":3,"interpolatorId":604,"value":-20.7199}],["KeyFrameDouble",{"frame":55,"interpolationType":3,"interpolatorId":605,"value":-44.5985}],["KeyFrameDouble",{"frame":75,"interpolationType":3,"interpolatorId":606,"value":-50.9657}],["KeyFrameDouble",{"frame":111,"interpolationType":3,"interpolatorId":607,"value":-44.8439}],["KeyFrameDouble",{"frame":149,"interpolationType":3,"interpolatorId":608,"value":-47.5842}],["KeyedObject",{"objectId":433}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-10.8238}],["KeyFrameDouble",{"frame":43,"interpolationType":2,"interpolatorId":609,"value":-24.2229}],["KeyFrameDouble",{"frame":73,"interpolationType":2,"interpolatorId":609,"value":-8.82382}],["KeyFrameDouble",{"frame":96,"interpolationType":2,"interpolatorId":609,"value":-11.8238}],["KeyFrameDouble",{"frame":118,"interpolationType":2,"interpolatorId":609,"value":-10.8238}],["KeyedObject",{"objectId":12}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":610}],["KeyedObject",{"objectId":452}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"frame":14,"interpolationType":2,"interpolatorId":611,"value":-27.8644}],["KeyFrameDouble",{"frame":69,"interpolationType":2,"interpolatorId":611,"value":87.848}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"frame":14,"interpolationType":2,"interpolatorId":611,"value":41.2034}],["KeyFrameDouble",{"frame":69,"interpolationType":2,"interpolatorId":611,"value":-100.394}],["KeyedObject",{"objectId":526}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":612,"value":0.466667}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":612,"value":0.466667}],["KeyedObject",{"objectId":11}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":613,"value":247.415}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":614,"value":647.193}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":615}],["KeyedObject",{"objectId":483}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-12.6029}],["KeyFrameDouble",{"frame":43,"interpolationType":2,"interpolatorId":609,"value":-4.66924}],["KeyFrameDouble",{"frame":73,"interpolationType":2,"interpolatorId":609,"value":-14.6029}],["KeyFrameDouble",{"frame":96,"interpolationType":2,"interpolatorId":609,"value":-11.6029}],["KeyFrameDouble",{"frame":118,"interpolationType":2,"interpolatorId":609,"value":-12.6029}],["LinearAnimation",{"name":"ArrowGoingDown","duration":20}],["KeyedObject",{"objectId":432}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-47.58}],["KeyedObject",{"objectId":431}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":616,"value":1.0}],["KeyFrameDouble",{"frame":20,"interpolationType":2,"interpolatorId":616,"value":0.533333}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":616,"value":1.0}],["KeyFrameDouble",{"frame":20,"interpolationType":2,"interpolatorId":616,"value":1.6}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":254.798}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":617,"value":342.676}],["KeyFrameDouble",{"frame":20,"interpolationType":2,"interpolatorId":616,"value":619.0}],["LinearAnimation",{"name":"ArrowGoingUp","duration":28}],["KeyedObject",{"objectId":432}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-47.58}],["KeyedObject",{"objectId":433}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-10.8238}],["KeyedObject",{"objectId":483}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-12.6029}],["KeyedObject",{"objectId":431}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":618,"value":0.533333}],["KeyFrameDouble",{"frame":28,"interpolationType":2,"interpolatorId":618,"value":1.0}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":618,"value":1.6}],["KeyFrameDouble",{"frame":28,"interpolationType":2,"interpolatorId":618,"value":1.0}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":254.798}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":618,"value":619.0}],["KeyFrameDouble",{"frame":28,"interpolationType":2,"interpolatorId":619,"value":342.676}],["LinearAnimation",{"name":"ArrowIdleDown","duration":80}],["KeyedObject",{"objectId":431}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":620,"value":0.533333}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":620,"value":1.6}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":254.798}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":620,"value":619.0}],["LinearAnimation",{"name":"IDLE 1","duration":80,"loopValue":1}],["KeyedObject",{"objectId":12}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":610}],["KeyedObject",{"objectId":244}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":595}],["KeyedObject",{"objectId":11}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":613,"value":247.415}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":614,"value":647.193}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":615}],["KeyedObject",{"objectId":526}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":612,"value":0.466667}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":612,"value":0.466667}],["LinearAnimation",{"name":"JumpOut","duration":80}],["KeyedObject",{"objectId":244}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":621}],["KeyFrameDouble",{"frame":22,"interpolationType":3,"interpolatorId":622,"value":0.395608}],["KeyFrameDouble",{"frame":42,"interpolationType":3,"interpolatorId":623,"value":-0.116355}],["KeyFrameDouble",{"frame":54,"interpolationType":3,"interpolatorId":624,"value":0.0745808}],["KeyFrameDouble",{"frame":64,"interpolationType":3,"interpolatorId":625,"value":-0.0443097}],["KeyFrameDouble",{"frame":68,"interpolationType":3,"interpolatorId":626}],["KeyedObject",{"objectId":12}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"frame":8,"interpolationType":3,"interpolatorId":627,"value":0.36395}],["KeyFrameDouble",{"frame":39,"interpolationType":3,"interpolatorId":628,"value":-0.100531}],["KeyFrameDouble",{"frame":50,"interpolationType":3,"interpolatorId":629,"value":0.0321663}],["KeyFrameDouble",{"frame":64,"interpolationType":3,"interpolatorId":630,"value":-0.0437827}],["KeyFrameDouble",{"frame":74,"interpolationType":3,"interpolatorId":626,"value":-0.0232303}],["KeyedObject",{"objectId":11}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":631,"value":247.415}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":632,"value":647.193}],["KeyFrameDouble",{"frame":23,"interpolationType":3,"interpolatorId":633,"value":370.928}],["KeyFrameDouble",{"frame":39,"interpolationType":3,"interpolatorId":634,"value":413.058}],["KeyFrameDouble",{"frame":54,"interpolationType":3,"interpolatorId":635,"value":381.734}],["KeyFrameDouble",{"frame":65,"interpolationType":3,"interpolatorId":636,"value":388.33}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":637}],["KeyFrameDouble",{"frame":16,"interpolationType":3,"interpolatorId":638,"value":0.0523599}],["KeyFrameDouble",{"frame":31,"interpolationType":3,"interpolatorId":639,"value":-0.0523599}],["KeyFrameDouble",{"frame":43,"interpolationType":3,"interpolatorId":640,"value":0.0114296}],["KeyFrameDouble",{"frame":56,"interpolationType":3,"interpolatorId":641}],["KeyedObject",{"objectId":431}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":642,"value":1.0}],["KeyFrameDouble",{"frame":19,"interpolationType":2,"interpolatorId":642,"value":0.533333}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":642,"value":1.0}],["KeyFrameDouble",{"frame":19,"interpolationType":2,"interpolatorId":642,"value":1.6}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"frame":19,"interpolationType":1,"value":254.798}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":642,"value":342.676}],["KeyFrameDouble",{"frame":19,"interpolationType":2,"interpolatorId":642,"value":619.0}],["KeyedObject",{"objectId":526}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":643,"value":0.466667}],["KeyFrameDouble",{"frame":19,"interpolationType":2,"interpolatorId":643,"value":1.05}],["KeyFrameDouble",{"frame":24,"interpolationType":2,"interpolatorId":609,"value":0.99}],["KeyFrameDouble",{"frame":29,"interpolationType":2,"interpolatorId":609,"value":1.0}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":643,"value":0.466667}],["KeyFrameDouble",{"frame":19,"interpolationType":2,"interpolatorId":643,"value":1.05}],["KeyFrameDouble",{"frame":24,"interpolationType":2,"interpolatorId":609,"value":0.99}],["KeyFrameDouble",{"frame":29,"interpolationType":2,"interpolatorId":609,"value":1.0}],["LinearAnimation",{"name":"JumpIn","duration":36}],["KeyedObject",{"objectId":244}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":626}],["KeyedObject",{"objectId":12}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":644}],["KeyFrameDouble",{"frame":10,"interpolationType":3,"interpolatorId":645,"value":-0.0807476}],["KeyFrameDouble",{"frame":17,"interpolationType":3,"interpolatorId":646,"value":0.232765}],["KeyedObject",{"objectId":11}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":613,"value":247.415}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":647,"value":388.33}],["KeyFrameDouble",{"frame":20,"interpolationType":2,"interpolatorId":647,"value":673.0}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":648}],["KeyedObject",{"objectId":526}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":599,"value":1.0}],["KeyFrameDouble",{"frame":6,"interpolationType":3,"interpolatorId":649,"value":1.0}],["KeyFrameDouble",{"frame":16,"interpolationType":3,"interpolatorId":650,"value":0.866667}],["KeyFrameDouble",{"frame":22,"interpolationType":3,"interpolatorId":651,"value":0.266667}],["KeyFrameDouble",{"frame":27,"interpolationType":3,"interpolatorId":652,"value":0.55}],["KeyFrameDouble",{"frame":31,"interpolationType":3,"interpolatorId":653,"value":0.45}],["KeyFrameDouble",{"frame":34,"interpolationType":3,"interpolatorId":654,"value":0.47}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"interpolationType":3,"interpolatorId":599,"value":1.0}],["KeyFrameDouble",{"frame":6,"interpolationType":3,"interpolatorId":655,"value":1.0}],["KeyFrameDouble",{"frame":16,"interpolationType":3,"interpolatorId":656,"value":0.866667}],["KeyFrameDouble",{"frame":22,"interpolationType":3,"interpolatorId":651,"value":0.266667}],["KeyFrameDouble",{"frame":27,"interpolationType":3,"interpolatorId":652,"value":0.55}],["KeyFrameDouble",{"frame":31,"interpolationType":3,"interpolatorId":653,"value":0.45}],["KeyFrameDouble",{"frame":34,"interpolationType":3,"interpolatorId":654,"value":0.47}],["LinearAnimation",{"name":"LOOP","duration":300,"loopValue":1,"workStart":60,"workEnd":184,"enableWorkArea":1}],["KeyedObject",{"objectId":12}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"frame":39,"interpolationType":2,"interpolatorId":609,"value":-0.0349066}],["KeyFrameDouble",{"frame":113,"interpolationType":2,"interpolatorId":609,"value":0.0349066}],["KeyFrameDouble",{"frame":166,"interpolationType":2,"interpolatorId":609,"value":-0.0349066}],["KeyFrameDouble",{"frame":240,"interpolationType":2,"interpolatorId":609,"value":0.0349066}],["KeyedObject",{"objectId":11}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"frame":124,"interpolationType":2,"interpolatorId":609,"value":247.415}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"frame":60,"interpolationType":2,"interpolatorId":609,"value":388.33}],["KeyFrameDouble",{"frame":124,"interpolationType":2,"interpolatorId":609,"value":381.541}],["KeyFrameDouble",{"frame":184,"interpolationType":2,"interpolatorId":609,"value":388.33}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"frame":60,"interpolationType":1}],["KeyedObject",{"objectId":526}],["KeyedProperty",{"propertyKey":16}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.0}],["KeyedProperty",{"propertyKey":17}],["KeyFrameDouble",{"frame":60,"interpolationType":1,"value":1.0}],["KeyedObject",{"objectId":245}],["KeyedProperty",{"propertyKey":15}],["KeyFrameDouble",{"frame":52,"interpolationType":2,"interpolatorId":609}],["KeyFrameDouble",{"frame":124,"interpolationType":2,"interpolatorId":609,"value":0.127991}],["KeyFrameDouble",{"frame":176,"interpolationType":2,"interpolatorId":609}],["KeyFrameDouble",{"frame":242,"interpolationType":2,"interpolatorId":609,"value":0.127991}],["KeyFrameDouble",{"frame":300,"interpolationType":2,"interpolatorId":609}],["LinearAnimation",{"name":"Blink","duration":180,"loopValue":1}],["KeyedObject",{"objectId":127}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":17.1547}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":8.68909}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":17.1547}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-6.59871}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-23.5046}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-6.59871}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":2.80813}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":2.80813}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":9.57034}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":9.57034}],["KeyedObject",{"objectId":53}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":1.32261}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":12.2744}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":1.32261}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-58.7374}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-20.4467}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-58.7374}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.410224}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-0.278836}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.410224}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":13.4399}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":13.5795}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":13.4399}],["KeyedObject",{"objectId":99}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":44.9014}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":39.3346}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":44.9014}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-14.2506}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-31.4378}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-14.2506}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.0211781}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.0211781}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":18.2361}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":18.2361}],["KeyedObject",{"objectId":85}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":1,"value":-31.2676}],["KeyFrameDouble",{"frame":6,"interpolationType":1,"value":-19.6876}],["KeyFrameDouble",{"frame":13,"interpolationType":1,"value":-32.8061}],["KeyFrameDouble",{"frame":18,"interpolationType":1,"value":-30.6289}],["KeyFrameDouble",{"frame":22,"interpolationType":1,"value":-31.2676}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":1,"value":-51.8847}],["KeyFrameDouble",{"frame":6,"interpolationType":1,"value":-21.636}],["KeyFrameDouble",{"frame":13,"interpolationType":1,"value":-56.014}],["KeyFrameDouble",{"frame":18,"interpolationType":1,"value":-50.4009}],["KeyFrameDouble",{"frame":22,"interpolationType":1,"value":-51.8847}],["KeyedObject",{"objectId":98}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":5.08474}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-0.482031}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":5.08474}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-2.09951}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-19.2868}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-2.09951}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.619464}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.619464}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":13.1631}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":13.1631}],["KeyedObject",{"objectId":27}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":48.0063}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":45.1669}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":48.0063}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-15.0576}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-27.6319}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-15.0576}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":18.2557}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":18.2557}],["KeyedObject",{"objectId":125}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-8.95731}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":7.73556}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-8.95731}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-60.1728}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-24.4562}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-60.1728}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.410224}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.410224}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":13.4399}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":13.4399}],["KeyedObject",{"objectId":54}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":35.928}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":33.1698}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":35.928}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-10.2545}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-23.2344}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-10.2545}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-1.6306}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-1.82499}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-1.6306}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":45.119}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":1.69112}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":45.119}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":2.91665}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":2.91665}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":7.80225}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":7.80225}],["KeyedObject",{"objectId":104}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":3.31221}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-5.19599}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":3.31221}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-2.03828}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-17.1574}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-2.03828}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-2.15743}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-1.87501}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-2.15743}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":34.3666}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":1.75836}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":34.3666}],["KeyedObject",{"objectId":32}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":3.31221}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-2.20425}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":3.31221}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-2.03828}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-13.7202}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-2.03828}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-2.15743}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-1.96123}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-2.15743}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":34.3666}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":1.38626}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":34.3666}],["KeyedObject",{"objectId":105}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-5.35223}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":10.6429}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-5.35223}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-62.162}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-26.5847}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-62.162}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.381155}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-0.341972}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.381155}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":16.8947}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":12.1435}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":16.8947}],["KeyedObject",{"objectId":55}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":16.982}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":14.3964}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":16.982}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-7.05472}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-19.5786}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-7.05472}],["KeyedObject",{"objectId":26}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":5.00666}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":2.1673}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":5.00666}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-2.51807}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-15.0924}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-2.51807}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.540768}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.540768}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":15.5415}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":15.5415}],["KeyedObject",{"objectId":34}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":38.9821}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":36.8729}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":38.9821}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-12.2927}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-25.1915}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-12.2927}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":1.50362}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":1.24054}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":1.50362}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":42.3268}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":1.50717}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":42.3268}],["KeyedObject",{"objectId":126}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":34.0146}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":30.2433}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":34.0146}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-9.79379}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-26.5701}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-9.79379}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-1.72111}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-2.06471}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-1.72111}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":48.2812}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":2.07037}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":48.2812}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":2.91665}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":3.20022}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":2.91665}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":7.80225}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":7.7419}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":7.80225}],["KeyedObject",{"objectId":33}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":4.41628}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":16.5038}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":4.41628}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-60.8087}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-23.0859}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-60.8087}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.381155}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-0.28579}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.381155}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":16.8947}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":9.91911}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":16.8947}],["KeyedObject",{"objectId":106}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":36.7204}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":33.7104}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":36.7204}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-12.0995}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-28.4545}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-12.0995}],["KeyedProperty",{"propertyKey":82}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":1.44103}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":1.07285}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":1.44103}],["KeyedProperty",{"propertyKey":83}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":42.8341}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":2.88447}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":42.8341}],["KeyedObject",{"objectId":15}],["KeyedProperty",{"propertyKey":13}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-23.8179}],["KeyFrameDouble",{"frame":6,"interpolationType":2,"interpolatorId":609,"value":-16.3545}],["KeyFrameDouble",{"frame":13,"interpolationType":2,"interpolatorId":609,"value":-25.1159}],["KeyFrameDouble",{"frame":18,"interpolationType":2,"interpolatorId":609,"value":-23.4958}],["KeyFrameDouble",{"frame":22,"interpolationType":2,"interpolatorId":609,"value":-23.8179}],["KeyedProperty",{"propertyKey":14}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-41.3581}],["KeyFrameDouble",{"frame":6,"interpolationType":2,"interpolatorId":609,"value":-10.2064}],["KeyFrameDouble",{"frame":13,"interpolationType":2,"interpolatorId":609,"value":-45.4143}],["KeyFrameDouble",{"frame":18,"interpolationType":2,"interpolatorId":609,"value":-40.1773}],["KeyFrameDouble",{"frame":22,"interpolationType":2,"interpolatorId":609,"value":-41.3581}],["KeyedObject",{"objectId":52}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":4.56969e-06}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-2.75823}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":4.56969e-06}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-12.9799}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.406822}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.406822}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":8.83235}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":8.83235}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-2.05498}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-2.15874}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-2.05498}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":42.7702}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":1.52262}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":42.7702}],["KeyedObject",{"objectId":124}],["KeyedProperty",{"propertyKey":24}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":4.56969e-06}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-7.70823}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":4.56969e-06}],["KeyedProperty",{"propertyKey":25}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-14.8546}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609}],["KeyedProperty",{"propertyKey":84}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-0.406822}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-0.634571}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-0.406822}],["KeyedProperty",{"propertyKey":85}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":8.83235}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":8.37468}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":8.83235}],["KeyedProperty",{"propertyKey":86}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":-2.14126}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":-1.61057}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":-2.14126}],["KeyedProperty",{"propertyKey":87}],["KeyFrameDouble",{"interpolationType":2,"interpolatorId":609,"value":40.0805}],["KeyFrameDouble",{"frame":5,"interpolationType":2,"interpolatorId":609,"value":3.25059}],["KeyFrameDouble",{"frame":10,"interpolationType":2,"interpolatorId":609,"value":40.0805}],["StateMachine",{"name":"State Machine 1"}],["StateMachineBool",{"name":"HoverOn"}],["StateMachineLayer",{"name":"UP/DOWN"}],["AnimationState",{"animationId":7}],["StateTransition",{"stateToId":5}],["TransitionBoolCondition",{"inputId":0}],["AnimationState",{"animationId":9}],["StateTransition",{"stateToId":0,"flags":12,"exitTime":100}],["ExitState"],["EntryState"],["StateTransition",{"stateToId":0}],["AnyState"],["AnimationState",{"animationId":8}],["StateTransition",{"stateToId":6,"flags":12,"exitTime":100}],["StateTransition",{"stateToId":1,"flags":4,"exitTime":100}],["TransitionBoolCondition",{"inputId":0,"opValue":1}],["AnimationState",{"animationId":10}],["StateTransition",{"stateToId":1}],["TransitionBoolCondition",{"inputId":0,"opValue":1}],["StateMachineLayer",{"name":"Arrow idle"}],["AnimationState",{"animationId":6}],["StateTransition",{"stateToId":1}],["TransitionBoolCondition",{"inputId":0,"opValue":1}],["AnimationState",{"animationId":5}],["StateTransition",{"stateToId":2,"flags":12,"duration":200,"exitTime":100}],["AnimationState",{"animationId":3}],["StateTransition",{"stateToId":3}],["TransitionBoolCondition",{"inputId":0}],["AnimationState",{"animationId":4}],["StateTransition",{"stateToId":0,"flags":12,"exitTime":100}],["AnyState"],["EntryState"],["StateTransition",{"stateToId":2}],["ExitState"],["StateMachineLayer",{"name":"Blink"}],["AnimationState",{"animationId":11}],["EntryState"],["StateTransition",{"stateToId":0}],["AnyState"],["ExitState"],["StateMachineListenerSingle",{"name":"HitboxHoverOff","targetId":1,"listenerTypeValue":1}],["ListenerBoolChange",{"inputId":0,"value":0}],["StateMachineListenerSingle",{"name":"HitboxHover","targetId":1}],["ListenerBoolChange",{"inputId":0}],["StateMachineListenerSingle",{"name":"Follower","targetId":4,"listenerTypeValue":4}],["ListenerAlignTarget",{"targetId":4}]];
+
+(() => {
+'use strict';
+
+// ---------------------------------------------------------------- defaults
+const TRANSFORM = { x: 0, y: 0, rotation: 0, scaleX: 1, scaleY: 1, opacity: 1 };
+const DEFAULTS = {
+  Artboard: { width: 0, height: 0, originX: 0, originY: 0 },
+  Node: TRANSFORM, Shape: Object.assign({ drawableFlags: 0 }, TRANSFORM),
+  PointsPath: Object.assign({ isClosed: 0 }, TRANSFORM),
+  Ellipse: Object.assign({ width: 0, height: 0, originX: 0.5, originY: 0.5 }, TRANSFORM),
+  Rectangle: Object.assign({ width: 0, height: 0, originX: 0.5, originY: 0.5, linkCornerRadius: 1,
+    cornerRadiusTL: 0, cornerRadiusTR: 0, cornerRadiusBL: 0, cornerRadiusBR: 0 }, TRANSFORM),
+  StraightVertex: { x: 0, y: 0, radius: 0 },
+  CubicMirroredVertex: { x: 0, y: 0, rotation: 0, distance: 0 },
+  CubicAsymmetricVertex: { x: 0, y: 0, rotation: 0, inDistance: 0, outDistance: 0 },
+  CubicDetachedVertex: { x: 0, y: 0, inRotation: 0, inDistance: 0, outRotation: 0, outDistance: 0 },
+  Fill: { isVisible: 1, fillRule: 0 },
+  Stroke: { isVisible: 1, thickness: 1, cap: 0, join: 0, transformAffectsStroke: 1 },
+  SolidColor: { colorValue: 0xFF747474 },
+  LinearGradient: { startX: 0, startY: 0, endX: 0, endY: 0, opacity: 1 },
+  RadialGradient: { startX: 0, startY: 0, endX: 0, endY: 0, opacity: 1 },
+  GradientStop: { colorValue: 0xFFFFFFFF, position: 0 },
+  ClippingShape: { fillRule: 0, isVisible: 1 },
+  TransformConstraint: { strength: 1, originX: 0, originY: 0, sourceSpaceValue: 0, destSpaceValue: 0 },
+  Feather: { strength: 12, offsetX: 0, offsetY: 0, inner: 0 },
+  CubicEaseInterpolator: { x1: 0.42, y1: 0, x2: 0.58, y2: 1 },
+  CubicValueInterpolator: { x1: 0.42, y1: 0, x2: 0.58, y2: 1 },
+  KeyFrameDouble: { frame: 0, interpolationType: 1, value: 0 },
+  LinearAnimation: { fps: 60, duration: 60, speed: 1, loopValue: 0, workStart: 0, workEnd: 0, enableWorkArea: 0 },
+  AnimationState: { speed: 1 },
+  StateTransition: { flags: 0, duration: 0, exitTime: 0 },
+  TransitionBoolCondition: { opValue: 0 },
+  ListenerBoolChange: { value: 1 },
+  StateMachineListenerSingle: { listenerTypeValue: 0 },
+  ListenerAlignTarget: { preserveOffset: 0 },
+  Joystick: { x: 0, y: 0, posX: 0, posY: 0, originX: 0.5, originY: 0.5, width: 100, height: 100, joystickFlags: 0 },
+  StateMachineBool: { value: 0 },
+};
+const KEY_NAMES = { 13: 'x', 14: 'y', 15: 'rotation', 16: 'scaleX', 17: 'scaleY', 18: 'opacity',
+  24: 'x', 25: 'y', 26: 'radius', 79: 'rotation', 80: 'inDistance', 81: 'outDistance', 82: 'rotation',
+  83: 'distance', 84: 'inRotation', 85: 'inDistance', 86: 'outRotation', 87: 'outDistance' };
+
+// ---------------------------------------------------------------- math
+const mul = (a, b) => [
+  a[0] * b[0] + a[2] * b[1], a[1] * b[0] + a[3] * b[1],
+  a[0] * b[2] + a[2] * b[3], a[1] * b[2] + a[3] * b[3],
+  a[0] * b[4] + a[2] * b[5] + a[4], a[1] * b[4] + a[3] * b[5] + a[5]];
+const invert = (m) => {
+  let det = m[0] * m[3] - m[1] * m[2];
+  if (!det) return [1, 0, 0, 1, 0, 0];
+  det = 1 / det;
+  return [m[3] * det, -m[1] * det, -m[2] * det, m[0] * det,
+    (m[2] * m[5] - m[3] * m[4]) * det, (m[1] * m[4] - m[0] * m[5]) * det];
+};
+const apply = (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+const compose = (x, y, r, sx, sy, sk) => {
+  const c = Math.cos(r), s = Math.sin(r);
+  const m = [c * sx, s * sx, -s * sy, c * sy, x, y];
+  if (sk) { m[2] += m[0] * sk; m[3] += m[1] * sk; }
+  return m;
+};
+const decompose = (m) => {
+  const denom = m[0] * m[0] + m[1] * m[1];
+  const sx = Math.sqrt(denom);
+  return { x: m[4], y: m[5], rotation: Math.atan2(m[1], m[0]), scaleX: sx,
+    scaleY: sx === 0 ? 0 : (m[0] * m[3] - m[2] * m[1]) / sx,
+    skew: Math.atan2(m[0] * m[2] + m[1] * m[3], denom) };
+};
+
+// ---------------------------------------------------------------- import
+// Index 0 is the Backboard; artboard-local ids are offset by one.
+const objects = [];
+for (let i = 1; i < DATA.length; i++) {
+  const [type, props] = DATA[i];
+  const o = Object.assign({ type, id: i - 1, children: [] }, DEFAULTS[type] || {}, props || {});
+  objects.push(o);
+}
+const artboard = objects[0];
+const byId = (id) => objects[id];
+
+const components = [];
+const animations = [];
+let stateMachine = null;
+const interpolators = {};
+let curAnim, curKO, curKP, curLayer, curState, curTransition, curListener;
+for (const o of objects) {
+  switch (o.type) {
+    case 'LinearAnimation': curAnim = o; o.keyedObjects = []; animations.push(o); break;
+    case 'KeyedObject': curKO = o; o.props = []; curAnim.keyedObjects.push(o); break;
+    case 'KeyedProperty': curKP = o; o.name = KEY_NAMES[o.propertyKey]; o.frames = []; curKO.props.push(o); break;
+    case 'KeyFrameDouble': o.seconds = o.frame / curAnim.fps; curKP.frames.push(o); break;
+    case 'StateMachine': stateMachine = o; o.inputs = []; o.layers = []; o.listeners = []; break;
+    case 'StateMachineBool': stateMachine.inputs.push(o); break;
+    case 'StateMachineLayer': curLayer = o; o.states = []; stateMachine.layers.push(o); break;
+    case 'AnimationState': case 'EntryState': case 'ExitState': case 'AnyState':
+      curState = o; o.transitions = []; curLayer.states.push(o); break;
+    case 'StateTransition': curTransition = o; o.conditions = []; curState.transitions.push(o); break;
+    case 'TransitionBoolCondition': curTransition.conditions.push(o); break;
+    case 'StateMachineListenerSingle': curListener = o; o.actions = []; stateMachine.listeners.push(o); break;
+    case 'ListenerBoolChange': case 'ListenerAlignTarget': curListener.actions.push(o); break;
+    case 'CubicEaseInterpolator': case 'CubicValueInterpolator': interpolators[o.id] = makeSolver(o); break;
+    default:
+      if (o.parentId !== undefined || o.type === 'Artboard') components.push(o);
+  }
+}
+for (const o of components) {
+  if (o.parentId !== undefined) { o.parent = byId(o.parentId); o.parent.children.push(o); }
+}
+
+const isTransform = (o) => ['Artboard', 'Node', 'Shape', 'PointsPath', 'Ellipse', 'Rectangle'].includes(o.type);
+const isPath = (o) => ['PointsPath', 'Ellipse', 'Rectangle'].includes(o.type);
+const isVertex = (o) => o.type.endsWith('Vertex');
+
+const shapes = components.filter((o) => o.type === 'Shape');
+const clippingShapes = components.filter((o) => o.type === 'ClippingShape');
+const constraints = components.filter((o) => o.type === 'TransformConstraint');
+const joystick = components.find((o) => o.type === 'Joystick');
+
+for (const s of shapes) { s.paths = []; s.paints = []; s.clips = []; }
+for (const o of components) {
+  if (isPath(o)) {
+    let p = o.parent;
+    while (p && p.type !== 'Shape') p = p.parent;
+    if (p) p.paths.push(o);
+    o.vertices = o.children.filter(isVertex);
+  }
+  if (o.type === 'Fill' || o.type === 'Stroke') {
+    if (o.parent.type === 'Shape') o.parent.paints.push(o);
+    o.mutator = o.children.find((c) => /Color|Gradient/.test(c.type));
+    o.feather = o.children.find((c) => c.type === 'Feather');
+    if (o.mutator && o.mutator.type.endsWith('Gradient')) {
+      o.mutator.stops = o.mutator.children.filter((c) => c.type === 'GradientStop')
+        .sort((a, b) => a.position - b.position);
+    }
+  }
+  if (o.type === 'TransformConstraint') {
+    o.target = byId(o.targetId);
+    (o.parent.constraints = o.parent.constraints || []).push(o);
+  }
+}
+const isDescendantOrSelf = (o, ancestor) => { for (let p = o; p; p = p.parent) if (p === ancestor) return true; return false; };
+for (const c of clippingShapes) {
+  c.source = byId(c.sourceId);
+  c.sourceShapes = shapes.filter((s) => isDescendantOrSelf(s, c.source));
+}
+for (const s of shapes) s.clips = clippingShapes.filter((c) => isDescendantOrSelf(s, c.parent));
+const artboardFill = artboard.children.find((c) => c.type === 'Fill');
+if (artboardFill) artboardFill.mutator = artboardFill.children[0];
+
+// Draw order: first object in the hierarchy is drawn on top.
+const drawOrder = shapes.slice().reverse();
+
+// ---------------------------------------------------------------- transforms
+let frameStamp = 0;
+function world(o) {
+  if (o.stamp === frameStamp) return o.world;
+  o.stamp = frameStamp;
+  if (o.type === 'Artboard') { o.world = [1, 0, 0, 1, 0, 0]; o.renderOpacity = 1; return o.world; }
+  const parentWorld = world(o.parent);
+  let m = mul(parentWorld, compose(o.x, o.y, o.rotation, o.scaleX, o.scaleY, 0));
+  if (o.constraints) {
+    for (const c of o.constraints) {
+      if (!c.strength) continue;
+      const to = decompose(world(c.target)), from = decompose(m);
+      const a = from.rotation % (Math.PI * 2), b = to.rotation % (Math.PI * 2);
+      let diff = b - a;
+      if (diff > Math.PI) diff -= Math.PI * 2; else if (diff < -Math.PI) diff += Math.PI * 2;
+      const t = c.strength, ti = 1 - t;
+      m = compose(from.x * ti + to.x * t, from.y * ti + to.y * t, a + diff * t,
+        from.scaleX * ti + to.scaleX * t, from.scaleY * ti + to.scaleY * t, from.skew * ti + to.skew * t);
+    }
+  }
+  o.world = m;
+  o.renderOpacity = (o.parent.renderOpacity === undefined ? 1 : o.parent.renderOpacity) * o.opacity;
+  return m;
+}
+function updateWorld() {
+  frameStamp++;
+  for (const o of components) if (isTransform(o)) world(o);
+}
+
+// ---------------------------------------------------------------- geometry
+const CIRCLE = 0.552284749831;
+function vertexPoints(v) {
+  const p = [v.x, v.y];
+  switch (v.type) {
+    case 'CubicMirroredVertex': {
+      const dx = Math.cos(v.rotation) * v.distance, dy = Math.sin(v.rotation) * v.distance;
+      return { p, in: [v.x - dx, v.y - dy], out: [v.x + dx, v.y + dy], cubic: true };
+    }
+    case 'CubicAsymmetricVertex': {
+      const c = Math.cos(v.rotation), s = Math.sin(v.rotation);
+      return { p, in: [v.x - c * v.inDistance, v.y - s * v.inDistance], out: [v.x + c * v.outDistance, v.y + s * v.outDistance], cubic: true };
+    }
+    case 'CubicDetachedVertex':
+      return { p, in: [v.x + Math.cos(v.inRotation) * v.inDistance, v.y + Math.sin(v.inRotation) * v.inDistance],
+        out: [v.x + Math.cos(v.outRotation) * v.outDistance, v.y + Math.sin(v.outRotation) * v.outDistance], cubic: true };
+    default: return { p, cubic: false, radius: v.radius || 0 };
+  }
+}
+function idealControl(tp, tn, radius) {
+  const angle = Math.abs(Math.atan2(tp[0] * tn[1] - tp[1] * tn[0], tp[0] * tn[0] + tp[1] * tn[1]));
+  return Math.min(radius, (4 / 3) * Math.tan(Math.PI / (2 * ((2 * Math.PI) / angle))) * radius *
+    (angle < Math.PI / 2 ? 1 + Math.cos(angle) : 2 - Math.sin(angle)));
+}
+function rotatePoints(next, prev, point, outP, inP) {
+  const v1 = [prev[0] - next[0], prev[1] - next[1]], v2 = [point[0] - next[0], point[1] - next[1]];
+  const angle = Math.atan2(v1[0] * v2[1] - v1[1] * v2[0], v1[0] * v2[0] + v1[1] * v2[1]);
+  let s = Math.sin(angle * 2), c = Math.cos(angle * 2);
+  let x = outP[0] - prev[0], y = outP[1] - prev[1];
+  outP[0] = x * c - y * s + prev[0]; outP[1] = x * s + y * c + prev[1];
+  s = Math.sin(-angle * 2); c = Math.cos(-angle * 2);
+  x = inP[0] - next[0]; y = inP[1] - next[1];
+  inP[0] = x * c - y * s + next[0]; inP[1] = x * s + y * c + next[1];
+}
+// Builds a list of path commands in the path's local space (mirrors rive's Path::buildPath).
+function pathCommands(path) {
+  if (path.type === 'Ellipse') {
+    const w = path.width, h = path.height, rx = w / 2, ry = h / 2;
+    const ox = -path.originX * w + rx, oy = -path.originY * h + ry;
+    const cx = rx * CIRCLE, cy = ry * CIRCLE;
+    return [['M', ox, oy - ry],
+      ['C', ox + cx, oy - ry, ox + rx, oy - cy, ox + rx, oy],
+      ['C', ox + rx, oy + cy, ox + cx, oy + ry, ox, oy + ry],
+      ['C', ox - cx, oy + ry, ox - rx, oy + cy, ox - rx, oy],
+      ['C', ox - rx, oy - cy, ox - cx, oy - ry, ox, oy - ry], ['Z']];
+  }
+  let verts, closed;
+  if (path.type === 'Rectangle') {
+    const w = path.width, h = path.height, ox = -path.originX * w, oy = -path.originY * h;
+    const tl = path.cornerRadiusTL, link = path.linkCornerRadius;
+    const r = link ? [tl, tl, tl, tl] : [tl, path.cornerRadiusTR, path.cornerRadiusBR, path.cornerRadiusBL];
+    verts = [{ p: [ox, oy], radius: r[0] }, { p: [ox + w, oy], radius: r[1] },
+      { p: [ox + w, oy + h], radius: r[2] }, { p: [ox, oy + h], radius: r[3] }];
+    closed = true;
+  } else {
+    verts = path.vertices.map(vertexPoints);
+    closed = !!path.isClosed;
+  }
+  const n = verts.length, cmds = [];
+  if (n < 2) return cmds;
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
+  const norm = (v) => { const l = Math.hypot(v[0], v[1]); if (l > 0) { v[0] /= l; v[1] /= l; } return l; };
+  const sa = (p, d, s) => [p[0] + d[0] * s, p[1] + d[1] * s];
+  let out, prevIsCubic, start, startIn, startIsCubic;
+  const corner = (i) => {
+    const v = verts[i], pos = v.p;
+    const prev = verts[(i - 1 + n) % n], next = verts[(i + 1) % n];
+    const toPrev = sub(prev.cubic ? prev.out : prev.p, pos), lp = norm(toPrev);
+    const toNext = sub(next.cubic ? next.in : next.p, pos), ln = norm(toNext);
+    const rr = Math.min(lp / 2, ln / 2, Math.abs(v.radius));
+    const ideal = idealControl(toPrev, toNext, rr);
+    const enter = sa(pos, toPrev, rr);
+    const outP = sa(pos, toPrev, rr - ideal), inP = sa(pos, toNext, rr - ideal);
+    const exit = sa(pos, toNext, rr);
+    if (v.radius < 0) rotatePoints(exit, enter, pos, outP, inP);
+    return { enter, outP, inP, exit };
+  };
+  const first = verts[0];
+  if (first.cubic) {
+    startIsCubic = prevIsCubic = true; startIn = first.in; out = first.out; start = first.p;
+    cmds.push(['M', start[0], start[1]]);
+  } else {
+    startIsCubic = prevIsCubic = false;
+    if (first.radius) {
+      const c = corner(0);
+      startIn = start = c.enter; cmds.push(['M', start[0], start[1]]);
+      cmds.push(['C', c.outP[0], c.outP[1], c.inP[0], c.inP[1], c.exit[0], c.exit[1]]);
+      out = c.exit;
+    } else {
+      startIn = start = out = first.p; cmds.push(['M', out[0], out[1]]);
+    }
+  }
+  for (let i = 1; i < n; i++) {
+    const v = verts[i];
+    if (v.cubic) {
+      cmds.push(['C', out[0], out[1], v.in[0], v.in[1], v.p[0], v.p[1]]);
+      prevIsCubic = true; out = v.out;
+    } else if (v.radius) {
+      const c = corner(i);
+      if (prevIsCubic) cmds.push(['C', out[0], out[1], c.enter[0], c.enter[1], c.enter[0], c.enter[1]]);
+      else cmds.push(['L', c.enter[0], c.enter[1]]);
+      cmds.push(['C', c.outP[0], c.outP[1], c.inP[0], c.inP[1], c.exit[0], c.exit[1]]);
+      out = c.exit; prevIsCubic = false;
+    } else if (prevIsCubic) {
+      cmds.push(['C', out[0], out[1], v.p[0], v.p[1], v.p[0], v.p[1]]);
+      prevIsCubic = false; out = v.p;
+    } else {
+      out = v.p; cmds.push(['L', out[0], out[1]]);
+    }
+  }
+  if (closed) {
+    if (prevIsCubic || startIsCubic) cmds.push(['C', out[0], out[1], startIn[0], startIn[1], start[0], start[1]]);
+    else cmds.push(['L', start[0], start[1]]);
+    cmds.push(['Z']);
+  }
+  return cmds;
+}
+function addCommands(p2d, cmds, m) {
+  for (const c of cmds) {
+    if (c[0] === 'Z') { p2d.closePath(); continue; }
+    const pts = [];
+    for (let i = 1; i < c.length; i += 2) pts.push(...apply(m, c[i], c[i + 1]));
+    if (c[0] === 'M') p2d.moveTo(pts[0], pts[1]);
+    else if (c[0] === 'L') p2d.lineTo(pts[0], pts[1]);
+    else p2d.bezierCurveTo(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]);
+  }
+}
+// space: matrix applied to each path's world transform (identity => world space).
+function shapePath(shape, space) {
+  const p2d = new Path2D();
+  for (const path of shape.paths) addCommands(p2d, pathCommands(path), mul(space, path.world));
+  return p2d;
+}
+
+// ---------------------------------------------------------------- paint
+const argb = (c, alpha) => {
+  const a = ((c >>> 24) & 255) / 255 * alpha;
+  return `rgba(${(c >>> 16) & 255},${(c >>> 8) & 255},${c & 255},${a})`;
+};
+function paintStyle(ctx, mutator, opacity, space) {
+  if (!mutator) return null;
+  if (mutator.type === 'SolidColor') return argb(mutator.colorValue, opacity);
+  const s = apply(space, mutator.startX, mutator.startY), e = apply(space, mutator.endX, mutator.endY);
+  const g = mutator.type === 'LinearGradient'
+    ? ctx.createLinearGradient(s[0], s[1], e[0], e[1])
+    : ctx.createRadialGradient(s[0], s[1], 0, s[0], s[1], Math.hypot(e[0] - s[0], e[1] - s[1]));
+  const op = opacity * mutator.opacity;
+  for (const st of mutator.stops) g.addColorStop(Math.min(1, Math.max(0, st.position)), argb(st.colorValue, op));
+  return g;
+}
+const CAPS = ['butt', 'round', 'square'], JOINS = ['miter', 'round', 'bevel'];
+const IDENTITY = [1, 0, 0, 1, 0, 0];
+
+function applyClips(ctx, base, shape) {
+  for (const clip of shape.clips) {
+    if (!clip.isVisible) continue;
+    const cp = new Path2D();
+    for (const s of clip.sourceShapes) cp.addPath(shapePath(s, IDENTITY));
+    ctx.setTransform(...base);
+    ctx.clip(cp, clip.fillRule === 1 ? 'evenodd' : 'nonzero');
+  }
+}
+
+function drawShape(ctx, base, shape) {
+  if (shape.drawableFlags & 1) return;
+  const opacity = shape.renderOpacity;
+  if (opacity <= 0) return;
+  const visible = shape.paints.filter((p) => p.isVisible && p.mutator);
+  if (!visible.length) return;
+  ctx.save();
+  applyClips(ctx, base, shape);
+  const inv = invert(shape.world);
+  let localPath, worldPath;
+  for (const paint of visible) {
+    const local = paint.type === 'Fill' || paint.transformAffectsStroke;
+    const xf = local ? mul(base, shape.world) : base;
+    ctx.setTransform(...xf);
+    const p2d = local ? (localPath = localPath || shapePath(shape, inv)) : (worldPath = worldPath || shapePath(shape, IDENTITY));
+    const style = paintStyle(ctx, paint.mutator, opacity, local ? IDENTITY : shape.world);
+    if (paint.feather) {
+      // Feather softens the edge with a gaussian blur, measured in the paint's space.
+      const scale = Math.sqrt(Math.abs(xf[0] * xf[3] - xf[1] * xf[2]));
+      ctx.filter = `blur(${paint.feather.strength * 0.5 * scale}px)`;
+    }
+    if (paint.type === 'Fill') {
+      ctx.fillStyle = style;
+      ctx.fill(p2d, paint.fillRule === 1 ? 'evenodd' : 'nonzero');
+    } else {
+      ctx.strokeStyle = style;
+      ctx.lineWidth = paint.thickness;
+      ctx.lineCap = CAPS[paint.cap] || 'butt';
+      ctx.lineJoin = JOINS[paint.join] || 'miter';
+      ctx.stroke(p2d);
+    }
+    if (paint.feather) ctx.filter = 'none';
+  }
+  ctx.restore();
+}
+
+// ---------------------------------------------------------------- animation
+function makeSolver(o) {
+  const { x1, x2 } = o;
+  const bez = (t, a1, a2) => (((1 - 3 * a2 + 3 * a1) * t + (3 * a2 - 6 * a1)) * t + 3 * a1) * t;
+  const slope = (t, a1, a2) => 3 * (1 - 3 * a2 + 3 * a1) * t * t + 2 * (3 * a2 - 6 * a1) * t + 3 * a1;
+  const N = 11, step = 1 / (N - 1), table = [];
+  for (let i = 0; i < N; i++) table.push(bez(i * step, x1, x2));
+  const getT = (x) => {
+    let start = 0, cur = 1;
+    for (; cur !== N - 1 && table[cur] <= x; cur++) start += step;
+    cur--;
+    const dist = (x - table[cur]) / (table[cur + 1] - table[cur]);
+    let t = start + dist * step;
+    const s0 = slope(t, x1, x2);
+    if (s0 >= 0.001) {
+      for (let i = 0; i < 4; i++) { const s = slope(t, x1, x2); if (s === 0) break; t -= (bez(t, x1, x2) - x) / s; }
+      return t;
+    }
+    if (s0 === 0) return t;
+    let a = start, b = start + step, cx, ct, i = 0;
+    do { ct = a + (b - a) / 2; cx = bez(ct, x1, x2) - x; if (cx > 0) b = ct; else a = ct; } while (Math.abs(cx) > 1e-7 && ++i < 10);
+    return ct;
+  };
+  if (o.type === 'CubicValueInterpolator') {
+    return (from, to, f) => {
+      const y1 = from, y2 = o.y1, y3 = o.y2, y4 = to;
+      const A = y4 + 3 * (y2 - y3) - y1, B = 3 * (y3 - y2 * 2 + y1), C = 3 * (y2 - y1);
+      const t = getT(f);
+      return ((A * t + B) * t + C) * t + y1;
+    };
+  }
+  return (from, to, f) => from + (to - from) * bez(getT(f), o.y1, o.y2);
+}
+function setValue(obj, name, value, mix) {
+  obj[name] = mix === 1 ? value : obj[name] * (1 - mix) + value * mix;
+}
+function applyAnimation(anim, time, mix) {
+  for (const ko of anim.keyedObjects) {
+    const obj = byId(ko.objectId);
+    if (!obj) continue;
+    for (const kp of ko.props) {
+      const fr = kp.frames, n = fr.length;
+      if (!n || !kp.name) continue;
+      let idx = 0;
+      while (idx < n && fr[idx].seconds < time) idx++;
+      if (idx === 0) setValue(obj, kp.name, fr[0].value, mix);
+      else if (idx < n) {
+        const a = fr[idx - 1], b = fr[idx];
+        if (time === b.seconds) setValue(obj, kp.name, b.value, mix);
+        else if (a.interpolationType === 0) setValue(obj, kp.name, a.value, mix);
+        else {
+          const f = (time - a.seconds) / (b.seconds - a.seconds);
+          const interp = a.interpolatorId !== undefined ? interpolators[a.interpolatorId] : null;
+          setValue(obj, kp.name, interp ? interp(a.value, b.value, f) : a.value + (b.value - a.value) * f, mix);
+        }
+      } else setValue(obj, kp.name, fr[n - 1].value, mix);
+    }
+  }
+}
+const animStart = (a) => (a.enableWorkArea ? a.workStart : 0) / a.fps;
+const animEnd = (a) => (a.enableWorkArea ? a.workEnd : a.duration) / a.fps;
+const animDuration = (a) => Math.abs(animEnd(a) - animStart(a));
+
+class AnimationInstance {
+  constructor(anim) { this.anim = anim; this.time = animStart(anim); this.totalTime = 0; this.lastTotalTime = 0; this.spilled = 0; this.didLoop = false; }
+  advance(seconds) {
+    const a = this.anim, delta = seconds * a.speed;
+    this.spilled = 0;
+    if (delta === 0) { this.didLoop = false; return; }
+    this.lastTotalTime = this.totalTime;
+    this.totalTime += Math.abs(delta);
+    this.time += delta;
+    const fps = a.fps, start = a.enableWorkArea ? a.workStart : 0, end = a.enableWorkArea ? a.workEnd : a.duration;
+    const range = end - start;
+    let frames = this.time * fps, didLoop = false;
+    if (a.loopValue === 0) {
+      if (frames > end) { this.spilled = ((frames - end) / (delta * fps)) * seconds; frames = end; this.time = frames / fps; didLoop = true; }
+    } else if (a.loopValue === 1) {
+      if (frames >= end) {
+        const rem = (frames - start) % range;
+        this.spilled = (rem / (delta * fps)) * seconds;
+        this.time = (start + rem) / fps; didLoop = true;
+      }
+    } else if (a.loopValue === 2) {
+      // ping-pong
+      while (frames > end || frames < start) {
+        frames = frames > end ? end - (frames - end) : start + (start - frames);
+        didLoop = true;
+      }
+      this.time = frames / fps;
+    }
+    this.didLoop = didLoop;
+  }
+  keepGoing() { return this.anim.loopValue !== 0 || this.time < animEnd(this.anim); }
+}
+
+// ---------------------------------------------------------------- state machine
+const inputs = stateMachine.inputs.map((i) => ({ name: i.name, value: !!i.value }));
+
+class StateInstance {
+  constructor(state) {
+    this.state = state;
+    this.anim = state.type === 'AnimationState' ? new AnimationInstance(animations[state.animationId]) : null;
+  }
+  advance(s) { if (this.anim) this.anim.advance(s * this.state.speed); }
+  apply(mix) { if (this.anim) applyAnimation(this.anim.anim, this.anim.time, mix); }
+}
+const exitTimeSeconds = (tr, state, absolute) => {
+  if (tr.flags & 8) {
+    const a = state.type === 'AnimationState' ? animations[state.animationId] : null;
+    return (absolute && a ? animStart(a) : 0) + tr.exitTime / 100 * (a ? animDuration(a) : 0);
+  }
+  return tr.exitTime / 1000;
+};
+const mixTime = (tr, state) => {
+  if (!tr.duration) return 0;
+  if (tr.flags & 2) {
+    const a = state.type === 'AnimationState' ? animations[state.animationId] : null;
+    return tr.duration / 100 * (a ? animDuration(a) : 0);
+  }
+  return tr.duration / 1000;
+};
+
+class LayerInstance {
+  constructor(layer) {
+    this.layer = layer;
+    this.any = layer.states.find((s) => s.type === 'AnyState');
+    this.from = null; this.transition = null; this.mix = 1;
+    this.current = new StateInstance(layer.states.find((s) => s.type === 'EntryState'));
+  }
+  allowed(tr, from) {
+    if (tr.flags & 1) return false;
+    for (const c of tr.conditions) {
+      const v = inputs[c.inputId].value;
+      if (!((v && c.opValue === 0) || (!v && c.opValue === 1))) return false;
+    }
+    if ((tr.flags & 4) && from.anim) {
+      const inst = from.anim, a = inst.anim, dur = animDuration(a);
+      let exit = exitTimeSeconds(tr, from.state, false);
+      if (exit <= dur && a.loopValue !== 0) exit += Math.floor(inst.lastTotalTime / dur) * dur;
+      if (inst.totalTime < exit) return false;
+    }
+    return true;
+  }
+  tryChange() {
+    for (const src of [this.any, this.current.state]) {
+      if (!src) continue;
+      const fromInst = src === this.any ? this.current : this.current;
+      for (const tr of src.transitions) {
+        const to = this.layer.states[tr.stateToId];
+        if (!to || to === this.current.state && src !== this.any) continue;
+        if (!this.allowed(tr, fromInst)) continue;
+        const useExit = (tr.flags & 4) && fromInst.anim;
+        if ((tr.flags & 16) && useExit) fromInst.anim.time = exitTimeSeconds(tr, fromInst.state, true);
+        const spilled = fromInst.anim ? fromInst.anim.spilled : 0;
+        this.from = this.current;
+        this.transition = tr;
+        this.current = new StateInstance(to);
+        if (spilled && this.current.anim) this.current.advance(spilled);
+        this.mixDuration = mixTime(tr, this.from.state);
+        this.mix = this.mixDuration > 0 ? 0 : 1;
+        this.holdFrom = !!(tr.flags & 16);
+        return true;
+      }
+    }
+    return false;
+  }
+  apply() {
+    if (this.from && this.mix < 1) this.from.apply(1);
+    this.current.apply(this.mix);
+  }
+  advance(seconds) {
+    this.current.advance(seconds);
+    if (this.transition && this.from && this.mixDuration > 0) {
+      this.mix = Math.min(1, Math.max(0, this.mix + seconds / this.mixDuration));
+    } else this.mix = 1;
+    if (this.from && this.mix < 1 && !this.holdFrom) this.from.advance(seconds);
+    this.apply();
+    for (let i = 0; i < 100 && this.tryChange(); i++) this.apply();
+  }
+}
+const layers = stateMachine.layers.map((l) => new LayerInstance(l));
+
+// ---------------------------------------------------------------- listeners
+const hitCanvas = document.createElement('canvas').getContext('2d');
+for (const l of stateMachine.listeners) {
+  const target = byId(l.targetId);
+  l.hitShapes = shapes.filter((s) => isDescendantOrSelf(s, target));
+  l.hovered = false;
+}
+function hitTest(l, x, y) {
+  for (const s of l.hitShapes) if (hitCanvas.isPointInPath(shapePath(s, IDENTITY), x, y)) return true;
+  return false;
+}
+function performActions(l, pos) {
+  for (const a of l.actions) {
+    if (a.type === 'ListenerBoolChange') {
+      const inp = inputs[a.inputId];
+      inp.value = a.value === 2 ? !inp.value : a.value === 1;
+    } else if (a.type === 'ListenerAlignTarget') {
+      if (window.__LAB && window.__LAB.follow === false) continue;
+      const t = byId(a.targetId);
+      const local = apply(invert(world(t.parent)), pos[0], pos[1]);
+      if (a.preserveOffset && l.prevPos) {
+        const prev = apply(invert(world(t.parent)), l.prevPos[0], l.prevPos[1]);
+        t.x += local[0] - prev[0]; t.y += local[1] - prev[1];
+      } else { t.x = local[0]; t.y = local[1]; }
+    }
+  }
+}
+let lastPointer = null;
+function pointerEvent(kind, pos) {
+  // kind: 'move' | 'down' | 'up' | 'exit'
+  for (const l of stateMachine.listeners) {
+    const hit = kind !== 'exit' && pos && hitTest(l, pos[0], pos[1]);
+    const type = l.listenerTypeValue;
+    const wasHovered = l.hovered;
+    l.hovered = hit;
+    if (hit && !wasHovered && type === 0) performActions(l, pos);
+    else if (!hit && wasHovered && type === 1) performActions(l, pos || lastPointer || [0, 0]);
+    if (hit) {
+      if ((type === 4 && kind === 'move') || (type === 2 && kind === 'down') || (type === 3 && kind === 'up')) performActions(l, pos);
+    }
+    l.prevPos = pos;
+  }
+  if (pos) lastPointer = pos;
+}
+
+// ---------------------------------------------------------------- joystick
+function applyJoystick() {
+  if (!joystick) return;
+  let m = [1, 0, 0, 1, joystick.posX, joystick.posY];
+  if (joystick.parent && joystick.parent.world) m = mul(joystick.parent.world, m);
+  const handle = byId(joystick.handleSourceId);
+  if (handle) {
+    const hw = world(handle);
+    const pos = apply(invert(m), hw[4], hw[5]);
+    const left = -joystick.width * joystick.originX, top = -joystick.height * joystick.originY;
+    joystick.x = joystick.width === 0 ? 0 : (pos[0] - left) * 2 / joystick.width - 1;
+    joystick.y = joystick.height === 0 ? 0 : (pos[1] - top) * 2 / joystick.height - 1;
+  }
+  const xa = animations[joystick.xId], ya = animations[joystick.yId];
+  if (xa) applyAnimation(xa, (((joystick.joystickFlags & 1) ? -joystick.x : joystick.x) + 1) / 2 * animDuration(xa), 1);
+  if (ya) applyAnimation(ya, (((joystick.joystickFlags & 2) ? -joystick.y : joystick.y) + 1) / 2 * animDuration(ya), 1);
+}
+
+// ---------------------------------------------------------------- title
+// "INSTALANDING" is parented to the arrow's bobbing node, so it bobs, squashes and
+// dives into the hole with the arrow. It reuses the arrow's paints: purple outline
+// (#642488), purple extrusion (#7b40a9 -> #5f2474), front gradient (#8a23db -> #ffc668)
+// and the arrow's own feathered cream shine sweep.
+const TITLE = 'INSTALANDING';
+const TITLE_SIZE = 31, TITLE_TRACKING = 1.2, TITLE_GAP = 16;
+const EXTRUDE = { steps: 6, dx: -0.9, dy: 0.75 };
+const arrowNode = byId(432);     // inner arrow node (keyed by ArrowIdle / ArrowGoingDown)
+const arrowOutline = byId(434);  // arrow back silhouette, carries the hole clip
+const arrowFront = byId(459);    // arrow front face (gradient)
+const arrowShine = byId(452);    // arrow shine sweep
+const outlinePaint = arrowOutline.paints[0].mutator.colorValue;
+const frontGradient = arrowFront.paints[0].mutator;
+const shinePaint = arrowShine.paints[0];
+let titleLayout = null;
+const DIVE = (() => {
+  const anim = animations.find((a) => a.name === 'ArrowGoingDown');
+  const ko = anim.keyedObjects.find((k) => k.objectId === arrowNode.parent.id);
+  const fr = ko.props.find((p) => p.name === 'y').frames;
+  return { rest: fr[0].value, down: fr[fr.length - 1].value, sink: 90 };
+})();
+
+function localBounds(shape, node) {
+  const inv = invert(node.world);
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const path of shape.paths) {
+    const m = mul(inv, path.world);
+    for (const c of pathCommands(path)) {
+      for (let i = 1; i < c.length; i += 2) {
+        const [x, y] = apply(m, c[i], c[i + 1]);
+        x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y);
+      }
+    }
+  }
+  return { x0, y0, x1, y1, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, w: x1 - x0, h: y1 - y0 };
+}
+
+function layoutTitle(ctx) {
+  // Measured once, at rest pose, in the arrow node's local space.
+  updateWorld();
+  const arrow = localBounds(arrowOutline, arrowNode);
+  const front = localBounds(arrowFront, arrowNode);
+  ctx.save();
+  ctx.font = `700 ${TITLE_SIZE}px Instalanding, sans-serif`;
+  const glyphs = [...TITLE].map((ch) => ({ ch, w: ctx.measureText(ch).width }));
+  const metrics = ctx.measureText(TITLE);
+  ctx.restore();
+  const width = glyphs.reduce((s, g) => s + g.w, 0) + TITLE_TRACKING * (glyphs.length - 1);
+  const capH = metrics.actualBoundingBoxAscent || TITLE_SIZE * 0.7;
+  const baseline = arrow.y0 - TITLE_GAP;
+  let x = arrow.cx - width / 2 + EXTRUDE.steps * -EXTRUDE.dx / 2;
+  for (const g of glyphs) { g.x = x; x += g.w + TITLE_TRACKING; }
+  return { glyphs, width, capH, baseline, x0: arrow.cx - width / 2, front,
+    cx: arrow.cx, cy: baseline - capH / 2, arrowTop: arrow.y0 };
+}
+
+let shineCanvas = null;
+function drawTitle(ctx, base) {
+  if (!titleLayout) return;
+  const L = titleLayout, opacity = arrowNode.renderOpacity;
+  if (opacity <= 0) return;
+  // Anchor at the arrow's top edge: squash/stretch is applied around that point so the
+  // title stays glued to the arrow and follows it all the way into the hole.
+  const w = arrowNode.world;
+  const anchor = apply(w, L.cx, L.arrowTop);
+  // Extra sink proportional to the arrow's dive progress (from ArrowGoingDown's own
+  // keyframes), so the stretched title is fully swallowed by the hole.
+  const root = arrowNode.parent;
+  const dive = Math.min(1, Math.max(0, (root.y - DIVE.rest) / (DIVE.down - DIVE.rest)));
+  anchor[1] += dive * dive * DIVE.sink;
+  const titleWorld = [w[0], w[1], w[2], w[3], 0, 0];
+  const tw = mul([1, 0, 0, 1, anchor[0], anchor[1]], mul(titleWorld, [1, 0, 0, 1, -L.cx, -L.arrowTop]));
+  const m = mul(base, tw);
+  const font = `700 ${TITLE_SIZE}px Instalanding, sans-serif`;
+  const eachGlyph = (fn) => { for (const g of L.glyphs) fn(g); };
+
+  ctx.save();
+  applyClips(ctx, base, arrowOutline);
+  ctx.setTransform(...m);
+  ctx.font = font;
+  ctx.textBaseline = 'alphabetic';
+  ctx.lineJoin = 'round';
+  ctx.globalAlpha = opacity;
+
+  // 1. Outline around the whole extruded body (like the arrow's back silhouette).
+  ctx.strokeStyle = argb(outlinePaint, 1);
+  ctx.lineWidth = 5;
+  for (let k = EXTRUDE.steps; k >= 0; k--) {
+    eachGlyph((g) => ctx.strokeText(g.ch, g.x + k * EXTRUDE.dx, L.baseline + k * EXTRUDE.dy));
+  }
+  // 2. Extruded side faces.
+  const side = ctx.createLinearGradient(0, L.baseline - L.capH, 0, L.baseline + EXTRUDE.steps * EXTRUDE.dy);
+  side.addColorStop(0, '#7b40a9'); side.addColorStop(1, '#5f2474');
+  ctx.fillStyle = side;
+  for (let k = EXTRUDE.steps; k >= 1; k--) {
+    eachGlyph((g) => ctx.fillText(g.ch, g.x + k * EXTRUDE.dx, L.baseline + k * EXTRUDE.dy));
+  }
+  // 3. Front faces: each glyph gets the arrow-front gradient, mapped to the glyph box
+  //    with the same direction (purple bottom-left -> warm yellow top-right).
+  const f = frontGradient, fb = L.front;
+  const u = (px) => (px - fb.x0) / fb.w, v = (py) => (py - fb.y0) / fb.h;
+  const gs = [u(f.startX + arrowFront.x), v(f.startY + arrowFront.y)];
+  const ge = [u(f.endX + arrowFront.x), v(f.endY + arrowFront.y)];
+  const top = L.baseline - L.capH;
+  eachGlyph((g) => {
+    const gr = ctx.createLinearGradient(g.x + gs[0] * g.w, top + gs[1] * L.capH, g.x + ge[0] * g.w, top + ge[1] * L.capH);
+    for (const st of f.stops) gr.addColorStop(st.position, argb(st.colorValue, 1));
+    ctx.fillStyle = gr;
+    ctx.fillText(g.ch, g.x, L.baseline);
+  });
+  // 4. Crisp edge between front and side.
+  ctx.lineWidth = 1.2;
+  eachGlyph((g) => ctx.strokeText(g.ch, g.x, L.baseline));
+  ctx.restore();
+
+  // 5. Shine: the arrow's own shine shape, remapped from the arrow face onto the title
+  //    and composited only inside the letters.
+  if (!shinePaint || !shinePaint.isVisible) return;
+  const cw = ctx.canvas.width, ch = ctx.canvas.height;
+  if (!shineCanvas) shineCanvas = document.createElement('canvas');
+  if (shineCanvas.width !== cw || shineCanvas.height !== ch) { shineCanvas.width = cw; shineCanvas.height = ch; }
+  const sc = shineCanvas.getContext('2d');
+  sc.setTransform(1, 0, 0, 1, 0, 0);
+  sc.clearRect(0, 0, cw, ch);
+  sc.setTransform(...m);
+  sc.font = font;
+  sc.fillStyle = '#000';
+  eachGlyph((g) => sc.fillText(g.ch, g.x, L.baseline));
+  sc.globalCompositeOperation = 'source-in';
+  const sx = L.width / fb.w, sy = L.capH / fb.h * 1.6;
+  const remap = mul(tw, mul([sx, 0, 0, sy, L.cx - fb.cx * sx, L.cy - fb.cy * sy], invert(arrowNode.world)));
+  sc.setTransform(...base);
+  const scale = Math.sqrt(Math.abs(m[0] * m[3] - m[1] * m[2]));
+  sc.filter = `blur(${(shinePaint.feather ? shinePaint.feather.strength : 0) * 0.5 * scale * sx}px)`;
+  sc.fillStyle = argb(shinePaint.mutator.colorValue, 1);
+  sc.fill(shapePath(arrowShine, remap));
+  sc.filter = 'none';
+  sc.globalCompositeOperation = 'source-over';
+  ctx.save();
+  applyClips(ctx, base, arrowOutline);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha = opacity * arrowShine.renderOpacity;
+  ctx.drawImage(shineCanvas, 0, 0);
+  ctx.restore();
+}
+
+// ---------------------------------------------------------------- loop
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+titleLayout = layoutTitle(ctx);
+if (document.fonts) {
+  document.fonts.load(`700 ${TITLE_SIZE}px Instalanding`).then(() => { titleLayout = layoutTitle(ctx); });
+}
+let view = [1, 0, 0, 1, 0, 0];
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  // Fit: contain, Alignment: center (same as the default rive web runtime).
+  const s = Math.min(w / artboard.width, h / artboard.height);
+  view = [s, 0, 0, s, (w - artboard.width * s) / 2, (h - artboard.height * s) / 2];
+  view.dpr = dpr;
+}
+window.addEventListener('resize', resize);
+resize();
+
+function toArtboard(e) {
+  const r = canvas.getBoundingClientRect();
+  return apply(invert(view), e.clientX - r.left, e.clientY - r.top);
+}
+canvas.addEventListener('pointermove', (e) => pointerEvent('move', toArtboard(e)));
+canvas.addEventListener('pointerdown', (e) => pointerEvent('down', toArtboard(e)));
+canvas.addEventListener('pointerup', (e) => pointerEvent('up', toArtboard(e)));
+canvas.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') pointerEvent('exit', null); });
+let touchDown = null;
+canvas.addEventListener('pointerdown', (e) => {
+  if (e.pointerType === 'touch') touchDown = { x: e.clientX, y: e.clientY, wasOut: inputs[0].value };
+}, true);
+canvas.addEventListener('pointerup', (e) => {
+  if (e.pointerType !== 'touch' || !touchDown) return;
+  const tap = Math.hypot(e.clientX - touchDown.x, e.clientY - touchDown.y) < 10;
+  if (tap && touchDown.wasOut) pointerEvent('exit', null);
+  touchDown = null;
+});
+// for the lab hooks below
+const follower = byId(4);
+window.__cute = { pointerEvent, inputs, follower, rest: { x: follower.x, y: follower.y }, size: [artboard.width, artboard.height] };
+
+function advance(dt) {
+  updateWorld();
+  for (const l of layers) l.advance(dt);
+  updateWorld();
+  applyJoystick();
+  updateWorld();
+}
+
+function render() {
+  const dpr = view.dpr;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const base = mul([dpr, 0, 0, dpr, 0, 0], view);
+  if (artboardFill && artboardFill.isVisible !== 0 && artboardFill.mutator) {
+    ctx.setTransform(...base);
+    ctx.fillStyle = argb(artboardFill.mutator.colorValue, 1);
+    ctx.fillRect(0, 0, artboard.width, artboard.height);
+  }
+  for (const s of drawOrder) {
+    drawShape(ctx, base, s);
+    if (s === arrowOutline && !(window.__LAB && window.__LAB.title === false)) drawTitle(ctx, base);
+  }
+}
+
+let last = null;
+function frame(t) {
+  const dt = last === null ? 0 : Math.min(0.1, (t - last) / 1000);
+  last = t;
+  advance(dt * (window.__LAB ? window.__LAB.speed : 1));
+  render();
+  requestAnimationFrame(frame);
+}
+advance(0);
+render();
+requestAnimationFrame(frame);
+dispatchEvent(new Event('cute-ready'));
+})();
+</script>
+<script>
+/* ------------------------------------------------------------------
+     Lab hooks (InstaLanding Motion). The character works on its own;
+     when it is framed, the lab drives it with postMessage and it reports
+     what he is doing.
+       { source: 'il-motion', type: 'speed', value: 0.25 }   the scene clock
+       { ..., type: 'step', value: 1 | -1 }    call him up and look around (1), or send him back down (-1)
+       { ..., type: 'sweep', value: 3 }        seconds for one lap of the lab's pointer around him
+       { ..., type: 'title', value: true }     the INSTALANDING title on the arrow
+       { ..., type: 'follow', value: true }    his head and eyes follow the pointer
+       { ..., type: 'autoplay', value: true }  up, a look around, back down, every few seconds
+     The lab moves a pointer the way a person does, through the same
+     listeners, so the state machine decides what each move does.
+  ------------------------------------------------------------------ */
+(function () {
+  const LAB = window.__LAB = window.__LAB || { speed: 1 };
+  LAB.sweep = 3; LAB.title = true; LAB.follow = true;
+  let C, auto = 0, lap = 0;
+  const isOut = () => C.inputs[0].value;
+  const at = (x, y) => C.pointerEvent('move', [x, y]);
+  const down = () => { cancelAnimationFrame(lap); lap = 0; C.pointerEvent('exit', null); };
+  // enter at the centre, then circle him once so his head and eyes track the pointer
+  function lookAround() {
+    cancelAnimationFrame(lap);
+    const [w, h] = C.size, cx = w / 2, cy = h * 0.46, r = Math.min(w, h) * 0.36;
+    at(cx, cy);
+    let t0 = null, a = 0;
+    const tick = (t) => {
+      if (t0 === null) t0 = t;
+      a = ((t - t0) / 1000) * LAB.speed / Math.max(0.5, LAB.sweep);
+      at(cx + Math.cos(a * Math.PI * 2 - Math.PI / 2) * r, cy + Math.sin(a * Math.PI * 2 - Math.PI / 2) * r * 0.8);
+      if (a < 1) lap = requestAnimationFrame(tick); else { lap = 0; at(cx, cy); }
+    };
+    setTimeout(() => { lap = requestAnimationFrame(tick); }, 1100 / Math.max(LAB.speed, 0.05));
+  }
+  function setFollow(on) {
+    LAB.follow = on;
+    if (!on) { C.follower.x = C.rest.x; C.follower.y = C.rest.y; }
+  }
+  const autoplay = (on, ms = 4200) => {
+    clearInterval(auto);
+    if (!on) return;
+    const cycle = () => { if (document.hidden) return; isOut() ? down() : lookAround(); };
+    cycle();
+    auto = setInterval(cycle, ms / Math.max(LAB.speed, 0.25));
+  };
+  function start() {
+    if (C) return;
+    C = window.__cute;
+    const canvas = document.getElementById('stage');
+    const qs = new URLSearchParams(location.search);
+    if (qs.has('autoplay')) autoplay(true, Number(qs.get('autoplay')) || 4200);
+    // a real press takes over from the lab
+    canvas.addEventListener('pointerdown', (e) => { if (e.isTrusted) { clearInterval(auto); cancelAnimationFrame(lap); } });
+    if (parent !== window) {
+      let lastText = '', was = false, since = 0;
+      const report = (t) => {
+        const out = isOut();
+        if (out !== was) { was = out; since = t; }
+        const fresh = t - since < 1100 / Math.max(LAB.speed, 0.05);
+        const text = out
+          ? (fresh ? 'POPPING UP · THE ARROW DIVES INTO THE HOLE' : LAB.follow ? 'UP · WATCHING THE POINTER' : 'UP · FOLLOW OFF')
+          : (fresh && since ? 'JUMPING BACK IN · THE ARROW RISES' : 'IN THE HOLE · HOVER TO CALL HIM UP');
+        if (text !== lastText) { lastText = text; parent.postMessage({ source: 'il-motion-demo', type: 'status', text }, '*'); }
+        setTimeout(() => requestAnimationFrame(report), 120);
+      };
+      requestAnimationFrame(report);
+    }
+  }
+  if (window.__cute) start(); else addEventListener('cute-ready', start, { once: true });
+  addEventListener('message', (e) => {
+    const d = e.data;
+    if (!d || d.source !== 'il-motion' || !C) return;
+    if (d.type === 'speed') LAB.speed = Math.max(0.05, Number(d.value) || 1);
+    if (d.type === 'step') { clearInterval(auto); d.value > 0 ? lookAround() : down(); }
+    if (d.type === 'sweep') LAB.sweep = Math.min(8, Math.max(1, Number(d.value) || 3));
+    if (d.type === 'title') LAB.title = Boolean(d.value);
+    if (d.type === 'follow') setFollow(Boolean(d.value));
+    if (d.type === 'autoplay') autoplay(Boolean(d.value));
+  });
+})();
+</script>
+</body>
+</html>

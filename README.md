@@ -35,7 +35,51 @@ Browse them live at **[instalanding.ai/pages](https://instalanding.ai/pages)**, 
 ## New drops
 
 <!-- NEW-DROPS:START -->
-**Updated Nov 26, 2026 · 98 pages · 36 design systems · 17 motion studies · 3 videos · 1 icon set · 9 products.** Everything new lands here first: pages, design systems, motion studies, videos, icons and products. Each one is also listed in its own section below.
+**Updated Nov 27, 2026 · 98 pages · 36 design systems · 18 motion studies · 9 videos · 3 icon sets · 11 products.** Everything new lands here first: pages, design systems, motion studies, videos, icons and products. Each one is also listed in its own section below.
+
+<p><a href="products/dx-coder-console"><img src="products/dx-coder-console/preview.jpg" width="400" alt="DX-Coder Decoder Console"></a></p>
+<p><b><a href="products/dx-coder-console">DX-Coder Decoder Console</a></b> · <sub>PRODUCT · Nov 27, 2026</sub><br>A teal-on-black ops console for a prompt-decoding service, with five live sections: rolling-digit KPIs and a token-throughput chart, a decoder fleet with a scrolling bitstream and hex frame inspector, three regional streams and a request heatmap, model routing with its latency histogram, and a filterable decode log<br><sub>HTML + CSS + SVG · no libraries · 8 controls · <a href="https://instalanding.ai/products/dx-coder-console">Use it live</a> · <a href="products/dx-coder-console/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="icons/css-software-icons"><img src="icons/css-software-icons/preview.jpg" width="400" alt="Pure CSS Software Icons"></a></p>
+<p><b><a href="icons/css-software-icons">Pure CSS Software Icons</a></b> · <sub>ICONS · Nov 26, 2026</sub><br>Nine software icons drawn in nothing but CSS (cloud upload, settings, terminal, code, sun, database, sync, lock and chat), white on near-black with a cyan accent, each idling on its own loop and doing its job when the pointer lands on it<br><sub>9 icons · HTML + CSS · no SVG, no JavaScript · <a href="https://instalanding.ai/icons/css-software-icons">Copy one live</a> · <a href="icons/css-software-icons/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="icons/healthcare-buttons"><img src="icons/healthcare-buttons/preview.jpg" width="400" alt="Healthcare Buttons"></a></p>
+<p><b><a href="icons/healthcare-buttons">Healthcare Buttons</a></b> · <sub>ICONS · Nov 26, 2026</sub><br>Six animated buttons for a patient portal (find a doctor, schedule, virtual care, refill prescription, online check-in and lab results), teal glass tiles with flat illustrations that pop a pill, bandage or syringe label on hover and act out their task on click<br><sub>6 icons · Decoded Rive · Canvas 2D · no libraries · <a href="https://instalanding.ai/icons/healthcare-buttons">Copy one live</a> · <a href="icons/healthcare-buttons/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="products/bastion-tiers"><img src="products/bastion-tiers/preview.jpg" width="400" alt="Bastion Threat Protection Tiers"></a></p>
+<p><b><a href="products/bastion-tiers">Bastion Threat Protection Tiers</a></b> · <sub>PRODUCT · Nov 26, 2026</sub><br>A tier picker for a cybersecurity service, set on a dark glass card: an arc gauge with three lit segments where a needle swings to Proactive, Adaptive or Essential, the shield icon glows, the copy below rewrites itself and the whole scene re-lights in that tier's blue, orange or violet<br><sub>Decoded Rive · Canvas 2D · no libraries · 5 controls · <a href="https://instalanding.ai/products/bastion-tiers">Use it live</a> · <a href="products/bastion-tiers/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/medusa-naga"><img src="videos/medusa-naga/preview.jpg" width="400" alt="Medusa Naga"></a></p>
+<p><b><a href="videos/medusa-naga">Medusa Naga</a></b> · <sub>VIDEO · Nov 26, 2026</sub><br>A 15-second talking ad for InstaLanding: a 3D snake-tailed Medusa in sunglasses waves, sways and speaks her lines in a synthesized voice, then stays live, watching your cursor, reacting when tapped and spinning when dragged<br><sub>Real-time 3D · Web Audio · speech synthesis · <a href="https://instalanding.ai/videos/medusa-naga">Watch</a> · <a href="videos/medusa-naga/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/vending-machine-city"><img src="videos/vending-machine-city/preview.jpg" width="400" alt="Vending Machine City"></a></p>
+<p><b><a href="videos/vending-machine-city">Vending Machine City</a></b> · <sub>VIDEO · Nov 26, 2026</sub><br>A 10-second wordless pull-back: a glowing red vending machine on a dark street corner keeps dropping cans, which tumble out and roll across the pavement as the camera climbs away over a night-time isometric city of towers, hotels, parks and lamplit streets, until the machine is a red speck among the rooftops<br><sub>Decoded Rive · Canvas 2D · procedural city · <a href="https://instalanding.ai/videos/vending-machine-city">Watch</a> · <a href="videos/vending-machine-city/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/voxel-pelican-assembly"><img src="videos/voxel-pelican-assembly/preview.jpg" width="400" alt="Voxel Pelican Assembly"></a></p>
+<p><b><a href="videos/voxel-pelican-assembly">Voxel Pelican Assembly</a></b> · <sub>VIDEO · Nov 26, 2026</sub><br>A 24-second voxel build-and-ride: a seaside diorama of a pelican on a bicycle assembles itself block by block in an isometric view, then the camera flattens to a side-on shot and the pelican pedals off across a bridge that builds itself just ahead of the wheels<br><sub>three.js · voxels · GSAP timeline · <a href="https://instalanding.ai/videos/voxel-pelican-assembly">Watch</a> · <a href="videos/voxel-pelican-assembly/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/tube-field-lights"><img src="videos/tube-field-lights/preview.jpg" width="400" alt="Tube Field Lights"></a></p>
+<p><b><a href="videos/tube-field-lights">Tube Field Lights</a></b> · <sub>VIDEO · Nov 26, 2026</sub><br>A 14-second WebGL piece on black: pink light balls bounce up and down through a dark grid of rounded-square tubes, then a green ball rises, freezes mid-air, and blooms until its light engulfs the frame before pulling back into a single glowing orb<br><sub>three.js · point lights · GSAP timeline · <a href="https://instalanding.ai/videos/tube-field-lights">Watch</a> · <a href="videos/tube-field-lights/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/chaotic-time-clock"><img src="videos/chaotic-time-clock/preview.jpg" width="400" alt="Chaotic Time Clock"></a></p>
+<p><b><a href="videos/chaotic-time-clock">Chaotic Time Clock</a></b> · <sub>VIDEO · Nov 26, 2026</sub><br>An 8-second shot of a glowing seven-segment clock floating over its own reflection, where time has come loose: the digits whir, surge and stutter as the clock races ahead, the camera drifts and the neon cycles through the spectrum<br><sub>CSS 3D · GSAP timeline · <a href="https://instalanding.ai/videos/chaotic-time-clock">Watch</a> · <a href="videos/chaotic-time-clock/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/car-drive-loop"><img src="videos/car-drive-loop/preview.jpg" width="400" alt="Car Drive Loop"></a></p>
+<p><b><a href="videos/car-drive-loop">Car Drive Loop</a></b> · <sub>VIDEO · Nov 26, 2026</sub><br>An 11-second flat-illustrated drive: a time-machine sports car cruises through a circular porthole ringed by a glowing tachometer, across a synthwave desert of layered hills, cacti and hot-air balloons, until the porthole opens onto the whole sunset landscape<br><sub>SVG car · Canvas 2D · GSAP timeline · <a href="https://instalanding.ai/videos/car-drive-loop">Watch</a> · <a href="videos/car-drive-loop/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="motion/peekaboo-orange"><img src="motion/peekaboo-orange/preview.jpg" width="400" alt="Peekaboo Orange"></a></p>
+<p><b><a href="motion/peekaboo-orange">Peekaboo Orange</a></b> · <sub>MOTION · Nov 26, 2026</sub><br>A cartoon orange in a top hat hides in a purple hole under a bobbing INSTALANDING arrow; point at him and the arrow dives in, he pops out and his head and eyes follow you<br><sub>Canvas 2D decoded .riv · no runtime · state machine · joystick · 8 tracks · <a href="https://instalanding.ai/motion/peekaboo-orange">Open the lab</a> · <a href="motion/peekaboo-orange/PROMPT.md">Prompt</a></sub></p>
+<br>
 
 <p><a href="icons/glassmorphism-material"><img src="icons/glassmorphism-material/preview.jpg" width="400" alt="Glassmorphism Material Icons"></a></p>
 <p><b><a href="icons/glassmorphism-material">Glassmorphism Material Icons</a></b> · <sub>ICONS · Nov 26, 2026</sub><br>Nine frosted-glass icons on a deep violet field (account, lock, picture, location pin, plant, credit card, calendar, clock and documents), each lit by a neon gradient behind the glass, that lift, glow and catch a sheen of light as the pointer passes over them<br><sub>9 icons · Decoded Rive · Canvas 2D · no libraries · <a href="https://instalanding.ai/icons/glassmorphism-material">Copy one live</a> · <a href="icons/glassmorphism-material/index.html">Code</a></sub></p>
@@ -857,6 +901,11 @@ choreography, or explore it live in the lab — slow motion, stepping and live k
 
 <p><a href="motion/redline-gauge"><img src="motion/redline-gauge/preview.jpg" width="400" alt="Redline Gauge"></a></p>
 <p><b><a href="motion/redline-gauge">Redline Gauge</a></b> · <sub>tap-to-rev gauge</sub><br>A neon speedometer wrapped in violet smoke; tap the dial in rhythm and the needle revs through three levels to the redline, then the smoke bursts<br><sub>Canvas 2D decoded .riv · no runtime · state machine · nested artboards · 8 tracks · <a href="https://instalanding.ai/motion/redline-gauge">Open the lab</a> · <a href="motion/redline-gauge/PROMPT.md">Prompt</a></sub></p>
+<br>
+
+<p><a href="motion/peekaboo-orange"><img src="motion/peekaboo-orange/preview.jpg" width="400" alt="Peekaboo Orange"></a></p>
+<p><b><a href="motion/peekaboo-orange">Peekaboo Orange</a></b> · <sub>cursor-follow character</sub><br>A cartoon orange in a top hat hides in a purple hole under a bobbing INSTALANDING arrow; point at him and the arrow dives in, he pops out and his head and eyes follow you<br><sub>Canvas 2D decoded .riv · no runtime · state machine · joystick · 8 tracks · <a href="https://instalanding.ai/motion/peekaboo-orange">Open the lab</a> · <a href="motion/peekaboo-orange/PROMPT.md">Prompt</a></sub></p>
+
 <!-- MOTION:END -->
 
 ## Videos
@@ -865,6 +914,30 @@ choreography, or explore it live in the lab — slow motion, stepping and live k
 Each video is one HTML file that renders every frame live, with its models, images and soundtrack
 inlined: no video file, no install. Open `index.html` and press play, or watch them at
 [instalanding.ai/videos](https://instalanding.ai/videos).
+
+<p><a href="videos/medusa-naga"><img src="videos/medusa-naga/preview.jpg" width="400" alt="Medusa Naga"></a></p>
+<p><b><a href="videos/medusa-naga">Medusa Naga</a></b> · <sub>0:15</sub><br>A 15-second talking ad for InstaLanding: a 3D snake-tailed Medusa in sunglasses waves, sways and speaks her lines in a synthesized voice, then stays live, watching your cursor, reacting when tapped and spinning when dragged<br><sub>Real-time 3D · Web Audio · speech synthesis · <a href="https://instalanding.ai/videos/medusa-naga">Watch</a> · <a href="videos/medusa-naga/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/vending-machine-city"><img src="videos/vending-machine-city/preview.jpg" width="400" alt="Vending Machine City"></a></p>
+<p><b><a href="videos/vending-machine-city">Vending Machine City</a></b> · <sub>0:10</sub><br>A 10-second wordless pull-back: a glowing red vending machine on a dark street corner keeps dropping cans, which tumble out and roll across the pavement as the camera climbs away over a night-time isometric city of towers, hotels, parks and lamplit streets, until the machine is a red speck among the rooftops<br><sub>Decoded Rive · Canvas 2D · procedural city · <a href="https://instalanding.ai/videos/vending-machine-city">Watch</a> · <a href="videos/vending-machine-city/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/voxel-pelican-assembly"><img src="videos/voxel-pelican-assembly/preview.jpg" width="400" alt="Voxel Pelican Assembly"></a></p>
+<p><b><a href="videos/voxel-pelican-assembly">Voxel Pelican Assembly</a></b> · <sub>0:24</sub><br>A 24-second voxel build-and-ride: a seaside diorama of a pelican on a bicycle assembles itself block by block in an isometric view, then the camera flattens to a side-on shot and the pelican pedals off across a bridge that builds itself just ahead of the wheels<br><sub>three.js · voxels · GSAP timeline · <a href="https://instalanding.ai/videos/voxel-pelican-assembly">Watch</a> · <a href="videos/voxel-pelican-assembly/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/tube-field-lights"><img src="videos/tube-field-lights/preview.jpg" width="400" alt="Tube Field Lights"></a></p>
+<p><b><a href="videos/tube-field-lights">Tube Field Lights</a></b> · <sub>0:14</sub><br>A 14-second WebGL piece on black: pink light balls bounce up and down through a dark grid of rounded-square tubes, then a green ball rises, freezes mid-air, and blooms until its light engulfs the frame before pulling back into a single glowing orb<br><sub>three.js · point lights · GSAP timeline · <a href="https://instalanding.ai/videos/tube-field-lights">Watch</a> · <a href="videos/tube-field-lights/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/chaotic-time-clock"><img src="videos/chaotic-time-clock/preview.jpg" width="400" alt="Chaotic Time Clock"></a></p>
+<p><b><a href="videos/chaotic-time-clock">Chaotic Time Clock</a></b> · <sub>0:08</sub><br>An 8-second shot of a glowing seven-segment clock floating over its own reflection, where time has come loose: the digits whir, surge and stutter as the clock races ahead, the camera drifts and the neon cycles through the spectrum<br><sub>CSS 3D · GSAP timeline · <a href="https://instalanding.ai/videos/chaotic-time-clock">Watch</a> · <a href="videos/chaotic-time-clock/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="videos/car-drive-loop"><img src="videos/car-drive-loop/preview.jpg" width="400" alt="Car Drive Loop"></a></p>
+<p><b><a href="videos/car-drive-loop">Car Drive Loop</a></b> · <sub>0:11</sub><br>An 11-second flat-illustrated drive: a time-machine sports car cruises through a circular porthole ringed by a glowing tachometer, across a synthwave desert of layered hills, cacti and hot-air balloons, until the porthole opens onto the whole sunset landscape<br><sub>SVG car · Canvas 2D · GSAP timeline · <a href="https://instalanding.ai/videos/car-drive-loop">Watch</a> · <a href="videos/car-drive-loop/index.html">Code</a></sub></p>
+<br>
 
 <p><a href="videos/canyon-run"><img src="videos/canyon-run/preview.jpg" width="400" alt="Canyon Run"></a></p>
 <p><b><a href="videos/canyon-run">Canyon Run</a></b> · <sub>0:15</sub><br>A 15-second real-time video: a wooden biplane flies through a sunset canyon that turns into code, with the canyon, sky, light and score all generated in the browser<br><sub>Real-time 3D · generated score · <a href="https://instalanding.ai/videos/canyon-run">Watch</a> · <a href="videos/canyon-run/index.html">Code</a></sub></p>
@@ -883,6 +956,14 @@ inlined: no video file, no install. Open `index.html` and press play, or watch t
 <!-- ICONS:START -->
 Each icon set is one HTML file with every icon, plus one standalone file per icon, so you can take a single
 icon or the set. Open any file from disk, or copy them at [instalanding.ai/icons](https://instalanding.ai/icons).
+
+<p><a href="icons/css-software-icons"><img src="icons/css-software-icons/preview.jpg" width="400" alt="Pure CSS Software Icons"></a></p>
+<p><b><a href="icons/css-software-icons">Pure CSS Software Icons</a></b> · <sub>icon set</sub><br>Nine software icons drawn in nothing but CSS (cloud upload, settings, terminal, code, sun, database, sync, lock and chat), white on near-black with a cyan accent, each idling on its own loop and doing its job when the pointer lands on it<br><sub>9 icons · HTML + CSS · no SVG, no JavaScript · <a href="https://instalanding.ai/icons/css-software-icons">Copy one live</a> · <a href="icons/css-software-icons/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="icons/healthcare-buttons"><img src="icons/healthcare-buttons/preview.jpg" width="400" alt="Healthcare Buttons"></a></p>
+<p><b><a href="icons/healthcare-buttons">Healthcare Buttons</a></b> · <sub>icon set</sub><br>Six animated buttons for a patient portal (find a doctor, schedule, virtual care, refill prescription, online check-in and lab results), teal glass tiles with flat illustrations that pop a pill, bandage or syringe label on hover and act out their task on click<br><sub>6 icons · Decoded Rive · Canvas 2D · no libraries · <a href="https://instalanding.ai/icons/healthcare-buttons">Copy one live</a> · <a href="icons/healthcare-buttons/index.html">Code</a></sub></p>
+<br>
 
 <p><a href="icons/glassmorphism-material"><img src="icons/glassmorphism-material/preview.jpg" width="400" alt="Glassmorphism Material Icons"></a></p>
 <p><b><a href="icons/glassmorphism-material">Glassmorphism Material Icons</a></b> · <sub>icon set</sub><br>Nine frosted-glass icons on a deep violet field (account, lock, picture, location pin, plant, credit card, calendar, clock and documents), each lit by a neon gradient behind the glass, that lift, glow and catch a sheen of light as the pointer passes over them<br><sub>9 icons · Decoded Rive · Canvas 2D · no libraries · <a href="https://instalanding.ai/icons/glassmorphism-material">Copy one live</a> · <a href="icons/glassmorphism-material/index.html">Code</a></sub></p>
@@ -929,6 +1010,15 @@ Each product is a device or app concept in one HTML file, and every control in i
 
 <p><a href="products/lintel-terminal"><img src="products/lintel-terminal/preview.jpg" width="400" alt="Lintel L1 Agent Terminal"></a></p>
 <p><b><a href="products/lintel-terminal">Lintel L1 Agent Terminal</a></b> · <sub>hardware concept</sub><br>A periwinkle desk terminal for a coding agent, drawn in isometric SVG: approve or reject its edit to a rover's motor firmware on the tilted screen, hold the talk key to ask for a revision, then run it to build and flash and watch the serial log, with keys that sink and click and a knob that scrolls the screen<br><sub>Isometric SVG · Web Audio · no libraries · 7 controls · <a href="https://instalanding.ai/products/lintel-terminal">Use it live</a> · <a href="products/lintel-terminal/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="products/bastion-tiers"><img src="products/bastion-tiers/preview.jpg" width="400" alt="Bastion Threat Protection Tiers"></a></p>
+<p><b><a href="products/bastion-tiers">Bastion Threat Protection Tiers</a></b> · <sub>web app ui</sub><br>A tier picker for a cybersecurity service, set on a dark glass card: an arc gauge with three lit segments where a needle swings to Proactive, Adaptive or Essential, the shield icon glows, the copy below rewrites itself and the whole scene re-lights in that tier's blue, orange or violet<br><sub>Decoded Rive · Canvas 2D · no libraries · 5 controls · <a href="https://instalanding.ai/products/bastion-tiers">Use it live</a> · <a href="products/bastion-tiers/index.html">Code</a></sub></p>
+<br>
+
+<p><a href="products/dx-coder-console"><img src="products/dx-coder-console/preview.jpg" width="400" alt="DX-Coder Decoder Console"></a></p>
+<p><b><a href="products/dx-coder-console">DX-Coder Decoder Console</a></b> · <sub>web app ui</sub><br>A teal-on-black ops console for a prompt-decoding service, with five live sections: rolling-digit KPIs and a token-throughput chart, a decoder fleet with a scrolling bitstream and hex frame inspector, three regional streams and a request heatmap, model routing with its latency histogram, and a filterable decode log<br><sub>HTML + CSS + SVG · no libraries · 8 controls · <a href="https://instalanding.ai/products/dx-coder-console">Use it live</a> · <a href="products/dx-coder-console/index.html">Code</a></sub></p>
+
 <!-- PRODUCTS:END -->
 
 ## Repo layout

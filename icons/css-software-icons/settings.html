@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<!-- InstaLanding.ai · ICONS · css-software-icons · Settings · https://instalanding.ai/icons/css-software-icons -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Settings · Pure CSS Software Icons</title>
+<style>
+html { box-sizing: border-box; }
+html *,
+html *:before,
+html *:after { box-sizing: inherit; }
+
+body {
+  max-width: 42em;
+  padding: 2em;
+  margin: 0 auto;
+  color: #161616;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  background-color: currentColor;
+}
+
+.icon {
+  position: relative;
+  display: inline-block;
+  width: 12em;
+  height: 10em;
+  font-size: 1em; /* control icon size here */
+}
+
+/* ===== Cloud (kept) ===== */
+.cloud {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 3.6875em;
+  height: 3.6875em;
+  margin: -1.84375em;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow:
+    -2.1875em 0.6875em 0 -0.6875em,
+    2.0625em 0.9375em 0 -0.9375em,
+    0 0 0 0.375em #fff,
+    -2.1875em 0.6875em 0 -0.3125em #fff,
+    2.0625em 0.9375em 0 -0.5625em #fff;
+}
+.cloud:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -0.5em;
+  display: block;
+  width: 4.5625em;
+  height: 1em;
+  background: currentColor;
+  box-shadow: 0 0.4375em 0 -0.0625em #fff;
+}
+.cloud:nth-child(2) {
+  z-index: 0;
+  background: #fff;
+  box-shadow:
+    -2.1875em 0.6875em 0 -0.6875em #fff,
+    2.0625em 0.9375em 0 -0.9375em #fff,
+    0 0 0 0.375em #fff,
+    -2.1875em 0.6875em 0 -0.3125em #fff,
+    2.0625em 0.9375em 0 -0.5625em #fff;
+  opacity: 0.3;
+  transform: scale(0.5) translate(6em, -3em);
+  animation: cloud 4s linear infinite;
+}
+.cloud:nth-child(2):after { background: #fff; }
+
+/* ===== Sun (kept) ===== */
+.sun {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  margin: -1.25em;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0.375em #fff;
+  animation: spin 12s infinite linear;
+}
+.rays {
+  position: absolute;
+  top: -2em;
+  left: 50%;
+  display: block;
+  width: 0.375em;
+  height: 1.125em;
+  margin-left: -0.1875em;
+  background: #fff;
+  border-radius: 0.25em;
+  box-shadow: 0 5.375em #fff;
+}
+.rays:before,
+.rays:after {
+  content: '';
+  position: absolute;
+  top: 0em;
+  left: 0em;
+  display: block;
+  width: 0.375em;
+  height: 1.125em;
+  transform: rotate(60deg);
+  transform-origin: 50% 3.25em;
+  background: #fff;
+  border-radius: 0.25em;
+  box-shadow: 0 5.375em #fff;
+}
+.rays:before { transform: rotate(120deg); }
+
+/* ===== Gear (settings) ===== */
+.gear {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin: 0.25em 0 0 -0.75em;
+  animation: spin 10s linear infinite;
+}
+.gear .tooth {
+  position: absolute;
+  top: -2.375em;
+  left: -0.4375em;
+  width: 0.875em;
+  height: 4.75em;
+  background: #fff;
+  border-radius: 0.2em;
+}
+.gear .tooth:nth-child(2) { transform: rotate(45deg); }
+.gear .tooth:nth-child(3) { transform: rotate(90deg); }
+.gear .tooth:nth-child(4) { transform: rotate(135deg); }
+.gear .hub {
+  position: absolute;
+  top: -1.375em;
+  left: -1.375em;
+  width: 2.75em;
+  height: 2.75em;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0.375em #fff;
+}
+.gear .hub:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.875em;
+  height: 0.875em;
+  margin: -0.4375em;
+  background: #0cf;
+  border-radius: 50%;
+}
+.gear.small {
+  font-size: 0.5em;
+  margin: -4.5em 0 0 4.25em;
+  opacity: 0.3;
+  animation: spin 5s linear infinite reverse;
+}
+.gear.small .hub:after { background: #fff; }
+
+/* ===== Terminal ===== */
+.terminal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5.75em;
+  height: 4.25em;
+  margin: -2.125em 0 0 -2.875em;
+  background: currentColor;
+  border-radius: 0.5em;
+  box-shadow: 0 0 0 0.375em #fff;
+}
+.terminal:before {
+  content: '';
+  position: absolute;
+  top: 0.75em;
+  left: 0;
+  right: 0;
+  height: 0.375em;
+  background: #fff;
+}
+.terminal:after {
+  content: '';
+  position: absolute;
+  top: 0.25em;
+  left: 0.375em;
+  width: 0.25em;
+  height: 0.25em;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  box-shadow: 0.4375em 0 rgba(255,255,255,0.3), 0.875em 0 rgba(255,255,255,0.3);
+}
+.prompt {
+  position: absolute;
+  top: 1.75em;
+  left: 0.75em;
+  width: 0.875em;
+  height: 0.875em;
+  border-top: 0.375em solid #fff;
+  border-right: 0.375em solid #fff;
+  border-radius: 0.1em;
+  transform: rotate(45deg);
+}
+.cursor {
+  position: absolute;
+  top: 1.625em;
+  left: 2em;
+  width: 0.625em;
+  height: 1.125em;
+  background: #0cf;
+  border-radius: 0.1em;
+  animation: blink 1s steps(1) infinite;
+}
+
+/* ===== Code </> ===== */
+.chevron {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.75em;
+  height: 1.75em;
+  margin: -0.875em 0 0 -3.25em;
+  border-left: 0.375em solid #fff;
+  border-bottom: 0.375em solid #fff;
+  border-radius: 0.1em;
+  transform: rotate(45deg);
+  animation: chevron-l 2.4s ease-in-out infinite;
+}
+.chevron + .chevron {
+  margin-left: 1.5em;
+  border-left: 0;
+  border-bottom: 0;
+  border-top: 0.375em solid #fff;
+  border-right: 0.375em solid #fff;
+  animation-name: chevron-r;
+}
+.slash {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.375em;
+  height: 3.75em;
+  margin: -1.875em 0 0 -0.1875em;
+  background: #0cf;
+  border-radius: 0.25em;
+  transform: rotate(20deg);
+  animation: pulse 2.4s linear infinite;
+}
+
+/* ===== Database ===== */
+.db {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4.5em;
+  height: 4.25em;
+  margin: -2.25em 0 0 -2.25em;
+  border-left: 0.375em solid #fff;
+  border-right: 0.375em solid #fff;
+}
+.db .disk {
+  position: absolute;
+  left: -0.375em;
+  width: 4.5em;
+  height: 1.5em;
+  border-radius: 50%;
+}
+.db .disk:nth-child(1) {
+  top: -0.75em;
+  background: currentColor;
+  border: 0.375em solid #fff;
+}
+.db .disk:nth-child(2),
+.db .disk:nth-child(3) {
+  border-bottom: 0.375em solid #fff;
+  animation: flow 2.4s linear infinite;
+}
+.db .disk:nth-child(2) { top: 0.875em; animation-delay: 0.4s; }
+.db .disk:nth-child(3) { top: 3.375em; animation-delay: 0.8s; }
+
+/* ===== Sync ===== */
+.sync {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4.25em;
+  height: 4.25em;
+  margin: -2.125em;
+  border: 0.375em solid transparent;
+  border-top-color: #fff;
+  border-bottom-color: #0cf;
+  border-radius: 50%;
+  animation: spin 2.4s linear infinite;
+}
+.sync:before,
+.sync:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 0.5em solid transparent;
+  border-right: 0.5em solid transparent;
+  border-top: 0.6875em solid #fff;
+}
+.sync:before {
+  top: 0.125em;
+  right: -0.625em;
+  transform: rotate(-45deg);
+  border-top-color: #fff;
+}
+.sync:after {
+  bottom: 0.125em;
+  left: -0.625em;
+  transform: rotate(135deg);
+  border-top-color: #0cf;
+}
+
+/* ===== Lock ===== */
+.shackle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  margin: -2.875em 0 0 -1.25em;
+  border: 0.375em solid #fff;
+  border-bottom: 0;
+  border-radius: 1.25em 1.25em 0 0;
+  animation: unlock 3s ease-in-out infinite;
+}
+.lock {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 4.25em;
+  height: 3.125em;
+  margin: -0.625em 0 0 -2.125em;
+  background: currentColor;
+  border-radius: 0.5em;
+  box-shadow: 0 0 0 0.375em #fff;
+}
+.lock:before {
+  content: '';
+  position: absolute;
+  top: 0.75em;
+  left: 50%;
+  width: 0.875em;
+  height: 0.875em;
+  margin-left: -0.4375em;
+  background: #0cf;
+  border-radius: 50%;
+  animation: keyhole 3s linear infinite;
+}
+.lock:after {
+  content: '';
+  position: absolute;
+  top: 1.375em;
+  left: 50%;
+  width: 0.375em;
+  height: 0.875em;
+  margin-left: -0.1875em;
+  background: #0cf;
+  border-radius: 0.1em;
+  animation: keyhole 3s linear infinite;
+}
+
+/* ===== Chat ===== */
+.bubble {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 5.25em;
+  height: 3.375em;
+  margin: -1.5em 0 0 -3em;
+  background: currentColor;
+  border-radius: 1.125em;
+  box-shadow: 0 0 0 0.375em #fff;
+}
+.bubble:after {
+  content: '';
+  position: absolute;
+  bottom: -1.375em;
+  left: 0.875em;
+  width: 0;
+  height: 0;
+  border-top: 1.125em solid #fff;
+  border-right: 1.125em solid transparent;
+}
+.bubble + .bubble {
+  z-index: 0;
+  margin: -3em 0 0 0.25em;
+  background: #fff;
+  opacity: 0.3;
+  transform: scale(0.5);
+  animation: bubble 4s ease-in-out infinite;
+}
+.bubble + .bubble:after { display: none; }
+.dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.625em;
+  height: 0.625em;
+  margin: -0.3125em 0 0 -0.3125em;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  animation: typing 1.2s ease-in-out infinite;
+}
+.dot:nth-child(1) { margin-left: -1.4375em; }
+.dot:nth-child(3) { margin-left: 0.8125em; animation-delay: 0.3s; }
+.dot:nth-child(2) { animation-delay: 0.15s; }
+
+/* ===== Hover: each icon performs its own action =====
+   Uses the individual translate / rotate / scale properties, which stack on
+   top of the idle transform animations, so nothing jumps when hover starts. */
+.icon {
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  transition: opacity 0.4s ease;
+}
+.icon > *,
+.icon > * > * {
+  transition: translate 0.5s var(--spring), rotate 0.6s var(--spring),
+              scale 0.5s var(--spring), opacity 0.4s ease, filter 0.4s ease;
+}
+.icon:is(:hover, .is-hover) > * {
+  filter: drop-shadow(0 0 0.3em rgba(0,204,255,0.3));
+}
+
+/* Cloud: floats and uploads */
+.upload {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 0.375em;
+  height: 1.375em;
+  margin: -0.375em 0 0 -0.1875em;
+  background: #0cf;
+  border-radius: 0.2em;
+  opacity: 0;
+}
+.upload:before {
+  content: '';
+  position: absolute;
+  top: -0.0625em;
+  left: -0.25em;
+  width: 0.875em;
+  height: 0.875em;
+  border-top: 0.375em solid #0cf;
+  border-left: 0.375em solid #0cf;
+  border-radius: 0.1em;
+  transform: rotate(45deg);
+}
+.cloudy:is(:hover, .is-hover) .cloud:first-child { animation: float 1.8s ease-in-out infinite; }
+.cloudy:is(:hover, .is-hover) .upload { animation: upload 1.1s ease-in infinite; }
+.cloudy:is(:hover, .is-hover) .cloud:first-child { scale: 1.06; }
+
+/* Gear: whirs a full turn, small gear counter-spins, hub pulses */
+.settings:is(:hover, .is-hover) .gear:not(.small) { animation-name: spin, whir; animation-duration: 10s, 1.3s; animation-timing-function: linear, var(--spring); animation-iteration-count: infinite, 1; }
+.settings:is(:hover, .is-hover) .gear.small { opacity: 0.8; animation-name: spin, whir-back; animation-duration: 5s, 1.3s; animation-timing-function: linear, var(--spring); animation-iteration-count: infinite, 1; animation-direction: reverse, normal; }
+.settings:is(:hover, .is-hover) .hub:after { animation: hub 0.9s ease-in-out infinite; }
+.settings:is(:hover, .is-hover) .gear.small .hub:after { animation: none; }
+
+/* Terminal: types a command */
+.typed {
+  position: absolute;
+  top: 2em;
+  left: 2em;
+  width: 0;
+  height: 0.375em;
+  background: repeating-linear-gradient(90deg, #fff 0 0.375em, transparent 0.375em 0.5em);
+}
+.terminal-icon:is(:hover, .is-hover) .typed { animation: type 1.8s infinite; }
+.terminal-icon:is(:hover, .is-hover) .cursor { animation: type-cursor 1.8s infinite; }
+.terminal-icon:is(:hover, .is-hover) .prompt { translate: 0.125em 0; }
+
+/* Code: brackets spring apart, slash flips */
+.code:is(:hover, .is-hover) .chevron:first-child { translate: -0.5em 0; }
+.code:is(:hover, .is-hover) .chevron:nth-child(2) { translate: 0.5em 0; }
+.code:is(:hover, .is-hover) .slash { rotate: 180deg; scale: 1.1; animation: none; background: #0cf; }
+
+/* Sun: blooms and turns */
+.sunny:is(:hover, .is-hover) .sun { animation-name: spin, bloom, flare; animation-duration: 12s, 1s, 1.6s; animation-timing-function: linear, var(--spring), ease-in-out; animation-iteration-count: infinite, 1, infinite; animation-delay: 0s, 0s, 1s; }
+
+/* Database: lid lifts, data streams out */
+.bit {
+  position: absolute;
+  top: -0.75em;
+  left: 50%;
+  width: 0.5em;
+  height: 0.5em;
+  margin-left: -0.25em;
+  background: #0cf;
+  border-radius: 0.1em;
+  opacity: 0;
+}
+.bit:nth-of-type(5) { margin-left: -1.25em; }
+.bit:nth-of-type(6) { margin-left: 0.75em; }
+.database:is(:hover, .is-hover) .disk:nth-child(1) { translate: 0 -0.5em; }
+.database:is(:hover, .is-hover) .disk:nth-child(2),
+.database:is(:hover, .is-hover) .disk:nth-child(3) { animation-duration: 0.9s; }
+.database:is(:hover, .is-hover) .bit { animation: rise 1.2s ease-out infinite; }
+.database:is(:hover, .is-hover) .bit:nth-of-type(5) { animation-delay: 0.4s; }
+.database:is(:hover, .is-hover) .bit:nth-of-type(6) { animation-delay: 0.8s; }
+
+/* Sync: double-time spin with a pulse */
+.sync-icon:is(:hover, .is-hover) .sync { animation-name: spin, sync-burst; animation-duration: 2.4s, 1.4s; animation-timing-function: linear, cubic-bezier(0.6, 0, 0.2, 1); animation-iteration-count: infinite, infinite; }
+
+/* Lock: unlocks */
+.shackle { transform-origin: 100% 100%; }
+.secure:is(:hover, .is-hover) .shackle { animation: open 0.7s var(--spring) forwards; }
+.secure:is(:hover, .is-hover) .lock { animation: thunk 0.5s var(--spring); }
+.secure:is(:hover, .is-hover) .lock:before,
+.secure:is(:hover, .is-hover) .lock:after { animation: none; background: #0cf; }
+
+/* Chat: bubble pops, dots race, reply appears */
+.chat:is(:hover, .is-hover) .bubble:first-child { animation: pop 0.6s var(--spring); }
+.chat:is(:hover, .is-hover) .dot { animation-duration: 0.7s; }
+.chat:is(:hover, .is-hover) .bubble + .bubble { animation: reply 0.6s var(--spring) forwards; }
+
+@keyframes float {
+  50% { translate: 0 -0.3em; }
+}
+@keyframes upload {
+  0%   { opacity: 0; translate: 0 0.625em; }
+  35%  { opacity: 1; }
+  100% { opacity: 0; translate: 0 -0.875em; }
+}
+@keyframes whir { from { rotate: 0deg; } to { rotate: 360deg; } }
+@keyframes whir-back { from { rotate: 0deg; } to { rotate: -720deg; } }
+@keyframes hub {
+  50% { scale: 1.5; background: #fff; }
+}
+@keyframes type {
+  0%   { width: 0; animation-timing-function: steps(5, end); }
+  55%  { width: 2.5em; }
+  100% { width: 2.5em; }
+}
+@keyframes type-cursor {
+  0%   { translate: 0 0; opacity: 1; animation-timing-function: steps(5, end); }
+  55%  { translate: 2.625em 0; opacity: 1; }
+  70%  { opacity: 0; }
+  85%  { opacity: 1; }
+  100% { translate: 2.625em 0; opacity: 1; }
+}
+@keyframes bloom {
+  0%   { rotate: 0deg; scale: 1; }
+  100% { rotate: 120deg; scale: 1.15; }
+}
+@keyframes flare {
+  0%, 100% { scale: 1.15; }
+  50% { scale: 1.25; }
+}
+@keyframes rise {
+  0%   { opacity: 0; translate: 0 0.75em; scale: 0.6; }
+  30%  { opacity: 1; scale: 1; }
+  100% { opacity: 0; translate: 0 -1.75em; scale: 0.6; }
+}
+@keyframes sync-burst {
+  0%   { rotate: 0deg; scale: 1; }
+  50%  { scale: 1.12; }
+  100% { rotate: 360deg; scale: 1; }
+}
+@keyframes open {
+  0%   { transform: translateY(0) rotate(0); }
+  45%  { transform: translateY(-0.875em) rotate(0); }
+  100% { transform: translateY(-0.875em) rotate(-28deg); }
+}
+@keyframes thunk {
+  0% { scale: 1; }
+  40% { scale: 1.08 0.94; }
+  100% { scale: 1; }
+}
+@keyframes pop {
+  0% { scale: 1; }
+  35% { scale: 1.12 0.92; }
+  65% { scale: 0.96 1.05; }
+  100% { scale: 1; }
+}
+@keyframes reply {
+  from { opacity: 0; transform: scale(0.3) translateY(1em); }
+  to   { opacity: 0.6; transform: scale(0.5) translateY(-0.5em); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon:is(:hover, .is-hover) * { animation-duration: 0s !important; transition-duration: 0s !important; }
+}
+
+
+/* ===== Animations ===== */
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes cloud {
+  0% { opacity: 0; }
+  50% { opacity: 0.3; }
+  100% {
+    opacity: 0;
+    transform: scale(0.5) translate(-200%, -3em);
+  }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes chevron-l {
+  50% { margin-left: -3.625em; }
+}
+@keyframes chevron-r {
+  50% { margin-left: 1.875em; }
+}
+
+@keyframes pulse {
+  45% { background: rgba(255,255,255,0.3); }
+  50% { background: #0cf; }
+  55% { background: rgba(255,255,255,0.3); }
+  0%, 100% { background: #0cf; }
+}
+
+@keyframes flow {
+  0%, 60%, 100% { border-bottom-color: #fff; }
+  30% { border-bottom-color: #0cf; }
+}
+
+@keyframes unlock {
+  0%, 35%, 100% { transform: translateY(0); }
+  50%, 85% { transform: translateY(-0.625em); }
+}
+@keyframes keyhole {
+  0%, 35%, 100% { background: #0cf; }
+  50%, 85% { background: rgba(255,255,255,0.3); }
+}
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); background: rgba(255,255,255,0.3); }
+  30% { transform: translateY(-0.375em); background: #0cf; }
+}
+
+@keyframes bubble {
+  0%, 100% { opacity: 0; transform: scale(0.5) translateY(0.5em); }
+  40%, 70% { opacity: 0.3; transform: scale(0.5) translateY(0); }
+}
+
+/* One icon, centred. `color` is the ground: shapes are cut out of it, so set
+   it to your background (and the page background follows). Size with font-size on .icon. */
+html, body { height: 100%; }
+body { max-width: none; margin: 0; padding: 0; display: grid; place-items: center; overflow: hidden; }
+.icon { font-size: min(7.4vw, 8.9vh); } /* fills the frame at any size */
+</style>
+</head>
+<body>
+<div class="icon settings">
+  <div class="gear">
+    <div class="tooth"></div><div class="tooth"></div><div class="tooth"></div><div class="tooth"></div>
+    <div class="hub"></div>
+  </div>
+  <div class="gear small">
+    <div class="tooth"></div><div class="tooth"></div><div class="tooth"></div><div class="tooth"></div>
+    <div class="hub"></div>
+  </div>
+</div>
+</body>
+</html>
